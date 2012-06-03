@@ -1,0 +1,53 @@
+<RCC>
+    <qresource prefix="/qaiv/emoticon">
+        <file alias="smiley.neutral">resources/emoticon_neutral.ico</file>
+        <file alias="smiley.happy">resources/emoticon_smile.ico</file>
+        <file alias="smiley.unhappy">resources/emoticon_unhappy.ico</file>
+    </qresource>
+    <qresource prefix="/qaiv/flag">
+        <file alias="blue">resources/flag_blue.ico</file>
+        <file alias="green">resources/flag_green.ico</file>
+        <file alias="orange">resources/flag_orange.ico</file>
+        <file alias="pink">resources/flag_pink.ico</file>
+        <file alias="purple">resources/flag_purple.ico</file>
+        <file alias="red">resources/flag_red.ico</file>
+        <file alias="yellow">resources/flag_yellow.ico</file>
+    </qresource>
+    <qresource prefix="/qaiv/tag">
+        <file alias="blue">resources/tag_blue.ico</file>
+        <file alias="green">resources/tag_green.ico</file>
+        <file alias="orange">resources/tag_orange.ico</file>
+        <file alias="pink">resources/tag_pink.ico</file>
+        <file alias="purple">resources/tag_purple.ico</file>
+        <file alias="red">resources/tag_red.ico</file>
+        <file alias="yellow">resources/tag_yellow.ico</file>
+    </qresource>
+    <qresource prefix="/qaiv/led">
+        <file alias="amber.on">resources/amber-on.ico</file>
+        <file alias="blue.on">resources/blue-on.ico</file>
+        <file alias="green.on">resources/green-on.ico</file>
+        <file alias="red.on">resources/red-on.ico</file>
+        <file alias="white.on">resources/white-on.ico</file>
+        <file alias="yellow.on">resources/yellow-on.ico</file>
+    </qresource>
+    <qresource prefix="/qaiv/filter">
+        <file alias="regexp">resources/filter_regexp.ico</file>
+        <file alias="range">resources/range.ico</file>
+        <file alias="selection">resources/selection.ico</file>
+        <file alias="text">resources/textfilter.ico</file>
+        <file alias="value">resources/value.ico</file>
+        <file alias="case_insensitive">resources/case_insensitive.ico</file>
+        <file alias="case_sensitive">resources/case_sensitive.ico</file>
+        <file alias="ends_with">resources/ends_with.ico</file>
+        <file alias="add">resources/filter_add.ico</file>
+        <file alias="delete">resources/filter_delete.ico</file>
+        <file alias="disable.row">resources/filter_disable_row.ico</file>
+        <file alias="disabled">resources/filter_disabled.ico</file>
+        <file alias="enable_row">resources/filter_enable_row.ico</file>
+        <file alias="enabled">resources/filter_enabled.ico</file>
+        <file alias="toggle">resources/filter_toggle.ico</file>
+        <file alias="starts_with">resources/starts_with.ico</file>
+        <file alias="sortorder.toggle">resources/togglesortorder.ico</file>
+        <file alias="contains">resources/contains.ico</file>
+    </qresource>
+</RCC>
