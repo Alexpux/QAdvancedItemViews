@@ -29,6 +29,35 @@
 #include <qfiltermodel.h>
 #include <qfilterviewitemdelegate.h>
 
+class QAdvancedTableViewPrivate
+{
+public:
+    QAdvancedTableViewPrivate(QAdvancedTableView* tv);
+    ~QAdvancedTableViewPrivate();
+
+    bool autoResizeRowsToContents;
+    int defaultFilterType;
+    QFilterModelProxy* dataViewProxy;
+    QAbstractFilterModel* filterModel;
+    QAbstractItemModel* model;
+    QFilterTableViewSettingsDialog* settingsDialog;
+
+    QAdvancedHeaderView* horizontalHeader;
+    QAdvancedHeaderView* verticalHeader;
+
+    QAdvancedTableView* v;
+};
+
+QAdvancedTableViewPrivate::QAdvancedTableViewPrivate(QAdvancedTableView *tv)
+{
+    v = tv;
+}
+
+QAdvancedTableViewPrivate::~QAdvancedTableViewPrivate()
+{
+
+}
+
 //-----------------------------------------------
 // class QFilterTableViewSettingsDialog
 //-----------------------------------------------
@@ -139,38 +168,38 @@ void QFilterTableViewSettingsDialog::retranslate()
 
 QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::QAdvancedTableView)
+    ui(new Ui::QAdvancedTableView), d(new QAdvancedTableViewPrivate(this))
 {
     ui->setupUi(this);
-    cAutoResizeRowsToContents = true;
-    cDefaultFilterType = QAbstractFilter::Type;
-    cSettingsDialog = 0;
+    d->autoResizeRowsToContents = true;
+    d->defaultFilterType = QAbstractFilter::Type;
+    d->settingsDialog = 0;
     // Create header view (model) proxy
-    cFilterModel = new QFilterModel(this);
+    d->filterModel = new QFilterModel(this);
     // Create horizontal header view
-    cHorizontalHeader = new QAdvancedHeaderView(Qt::Horizontal, this);
-    ui->headerTableView->setHorizontalHeader(cHorizontalHeader);
+    d->horizontalHeader = new QAdvancedHeaderView(Qt::Horizontal, this);
+    ui->headerTableView->setHorizontalHeader(d->horizontalHeader);
     ui->headerTableView->setItemDelegate(new QFilterViewItemDelegate(this));
     ui->headerTableView->horizontalHeader()->setMovable(true);
 
-//    connect(cHorizontalHeader, SIGNAL(showFilterView()), this, SLOT(showFilterView()));
-//    connect(cHorizontalHeader, SIGNAL(hideFilterView()), this, SLOT(hideFilterView()));
+//    connect(d->horizontalHeader, SIGNAL(showFilterView()), this, SLOT(showFilterView()));
+//    connect(d->horizontalHeader, SIGNAL(hideFilterView()), this, SLOT(hideFilterView()));
 
     // Create vertical header view
-    cVerticalHeader = new QAdvancedHeaderView(Qt::Vertical, this);
-//    connect(cVerticalHeader, SIGNAL(addFilter()), this, SLOT(addFilter()));
-//    connect(cVerticalHeader, SIGNAL(settingsDialogRequested()), this, SLOT(showSettingsDialog()));
+    d->verticalHeader = new QAdvancedHeaderView(Qt::Vertical, this);
+//    connect(d->verticalHeader, SIGNAL(addFilter()), this, SLOT(addFilter()));
+//    connect(d->verticalHeader, SIGNAL(settingsDialogRequested()), this, SLOT(showSettingsDialog()));
 
-    ui->headerTableView->setVerticalHeader(cVerticalHeader);
+    ui->headerTableView->setVerticalHeader(d->verticalHeader);
     ui->headerTableView->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 //	ui->headerTableView->verticalHeader()->setDefaultSectionSize(20);
 
-    cDataViewProxy = new QFilterModelProxy(this);
-    ui->dataTableView->setModel(cDataViewProxy);
+    d->dataViewProxy = new QFilterModelProxy(this);
+    ui->dataTableView->setModel(d->dataViewProxy);
 
-    ui->headerTableView->setModel(cFilterModel);
+    ui->headerTableView->setModel(d->filterModel);
 
-    cDataViewProxy->setFilterModel(cFilterModel);
+    d->dataViewProxy->setFilterModel(d->filterModel);
 
     connect(ui->dataTableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(dataViewCustomContextMenuRequested(QPoint)));
     //
@@ -179,15 +208,15 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(dataViewHorizontalScrollBarValueChanged(int)));
     connect(ui->dataTableView->verticalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(updateHeaderViewVerticalScrollBar(int,int)));
 
-    //connect(cFilterModel, SIGNAL(filterChanged(QModelIndex)), cDataViewProxy, SLOT(changeFilter(QModelIndex)));
-    //connect(cFilterModel, SIGNAL(filterRemoved(QModelIndex)), cDataViewProxy, SLOT(removeFilter(QModelIndex)));
-//    connect(cFilterModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), cDataViewProxy, SLOT(invalidate()));
-    connect(cFilterModel, SIGNAL(modelReset()), this, SLOT(updateHeaderViewGeometries()));
-    connect(cFilterModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(updateHeaderViewGeometries()));
+    //connect(d->filterModel, SIGNAL(filterChanged(QModelIndex)), d->dataViewProxy, SLOT(changeFilter(QModelIndex)));
+    //connect(d->filterModel, SIGNAL(filterRemoved(QModelIndex)), d->dataViewProxy, SLOT(removeFilter(QModelIndex)));
+//    connect(d->filterModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), d->dataViewProxy, SLOT(invalidate()));
+    connect(d->filterModel, SIGNAL(modelReset()), this, SLOT(updateHeaderViewGeometries()));
+    connect(d->filterModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(updateHeaderViewGeometries()));
 
-    connect(cDataViewProxy, SIGNAL(modelReset()), this, SLOT(modelReset()));
-    connect(cDataViewProxy, SIGNAL(layoutChanged()), this, SLOT(dataModelLayoutChanged()));
-//    connect(cDataViewProxy, SIGNAL(filterUpdated()), this, SLOT(updateHeaderViewVerticalScrollBar()));
+    connect(d->dataViewProxy, SIGNAL(modelReset()), this, SLOT(modelReset()));
+    connect(d->dataViewProxy, SIGNAL(layoutChanged()), this, SLOT(dataModelLayoutChanged()));
+//    connect(d->dataViewProxy, SIGNAL(filterUpdated()), this, SLOT(updateHeaderViewVerticalScrollBar()));
 
     connect(ui->headerTableView, SIGNAL(cornerButtonClicked()), this, SLOT(selectAll()));
     connect(ui->headerTableView, SIGNAL(calcGeometryRequested()), this, SLOT(updateHeaderViewGeometries()));
@@ -212,12 +241,13 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
 
 QAdvancedTableView::~QAdvancedTableView()
 {
+    delete d;
     delete ui;
 }
 
 void QAdvancedTableView::addFilterGroup()
 {
-    cFilterModel->insertRows(cFilterModel->rowCount(), 1);
+    d->filterModel->insertRows(d->filterModel->rowCount(), 1);
 }
 
 bool QAdvancedTableView::alternatingRowColors() const
@@ -227,7 +257,7 @@ bool QAdvancedTableView::alternatingRowColors() const
 
 QVariantList QAdvancedTableView::columnsFilterTypes(int column) const
 {
-    return cFilterModel->index(0, column).data(QAbstractFilterModel::ColumnFilterTypesRole).toList();
+    return d->filterModel->index(0, column).data(QAbstractFilterModel::ColumnFilterTypesRole).toList();
 }
 
 void QAdvancedTableView::clearSelection()
@@ -242,7 +272,7 @@ QModelIndex QAdvancedTableView::currentIndex() const
 
 int QAdvancedTableView::defaultFilterType(int column) const
 {
-    return cFilterModel->index(0, column).data(QAbstractFilterModel::DefaultFilterTypeRole).toInt();
+    return d->filterModel->index(0, column).data(QAbstractFilterModel::DefaultFilterTypeRole).toInt();
 }
 
 void QAdvancedTableView::dataViewCustomContextMenuRequested(const QPoint & pos)
@@ -277,7 +307,7 @@ QAbstractItemView::EditTriggers QAdvancedTableView::editTriggers () const
 
 QAbstractFilter *QAdvancedTableView::filterAt(int row, int col) const
 {
-    return cFilterModel->filter(cFilterModel->index(row, col));
+    return d->filterModel->filter(d->filterModel->index(row, col));
 }
 
 void QAdvancedTableView::filterAdded(const QModelIndex & parent, int start, int end)
@@ -290,7 +320,7 @@ void QAdvancedTableView::filterAdded(const QModelIndex & parent, int start, int 
 
 QAbstractFilterModel* QAdvancedTableView::filterModel() const
 {
-    return cFilterModel;
+    return d->filterModel;
 }
 
 bool QAdvancedTableView::filterVisible() const
@@ -396,7 +426,7 @@ QAbstractItemModel* QAdvancedTableView::model() const
 
 void QAdvancedTableView::modelReset()
 {
-    if (cAutoResizeRowsToContents){
+    if (d->autoResizeRowsToContents){
         ui->dataTableView->resizeRowsToContents();
     }
 }
@@ -419,19 +449,19 @@ bool QAdvancedTableView::restoreFilter(const QByteArray & data)
     QString mName;
     QVariantMap mProperties;
     // Clear current filter model
-    cFilterModel->removeRows(0, cFilterModel->rowCount());
+    d->filterModel->removeRows(0, d->filterModel->rowCount());
     mStream >> mRows;
-    cFilterModel->insertRows(0, mRows);
+    d->filterModel->insertRows(0, mRows);
     for (int iRow = 0; iRow < mRows; iRow++){
         mStream >> mName;
-        cFilterModel->setHeaderData(iRow, Qt::Vertical, mName);
+        d->filterModel->setHeaderData(iRow, Qt::Vertical, mName);
     }
     while(!mStream.atEnd()){
         mStream >> mRow >> mCol >> mProperties;
-        if (cFilterModel->rowCount() < mRow){
-            cFilterModel->insertRows(cFilterModel->rowCount(), 1);
+        if (d->filterModel->rowCount() < mRow){
+            d->filterModel->insertRows(d->filterModel->rowCount(), 1);
         }
-        cFilterModel->setData(cFilterModel->index(mRow, mCol), mProperties);
+        d->filterModel->setData(d->filterModel->index(mRow, mCol), mProperties);
     }
     return true;
 }
@@ -462,13 +492,13 @@ QByteArray QAdvancedTableView::saveFilter() const
     QDataStream mStream(&mData, QIODevice::WriteOnly);
     QVariantMap mProperties;
 
-    mStream << qint32(cFilterModel->rowCount());
-    for (int iRow = 0; iRow < cFilterModel->rowCount(); iRow++){
-        mStream << cFilterModel->headerData(iRow, Qt::Vertical).toString();
+    mStream << qint32(d->filterModel->rowCount());
+    for (int iRow = 0; iRow < d->filterModel->rowCount(); iRow++){
+        mStream << d->filterModel->headerData(iRow, Qt::Vertical).toString();
     }
-    for (int iRow = 0; iRow < cFilterModel->rowCount(); iRow++){
-        for (int iCol = 0; iCol < cFilterModel->columnCount(); iCol++){
-            mProperties = cFilterModel->index(iRow, iCol).data(Qt::EditRole).toMap();
+    for (int iRow = 0; iRow < d->filterModel->rowCount(); iRow++){
+        for (int iCol = 0; iCol < d->filterModel->columnCount(); iCol++){
+            mProperties = d->filterModel->index(iRow, iCol).data(Qt::EditRole).toMap();
             if (!mProperties.isEmpty()){
                 mStream << qint32(iRow) << qint32(iCol) << mProperties;
             }
@@ -525,7 +555,7 @@ void QAdvancedTableView::setCurrentIndex(const QModelIndex & index)
 
 void QAdvancedTableView::setDefaultFilterType(int column, int type)
 {
-    cFilterModel->setData(cFilterModel->index(0, column), type, QAbstractFilterModel::DefaultFilterTypeRole);
+    d->filterModel->setData(d->filterModel->index(0, column), type, QAbstractFilterModel::DefaultFilterTypeRole);
 }
 
 void QAdvancedTableView::setDragEnabled(bool enable)
@@ -540,12 +570,12 @@ void QAdvancedTableView::setEditTriggers(QAbstractItemView::EditTriggers trigger
 
 void QAdvancedTableView::setColumnFilterTypes(int column, const QVariantList &types)
 {
-    cFilterModel->setData(cFilterModel->index(0, column), types, QAbstractFilterModel::ColumnFilterTypesRole);
+    d->filterModel->setData(d->filterModel->index(0, column), types, QAbstractFilterModel::ColumnFilterTypesRole);
 }
 
 void QAdvancedTableView::setFilterEnabled(int row, int column, bool enable )
 {
-//    cFilterModel->setFilterEnabled(row, column, enable);
+//    d->filterModel->setFilterEnabled(row, column, enable);
 }
 
 void QAdvancedTableView::setItemDelegate(QAbstractItemDelegate* delegate)
@@ -561,11 +591,12 @@ void QAdvancedTableView::setGridStyle(Qt::PenStyle style)
 
 void QAdvancedTableView::setModel( QAbstractItemModel* model )
 {
-    cDataViewProxy->setSourceModel(model);
-	cFilterModel->setSourceModel(model);
-    for(int iCol = 0; iCol < cHorizontalHeader->count(); iCol++){
-        ui->dataTableView->horizontalHeader()->resizeSection(iCol, cHorizontalHeader->sectionSize(iCol));
-        ui->dataTableView->horizontalHeader()->moveSection(ui->dataTableView->horizontalHeader()->visualIndex(iCol), cHorizontalHeader->visualIndex(iCol));
+    d->model = model;
+    d->dataViewProxy->setSourceModel(d->model);
+    d->filterModel->setSourceModel(d->model);
+    for(int iCol = 0; iCol < d->horizontalHeader->count(); iCol++){
+        ui->dataTableView->horizontalHeader()->resizeSection(iCol, d->horizontalHeader->sectionSize(iCol));
+        ui->dataTableView->horizontalHeader()->moveSection(ui->dataTableView->horizontalHeader()->visualIndex(iCol), d->horizontalHeader->visualIndex(iCol));
     }
 }
 
@@ -588,7 +619,7 @@ bool QAdvancedTableView::setFilterType(int type, int column, int row)
 {
     QVariantMap mProperties;
     mProperties["type"] = type;
-    if (cFilterModel->createFilter(cFilterModel->index(row, column), mProperties) != 0){
+    if (d->filterModel->createFilter(d->filterModel->index(row, column), mProperties) != 0){
         return true;
     }
     return false;
@@ -597,7 +628,7 @@ bool QAdvancedTableView::setFilterType(int type, int column, int row)
 void QAdvancedTableView::setShowGrid( bool show )
 {
 	ui->headerTableView->setShowGrid(true);
-	ui->dataTableView->setShowGrid(true);
+    ui->dataTableView->setShowGrid(true);
 }
 
 void QAdvancedTableView::setSortIndicatorShown( bool show )
@@ -612,10 +643,10 @@ void QAdvancedTableView::setSortingEnabled( bool enable )
 
 QFilterTableViewSettingsDialog* QAdvancedTableView::settingsDialog()
 {
-	if (cSettingsDialog == 0){
-		cSettingsDialog = new QFilterTableViewSettingsDialog(cFilterModel, this);
+    if (d->settingsDialog == 0){
+        d->settingsDialog = new QFilterTableViewSettingsDialog(d->filterModel, this);
 	}
-	return cSettingsDialog;
+    return d->settingsDialog;
 }
 
 void QAdvancedTableView::setTextElideMode(Qt::TextElideMode mode)
@@ -666,7 +697,7 @@ void QAdvancedTableView::update(const QModelIndex & index)
 
 void QAdvancedTableView::dataModelLayoutChanged()
 {
-    if (cAutoResizeRowsToContents){
+    if (d->autoResizeRowsToContents){
         ui->dataTableView->resizeRowsToContents();
     }
 }

@@ -33,6 +33,8 @@ class QFilterModelProxy;
 class QAbstractFilterModel;
 class QFilterTableViewSettingsDialog;
 
+class QAdvancedTableViewPrivate;
+
 namespace Ui {
     class QAdvancedTableView;
 }
@@ -444,15 +446,7 @@ private slots:
     void updateHeaderViewGeometries();
     void updateHeaderViewVerticalScrollBar( int min, int max );
 private:
-
-    bool cAutoResizeRowsToContents;
-    int cDefaultFilterType;
-    QFilterModelProxy* cDataViewProxy;
-    QAbstractFilterModel* cFilterModel;
-	QFilterTableViewSettingsDialog* cSettingsDialog;
-
-    QAdvancedHeaderView* cHorizontalHeader;
-    QAdvancedHeaderView* cVerticalHeader;
+    QAdvancedTableViewPrivate* d;
 
     Ui::QAdvancedTableView *ui;
 };
