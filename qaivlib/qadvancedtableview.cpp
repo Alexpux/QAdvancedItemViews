@@ -553,6 +553,16 @@ void QAdvancedTableView::setItemDelegate(QAbstractItemDelegate* delegate)
 	ui->dataTableView->setItemDelegate(delegate);
 }
 
+void QAdvancedTableView::setItemDelegateForColumn(int column, QAbstractItemDelegate * delegate)
+{
+	ui->dataTableView->setItemDelegateForColumn(column, delegate);
+}
+
+void QAdvancedTableView::setItemDelegateForRow(int row, QAbstractItemDelegate * delegate)
+{
+	ui->dataTableView->setItemDelegateForRow(row, delegate);
+}
+
 void QAdvancedTableView::setGridStyle(Qt::PenStyle style)
 {
     ui->headerTableView->setGridStyle(style);
