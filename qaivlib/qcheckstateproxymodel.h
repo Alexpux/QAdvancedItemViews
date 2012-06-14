@@ -47,6 +47,13 @@ public:
       * @reimp
       */
     virtual Qt::ItemFlags flags( const QModelIndex & index ) const;
+    /**
+      * Returns true if the column @p column is checkable. Otherwise false.
+      * @see setColumnCheckable()
+      */
+    bool isColumnCheckable(int column) const;
+
+    void setColumnCheckable(int column, bool checkable = true);
 
     void setCheckedIndexes(const QModelIndexList & indexes);
 

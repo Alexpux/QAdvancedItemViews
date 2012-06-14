@@ -28,12 +28,14 @@ public:
     ~QCheckStateProxyModelPrivate();
 
     QList<QModelIndex> checkedIndexes;
+    QList<int> columns;
 
     QCheckStateProxyModel* m;
 };
 
 QCheckStateProxyModelPrivate::QCheckStateProxyModelPrivate(QCheckStateProxyModel *pm)
 {
+    columns << 0;
     m = pm;
 }
 
@@ -58,7 +60,7 @@ QModelIndexList QCheckStateProxyModel::checkedIndexes() const
 
 QVariant QCheckStateProxyModel::data(const QModelIndex & index, int role) const
 {
-    if (role == Qt::CheckStateRole){
+    if (role == Qt::CheckStateRole && d->columns.contains(index.column())){
         return d->checkedIndexes.contains(index)?Qt::Checked:Qt::Unchecked;
     }
     return QSortFilterProxyModel::data(index, role);
@@ -67,10 +69,27 @@ QVariant QCheckStateProxyModel::data(const QModelIndex & index, int role) const
 Qt::ItemFlags QCheckStateProxyModel::flags(const QModelIndex & index) const
 {
     Qt::ItemFlags f = QSortFilterProxyModel::flags(index);
-    if (index.isValid()){
+    if (index.isValid() && d->columns.contains(index.column())){
         f |= Qt::ItemIsUserCheckable;
     }
     return f;
+}
+
+bool QCheckStateProxyModel::isColumnCheckable(int column) const
+{
+    return d->columns.contains(column);
+}
+
+void QCheckStateProxyModel::setColumnCheckable(int column, bool checkable)
+{
+    if (checkable){
+        if (!d->columns.contains(column)){
+            d->columns << column;
+        }
+    } else {
+        d->columns.removeAt(d->columns.indexOf(column));
+    }
+    invalidateFilter();
 }
 
 void QCheckStateProxyModel::setCheckedIndexes(const QModelIndexList & indexes)

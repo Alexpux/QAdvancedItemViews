@@ -44,6 +44,11 @@ public slots:
     void exitActionTriggered();
     void groupWindowsCheckBoxToggled(bool on);
     void groupUnixCheckBoxToggled(bool on);
+
+    void pinRowsToolButtonClicked();
+    void populatePushButtonClicked();
+
+    void splitActionTriggered();
 private:
     void initModel();
     void initTabAdvancedTableView();
@@ -51,6 +56,8 @@ private:
     void initTabGroupingProxyModel();
     void initTabConditionalDecorationAndGrouping();
     void initTabTableView();
+    void initTabPinTableView();
+    void initTabLargeTableView();
 
     void initTabUniqueValuesProxyModel();
 

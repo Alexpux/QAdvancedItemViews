@@ -61,6 +61,8 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
 	Q_PROPERTY(QAbstractItemView::EditTriggers editTriggers READ editTriggers WRITE setEditTriggers)
     //! @property(bool filterVisible READ filterVisible WRITE setFilterVisible)
     Q_PROPERTY(QAbstractItemView::EditTriggers editTriggers READ editTriggers WRITE setEditTriggers)
+    //! @property(fixedRows)
+    Q_PROPERTY(bool fixedRows READ isFixedRowsEnabled WRITE setFixedRowsEnabled)
     //! @property(gridStyle)
 	/**
 	 * This property holds the pen style used to draw the grid.
@@ -80,13 +82,25 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
 	//! @property(editTriggers)
     Q_PROPERTY(bool showSortIndicator READ isSortIndicatorShown WRITE setSortIndicatorShown)
 	//! @property(sortingEnabled)
+    /**
+      * This property holds whether sorting is enabled.
+      *
+      * If this property is true, sorting is enabled for the table. If this property is false, sorting is not enabled. The default value is false.
+      *
+      * @note  Setting the property to true with setSortingEnabled() immediately triggers a call to sortByColumn() with the current sort section and order.
+      * @see isSortingEnabled()
+      * @see setSortingEnabled()
+      */
     Q_PROPERTY(bool sortingEnabled READ isSortingEnabled WRITE setSortingEnabled)
-
 	//! @property(textElideMode)
 	Q_PROPERTY(Qt::TextElideMode textElideMode READ textElideMode WRITE setTextElideMode)
-	//! @property(
+    //! @property(wordWrap)
 	/**
 	 * This property holds the item text word-wrapping policy.
+     *
+     * If this property is true then the item text is wrapped where necessary at word-breaks; otherwise it is not wrapped at all. This property is true by default.
+     *
+     * Note that even of wrapping is enabled, the cell will not be expanded to fit all text. Ellipsis will be inserted according to the current textElideMode.
 	 */
 	 Q_PROPERTY(bool wordWrap READ wordWrap WRITE setWordWrap)
 public:
@@ -112,11 +126,22 @@ public:
 	 */
     bool alternatingRowColors() const;
     /**
+      * Returns the column in which the given x-coordinate, @p x, in contents coordinates is located.
+      * @note This function returns -1 if the given coordinate is not valid (has no column).
+      * @see rowAt()
+      */
+    int	columnAt(int x) const;
+    /**
       * Returns a list filter types allowed for the specfied @p column.
       * The list is empty if the specified @p column does not exists or all types are allowed.
       * @see setColumnFilterTypes()
       */
     QVariantList columnsFilterTypes(int column) const;
+    /**
+      * Returns the width of the given @p column.
+      * @see setColumnWidth()
+      */
+    int columnWidth(int column) const;
 	/**
 	 *
 	 */
@@ -151,6 +176,10 @@ public:
       * @see setFilterVisible()
       */
     bool filterVisible() const;
+    /**
+      * Returns the indexes in the given @p column for the rows where all columns are fixed.
+      */
+    QModelIndexList fixedRows(int column = 0) const;
 	/**
 	 * Returns the table view's horizontal header.
 	 */
@@ -173,7 +202,11 @@ public:
 	 * @see isRowHidden()
 	 */
 	bool isColumnHidden(int column) const;
-	/**
+    /**
+      * @see setFixedRowsEnabled()
+      */
+    bool isFixedRowsEnabled() const;
+    /**
 	 * Returns true if the given @p row is hidden; otherwise returns false.
 	 * @see isColumnHidden()
 	 */
@@ -212,6 +245,15 @@ public:
       */
     QModelIndex rootIndex() const;
     /**
+      * Returns the row in which the given y-coordinate, @p y, in contents coordinates is located.
+      * @note This function returns -1 if the given coordinate is not valid (has no row).
+      */
+    int rowAt(int y) const;
+    /**
+      * Returns the height of the given @p row.
+      */
+    int rowHeight(int row) const;
+    /**
       * Saves the current filter definition of this table view.
       * @see restoreFilter()
       */
@@ -234,6 +276,11 @@ public:
 	 *
 	 */
 	void setAutoScroll(bool enable);
+    /**
+      * Sets the width of the given @p column to be @p width.
+      * @see columnWidth()
+      */
+    void setColumnWidth(int column, int width);
     /**
       *
       */
@@ -265,10 +312,16 @@ public:
      * @see ItemDelegate()
 	 */
 	void setItemDelegate(QAbstractItemDelegate* delegate);
+    /**
+      *
+      */
+    void setItemDelegateForColumn(int column, QAbstractItemDelegate* delegate);
 	/**
 	 * Sets the @p model for the view to present.
 	 */
     void setModel( QAbstractItemModel* model );
+
+    void setRowHeight(int row, int height);
 
 	void setSelectionBehavior(QAbstractItemView::SelectionBehavior behavior);
 	/**
@@ -280,6 +333,10 @@ public:
       * @see filterType()
       */
     bool setFilterType(int type, int column, int row = 0);
+    /**
+      *
+      */
+    void setFixedRowsEnabled(bool on);
 	/**
 	 * If @p show is true a grid is drawn for the table. Otherwise no grid is drawn.
 	 * @see showGrid()
@@ -313,6 +370,16 @@ public:
 	bool showGrid() const;
 
 	QSize sizeHint() const;
+    /**
+      *
+      * @see isSplitted()
+      */
+    void splitView(bool on);
+    /**
+      * Sorts the model by the values in the given @p column in the given @p order.
+      * @see sortingEnabled
+      */
+    void sortByColumn(int column, Qt::SortOrder order);
 	/**
 	 *
 	 */
@@ -382,6 +449,11 @@ public slots:
      * Hides the filter view.
 	 */
     void hideFilterView();
+    /**
+      * Hide the given @p row.
+      * @see showRow() hideColum()
+      */
+    void hideRow(int row);
 	/**
 	 * Resizes the given @p column based on the size hints of the delegate used to render each item in the column.
 	 * @remark Only visible columns will be resized. Reimplement sizeHintForColumn() to resize hidden columns as well.
@@ -428,10 +500,8 @@ public slots:
      * Updates the area occupied by the given @p index.
 	 */
 	void update(const QModelIndex & index);
-
 private slots:
     void dataModelLayoutChanged();
-	void dataViewCustomContextMenuRequested(const QPoint & pos);
     void dataViewHorizontalScrollBarSilderMoved( int value );
     void dataViewHorizontalScrollBarValueChanged( int value );
 	void filterAdded(const QModelIndex & parent, int start, int end);
@@ -445,6 +515,9 @@ private slots:
     void updateHeaderViewHorizontalScrollBar( int min, int max );
     void updateHeaderViewGeometries();
     void updateHeaderViewVerticalScrollBar( int min, int max );
+    void verticalHeaderSectionClicked(int section);
+
+    void verticalHeaderSectionResized(int logicalIndex, int oldSize, int newSize);
 private:
     QAdvancedTableViewPrivate* d;
 

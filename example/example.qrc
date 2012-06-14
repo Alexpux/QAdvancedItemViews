@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/icons">
         <file alias="folder">resources/folder.ico</file>
+        <file alias="no_split">resources/application.ico</file>
+        <file alias="hsplit">resources/application_tile_horizontal.ico</file>
+        <file alias="vsplit">resources/application_tile_vertical.ico</file>
     </qresource>
 </RCC>

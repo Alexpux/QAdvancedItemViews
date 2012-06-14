@@ -25,3 +25,14 @@
 QAdvancedItemViews::QAdvancedItemViews()
 {
 }
+
+QModelIndex qSourceIndex(const QModelIndex & index)
+{
+    QModelIndex i(index);
+    QAbstractProxyModel* proxy;
+    while((proxy = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
+        i = proxy->mapToSource(i);
+    }
+    return i;
+}
+

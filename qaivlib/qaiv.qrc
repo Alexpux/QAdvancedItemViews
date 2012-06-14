@@ -50,4 +50,10 @@
         <file alias="sortorder.toggle">resources/togglesortorder.ico</file>
         <file alias="contains">resources/contains.ico</file>
     </qresource>
+    <qresource prefix="/qaiv/pin">
+        <file alias="disabled">resources/pin_rows_disabled.ico</file>
+        <file alias="enabled">resources/pin_rows_enabled.ico</file>
+        <file alias="fixed">resources/row_fixed.ico</file>
+        <file alias="free">resources/row_free.ico</file>
+    </qresource>
 </RCC>

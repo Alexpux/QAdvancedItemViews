@@ -22,6 +22,8 @@
 #include "ui_mainwindow.h"
 
 #include <QDebug>
+#include <QFile>
+#include <QProgressDialog>
 #include <QStandardItemModel>
 #include <QTime>
 
@@ -33,17 +35,26 @@
 #include <qfilterviewconnector.h>
 #include <qgroupingproxymodel.h>
 #include <qconditionaldecoration.h>
+#include <qfixedrowstableview.h>
 #include <qrangefilter.h>
 #include <quniquevaluesproxymodel.h>
 #include <qselectionlistfilter.h>
 #include <qtextfilter.h>
 #include <qvaluefilter.h>
 
+#include "spinboxitemdelegate.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QMenu* m = new QMenu(this);
+    m->addAction(ui->singleViewAction);
+    m->addAction(ui->horizontalSplitAction);
+    ui->splitModeToolButton->setMenu(m);
+    ui->splitModeToolButton->setDefaultAction(ui->singleViewAction);
 
     initModel();
 
@@ -58,6 +69,10 @@ MainWindow::MainWindow(QWidget *parent) :
     initTabConditionalDecorationProxyModel();
     //
     initTabConditionalDecorationAndGrouping();
+    //
+    initTabPinTableView();
+    //
+    initTabLargeTableView();
 }
 
 MainWindow::~MainWindow()
@@ -112,6 +127,65 @@ void MainWindow::groupUnixCheckBoxToggled(bool on)
         m_groupingProxy->addGroup(QIcon(":/icons/folder"), tr("Unix Developers"), "Unix developers");
     } else {
         m_groupingProxy->removeGroup(m_groupingProxy->findText(tr("Unix Developers")));
+    }
+}
+
+void MainWindow::pinRowsToolButtonClicked()
+{
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    if (ui->filterTableView->isFixedRowsEnabled()){
+        ui->filterTableView->setFixedRowsEnabled(false);
+        ui->pinRowsToolButton->setIcon(QIcon(":/qaiv/pin/enabled"));
+    } else {
+        ui->filterTableView->setFixedRowsEnabled(true);
+        ui->pinRowsToolButton->setIcon(QIcon(":/qaiv/pin/disabled"));
+    }
+    QApplication::restoreOverrideCursor();
+}
+
+void MainWindow::populatePushButtonClicked()
+{
+    QList<QByteArray> w;
+    QFile f(QApplication::applicationDirPath() + "/../lorem_ipsum.txt");
+    if (f.open(QIODevice::ReadOnly)){
+        w = f.readAll().split(' ');
+        f.close();
+    }
+    QProgressDialog* d = new QProgressDialog(tr("Reading file..."), tr("Cancel"), 0, 30000, this);
+    d->setMinimumDuration(0);
+    d->setWindowModality(Qt::WindowModal);
+
+    QStandardItemModel* m = new QStandardItemModel(this);
+    m->setColumnCount(10);
+    QStringList l;
+    l << "Lorem ipsum" << "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum";
+    m->setHorizontalHeaderLabels(l);
+    int wi = 0;
+    for (int i = 0; i < 3000 && !d->wasCanceled(); i++){
+        d->setValue(wi);
+        QList<QStandardItem*> items;
+        for (int c = 0; c < 10; c++){
+            items << new QStandardItem(QString(w.at(wi)));
+            wi++;
+        }
+        m->appendRow(items);
+    }
+    delete d;
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    ui->populatePushButton->setEnabled(false);
+    ui->largeTableView->setModel(m);
+    QApplication::restoreOverrideCursor();
+}
+
+void MainWindow::splitActionTriggered()
+{
+    if (sender() == ui->singleViewAction){
+        ui->filterTableView->splitView(false);
+        ui->splitModeToolButton->setIcon(ui->singleViewAction->icon());
+    } else if (sender() == ui->horizontalSplitAction){
+        ui->filterTableView->splitView(true);
+        ui->splitModeToolButton->setIcon(ui->horizontalSplitAction->icon());
     }
 }
 
@@ -327,6 +401,8 @@ void MainWindow::initTabAdvancedTableView()
         selectionListFilter->setValues(values);
         selectionListFilter->setEnabled(false);
     }
+
+    ui->filterTableView->setItemDelegateForColumn(0, new SpinBoxDelegate(this));
 }
 
 void MainWindow::initTabConditionalDecorationProxyModel()
@@ -399,7 +475,22 @@ void MainWindow::initTabTableView()
 //    filterModelProxy->setSourceModel(m_model);
 
 //    ui->tableFilterView->setModel(filterModel);
-//    ui->tableView->setModel(filterModelProxy);
+    //    ui->tableView->setModel(filterModelProxy);
+}
+
+void MainWindow::initTabPinTableView()
+{
+//    QPinnedRowsFilterProxyModel* p = new QPinnedRowsFilterProxyModel(this);
+//    p->setSourceModel(m_model);
+//    ui->pinnedFilterTableView->setModel(p);
+    //    p->pinRow(0);
+}
+
+void MainWindow::initTabLargeTableView()
+{
+//    QStandardItemModel* model = new QStandardItemModel(this);
+//    ui->largeTableView->setModel(model);
+    ui->largeTableView->setFixedRowsEnabled(true);
 }
 
 void MainWindow::initTabUniqueValuesProxyModel()

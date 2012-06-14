@@ -16,73 +16,127 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_5">
     <item>
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="currentIndex">
-       <number>3</number>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
-      <widget class="QWidget" name="tab">
-       <attribute name="title">
-        <string>QAdvancedTableView</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>QAdvancedTableView</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* Column 'Int': Filter types are limited to Range and Value filter. All other types are disabled.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* Column 'Qt': All filter types are allowed. The default filter is set to QTextFilter. Select the cell, start typing and the text filter is created automatically.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* Column 'Maturity Level': The filter type is set to Selection List. The selection list is populated with the values&lt;/span&gt;&lt;span style=&quot; font-size:8pt; color:#000000;&quot;&gt; 'Deprecated', 'Done' and 'Maintained'. 'Activte'is omitted. The filter is disabled programmatically.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QAdvancedTableView" name="filterTableView">
-          <attribute name="horizontalHeaderCascadingSectionResizes">
-           <bool>false</bool>
-          </attribute>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>QUniqueValuesProxyModel</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0" rowspan="3">
+            <widget class="QAdvancedTableView" name="filterTableView">
+             <attribute name="horizontalHeaderCascadingSectionResizes">
+              <bool>false</bool>
+             </attribute>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="0" column="1">
+            <widget class="QToolButton" name="splitModeToolButton">
+             <property name="text">
+              <string/>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QToolButton" name="pinRowsToolButton">
+             <property name="text">
+              <string>...</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../qaivlib/qaiv.qrc">
+               <normaloff>:/qaiv/pin/enabled</normaloff>:/qaiv/pin/enabled</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="checkable">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>QUniqueValuesProxyModel</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;The QUniqueValuesProxyModel removes all duplicate values in column 'Duplicate Values'&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTableView" name="uniqueValuesTableView"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_3">
-       <attribute name="title">
-        <string>QGroupingProxyModel</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_6">
-        <item>
-         <widget class="QLabel" name="label_3">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableView" name="uniqueValuesTableView"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>QGroupingProxyModel</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
@@ -91,136 +145,200 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* The groups are defined in mainwindow.cpp section 'QGroupingProxyModel'.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* Both views are using the class QAdvancedHeaderView to control the visbility of the columns (Right mouse click on the header items shows the context menu).&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* Sorting is enabled by using cascading proxies. QStandardItemModel -&amp;gt; QGroupingProxyModel -&amp;gt; QSortFilterProxyModel -&amp;gt; QTreeView.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Add/Remove Group&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" rowspan="4">
-           <widget class="QTreeView" name="groupingTreeView">
-            <property name="sortingEnabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="groupWindowsCheckBox">
-            <property name="text">
-             <string>Windows developers</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QCheckBox" name="groupUnixCheckBox">
-            <property name="text">
-             <string>Unix developers</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_4">
-       <attribute name="title">
-        <string>QConditionalDecorationProxyModel</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <widget class="QTableView" name="decorationProxyModelTableView">
-          <property name="contextMenuPolicy">
-           <enum>Qt::CustomContextMenu</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_7">
-       <attribute name="title">
-        <string>Conditional Decoration and Grouping</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_9">
-        <item>
-         <widget class="QLabel" name="label_5">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" rowspan="4">
+            <widget class="QTreeView" name="groupingTreeView">
+             <property name="sortingEnabled">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="groupWindowsCheckBox">
+             <property name="text">
+              <string>Windows developers</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QCheckBox" name="groupUnixCheckBox">
+             <property name="text">
+              <string>Unix developers</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_4">
+        <attribute name="title">
+         <string>QConditionalDecorationProxyModel</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QTableView" name="decorationProxyModelTableView">
+           <property name="contextMenuPolicy">
+            <enum>Qt::CustomContextMenu</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_7">
+        <attribute name="title">
+         <string>Conditional Decoration and Grouping</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_9">
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* This tab demonstrates how a QConditionalDecorationProxyModel and the QGroupingProxyModel can be combined.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* A click on the right mouse button opens the dialog to configure the decorations.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTreeView" name="decoratedGroupingTreeView">
+           <property name="contextMenuPolicy">
+            <enum>Qt::CustomContextMenu</enum>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_5">
+        <attribute name="title">
+         <string>Seite</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_13">
+         <item>
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* Column 'Int': Filter types are limited to Range and Value filter. All other types are disabled.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* Column 'Qt': All filter types are allowed. The default filter is set to QTextFilter. Select the cell, start typing and the text filter is created automatically.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* Column 'Maturity Level': The filter type is set to Selection List. The selection list is populated with the values&lt;/span&gt;&lt;span style=&quot; font-size:8pt; color:#000000;&quot;&gt; 'Deprecated', 'Done' and 'Maintained'. 'Activte'is omitted. The filter is disabled programmatically.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QAdvancedTableView" name="pinnedFilterTableView">
+           <attribute name="horizontalHeaderCascadingSectionResizes">
+            <bool>false</bool>
+           </attribute>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tabLargeTable">
+        <attribute name="title">
+         <string>Large Table</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Click 'Populate' to fill the table view with 30.000 words from the file 'lorem_ipsum.txt'.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="populatePushButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Populate</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QAdvancedTableView" name="largeTableView">
+           <attribute name="horizontalHeaderCascadingSectionResizes">
+            <bool>false</bool>
+           </attribute>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>Source Model</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QTreeView" name="decoratedGroupingTreeView">
-          <property name="contextMenuPolicy">
-           <enum>Qt::CustomContextMenu</enum>
-          </property>
-          <property name="sortingEnabled">
-           <bool>true</bool>
-          </property>
-         </widget>
+         <widget class="QTableView" name="groupingTableView"/>
         </item>
        </layout>
       </widget>
-     </widget>
-    </item>
-    <item>
-     <widget class="QGroupBox" name="groupBox">
-      <property name="title">
-       <string>Source Model</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QTableView" name="groupingTableView"/>
-       </item>
-      </layout>
      </widget>
     </item>
    </layout>
@@ -271,6 +389,33 @@ p, li { white-space: pre-wrap; }
     <string>About &amp;Qt...</string>
    </property>
   </action>
+  <action name="singleViewAction">
+   <property name="icon">
+    <iconset resource="example.qrc">
+     <normaloff>:/icons/no_split</normaloff>:/icons/no_split</iconset>
+   </property>
+   <property name="text">
+    <string>Single View</string>
+   </property>
+  </action>
+  <action name="horizontalSplitAction">
+   <property name="icon">
+    <iconset resource="example.qrc">
+     <normaloff>:/icons/vsplit</normaloff>:/icons/vsplit</iconset>
+   </property>
+   <property name="text">
+    <string>Horizontal Split</string>
+   </property>
+  </action>
+  <action name="verticalSplitAction">
+   <property name="icon">
+    <iconset resource="example.qrc">
+     <normaloff>:/icons/hsplit</normaloff>:/icons/hsplit</iconset>
+   </property>
+   <property name="text">
+    <string>Vertical Split</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -280,7 +425,10 @@ p, li { white-space: pre-wrap; }
    <header>qadvancedtableview.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="example.qrc"/>
+  <include location="../qaivlib/qaiv.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>exitAction</sender>
@@ -378,6 +526,86 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>singleViewAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>splitActionTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSplitAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>splitActionTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>verticalSplitAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>splitActionTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pinRowsToolButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pinRowsToolButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1313</x>
+     <y>156</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>populatePushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>populatePushButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1289</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>exitActionTriggered()</slot>
@@ -387,5 +615,8 @@ p, li { white-space: pre-wrap; }
   <slot>aboutQtActionTriggered()</slot>
   <slot>decoratedTableViewCustomContextMenuRequested(QPoint)</slot>
   <slot>decoratedGroupingTreeViewCustomContextMenuRequested(QPoint)</slot>
+  <slot>splitActionTriggered()</slot>
+  <slot>pinRowsToolButtonClicked()</slot>
+  <slot>populatePushButtonClicked()</slot>
  </slots>
 </ui>

@@ -42,9 +42,19 @@
 #include <qclickablelabel.h>
 
 class QComboBox;
+class QAbstractItemDelegate;
 class QLineEdit;
 class QStandardItemModel;
 
+class QAdvancedTableViewProxy : public QTableView
+{
+    Q_OBJECT
+public:
+    QAdvancedTableViewProxy(QWidget* parent = 0);
+    ~QAdvancedTableViewProxy();
+protected:
+    void closeEditor(QWidget * editor, QAbstractItemDelegate::EndEditHint hint);
+};
 
 //-----------------------------------------------
 // class QFilterTableViewSettingsDialog

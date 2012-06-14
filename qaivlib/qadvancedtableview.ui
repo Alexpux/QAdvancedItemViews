@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>385</width>
-    <height>219</height>
+    <height>363</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -76,38 +76,125 @@
     </widget>
    </item>
    <item>
-    <widget class="QTableView" name="dataTableView">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>2</number>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="contextMenuPolicy">
-      <enum>Qt::CustomContextMenu</enum>
-     </property>
-     <property name="sortingEnabled">
-      <bool>false</bool>
-     </property>
-     <attribute name="horizontalHeaderVisible">
-      <bool>false</bool>
-     </attribute>
-     <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-      <bool>false</bool>
-     </attribute>
-     <attribute name="horizontalHeaderStretchLastSection">
-      <bool>false</bool>
-     </attribute>
-     <attribute name="verticalHeaderShowSortIndicator" stdset="0">
-      <bool>false</bool>
-     </attribute>
-    </widget>
+     <item>
+      <widget class="QFixedRowsTableView" name="fixedRowsTableView">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::CustomContextMenu</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>false</bool>
+       </property>
+       <attribute name="horizontalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderStretchLastSection">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+        <bool>false</bool>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSplitter" name="splitter">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <widget class="QAdvancedTableViewProxy" name="splittedDataTableView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::CustomContextMenu</enum>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
+        <attribute name="horizontalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+         <bool>false</bool>
+        </attribute>
+       </widget>
+       <widget class="QAdvancedTableViewProxy" name="dataTableView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::CustomContextMenu</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
+        <attribute name="horizontalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+         <bool>false</bool>
+        </attribute>
+       </widget>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -116,6 +203,16 @@
    <class>QFilterView</class>
    <extends>QTableView</extends>
    <header>qfilterview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QFixedRowsTableView</class>
+   <extends>QTableView</extends>
+   <header>qfixedrowstableview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QAdvancedTableViewProxy</class>
+   <extends>QTableView</extends>
+   <header>qadvancedtableview_p.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

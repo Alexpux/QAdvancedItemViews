@@ -47,4 +47,6 @@ public:
 
 };
 
+QAIVLIBSHARED_EXPORT QModelIndex qSourceIndex(const QModelIndex & index);
+
 #endif // QADVANCEDITEMVIEWS_H
