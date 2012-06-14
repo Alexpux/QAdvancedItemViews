@@ -312,10 +312,6 @@ public:
      * @see ItemDelegate()
 	 */
 	void setItemDelegate(QAbstractItemDelegate* delegate);
-    /**
-      *
-      */
-    void setItemDelegateForColumn(int column, QAbstractItemDelegate* delegate);
 	/**
 	 * Sets the given item delegate used by this view and model for the given column. All items on column will be drawn and managed by delegate instead of using the default delegate (i.e., itemDelegate()).
      * @see ItemDelegate()
