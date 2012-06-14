@@ -317,6 +317,16 @@ public:
       */
     void setItemDelegateForColumn(int column, QAbstractItemDelegate* delegate);
 	/**
+	 * Sets the given item delegate used by this view and model for the given column. All items on column will be drawn and managed by delegate instead of using the default delegate (i.e., itemDelegate()).
+     * @see ItemDelegate()
+	 */
+	void setItemDelegateForColumn(int column, QAbstractItemDelegate * delegate);
+	/**
+	 * Sets the given item delegate used by this view and model for the given row. All items on row will be drawn and managed by delegate instead of using the default delegate (i.e., itemDelegate()).
+     * @see ItemDelegate()
+	 */
+	void setItemDelegateForRow(int row, QAbstractItemDelegate * delegate);
+	/**
 	 * Sets the @p model for the view to present.
 	 */
     void setModel( QAbstractItemModel* model );
