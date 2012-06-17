@@ -226,6 +226,12 @@ void QFilterView::contextMenuEvent(QContextMenuEvent* event)
     delete menu;
 }
 
+void QFilterView::focusInEvent(QFocusEvent *event)
+{
+    QTableView::focusInEvent(event);
+    emit focusReceived();
+}
+
 int QFilterView::defaultFilterType() const
 {
     return d->defaultFilterType;

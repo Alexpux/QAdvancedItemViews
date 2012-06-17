@@ -79,6 +79,7 @@ public:
 signals:
     void calcGeometryRequested();
     void cornerButtonClicked();
+    void focusReceived();
     /**
       * This signal is emitted if the visility of the filter sets has been changed.
       */
@@ -100,8 +101,8 @@ public slots:
     void setFilterVisible(bool visible);
     void toggleSelectedFilters();
 protected:
-    void contextMenuEvent( QContextMenuEvent * event );
-
+    void contextMenuEvent( QContextMenuEvent* event );
+    void focusInEvent(QFocusEvent* event);
     void mousePressEvent( QMouseEvent* event );
 private slots:
     void hideFilter();

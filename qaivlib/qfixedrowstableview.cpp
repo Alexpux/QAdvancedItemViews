@@ -283,6 +283,12 @@ void QFixedRowsTableView::closeEditor(QWidget *editor, QAbstractItemDelegate::En
     }
 }
 
+void QFixedRowsTableView::focusInEvent(QFocusEvent *event)
+{
+    QTableView::focusInEvent(event);
+    emit focusReceived();
+}
+
 void QFixedRowsTableView::updateHeight()
 {
     int h = 0;

@@ -47,8 +47,11 @@ public:
     QFixedRowsFilterProxyModel* filterProxy() const;
 
     void setModel(QAbstractItemModel* model);
+signals:
+    void focusReceived();
 protected:
-    void closeEditor(QWidget * editor, QAbstractItemDelegate::EndEditHint hint);
+    void closeEditor(QWidget* editor, QAbstractItemDelegate::EndEditHint hint);
+    void focusInEvent(QFocusEvent* event);
 private slots:
     void updateHeight();
 

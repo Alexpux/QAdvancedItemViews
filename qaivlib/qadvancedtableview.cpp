@@ -199,10 +199,6 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     ui->headerTableView->setHorizontalHeader(d->horizontalHeader);
     ui->headerTableView->setItemDelegate(new QFilterViewItemDelegate(this));
     ui->headerTableView->horizontalHeader()->setMovable(true);
-
-    // Connect data views
-    connect(ui->dataTableView->verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
-    connect(ui->splittedDataTableView->verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
     // Create vertical header view
     d->verticalHeader = new QAdvancedHeaderView(Qt::Vertical, this);
 
@@ -219,34 +215,38 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     // set selection models
     ui->splittedDataTableView->setSelectionModel(new QSharedItemSelectionModel(ui->splittedDataTableView->model(), ui->dataTableView->selectionModel(), this));
     ui->fixedRowsTableView->setSelectionModel(new QSharedItemSelectionModel(ui->fixedRowsTableView->model(), ui->dataTableView->selectionModel(), this));
-    //
+    // data table view
+    connect(ui->dataTableView->verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
     connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(sliderMoved(int)), this, SLOT(dataViewHorizontalScrollBarSilderMoved(int)));
     connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(updateHeaderViewHorizontalScrollBar(int,int)));
     connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(dataViewHorizontalScrollBarValueChanged(int)));
     connect(ui->dataTableView->verticalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(updateHeaderViewVerticalScrollBar(int,int)));
-
+    connect(ui->dataTableView->verticalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(verticalHeaderSectionResized(int,int,int)));
+    connect(ui->dataTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
+    // fixed rows view
+    connect(ui->fixedRowsTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
+    // splitted data table view view
+    connect(ui->splittedDataTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
+    connect(ui->splittedDataTableView->verticalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(verticalHeaderSectionResized(int,int,int)));
+    connect(ui->splittedDataTableView->verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
+    // filter model
     connect(d->filterModel, SIGNAL(modelReset()), this, SLOT(updateHeaderViewGeometries()));
     connect(d->filterModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(updateHeaderViewGeometries()));
-
+    // data view proxy
     connect(d->dataViewProxy, SIGNAL(modelReset()), this, SLOT(modelReset()));
     connect(d->dataViewProxy, SIGNAL(layoutChanged()), this, SLOT(dataModelLayoutChanged()));
-
+    // header table view
     connect(ui->headerTableView, SIGNAL(cornerButtonClicked()), this, SLOT(selectAll()));
     connect(ui->headerTableView, SIGNAL(calcGeometryRequested()), this, SLOT(updateHeaderViewGeometries()));
     connect(ui->headerTableView, SIGNAL(visibilityChanged(bool)), this, SLOT(updateHeaderViewGeometries()));
+    connect(ui->headerTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
+    //
     connect(ui->headerTableView->model(), SIGNAL(rowsInserted(QModelIndex, int, int)), this, SLOT(filterAdded(QModelIndex, int, int)));
     connect(ui->headerTableView->horizontalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(headerViewSectionResized(int,int,int)));
     connect(ui->headerTableView->horizontalHeader(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(horizontalHeaderViewSectionMoved(int,int,int)));
     connect(ui->headerTableView->horizontalHeader(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), this, SLOT(horizontalHeaderSortIndicatorChanged(int,Qt::SortOrder)));
     connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(sliderMoved(int)), this, SLOT(headerViewHorizontalScrollBarSilderMoved(int)));
     connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(headerViewHorizontalScrollBarValueChanged(int)));
-
-    //
-    connect(ui->dataTableView->verticalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(verticalHeaderSectionResized(int,int,int)));
-    connect(ui->splittedDataTableView->verticalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(verticalHeaderSectionResized(int,int,int)));
-
-//    showFilterView();
-    updateHeaderViewGeometries();
     // Forward data view signals
     connect(ui->dataTableView, SIGNAL(activated(QModelIndex)), this, SIGNAL(activated(QModelIndex)));
     connect(ui->dataTableView, SIGNAL(clicked(QModelIndex)), this, SIGNAL(clicked(QModelIndex)));
@@ -255,7 +255,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->dataTableView, SIGNAL(entered(QModelIndex)), this, SIGNAL(entered(QModelIndex)));
     connect(ui->dataTableView, SIGNAL(pressed(QModelIndex)), this, SIGNAL(pressed(QModelIndex)));
     connect(ui->dataTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
-
+    // Forward fixed rows view signals
     connect(ui->fixedRowsTableView, SIGNAL(activated(QModelIndex)), this, SIGNAL(activated(QModelIndex)));
     connect(ui->fixedRowsTableView, SIGNAL(clicked(QModelIndex)), this, SIGNAL(clicked(QModelIndex)));
     connect(ui->fixedRowsTableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(customContextMenuRequested(QPoint)));
@@ -263,7 +263,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->fixedRowsTableView, SIGNAL(entered(QModelIndex)), this, SIGNAL(entered(QModelIndex)));
     connect(ui->fixedRowsTableView, SIGNAL(pressed(QModelIndex)), this, SIGNAL(pressed(QModelIndex)));
     connect(ui->fixedRowsTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
-
+    // Forward splitted data table view signals
     connect(ui->splittedDataTableView, SIGNAL(activated(QModelIndex)), this, SIGNAL(activated(QModelIndex)));
     connect(ui->splittedDataTableView, SIGNAL(clicked(QModelIndex)), this, SIGNAL(clicked(QModelIndex)));
     connect(ui->splittedDataTableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(customContextMenuRequested(QPoint)));
@@ -272,11 +272,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->splittedDataTableView, SIGNAL(pressed(QModelIndex)), this, SIGNAL(pressed(QModelIndex)));
     connect(ui->splittedDataTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
 
-    // setup focus handling
-    setFocusProxy(ui->dataTableView);
-    ui->fixedRowsTableView->setFocusProxy(ui->dataTableView);
-    ui->splittedDataTableView->setFocusProxy(ui->dataTableView);
-    ui->headerTableView->setFocusProxy(ui->dataTableView);
+    updateHeaderViewGeometries();
 }
 
 QAdvancedTableView::~QAdvancedTableView()
@@ -433,7 +429,7 @@ QSize QAdvancedTableView::iconSize() const
 
 bool QAdvancedTableView::hasAutoScroll() const
 {
-	return ui->dataTableView->hasAutoScroll();
+    return ui->dataTableView->hasAutoScroll();
 }
 
 void QAdvancedTableView::headerViewHorizontalScrollBarSilderMoved( int value )
@@ -888,6 +884,14 @@ void QAdvancedTableView::showSettingsDialog()
     mDlg->exec();
 }
 
+void QAdvancedTableView::subviewReceivedFocus()
+{
+    QWidget* w = qobject_cast<QWidget*>(sender());
+    if (w){
+        setFocusProxy(w);
+    }
+}
+
 void QAdvancedTableView::updateHeaderViewHorizontalScrollBar(int min, int max)
 {
     ui->headerTableView->horizontalScrollBar()->setRange(min, max);
@@ -1042,4 +1046,10 @@ void QAdvancedTableViewProxy::closeEditor(QWidget *editor, QAbstractItemDelegate
     if (editor->parent()->parent() == this){
         QTableView::closeEditor(editor, hint);
     }
+}
+
+void QAdvancedTableViewProxy::focusInEvent(QFocusEvent *event)
+{
+    QTableView::focusInEvent(event);
+    emit focusReceived();
 }

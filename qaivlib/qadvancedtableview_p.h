@@ -52,8 +52,11 @@ class QAdvancedTableViewProxy : public QTableView
 public:
     QAdvancedTableViewProxy(QWidget* parent = 0);
     ~QAdvancedTableViewProxy();
+signals:
+    void focusReceived();
 protected:
     void closeEditor(QWidget * editor, QAbstractItemDelegate::EndEditHint hint);
+    void focusInEvent(QFocusEvent *event);
 };
 
 //-----------------------------------------------

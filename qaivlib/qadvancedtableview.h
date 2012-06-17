@@ -611,6 +611,7 @@ private slots:
     void horizontalHeaderSortIndicatorChanged( int logicalIndex, Qt::SortOrder order );
     void modelReset();
 	void showSettingsDialog();
+    void subviewReceivedFocus();
     void updateHeaderViewHorizontalScrollBar( int min, int max );
     void updateHeaderViewGeometries();
     void updateHeaderViewVerticalScrollBar( int min, int max );
