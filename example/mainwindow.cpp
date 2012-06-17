@@ -133,11 +133,11 @@ void MainWindow::groupUnixCheckBoxToggled(bool on)
 void MainWindow::pinRowsToolButtonClicked()
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    if (ui->filterTableView->isFixedRowsEnabled()){
-        ui->filterTableView->setFixedRowsEnabled(false);
+    if (ui->filterTableView->isFixedRowsModeEnabled()){
+        ui->filterTableView->setFixedRowsModeEnabled(false);
         ui->pinRowsToolButton->setIcon(QIcon(":/qaiv/pin/enabled"));
     } else {
-        ui->filterTableView->setFixedRowsEnabled(true);
+        ui->filterTableView->setFixedRowsModeEnabled(true);
         ui->pinRowsToolButton->setIcon(QIcon(":/qaiv/pin/disabled"));
     }
     QApplication::restoreOverrideCursor();
@@ -490,7 +490,7 @@ void MainWindow::initTabLargeTableView()
 {
 //    QStandardItemModel* model = new QStandardItemModel(this);
 //    ui->largeTableView->setModel(model);
-    ui->largeTableView->setFixedRowsEnabled(true);
+    ui->largeTableView->setFixedRowsModeEnabled(true);
 }
 
 void MainWindow::initTabUniqueValuesProxyModel()
