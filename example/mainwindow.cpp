@@ -73,6 +73,9 @@ MainWindow::MainWindow(QWidget *parent) :
     initTabPinTableView();
     //
     initTabLargeTableView();
+
+    ui->sourceModelTableView->setModel(m_model);
+    ui->sourceModelTableView->setHorizontalHeader(new QAdvancedHeaderView(Qt::Horizontal, ui->sourceModelTableView));
 }
 
 MainWindow::~MainWindow()
@@ -429,7 +432,6 @@ void MainWindow::initTabConditionalDecorationProxyModel()
 
 void MainWindow::initTabGroupingProxyModel()
 {
-    ui->groupingTableView->setHorizontalHeader(new QAdvancedHeaderView(Qt::Horizontal, ui->groupingTableView));
     ui->groupingTreeView->setHeader(new QAdvancedHeaderView(Qt::Horizontal, ui->groupingTreeView));
 
     m_groupingProxy = new QGroupingProxyModel(this);
@@ -443,21 +445,11 @@ void MainWindow::initTabGroupingProxyModel()
     QSortFilterProxyModel* proxy = new QSortFilterProxyModel(this);
     proxy->setSourceModel(m_groupingProxy);
     //
-    ui->groupingTreeView->setModel(proxy);
-    ui->groupingTableView->setModel(m_model);
+    ui->groupingTreeView->setModel(m_groupingProxy);
 }
 
 void MainWindow::initTabConditionalDecorationAndGrouping()
 {
-    ui->groupingTableView->setHorizontalHeader(new QAdvancedHeaderView(Qt::Horizontal, ui->groupingTableView));
-    ui->groupingTreeView->setHeader(new QAdvancedHeaderView(Qt::Horizontal, ui->groupingTreeView));
-
-    m_groupingProxy = new QGroupingProxyModel(this);
-    m_groupingProxy->setModelColumn(2);
-    m_groupingProxy->addGroup(QIcon(":/icons/folder"), "general software development");
-    m_groupingProxy->addGroup(QIcon(":/icons/folder"), "Qt's Tools", "Qt's tools");
-    m_groupingProxy->setSourceModel(m_model);
-
     QConditionalDecorationProxyModel* decorationProxyModel = new QConditionalDecorationProxyModel(this);
     decorationProxyModel->setSourceModel(m_groupingProxy);
     //
