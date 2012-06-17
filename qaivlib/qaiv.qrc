@@ -56,4 +56,8 @@
         <file alias="fixed">resources/row_fixed.ico</file>
         <file alias="free">resources/row_free.ico</file>
     </qresource>
+    <qresource prefix="/qaiv/view">
+        <file alias="single">resources/single_view.ico</file>
+        <file alias="splitted">resources/splitted_view.ico</file>
+    </qresource>
 </RCC>

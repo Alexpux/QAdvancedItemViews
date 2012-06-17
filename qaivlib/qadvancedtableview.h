@@ -40,6 +40,11 @@ namespace Ui {
 }
 
 //! The QAdvancedTableView class provides an advanced model/view implementation of a table view.
+/**
+  *
+  * <h3>Filter</h3>
+  *
+  */
 class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
 {
     Q_OBJECT
@@ -54,20 +59,44 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
 	 */
     Q_PROPERTY(bool alternatingRowColors READ alternatingRowColors WRITE setAlternatingRowColors)
 	//! @property(autoScroll)
+    /**
+      * This property holds whether autoscrolling in drag move events is enabled.
+      *
+      * If this property is set to true (the default), the QAbstractItemView automatically scrolls the contents of the view if the user drags within 16 pixels of the viewport edge. If the current item changes, then the view will scroll automatically to ensure that the current item is fully visible.
+      *
+      * This property only works if the viewport accepts drops. Autoscroll is switched off by setting this property to false.
+      * @see bool hasAutoScroll() const
+      * @see void setAutoScroll(bool enable)
+      */
     Q_PROPERTY(bool autoScroll READ hasAutoScroll WRITE setAutoScroll)
 	//! @property(dragEnabled)
+    /**
+      * This property holds whether the view supports dragging of its own items.
+      */
 	Q_PROPERTY(bool dragEnabled READ dragEnabled WRITE setDragEnabled)
 	//! @property(editTriggers)
+    /**
+      * This property holds which actions will initiate item editing.
+      *
+      * This property is a selection of flags defined by EditTrigger, combined using the OR operator. The view will only initiate the editing of an item if the action performed is set in this property.
+      */
 	Q_PROPERTY(QAbstractItemView::EditTriggers editTriggers READ editTriggers WRITE setEditTriggers)
     //! @property(bool filterVisible READ filterVisible WRITE setFilterVisible)
     Q_PROPERTY(QAbstractItemView::EditTriggers editTriggers READ editTriggers WRITE setEditTriggers)
-    //! @property(fixedRows)
-    Q_PROPERTY(bool fixedRows READ isFixedRowsEnabled WRITE setFixedRowsEnabled)
+    //! @property(fixedRowsMode)
+    Q_PROPERTY(bool fixedRowsMode READ isFixedRowsModeEnabled WRITE setFixedRowsModeEnabled)
     //! @property(gridStyle)
 	/**
 	 * This property holds the pen style used to draw the grid.
 	 */
 	Q_PROPERTY(Qt::PenStyle gridStyle READ gridStyle WRITE setGridStyle)
+    //! @property(iconSize)
+    /**
+      * This property holds the size of items' icons.
+      *
+      * Setting this property when the view is visible will cause the items to be laid out again.
+      */
+    Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
 	//! @property(selectionMode)
 	/**
 	 * This property holds which selection mode the view operates in.
@@ -77,10 +106,14 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
 	/**
 	 * This property holds whether the grid is shown.
 	 * If this property is true a grid is drawn for the table; if the property is false, no grid is drawn. The default value is true.
+     * @see bool showGrid() const
+     * @see void setShowGrid(bool show)
 	 */
 	Q_PROPERTY(bool showGrid READ showGrid WRITE setShowGrid)
-	//! @property(editTriggers)
+    //! @property(showSortIndicator)
     Q_PROPERTY(bool showSortIndicator READ isSortIndicatorShown WRITE setSortIndicatorShown)
+    //! @property(splitView)
+    Q_PROPERTY(bool splitView READ isViewSplitted WRITE splitView)
 	//! @property(sortingEnabled)
     /**
       * This property holds whether sorting is enabled.
@@ -93,7 +126,12 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
       */
     Q_PROPERTY(bool sortingEnabled READ isSortingEnabled WRITE setSortingEnabled)
 	//! @property(textElideMode)
-	Q_PROPERTY(Qt::TextElideMode textElideMode READ textElideMode WRITE setTextElideMode)
+    /**
+      * This property holds the position of the "..." in elided text.
+      *
+      * The default value for all item views is Qt::ElideRight.
+      */
+    Q_PROPERTY(Qt::TextElideMode textElideMode READ textElideMode WRITE setTextElideMode)
     //! @property(wordWrap)
 	/**
 	 * This property holds the item text word-wrapping policy.
@@ -142,10 +180,10 @@ public:
       * @see setColumnWidth()
       */
     int columnWidth(int column) const;
-	/**
-	 *
-	 */
-	bool hasAutoScroll() const;
+    /**
+      *
+      */
+    QMenu* createStandardContextMenu();
 	/**
 	 * Returns the model index of the current item.
 	 * @see setCurrentIndex()
@@ -180,19 +218,21 @@ public:
       * Returns the indexes in the given @p column for the rows where all columns are fixed.
       */
     QModelIndexList fixedRows(int column = 0) const;
-	/**
+    /**
+     *
+     */
+    bool hasAutoScroll() const;
+    /**
 	 * Returns the table view's horizontal header.
 	 */
 	QHeaderView* horizontalHeader() const;
-	/**
-	 *
-	 */
-    bool horizontalStretchLastSection() const;
 	/**
 	 * Returns the style used when drawing the grid.
 	 * @see setGridStyle()
 	 */
 	Qt::PenStyle gridStyle() const;
+
+    QSize iconSize() const;
 	/**
 	 * Returns the model index of the item at the viewport coordinates @p point.
 	 */
@@ -203,9 +243,10 @@ public:
 	 */
 	bool isColumnHidden(int column) const;
     /**
+      * Returns true if the fixed rows mode is enabled. Otherwise false.
       * @see setFixedRowsEnabled()
       */
-    bool isFixedRowsEnabled() const;
+    bool isFixedRowsModeEnabled() const;
     /**
 	 * Returns true if the given @p row is hidden; otherwise returns false.
 	 * @see isColumnHidden()
@@ -221,10 +262,25 @@ public:
 	 */
     bool isSortingEnabled() const;
     /**
+      * Returns true if the view is splitted. Otherwise false.
+      * @see splitView()
+      */
+    bool isViewSplitted() const;
+    /**
       * Returns the item delegate used by this view and model. This is either one set with setItemDelegate(), or the default one.
       * @see setItemDelegate()
       */
     QAbstractItemDelegate* itemDelegate() const;
+    /**
+      * Returns the item delegate used by this view and model for the given @p column. You can call itemDelegate() to get a pointer to the current delegate for a given index.
+      * @see setItemDelegateForColumn() setItemDelegateForRow() itemDelegate()
+      */
+    QAbstractItemDelegate* itemDelegateForColumn(int column) const;
+    /**
+      * Returns the item delegate used by this view and model for the given @p row, or 0 if no delegate has been assigned. You can call itemDelegate() to get a pointer to the current delegate for a given index.
+      * @see setItemDelegateForRow() setItemDelegateForColumn() itemDelegate()
+      */
+    QAbstractItemDelegate* itemDelegateForRow(int row) const;
 	/**
 	 *
 	 */
@@ -302,31 +358,45 @@ public:
       * @see columnsFilterTypes()
       */
     void setColumnFilterTypes(int column, const QVariantList & types);
-	/**
+    /**
+      * Sets the filter @p type for the specified @p column.
+      * @see filterType()
+      */
+    bool setFilterType(int type, int column, int row = 0);
+    /**
 	 * This property holds the pen @p style used to draw the grid.
 	 * @see gridStyle()
 	 */
 	void setGridStyle(Qt::PenStyle style);
+
+    void setIconSize(const QSize & size);
 	/**
 	 * Sets the item delegate for this view and its model to @p delegate. This is useful if you want complete control over the editing and display of items.
-     * @see ItemDelegate()
+     * @see itemDelegate()
 	 */
 	void setItemDelegate(QAbstractItemDelegate* delegate);
 	/**
 	 * Sets the given item delegate used by this view and model for the given column. All items on column will be drawn and managed by delegate instead of using the default delegate (i.e., itemDelegate()).
-     * @see ItemDelegate()
+     * @see itemDelegate()
 	 */
 	void setItemDelegateForColumn(int column, QAbstractItemDelegate * delegate);
 	/**
 	 * Sets the given item delegate used by this view and model for the given row. All items on row will be drawn and managed by delegate instead of using the default delegate (i.e., itemDelegate()).
-     * @see ItemDelegate()
+     * @see itemDelegate()
 	 */
 	void setItemDelegateForRow(int row, QAbstractItemDelegate * delegate);
 	/**
 	 * Sets the @p model for the view to present.
 	 */
     void setModel( QAbstractItemModel* model );
-
+    /**
+      * Sets the model's root @p index.
+      */
+    virtual void setRootIndex(const QModelIndex & index);
+    /**
+      * Sets the height of the given @p row to be @p height.
+      * @see rowHeight()
+      */
     void setRowHeight(int row, int height);
 
 	void setSelectionBehavior(QAbstractItemView::SelectionBehavior behavior);
@@ -334,20 +404,6 @@ public:
 	 * Sets the selection @p mode.
 	 */
 	void setSelectionMode(QAbstractItemView::SelectionMode mode);
-    /**
-      * Sets the filter @p type for the specified @p column.
-      * @see filterType()
-      */
-    bool setFilterType(int type, int column, int row = 0);
-    /**
-      *
-      */
-    void setFixedRowsEnabled(bool on);
-	/**
-	 * If @p show is true a grid is drawn for the table. Otherwise no grid is drawn.
-	 * @see showGrid()
-	 */
-	void setShowGrid( bool show );
 	/**
 	 * If @p show is true a sort indicator is shown.
 	 */
@@ -363,7 +419,8 @@ public:
 	 */
 	QFilterTableViewSettingsDialog* settingsDialog();
 	/**
-	 *
+     * Set the text elide mode to @p mode.
+     * @see textElideMode()
 	 */
 	void setTextElideMode(Qt::TextElideMode mode);
 	/**
@@ -376,11 +433,6 @@ public:
 	bool showGrid() const;
 
 	QSize sizeHint() const;
-    /**
-      *
-      * @see isSplitted()
-      */
-    void splitView(bool on);
     /**
       * Sorts the model by the values in the given @p column in the given @p order.
       * @see sortingEnabled
@@ -399,7 +451,7 @@ public:
 	 */
 	QWidget* viewport() const;
 	/**
-	 *
+     * Returns true if word wrap is enabled. Otherwise false.
 	 */
 	bool wordWrap() const;
 signals:
@@ -447,7 +499,7 @@ public slots:
       */
 	void edit(const QModelIndex & index);
 	/**
-	 * Hide the given column.
+     * Hide the given @p column.
 	 * @see showColumn() hideRow()
 	 */
 	void hideColumn(int column);
@@ -465,6 +517,14 @@ public slots:
 	 * @remark Only visible columns will be resized. Reimplement sizeHintForColumn() to resize hidden columns as well.
 	 */
 	void resizeColumnToContents(int column);
+    /**
+      * Resizes all columns based on the size hints of the delegate used to render each item in the columns.
+      */
+    void resizeColumnsToContents();
+    /**
+      * Resizes the given @p row based on the size hints of the delegate used to render each item in the row.
+      */
+    void resizeRowToContents(int row);
 	/**
 	 * Resizes all rows based on the size hints of the delegate used to render each item in the rows.
 	 */
@@ -488,6 +548,16 @@ public slots:
       */
 	virtual void selectAll();
     /**
+      * Selects the given @p column in the table view if the current SelectionMode and SelectionBehavior allows columns to be selected.
+      * @see selectRow()
+      */
+    void selectColumn(int colum);
+    /**
+      * Selects the given @p row in the table view if the current SelectionMode and SelectionBehavior allows rows to be selected.
+      * @see selectColumn()
+      */
+    void selectRow(int row);
+    /**
       * Sets the current item to be the item at @p index.
       */
 	void setCurrentIndex(const QModelIndex & index);
@@ -499,13 +569,36 @@ public slots:
 	 */
 	void setFilterVisible(bool visible);
     /**
-      * Sets the model's root @p index.
+      * Enables the fixed rows mode if @p on is true.
+      * @see fixedRowsModeEnabled()
       */
-	void setRootIndex(const QModelIndex & index);
-	/**
+    void setFixedRowsModeEnabled(bool on);
+    /**
+     * If @p show is true a grid is drawn for the table. Otherwise no grid is drawn.
+     * @see showGrid()
+     */
+    void setShowGrid( bool show );
+    /**
+      * Show the given @p column.
+      * @see hideColumn() showRow()
+      */
+    void showColumn(int column);
+    /**
+      * Show the given @p row.
+      * @see hideRow() showColumn()
+      */
+    void showRow(int row);
+    /**
+      * Splits view if @p on is true.
+      * @see isViewSplitted()
+      */
+    void splitView(bool on);
+    /**
      * Updates the area occupied by the given @p index.
 	 */
 	void update(const QModelIndex & index);
+protected:
+    virtual void contextMenuEvent(QContextMenuEvent* event);
 private slots:
     void dataModelLayoutChanged();
     void dataViewHorizontalScrollBarSilderMoved( int value );
