@@ -39,6 +39,7 @@ public:
     ~MainWindow();
 public slots:
     void aboutQtActionTriggered();
+    void advancedTableViewResultChanged(int filterRows, int unfilteredRows);
     void decoratedTableViewCustomContextMenuRequested(const QPoint & point);
     void decoratedGroupingTreeViewCustomContextMenuRequested(const QPoint & point);
     void exitActionTriggered();

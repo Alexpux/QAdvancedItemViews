@@ -88,6 +88,11 @@ void MainWindow::aboutQtActionTriggered()
     QApplication::aboutQt();
 }
 
+void MainWindow::advancedTableViewResultChanged(int filterRows, int unfilteredRows)
+{
+    ui->advancedTableViewResultLabel->setText(tr("Result: %1 of %2").arg(filterRows).arg(unfilteredRows));
+}
+
 void MainWindow::decoratedTableViewCustomContextMenuRequested(const QPoint & point)
 {
     QModelIndex mIndex = ui->decorationProxyModelTableView->currentIndex();
@@ -379,7 +384,7 @@ void MainWindow::initModel()
 
 void MainWindow::initTabAdvancedTableView()
 {
-
+    connect(ui->filterTableView->filterProxyModel(), SIGNAL(resultCountChanged(int,int)), this, SLOT(advancedTableViewResultChanged(int,int)));
     ui->filterTableView->setModel(m_model);
     ui->filterTableView->horizontalHeader()->setClickable(true);
 
