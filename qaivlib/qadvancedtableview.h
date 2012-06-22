@@ -31,6 +31,7 @@ class QFilterView;
 class QAdvancedHeaderView;
 class QFilterModelProxy;
 class QAbstractFilterModel;
+class QAbstractFilterProxyModel;
 class QFilterTableViewSettingsDialog;
 
 class QAdvancedTableViewPrivate;
@@ -206,9 +207,13 @@ public:
       */
     QAbstractFilter* filterAt(int row, int col) const;
     /**
-      *
+      * Returns the filter model that this view is using for filtering.
       */
     QAbstractFilterModel* filterModel() const;
+    /**
+      *
+      */
+    QAbstractFilterProxyModel* filterProxyModel() const;
     /**
       * Returns true if the filters are show in the filter view. Otherwise false.
       * @see setFilterVisible()

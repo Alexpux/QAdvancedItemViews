@@ -25,6 +25,7 @@
 #include "qadvancedheaderview.h"
 #include "qadvancedtableview_p.h"
 
+#include <qabstractfilterproxymodel.h>
 #include <qfiltermodelproxy.h>
 #include <qfiltermodel.h>
 #include <qfilterviewitemdelegate.h>
@@ -44,7 +45,7 @@ public:
 
     bool autoResizeRowsToContents;
     int defaultFilterType;
-    QFilterModelProxy* dataViewProxy;
+    QAbstractFilterProxyModel* dataViewProxy;
     QAbstractFilterModel* filterModel;
     QAbstractItemModel* model;
     QFilterTableViewSettingsDialog* settingsDialog;
@@ -403,6 +404,11 @@ QAbstractFilterModel* QAdvancedTableView::filterModel() const
     return d->filterModel;
 }
 
+QAbstractFilterProxyModel *QAdvancedTableView::filterProxyModel() const
+{
+    return d->dataViewProxy;
+}
+
 bool QAdvancedTableView::filterVisible() const
 {
     return ui->headerTableView->filterVisible();
@@ -692,7 +698,7 @@ QAbstractItemView::SelectionMode QAdvancedTableView::selectionMode() const
 
 QItemSelectionModel* QAdvancedTableView::selectionModel() const
 {
-    return d->selectionModel;
+    return ui->dataTableView->selectionModel();
 }
 
 void QAdvancedTableView::setAlternatingRowColors( bool enable )
@@ -1024,6 +1030,11 @@ QHeaderView* QAdvancedTableView::verticalHeader() const
 
 QWidget* QAdvancedTableView::viewport() const
 {
+    if (focusProxy() == ui->splittedDataTableView){
+        return ui->splittedDataTableView->viewport();
+    } else if (focusProxy() == ui->fixedRowsTableView){
+        return ui->fixedRowsTableView->viewport();
+    }
 	return ui->dataTableView->viewport();
 }
 
