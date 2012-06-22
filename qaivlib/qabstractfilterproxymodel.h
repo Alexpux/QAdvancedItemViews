@@ -26,6 +26,7 @@
 #include <qaivlib_global.h>
 
 class QAbstractFilterModel;
+class QAbstractFilterProxyModelPrivate;
 
 //! The QAbstractFilterProxyModel provides an abstract base class for filter models.
 class QAIVLIBSHARED_EXPORT QAbstractFilterProxyModel : public QSortFilterProxyModel
@@ -36,7 +37,8 @@ public:
     /**
       * Constructs a QAbstractFilterProxyModel with the given @p parent.
       */
-    explicit QAbstractFilterProxyModel(QObject* parent = 0);
+    QAbstractFilterProxyModel(QObject* parent = 0);
+    ~QAbstractFilterProxyModel();
     /**
       * Returns the filter model accosiated with proxy model.
       * @see setFilterModel()
@@ -49,10 +51,19 @@ public:
     void setFilterModel(QAbstractFilterModel* model);
 
     virtual void setSourceModel(QAbstractItemModel* sourceModel);
+signals:
+    /**
+      * This signal is emitted whenever the number of rows in the filtered result set has changed.
+      */
+    void resultCountChanged(int filteredRows, int unfilteredRows);
 protected:
+    void emitResultCountChanged();
     virtual bool filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const = 0;
+private slots:
+    void updateResult();
 private:
-    QAbstractFilterModel* cFilterModel;
+    QAbstractFilterProxyModelPrivate* d;
 };
 
 #endif // QABSTRACTFILTERPROXYMODEL_H
+
