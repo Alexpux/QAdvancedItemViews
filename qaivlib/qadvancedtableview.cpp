@@ -246,6 +246,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->headerTableView->horizontalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(headerViewSectionResized(int,int,int)));
     connect(ui->headerTableView->horizontalHeader(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(horizontalHeaderViewSectionMoved(int,int,int)));
     connect(ui->headerTableView->horizontalHeader(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), this, SLOT(horizontalHeaderSortIndicatorChanged(int,Qt::SortOrder)));
+    connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(headerViewHorizontalScrollBarRangeChanged(int,int)));
     connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(sliderMoved(int)), this, SLOT(headerViewHorizontalScrollBarSilderMoved(int)));
     connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(headerViewHorizontalScrollBarValueChanged(int)));
     // Forward data view signals
@@ -396,7 +397,12 @@ void QAdvancedTableView::filterAdded(const QModelIndex & parent, int start, int 
 	Q_UNUSED(parent);
 	Q_UNUSED(start);
 	Q_UNUSED(end);
-	updateHeaderViewGeometries();
+    updateHeaderViewGeometries();
+}
+
+void QAdvancedTableView::headerViewHorizontalScrollBarRangeChanged(int min, int max)
+{
+    ui->dataTableView->horizontalScrollBar()->setRange(min, max);
 }
 
 QAbstractFilterModel* QAdvancedTableView::filterModel() const
@@ -462,7 +468,7 @@ void QAdvancedTableView::headerViewSectionResized( int logicalIndex, int oldSize
 
 void QAdvancedTableView::hideColumn(int column)
 {
-	ui->headerTableView->horizontalHeader()->hideSection(ui->headerTableView->horizontalHeader()->logicalIndex(column));
+    ui->headerTableView->horizontalHeader()->hideSection(ui->headerTableView->horizontalHeader()->logicalIndex(column));
 }
 
 void QAdvancedTableView::hideFilterView()

@@ -609,6 +609,7 @@ private slots:
     void dataViewHorizontalScrollBarSilderMoved( int value );
     void dataViewHorizontalScrollBarValueChanged( int value );
 	void filterAdded(const QModelIndex & parent, int start, int end);
+    void headerViewHorizontalScrollBarRangeChanged( int min, int max );
     void headerViewHorizontalScrollBarSilderMoved( int value );
     void headerViewHorizontalScrollBarValueChanged( int value );
     void headerViewSectionResized( int logicalIndex, int oldSize, int newSize );
