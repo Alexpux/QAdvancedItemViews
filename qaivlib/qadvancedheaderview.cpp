@@ -36,9 +36,9 @@ QAdvancedHeaderView::~QAdvancedHeaderView()
 
 void QAdvancedHeaderView::addFilterSetActionTriggered()
 {
-    QAction* mAction = qobject_cast<QAction*>(sender());
-    if (mAction){
-        model()->insertRows(mAction->data().toInt(), 1);
+    QAction* a = qobject_cast<QAction*>(sender());
+    if (a){
+        model()->insertRows(a->data().toInt(), 1);
     } else {
         model()->insertRows(model()->rowCount(), 1);
     }
@@ -46,202 +46,195 @@ void QAdvancedHeaderView::addFilterSetActionTriggered()
 
 void QAdvancedHeaderView::contextMenuEvent(QContextMenuEvent* event)
 {
-    QAction* mAction;
-    QMenu mMenu;
-//    QAbstractItemModel* mModel = model();
-//    QAbstractFilterModel* mFilterModel = 0;
-//    QSortFilterProxyModel* mProxy = qobject_cast<QSortFilterProxyModel*>(model());
-//    if (mProxy){
-//        mModel = mProxy->sourceModel();
-//        mFilterModel = qobject_cast<QAbstractFilterModel*>(mProxy);
-//    }
-    QAbstractFilterModel* mFilterModel = qobject_cast<QAbstractFilterModel*>(model());
+    QAction* a;
+    QMenu menu;
+    QAbstractFilterModel* filterModel = qobject_cast<QAbstractFilterModel*>(model());
     if (orientation() == Qt::Horizontal){
-        int mColumn = logicalIndexAt(event->pos());
-        if (mColumn > -1){
-            mAction = new QAction(QIcon(":/qadvancedtableviews/column.hide"), QString(tr("Hide Column '%1'")).arg(model()->headerData(mColumn, Qt::Horizontal).toString()), &mMenu);
-            connect(mAction, SIGNAL(triggered()), this, SLOT(hideSectionActionTriggered()));
-            mAction->setData(mColumn);
-            mMenu.addAction(mAction);
+        int column = logicalIndexAt(event->pos());
+        if (column > -1){
+            a = new QAction(QIcon(":/qadvancedtableviews/column.hide"), QString(tr("Hide Column '%1'")).arg(model()->headerData(column, Qt::Horizontal).toString()), &menu);
+            connect(a, SIGNAL(triggered()), this, SLOT(hideSectionActionTriggered()));
+            a->setData(column);
+            menu.addAction(a);
         }
-        mMenu.addAction(tr("Show All Columns"), this, SLOT(showAllColumns()));
-        QVector<QAction*> mActions(model()->columnCount() < 11?model()->columnCount():10);
+        menu.addAction(tr("Show All Columns"), this, SLOT(showAllColumns()));
+        QVector<QAction*> actions(model()->columnCount() < 11?model()->columnCount():10);
         for (int iColumn = 0; iColumn < model()->columnCount() && iColumn < 10; iColumn++){
-            mAction = new QAction(model()->headerData(iColumn, Qt::Horizontal).toString(), &mMenu);
-            mAction->setCheckable(true);
-            mAction->setChecked(!isSectionHidden(iColumn));
-            mAction->setData(iColumn);
-            mActions[visualIndex(iColumn)] = mAction;
-            connect(mAction, SIGNAL(toggled(bool)), this, SLOT(sectionToggled(bool)));
+            a = new QAction(model()->headerData(iColumn, Qt::Horizontal).toString(), &menu);
+            a->setCheckable(true);
+            a->setChecked(!isSectionHidden(iColumn));
+            a->setData(iColumn);
+            actions[visualIndex(iColumn)] = a;
+            connect(a, SIGNAL(toggled(bool)), this, SLOT(sectionToggled(bool)));
         }
-        mMenu.addSeparator();
-        QMenu* mColumnsMenu = mMenu.addMenu(QIcon(":/qadvancedtableviews/columns.select"), tr("Columns"));
-        for (int iAction = 0; iAction < mActions.size(); iAction++){
-            mColumnsMenu->addAction(mActions.at(iAction));
+        menu.addSeparator();
+        QMenu* columnsMenu = menu.addMenu(QIcon(":/qadvancedtableviews/columns.select"), tr("Columns"));
+        for (int iAction = 0; iAction < actions.size(); iAction++){
+            columnsMenu->addAction(actions.at(iAction));
         }
         if (model()->columnCount() > 10){
-            mColumnsMenu->addSeparator();
-            mColumnsMenu->addAction(tr("More Columns..."), this, SLOT(moreColumnsActionTriggered()));
+            columnsMenu->addSeparator();
+            columnsMenu->addAction(tr("More Columns..."), this, SLOT(moreColumnsActionTriggered()));
         }
-        if (mFilterModel){
-            mMenu.addSeparator();
-            QMenu* mModeMenu = mMenu.addMenu(tr("Mode"));
-            mAction = mModeMenu->addAction(tr("Filter"), this, SLOT(filterModeActionTriggered()));
-            mAction->setCheckable(true);
-            mAction->setChecked(mFilterModel->mode() == QAdvancedItemViews::FilterMode);
+        if (filterModel){
+            menu.addSeparator();
+            QMenu* modeMenu = menu.addMenu(tr("Mode"));
+            a = modeMenu->addAction(tr("Filter"), this, SLOT(filterModeActionTriggered()));
+            a->setCheckable(true);
+            a->setChecked(filterModel->mode() == QAdvancedItemViews::FilterMode);
 
-            mAction = mModeMenu->addAction(tr("Highlight"), this, SLOT(highlightModeActionTriggered()));
-            mAction->setCheckable(true);
-            mAction->setChecked(mFilterModel->mode() == QAdvancedItemViews::HighlightMode);
+            a = modeMenu->addAction(tr("Highlight"), this, SLOT(highlightModeActionTriggered()));
+            a->setCheckable(true);
+            a->setChecked(filterModel->mode() == QAdvancedItemViews::HighlightMode);
 
-            mModeMenu->addSeparator();
-            mAction = mModeMenu->addAction(tr("Inverted"), this, SLOT(invertedMatchModeActionTriggered()));
-            mAction->setCheckable(true);
-            mAction->setChecked(mFilterModel->matchMode() == QAdvancedItemViews::MatchInverted);
+            modeMenu->addSeparator();
+            a = modeMenu->addAction(tr("Inverted"), this, SLOT(invertedMatchModeActionTriggered()));
+            a->setCheckable(true);
+            a->setChecked(filterModel->matchMode() == QAdvancedItemViews::MatchInverted);
         }
-        QFilterView* mView = qobject_cast<QFilterView*>(parentWidget());
-        if (mView != 0){
-            mMenu.addSeparator();
-            if (mView->filterVisible()){
-                mMenu.addAction(tr("Hide Filter"), this, SLOT(hideFilterActionTriggered()));
+        QFilterView* mvew = qobject_cast<QFilterView*>(parentWidget());
+        if (mvew != 0){
+            menu.addSeparator();
+            if (mvew->filterVisible()){
+                menu.addAction(tr("Hide Filter"), this, SLOT(hideFilterActionTriggered()));
             } else {
-                mMenu.addAction(tr("Show Filter"), this, SLOT(showFilterActionTriggered()));
+                menu.addAction(tr("Show Filter"), this, SLOT(showFilterActionTriggered()));
             }
         }
     } else if (orientation() == Qt::Vertical){
-        int mLogicalIndex = logicalIndexAt(event->pos());
+        int logicalIndex = logicalIndexAt(event->pos());
 
-        mAction = mMenu.addAction(QIcon(":/qaiv/filter/add"), tr("Add Filter Set"), this, SLOT(addFilterSetActionTriggered()));
-        mAction->setData(mLogicalIndex);
-        mAction = mMenu.addAction(QIcon(":/qaiv/filter/rename"), tr("Rename Filter Set"), this, SLOT(renameFilterActionTriggered()));
-        mAction->setData(mLogicalIndex);
+        a = menu.addAction(QIcon(":/qaiv/filter/add"), tr("Add Filter Set"), this, SLOT(addFilterSetActionTriggered()));
+        a->setData(logicalIndex);
+        a = menu.addAction(QIcon(":/qaiv/filter/rename"), tr("Rename Filter Set"), this, SLOT(renameFilterActionTriggered()));
+        a->setData(logicalIndex);
         //
-        mAction = mMenu.addAction(QIcon(":/qaiv/filter/delete"), tr("Remove Filter Set"), this, SLOT(removeFilterSetActionTriggered()));
-        mAction->setData(mLogicalIndex);
-        mAction->setEnabled(model()->rowCount() > 1);
+        a = menu.addAction(QIcon(":/qaiv/filter/delete"), tr("Remove Filter Set"), this, SLOT(removeFilterSetActionTriggered()));
+        a->setData(logicalIndex);
+        a->setEnabled(model()->rowCount() > 1);
     }
     event->accept();
-    mMenu.exec(mapToGlobal(event->pos()));
+    menu.exec(mapToGlobal(event->pos()));
 }
 
 void QAdvancedHeaderView::filterModeActionTriggered()
 {
-    QAbstractFilterModel* mFilterModel = qobject_cast<QAbstractFilterModel*>(model());
-    if (mFilterModel){
-        mFilterModel->setMode(QAdvancedItemViews::FilterMode);
+    QAbstractFilterModel* m = qobject_cast<QAbstractFilterModel*>(m());
+    if (m){
+        m->setMode(QAdvancedItemViews::FilterMode);
     }
 }
 
 void QAdvancedHeaderView::hideFilterActionTriggered()
 {
-    QFilterView* mView = qobject_cast<QFilterView*>(parentWidget());
-    if (mView){
-        mView->setFilterVisible(false);
+    QFilterView* v = qobject_cast<QFilterView*>(parentWidget());
+    if (v){
+        v->setFilterVisible(false);
     }
 }
 void QAdvancedHeaderView::hideSectionActionTriggered()
 {
-    QAction* mAction = qobject_cast<QAction*>(sender());
-    if (mAction){
-        hideSection(mAction->data().toInt());
+    QAction* a = qobject_cast<QAction*>(sender());
+    if (a){
+        setSectionHidden(a->data().toInt(), true);
     }
 }
 
 void QAdvancedHeaderView::highlightModeActionTriggered()
 {
-    QAbstractFilterModel* mFilterModel = qobject_cast<QAbstractFilterModel*>(model());
-    if (mFilterModel){
-        mFilterModel->setMode(QAdvancedItemViews::HighlightMode);
+    QAbstractFilterModel* m = qobject_cast<QAbstractFilterModel*>(model());
+    if (m){
+        m->setMode(QAdvancedItemViews::HighlightMode);
     }
 }
 
 void QAdvancedHeaderView::invertedMatchModeActionTriggered()
 {
-    QAbstractFilterModel* mFilterModel = qobject_cast<QAbstractFilterModel*>(model());
-    if (mFilterModel){
-        if (mFilterModel->matchMode() == QAdvancedItemViews::MatchNormal){
-            mFilterModel->setMatchMode(QAdvancedItemViews::MatchInverted);
+    QAbstractFilterModel* m = qobject_cast<QAbstractFilterModel*>(model());
+    if (m){
+        if (m->matchMode() == QAdvancedItemViews::MatchNormal){
+            m->setMatchMode(QAdvancedItemViews::MatchInverted);
         } else {
-            mFilterModel->setMatchMode(QAdvancedItemViews::MatchNormal);
+            m->setMatchMode(QAdvancedItemViews::MatchNormal);
         }
     }
 }
 
 void QAdvancedHeaderView::moreColumnsActionTriggered()
 {
-    QDialog* mDialog = new QDialog(this,Qt::Widget);
-    mDialog->setWindowTitle(tr("More columns..."));
-    QVBoxLayout* mLayout = new QVBoxLayout(mDialog);
+    QDialog* dlg = new QDialog(this,Qt::Widget);
+    dlg->setWindowTitle(tr("More columns..."));
+    QVBoxLayout* l = new QVBoxLayout(dlg);
 
-    QTableView* mView = new QTableView(mDialog);
-    mLayout->addWidget(mView);
+    QTableView* v = new QTableView(dlg);
+    l->addWidget(v);
 
-    QDialogButtonBox* mButtonBox = new QDialogButtonBox(mDialog);
-    mButtonBox->setOrientation(Qt::Horizontal);
-    mButtonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
-    mLayout->addWidget(mButtonBox);
+    QDialogButtonBox* b = new QDialogButtonBox(dlg);
+    b->setOrientation(Qt::Horizontal);
+    b->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+    l->addWidget(b);
 
-    QObject::connect(mButtonBox, SIGNAL(accepted()), mDialog, SLOT(accept()));
-    QObject::connect(mButtonBox, SIGNAL(rejected()), mDialog, SLOT(reject()));
+    QObject::connect(b, SIGNAL(accepted()), dlg, SLOT(accept()));
+    QObject::connect(b, SIGNAL(rejected()), dlg, SLOT(reject()));
 
-    QAbstractItemModel* mModel = model();
-    QAbstractFilterModel* mHeaderProxy;
-    QSortFilterProxyModel* mProxy = qobject_cast<QSortFilterProxyModel*>(model());
-    if (mProxy){
-        mModel = mProxy->sourceModel();
-        mHeaderProxy = qobject_cast<QAbstractFilterModel*>(mProxy);
+    QAbstractItemModel* m = model();
+    QAbstractFilterModel* hp;
+    QSortFilterProxyModel* p = qobject_cast<QSortFilterProxyModel*>(model());
+    if (p){
+        m = p->sourceModel();
+        hp = qobject_cast<QAbstractFilterModel*>(p);
     }
-    QStandardItemModel* mColumnModel = new QStandardItemModel(mDialog);
-    mColumnModel->setColumnCount(1);
-    mColumnModel->setRowCount(mModel->columnCount());
+    QStandardItemModel* cm = new QStandardItemModel(dlg);
+    cm->setColumnCount(1);
+    cm->setRowCount(m->columnCount());
 
-    mView->setModel(mColumnModel);
-    mView->horizontalHeader()->setStretchLastSection(true);
-    mView->horizontalHeader()->setVisible(false);
-    mView->verticalHeader()->setVisible(false);
+    v->setModel(cm);
+    v->horizontalHeader()->setStretchLastSection(true);
+    v->horizontalHeader()->setVisible(false);
+    v->verticalHeader()->setVisible(false);
 
-    QStandardItem* mItem;
-    for (int iColumn = 0; iColumn < mModel->columnCount(); iColumn++){
-        mItem = new QStandardItem(mModel->headerData(iColumn, Qt::Horizontal).toString());
-        mItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
-        mItem->setData(isSectionHidden(iColumn)?Qt::Unchecked:Qt::Checked, Qt::CheckStateRole);
-        mColumnModel->setItem(iColumn, 0, mItem);
+    QStandardItem* item;
+    for (int iColumn = 0; iColumn < m->columnCount(); iColumn++){
+        item = new QStandardItem(m->headerData(iColumn, Qt::Horizontal).toString());
+        item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+        item->setData(isSectionHidden(iColumn)?Qt::Unchecked:Qt::Checked, Qt::CheckStateRole);
+        cm->setItem(iColumn, 0, item);
     }
-    mView->resizeRowsToContents();
-    if (mDialog->exec()){
-        for (int iRow = 0; iRow < mColumnModel->rowCount(); iRow++){
-            setSectionHidden(iRow, mColumnModel->index(iRow, 0).data(Qt::CheckStateRole).toInt() == Qt::Unchecked);
+    v->resizeRowsToContents();
+    if (dlg->exec()){
+        for (int iRow = 0; iRow < cm->rowCount(); iRow++){
+            setSectionHidden(iRow, cm->index(iRow, 0).data(Qt::CheckStateRole).toInt() == Qt::Unchecked);
         }
     }
-    delete mDialog;
+    delete dlg;
 }
 
 void QAdvancedHeaderView::removeFilterSetActionTriggered()
 {
-    QAction* mAction = qobject_cast<QAction*>(sender());
-    if (mAction){
-        if (QMessageBox::question(this, tr("Remove Filter"), QString(tr("Please confirm to delete filter '%1'.")).arg(model()->headerData(mAction->data().toInt(), Qt::Vertical, Qt::DisplayRole).toString()), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes){
-            model()->removeRows(mAction->data().toInt(), 1);
+    QAction* a = qobject_cast<QAction*>(sender());
+    if (a){
+        if (QMessageBox::question(this, tr("Remove Filter"), QString(tr("Please confirm to delete filter '%1'.")).arg(model()->headerData(a->data().toInt(), Qt::Vertical, Qt::DisplayRole).toString()), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes){
+            model()->removeRows(a->data().toInt(), 1);
         }
     }
 }
 
 void QAdvancedHeaderView::renameFilterActionTriggered()
 {
-    QAction* mAction = qobject_cast<QAction*>(sender());
-    if (mAction){
-        QString mName = QInputDialog::getText(this, tr("Rename Filter Set"), tr("Name"), QLineEdit::Normal, model()->headerData(mAction->data().toInt(), Qt::Vertical, Qt::DisplayRole).toString());
-        if (!mName.isEmpty()){
-            model()->setHeaderData(mAction->data().toInt(), Qt::Vertical, mName);
+    QAction* a = qobject_cast<QAction*>(sender());
+    if (a){
+        QString name = QInputDialog::getText(this, tr("Rename Filter Set"), tr("Name"), QLineEdit::Normal, model()->headerData(a->data().toInt(), Qt::Vertical, Qt::DisplayRole).toString());
+        if (!name.isEmpty()){
+            model()->setHeaderData(a->data().toInt(), Qt::Vertical, name);
         }
     }
 }
 
 void QAdvancedHeaderView::sectionToggled( bool on )
 {
-    QAction* mAction = qobject_cast<QAction*>(sender());
-    if (mAction){
-        setSectionHidden(mAction->data().toInt(), !on);
+    QAction* a = qobject_cast<QAction*>(sender());
+    if (a){
+        setSectionHidden(a->data().toInt(), !on);
     }
 }
 
@@ -254,9 +247,9 @@ void QAdvancedHeaderView::showAllColumns()
 
 void QAdvancedHeaderView::showFilterActionTriggered()
 {
-    QFilterView* mView = qobject_cast<QFilterView*>(parentWidget());
-    if (mView){
-        mView->setFilterVisible(true);
+    QFilterView* v = qobject_cast<QFilterView*>(parentWidget());
+    if (v){
+        v->setFilterVisible(true);
     }
 }
 
@@ -267,10 +260,10 @@ int QAdvancedHeaderView::sizeHintForRow(int row) const
 
 void QAdvancedHeaderView::toggleSortOrderActionTriggered()
 {
-    QAction* mAction = qobject_cast<QAction*>(sender());
-    if (mAction){
-        Qt::SortOrder mSortOrder = sortIndicatorOrder();
-        if (mSortOrder == Qt::AscendingOrder){
+    QAction* a = qobject_cast<QAction*>(sender());
+    if (a){
+        Qt::SortOrder sortOrder = sortIndicatorOrder();
+        if (sortOrder == Qt::AscendingOrder){
             model()->sort(sortIndicatorSection(), Qt::DescendingOrder);
         } else {
             model()->sort(sortIndicatorSection(), Qt::AscendingOrder);
