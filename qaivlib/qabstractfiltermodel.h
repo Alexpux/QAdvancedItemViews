@@ -128,10 +128,11 @@ public:
     void setMatchMode(QAdvancedItemViews::FilterMatchMode flag);
 
     void setMode(QAdvancedItemViews::FilterProxyMode mode);
-
+    /**
+      * Sets the given source @p model to be processed by the filter model.
+      * @see sourceModel()
+      */
     void setSourceModel(QAbstractItemModel* model);
-
-    void setProxyModel(QAbstractFilterProxyModel* model);
     /**
       * Returns the model that contains the data this filter model is used for filtering.
       */

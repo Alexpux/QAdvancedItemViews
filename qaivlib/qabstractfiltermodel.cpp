@@ -41,8 +41,6 @@ public:
 
     QAdvancedItemViews::FilterMatchMode matchMode;
 
-    QAbstractFilterProxyModel* proxyModel;
-
     QAbstractItemModel* sourceModel;
 
     QMap<int,int> valueTypeMap;
@@ -69,7 +67,6 @@ QAbstractFilterModel::QAbstractFilterModel(QObject *parent)
     d->matchMode = QAdvancedItemViews::MatchNormal;
     d->mode = QAdvancedItemViews::FilterMode;
     d->sourceModel = 0;
-    d->proxyModel = 0;
 }
 
 QAbstractFilterModel::~QAbstractFilterModel()
@@ -327,12 +324,6 @@ void QAbstractFilterModel::setSourceModel(QAbstractItemModel* model)
         d->sourceModel = model;
         headerDataChanged(Qt::Horizontal, 0, model->columnCount() - 1);
     }
-}
-
-void QAbstractFilterModel::setProxyModel(QAbstractFilterProxyModel* model)
-{
-//    cProxyModel = model;
-//    headerDataChanged(Qt::Horizontal, 0, model->columnCount());
 }
 
 QAbstractItemModel* QAbstractFilterModel::sourceModel() const
