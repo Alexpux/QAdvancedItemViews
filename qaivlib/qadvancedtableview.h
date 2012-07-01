@@ -42,8 +42,24 @@ namespace Ui {
 
 //! The QAdvancedTableView class provides an advanced model/view implementation of a table view.
 /**
-  *
+  * <h2>Features</h2>
+  * QAdvancedTableView provides the following features.
+  * <ul><li>Filter</li>
+  * <li>Fixed Rows</li>
+  * <li>Splitted View</li></ul>
+  * <h2>Visual Appearance</h2>
+  * <h3>QTable View Compatibility</h3>
+  * With all features disabled, the QAbvancedTableView provides with same look and feel as Qt's QTableView class.
+  * @image html qadvancedtableview01.png "Compatibility Mode" width=5cm
   * <h3>Filter</h3>
+  * The visibility of the filter is controlled with setShowFilter().
+  * @image html qadvancedtableview02.png "Filter View Visible"
+  * <h3>Fixed Rows</h3>
+  * @image html qadvancedtableview03.png Fixed Rows Enabled
+  * A list
+  * <h3>Splitted View</h3>
+  * @image html qadvancedtableview04.png Splitted View Enabled
+  * <h2>Filter</h2>
   *
   */
 class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
@@ -81,11 +97,7 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
       *
       * This property is a selection of flags defined by EditTrigger, combined using the OR operator. The view will only initiate the editing of an item if the action performed is set in this property.
       */
-	Q_PROPERTY(QAbstractItemView::EditTriggers editTriggers READ editTriggers WRITE setEditTriggers)
-    //! @property(bool filterVisible READ filterVisible WRITE setFilterVisible)
     Q_PROPERTY(QAbstractItemView::EditTriggers editTriggers READ editTriggers WRITE setEditTriggers)
-    //! @property(fixedRowsMode)
-    Q_PROPERTY(bool fixedRowsMode READ isFixedRowsModeEnabled WRITE setFixedRowsModeEnabled)
     //! @property(gridStyle)
 	/**
 	 * This property holds the pen style used to draw the grid.
@@ -103,6 +115,22 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
 	 * This property holds which selection mode the view operates in.
 	 */
 	Q_PROPERTY(QAbstractItemView::SelectionMode selectionMode READ selectionMode WRITE setSelectionMode)
+    //! @property(showFilter)
+    /**
+     * This property holds whether the filter are shown.
+     * If this property is true the filter are visible; if the property is false, no filter are shown. The default value is true.
+     * @see bool showFilter() const
+     * @see void setShowFilter(bool show)
+     */
+    Q_PROPERTY(bool showFilter READ showFilter WRITE setShowFilter)
+    //! @property(showFixedRows)
+    /**
+     * This property holds whether fixed rows are shown.
+     * If this property is true fixed rows are show as a seperate table view above the main view; if the property is false, no fixed rows are shown. The default value is false.
+     * @see bool showFixedRows() const
+     * @see void setShowFixedRows(bool show)
+     */
+    Q_PROPERTY(bool showFixedRows READ showFixedRows WRITE setShowFixedRows)
     //! @property(showGrid)
 	/**
 	 * This property holds whether the grid is shown.
@@ -114,7 +142,13 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
     //! @property(showSortIndicator)
     Q_PROPERTY(bool showSortIndicator READ isSortIndicatorShown WRITE setSortIndicatorShown)
     //! @property(splitView)
-    Q_PROPERTY(bool splitView READ isViewSplitted WRITE splitView)
+    /**
+     * This property holds whether the view is splitted
+     * If this property is true is splitted into two table view; if the property is false, a single view is shown. The default value is false.
+     * @see bool viewSplitted() const
+     * @see void splitView(bool split)
+     */
+    Q_PROPERTY(bool splitView READ viewSplitted WRITE splitView)
 	//! @property(sortingEnabled)
     /**
       * This property holds whether sorting is enabled.
@@ -215,11 +249,6 @@ public:
       */
     QAbstractFilterProxyModel* filterProxyModel() const;
     /**
-      * Returns true if the filters are show in the filter view. Otherwise false.
-      * @see setFilterVisible()
-      */
-    bool filterVisible() const;
-    /**
       * Returns the indexes in the given @p column for the rows where all columns are fixed.
       */
     QModelIndexList fixedRows(int column = 0) const;
@@ -248,10 +277,10 @@ public:
 	 */
 	bool isColumnHidden(int column) const;
     /**
-      * Returns true if the fixed rows mode is enabled. Otherwise false.
-      * @see setFixedRowsEnabled()
+      * Returns true if the fixed rows are show. Otherwise false.
+      * @see setShowFixedRows()
       */
-    bool isFixedRowsModeEnabled() const;
+    bool showFixedRows() const;
     /**
 	 * Returns true if the given @p row is hidden; otherwise returns false.
 	 * @see isColumnHidden()
@@ -266,11 +295,6 @@ public:
 	 * @see setSortingEnabled()
 	 */
     bool isSortingEnabled() const;
-    /**
-      * Returns true if the view is splitted. Otherwise false.
-      * @see splitView()
-      */
-    bool isViewSplitted() const;
     /**
       * Returns the item delegate used by this view and model. This is either one set with setItemDelegate(), or the default one.
       * @see setItemDelegate()
@@ -432,11 +456,20 @@ public:
 	 * If @p wrap is true word wrapping is enabled.
 	 */
 	void setWordWrap(bool wrap);
-	/**
+    /**
+      * Returns true if the filter are shown. Otherwise false.
+      * @see setShowFilter()
+      */
+    bool showFilter() const;
+    /**
 	 * Returns true if the show is shwon. Otherwise false.
+     * @see setShowFilter()
 	 */
 	bool showGrid() const;
-
+    /**
+      * Returns true if the filter are shown. Otherwise false.
+      * @see setShowFilter()
+      */
 	QSize sizeHint() const;
     /**
       * Sorts the model by the values in the given @p column in the given @p order.
@@ -451,7 +484,12 @@ public:
 	 * Returns the table view's vertical header.
 	 */
 	QHeaderView* verticalHeader() const;
-	/**
+    /**
+      * Returns true if the view is splitted. Otherwise false.
+      * @see splitView()
+      */
+    bool viewSplitted() const;
+    /**
 	 * Returns the viewport widget.
 	 */
 	QWidget* viewport() const;
@@ -570,14 +608,14 @@ public slots:
     void setFilterEnabled(int row, int column, bool enable);
 	/**
 	 * If @p visible is true the filter is shown. Otherwise the filter is hidden.
-	 * @see isFilterVisible()
+     * @see showFilter()
 	 */
-	void setFilterVisible(bool visible);
+    void setShowFilter(bool show);
     /**
       * Enables the fixed rows mode if @p on is true.
-      * @see fixedRowsModeEnabled()
+      * @see showFixedRows()
       */
-    void setFixedRowsModeEnabled(bool on);
+    void setShowFixedRows(bool show);
     /**
      * If @p show is true a grid is drawn for the table. Otherwise no grid is drawn.
      * @see showGrid()
@@ -594,10 +632,10 @@ public slots:
       */
     void showRow(int row);
     /**
-      * Splits view if @p on is true.
-      * @see isViewSplitted()
+      * Splits view if @p split is true.
+      * @see viewSplitted()
       */
-    void splitView(bool on);
+    void splitView(bool split);
     /**
      * Updates the area occupied by the given @p index.
 	 */
@@ -606,6 +644,7 @@ protected:
     virtual void contextMenuEvent(QContextMenuEvent* event);
 private slots:
     void dataModelLayoutChanged();
+    void dataViewHorizontalScrollBarRangeChanged(int minimum, int maximum);
     void dataViewHorizontalScrollBarSilderMoved( int value );
     void dataViewHorizontalScrollBarValueChanged( int value );
 	void filterAdded(const QModelIndex & parent, int start, int end);
@@ -618,7 +657,6 @@ private slots:
     void modelReset();
 	void showSettingsDialog();
     void subviewReceivedFocus();
-    void updateHeaderViewHorizontalScrollBar( int min, int max );
     void updateHeaderViewGeometries();
     void updateHeaderViewVerticalScrollBar( int min, int max );
     void verticalHeaderSectionClicked(int section);

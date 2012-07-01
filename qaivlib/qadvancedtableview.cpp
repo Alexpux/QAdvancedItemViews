@@ -219,7 +219,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     // data table view
     connect(ui->dataTableView->verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
     connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(sliderMoved(int)), this, SLOT(dataViewHorizontalScrollBarSilderMoved(int)));
-    connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(updateHeaderViewHorizontalScrollBar(int,int)));
+    connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(dataViewHorizontalScrollBarRangeChanged(int,int)));
     connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(dataViewHorizontalScrollBarValueChanged(int)));
     connect(ui->dataTableView->verticalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(updateHeaderViewVerticalScrollBar(int,int)));
     connect(ui->dataTableView->verticalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(verticalHeaderSectionResized(int,int,int)));
@@ -315,20 +315,20 @@ QMenu *QAdvancedTableView::createStandardContextMenu()
     m = m->addMenu(tr("View"));
     a = m->addAction(tr("Splitted View"));
     a->setCheckable(true);
-    a->setChecked(isViewSplitted());
+    a->setChecked(viewSplitted());
     connect(a, SIGNAL(toggled(bool)), this, SLOT(splitView(bool)));
 
     a = m->addAction(tr("Fixed Rows"));
     a->setCheckable(true);
-    a->setChecked(isFixedRowsModeEnabled());
-    connect(a, SIGNAL(toggled(bool)), this, SLOT(setFixedRowsModeEnabled(bool)));
+    a->setChecked(showFixedRows());
+    connect(a, SIGNAL(toggled(bool)), this, SLOT(setShowFixedRows(bool)));
 
     m->addSeparator();
 
     a = m->addAction(tr("Show Filter"));
     a->setCheckable(true);
-    a->setChecked(filterVisible());
-    connect(a, SIGNAL(toggled(bool)), this, SLOT(setFilterVisible(bool)));
+    a->setChecked(showFilter());
+    connect(a, SIGNAL(toggled(bool)), this, SLOT(setShowFilter(bool)));
 
     m->addSeparator();
 
@@ -356,14 +356,26 @@ int QAdvancedTableView::defaultFilterType(int column) const
     return d->filterModel->index(0, column).data(QAbstractFilterModel::DefaultFilterTypeRole).toInt();
 }
 
+void QAdvancedTableView::dataViewHorizontalScrollBarRangeChanged(int minimum, int maximum)
+{
+    ui->headerTableView->horizontalScrollBar()->setRange(minimum, maximum);
+    ui->splittedDataTableView->horizontalScrollBar()->setRange(minimum, maximum);
+    ui->fixedRowsTableView->horizontalScrollBar()->setRange(minimum, maximum);
+
+}
+
 void QAdvancedTableView::dataViewHorizontalScrollBarSilderMoved( int value )
 {
     ui->headerTableView->horizontalScrollBar()->setValue(value);
+    ui->splittedDataTableView->horizontalScrollBar()->setValue(value);
+    ui->fixedRowsTableView->horizontalScrollBar()->setValue(value);
 }
 
 void QAdvancedTableView::dataViewHorizontalScrollBarValueChanged( int value )
 {
     ui->headerTableView->horizontalScrollBar()->setValue(value);
+    ui->splittedDataTableView->horizontalScrollBar()->setValue(value);
+    ui->fixedRowsTableView->horizontalScrollBar()->setValue(value);
 }
 
 bool QAdvancedTableView::dragEnabled() const
@@ -402,7 +414,7 @@ void QAdvancedTableView::filterAdded(const QModelIndex & parent, int start, int 
 
 void QAdvancedTableView::headerViewHorizontalScrollBarRangeChanged(int min, int max)
 {
-    ui->dataTableView->horizontalScrollBar()->setRange(min, max);
+//    ui->dataTableView->horizontalScrollBar()->setRange(min, max);
 }
 
 QAbstractFilterModel* QAdvancedTableView::filterModel() const
@@ -415,7 +427,7 @@ QAbstractFilterProxyModel *QAdvancedTableView::filterProxyModel() const
     return d->dataViewProxy;
 }
 
-bool QAdvancedTableView::filterVisible() const
+bool QAdvancedTableView::showFilter() const
 {
     return ui->headerTableView->filterVisible();
 }
@@ -460,10 +472,19 @@ void QAdvancedTableView::headerViewHorizontalScrollBarValueChanged( int value )
 
 void QAdvancedTableView::headerViewSectionResized( int logicalIndex, int oldSize, int newSize )
 {
-    Q_UNUSED(oldSize);
-    ui->dataTableView->horizontalHeader()->resizeSection(logicalIndex, newSize);
-    ui->fixedRowsTableView->horizontalHeader()->resizeSection(logicalIndex, newSize);
-    ui->splittedDataTableView->horizontalHeader()->resizeSection(logicalIndex, newSize);
+    if (newSize == 0){
+        ui->dataTableView->horizontalHeader()->hideSection(logicalIndex);
+        ui->fixedRowsTableView->horizontalHeader()->hideSection(logicalIndex);
+        ui->splittedDataTableView->horizontalHeader()->hideSection(logicalIndex);
+    } else if (oldSize == 0){
+        ui->dataTableView->horizontalHeader()->showSection(logicalIndex);
+        ui->fixedRowsTableView->horizontalHeader()->showSection(logicalIndex);
+        ui->splittedDataTableView->horizontalHeader()->showSection(logicalIndex);
+    } else {
+        ui->dataTableView->horizontalHeader()->resizeSection(logicalIndex, newSize);
+        ui->fixedRowsTableView->horizontalHeader()->resizeSection(logicalIndex, newSize);
+        ui->splittedDataTableView->horizontalHeader()->resizeSection(logicalIndex, newSize);
+    }
 }
 
 void QAdvancedTableView::hideColumn(int column)
@@ -473,7 +494,7 @@ void QAdvancedTableView::hideColumn(int column)
 
 void QAdvancedTableView::hideFilterView()
 {
-    setFilterVisible(false);
+    setShowFilter(false);
 }
 
 void QAdvancedTableView::hideRow(int row)
@@ -488,6 +509,8 @@ QHeaderView* QAdvancedTableView::horizontalHeader() const
 
 void QAdvancedTableView::horizontalHeaderViewSectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex )
 {
+    Q_UNUSED(logicalIndex);
+    qDebug() << Q_FUNC_INFO;
     ui->dataTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
     ui->fixedRowsTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
     ui->splittedDataTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
@@ -495,6 +518,7 @@ void QAdvancedTableView::horizontalHeaderViewSectionMoved( int logicalIndex, int
 
 void QAdvancedTableView::horizontalHeaderSortIndicatorChanged( int logicalIndex, Qt::SortOrder order )
 {
+    qDebug() << Q_FUNC_INFO;
     ui->dataTableView->sortByColumn(logicalIndex, order);
     ui->fixedRowsTableView->sortByColumn(logicalIndex, order);
     ui->splittedDataTableView->sortByColumn(logicalIndex, order);
@@ -525,7 +549,7 @@ bool QAdvancedTableView::isSortingEnabled() const
     return ui->dataTableView->isSortingEnabled();
 }
 
-bool QAdvancedTableView::isViewSplitted() const
+bool QAdvancedTableView::viewSplitted() const
 {
     return ui->splittedDataTableView->isVisible();
 }
@@ -555,7 +579,7 @@ QAbstractItemModel* QAdvancedTableView::model() const
     return d->model;
 }
 
-bool QAdvancedTableView::isFixedRowsModeEnabled() const
+bool QAdvancedTableView::showFixedRows() const
 {
     return ui->fixedRowsTableView->decorationProxy()->isEnabled();
 }
@@ -840,9 +864,9 @@ bool QAdvancedTableView::setFilterType(int type, int column, int row)
     return false;
 }
 
-void QAdvancedTableView::setFixedRowsModeEnabled(bool on)
+void QAdvancedTableView::setShowFixedRows(bool show)
 {
-    ui->fixedRowsTableView->decorationProxy()->setEnabled(on);
+    ui->fixedRowsTableView->decorationProxy()->setEnabled(show);
 }
 
 void QAdvancedTableView::setShowGrid( bool show )
@@ -874,9 +898,9 @@ void QAdvancedTableView::setTextElideMode(Qt::TextElideMode mode)
     V_CALL(setTextElideMode(mode))
 }
 
-void QAdvancedTableView::setFilterVisible(bool visible)
+void QAdvancedTableView::setShowFilter(bool show)
 {
-    ui->headerTableView->setFilterVisible(visible);
+    ui->headerTableView->setFilterVisible(show);
 }
 
 void QAdvancedTableView::setWordWrap(bool wrap)
@@ -904,22 +928,17 @@ void QAdvancedTableView::subviewReceivedFocus()
     }
 }
 
-void QAdvancedTableView::updateHeaderViewHorizontalScrollBar(int min, int max)
-{
-    ui->headerTableView->horizontalScrollBar()->setRange(min, max);
-}
-
 QSize QAdvancedTableView::sizeHint() const
 {
     return QSize(QWidget::sizeHint().width(), ui->headerTableView->height() * 2);
 }
 
-void QAdvancedTableView::splitView(bool on)
+void QAdvancedTableView::splitView(bool split)
 {
-    if (on == ui->splittedDataTableView->isVisible()){
+    if (split == ui->splittedDataTableView->isVisible()){
         return;
     }
-    if (on){
+    if (split){
         ui->splittedDataTableView->show();
         if (d->autoResizeRowsToContents){
             ui->splittedDataTableView->resizeRowsToContents();
