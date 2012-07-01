@@ -24,6 +24,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QProgressDialog>
+#include <QScrollBar>
 #include <QStandardItemModel>
 #include <QTime>
 
@@ -59,8 +60,6 @@ MainWindow::MainWindow(QWidget *parent) :
     initModel();
 
     initTabAdvancedTableView();
-
-//    initTabTableView();
     // Tab 3
     initTabUniqueValuesProxyModel();
     // Tab 4
@@ -141,11 +140,11 @@ void MainWindow::groupUnixCheckBoxToggled(bool on)
 void MainWindow::pinRowsToolButtonClicked()
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    if (ui->filterTableView->isFixedRowsModeEnabled()){
-        ui->filterTableView->setFixedRowsModeEnabled(false);
+    if (ui->filterTableView->showFixedRows()){
+        ui->filterTableView->setShowFixedRows(false);
         ui->pinRowsToolButton->setIcon(QIcon(":/qaiv/pin/enabled"));
     } else {
-        ui->filterTableView->setFixedRowsModeEnabled(true);
+        ui->filterTableView->setShowFixedRows(true);
         ui->pinRowsToolButton->setIcon(QIcon(":/qaiv/pin/disabled"));
     }
     QApplication::restoreOverrideCursor();
@@ -411,6 +410,9 @@ void MainWindow::initTabAdvancedTableView()
     }
 
     ui->filterTableView->setItemDelegateForColumn(0, new SpinBoxDelegate(this));
+
+    ui->filterTableView->hideColumn(0);
+    updateGeometry();
 }
 
 void MainWindow::initTabConditionalDecorationProxyModel()
@@ -487,7 +489,7 @@ void MainWindow::initTabLargeTableView()
 {
 //    QStandardItemModel* model = new QStandardItemModel(this);
 //    ui->largeTableView->setModel(model);
-    ui->largeTableView->setFixedRowsModeEnabled(true);
+    ui->largeTableView->setShowFixedRows(true);
 }
 
 void MainWindow::initTabUniqueValuesProxyModel()
