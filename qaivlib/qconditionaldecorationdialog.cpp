@@ -267,7 +267,7 @@ QVariantMap QConditionalDecorationDialog::value(int row) const
 SelectValueDialog::SelectValueDialog(QAbstractItemModel* model, int column, QWidget *parent) :
     QDialog(parent)
 {
-    setWindowIcon(QIcon(":/qadvancedtableviews/table.select"));
+    setWindowIcon(QIcon(":/qaiv/dialog/table.select"));
     setWindowTitle(tr("Select Value..."));
 
     QVBoxLayout* mLayout = new QVBoxLayout(this);
@@ -328,7 +328,7 @@ ValueEdit::ValueEdit(QAbstractItemModel* model, int column, QWidget *parent) :
 
     QPushButton* mButton = new QPushButton(this);
     mButton->setFlat(true);
-    mButton->setIcon(QIcon(":/qadvancedtableviews/table.select"));
+    mButton->setIcon(QIcon(":/qaiv/dialog/table.select"));
     connect(mButton, SIGNAL(clicked()), this, SLOT(buttonClicked()));
 
     mLayout->addWidget(cEdit);
