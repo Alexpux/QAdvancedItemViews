@@ -119,7 +119,7 @@ void QAdvancedHeaderView::contextMenuEvent(QContextMenuEvent* event)
 
 void QAdvancedHeaderView::filterModeActionTriggered()
 {
-    QAbstractFilterModel* m = qobject_cast<QAbstractFilterModel*>(m());
+    QAbstractFilterModel* m = qobject_cast<QAbstractFilterModel*>(model());
     if (m){
         m->setMode(QAdvancedItemViews::FilterMode);
     }
