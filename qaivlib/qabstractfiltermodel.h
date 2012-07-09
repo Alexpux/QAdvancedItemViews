@@ -122,6 +122,10 @@ public:
     int rowCount( const QModelIndex & parent = QModelIndex() ) const;
 
     bool setData( const QModelIndex & index, const QVariant & value, int role = Qt::EditRole );
+    /**
+      * Sets the default filter type for the specified @p column to @p type.
+      */
+    void setDefaultFilterType(int column, int type);
 
     bool setHeaderData (int section, Qt::Orientation orientation, const QVariant & value, int role = Qt::EditRole);
 

@@ -289,6 +289,11 @@ bool QAbstractFilterModel::setData(const QModelIndex & index, const QVariant & v
     return false;
 }
 
+void QAbstractFilterModel::setDefaultFilterType(int column, int type)
+{
+    d->defaultFilterType[column] = type;
+}
+
 bool QAbstractFilterModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role)
 {
     if (role != Qt::EditRole){
