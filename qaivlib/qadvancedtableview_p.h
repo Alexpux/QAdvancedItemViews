@@ -59,37 +59,4 @@ protected:
     void focusInEvent(QFocusEvent *event);
 };
 
-//-----------------------------------------------
-// class QFilterTableViewSettingsDialog
-//-----------------------------------------------
-
-class QFilterTableViewSettingsDialog : public QDialog
-{
-	Q_OBJECT
-public:
-    QFilterTableViewSettingsDialog(QAbstractFilterModel* model, QWidget* parent = 0);
-	~QFilterTableViewSettingsDialog();
-private:
-	void retranslate();
-	void setup();
-
-    QAbstractFilterModel* cModel;
-
-	QVBoxLayout *verticalLayout_2;
-	QHBoxLayout *horizontalLayout_2;
-	QHBoxLayout *horizontalLayout;
-	QLabel *label_2;
-	QLineEdit *nameLineEdit;
-	QPushButton *renamePushButton;
-	QGroupBox *groupBox_2;
-	QHBoxLayout *horizontalLayout_3;
-	QTableWidget *tableWidget;
-	QVBoxLayout *verticalLayout;
-	QPushButton *addPushButton;
-	QPushButton *removePushButton;
-	QPushButton *selectPushButton;
-	QSpacerItem *verticalSpacer;
-	QPushButton *closePushButton;
-};
-
 #endif // QFILTERTABLEVIEW_P_H

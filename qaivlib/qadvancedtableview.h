@@ -32,7 +32,6 @@ class QAdvancedHeaderView;
 class QFilterModelProxy;
 class QAbstractFilterModel;
 class QAbstractFilterProxyModel;
-class QFilterTableViewSettingsDialog;
 
 class QAdvancedTableViewPrivate;
 
@@ -218,7 +217,7 @@ public:
     /**
       *
       */
-    QMenu* createStandardContextMenu();
+    QMenu* createStandardContextMenu(const QModelIndex &index);
 	/**
 	 * Returns the model index of the current item.
 	 * @see setCurrentIndex()
@@ -443,11 +442,6 @@ public:
 	 */
     void setSortingEnabled(bool enable);
 	/**
-	 * Returns the settings dialog for the view.
-	 * This function creates and returns a settings dialog.
-	 */
-	QFilterTableViewSettingsDialog* settingsDialog();
-	/**
      * Set the text elide mode to @p mode.
      * @see textElideMode()
 	 */
@@ -655,7 +649,6 @@ private slots:
     void horizontalHeaderViewSectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex );
     void horizontalHeaderSortIndicatorChanged( int logicalIndex, Qt::SortOrder order );
     void modelReset();
-	void showSettingsDialog();
     void subviewReceivedFocus();
     void updateHeaderViewGeometries();
     void updateHeaderViewVerticalScrollBar( int min, int max );

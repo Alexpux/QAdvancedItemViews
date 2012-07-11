@@ -29,8 +29,10 @@
 #include <qfiltermodelproxy.h>
 #include <qfiltermodel.h>
 #include <qfilterviewitemdelegate.h>
+#include <qfixrowheaderview.h>
 #include <qfixedrowstableview.h>
 #include <qshareditemselectionmodel.h>
+#include "qtextfilter.h"
 
 #define V_CALL(_m_) ui->dataTableView->_m_; \
     ui->fixedRowsTableView->_m_; \
@@ -48,12 +50,9 @@ public:
     QAbstractFilterProxyModel* dataViewProxy;
     QAbstractFilterModel* filterModel;
     QAbstractItemModel* model;
-    QFilterTableViewSettingsDialog* settingsDialog;
-
     QAdvancedHeaderView* horizontalHeader;
     Qt::ScrollBarPolicy horizontalScrollBarPolicy;
     QAdvancedHeaderView* verticalHeader;
-    QItemSelectionModel* selectionModel;
     QSharedItemSelectionModel* splittedViewSelectionModel;
 
     QAdvancedTableView* v;
@@ -63,118 +62,12 @@ QAdvancedTableViewPrivate::QAdvancedTableViewPrivate(QAdvancedTableView *tv)
 {
     dataViewProxy = new QFilterModelProxy(tv);
     horizontalScrollBarPolicy = Qt::ScrollBarAsNeeded;
-    selectionModel = 0;
     v = tv;
 }
 
 QAdvancedTableViewPrivate::~QAdvancedTableViewPrivate()
 {
-
 }
-
-//-----------------------------------------------
-// class QFilterTableViewSettingsDialog
-//-----------------------------------------------
-
-QFilterTableViewSettingsDialog::QFilterTableViewSettingsDialog(QAbstractFilterModel *model, QWidget* parent) :
-QDialog(parent)
-{
-    setup();
-    cModel = model;
-}
-
-QFilterTableViewSettingsDialog::~QFilterTableViewSettingsDialog()
-{
-}
-
-void QFilterTableViewSettingsDialog::setup()
-{
-    if (objectName().isEmpty()){
-        setObjectName(QString::fromUtf8("Dialog"));
-    }
-    resize(400, 300);
-    verticalLayout_2 = new QVBoxLayout(this);
-    verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-    horizontalLayout_2 = new QHBoxLayout();
-    horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-
-    verticalLayout_2->addLayout(horizontalLayout_2);
-
-    horizontalLayout = new QHBoxLayout();
-    horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-    label_2 = new QLabel(this);
-    label_2->setObjectName(QString::fromUtf8("label_2"));
-
-    horizontalLayout->addWidget(label_2);
-
-    nameLineEdit = new QLineEdit(this);
-    nameLineEdit->setObjectName(QString::fromUtf8("nameLineEdit"));
-
-    horizontalLayout->addWidget(nameLineEdit);
-
-    renamePushButton = new QPushButton(this);
-    renamePushButton->setObjectName(QString::fromUtf8("renamePushButton"));
-
-    horizontalLayout->addWidget(renamePushButton);
-
-
-    verticalLayout_2->addLayout(horizontalLayout);
-
-    groupBox_2 = new QGroupBox(this);
-    groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
-    groupBox_2->setFlat(true);
-
-    verticalLayout_2->addWidget(groupBox_2);
-
-    horizontalLayout_3 = new QHBoxLayout();
-    horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
-    tableWidget = new QTableWidget(this);
-    tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-
-    horizontalLayout_3->addWidget(tableWidget);
-
-    verticalLayout = new QVBoxLayout();
-    verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-    addPushButton = new QPushButton(this);
-    addPushButton->setObjectName(QString::fromUtf8("addPushButton"));
-    verticalLayout->addWidget(addPushButton);
-
-    selectPushButton = new QPushButton(this);
-    selectPushButton->setObjectName(QString::fromUtf8("selectPushButton"));
-    verticalLayout->addWidget(selectPushButton);
-
-    removePushButton = new QPushButton(this);
-    removePushButton->setObjectName(QString::fromUtf8("removePushButton"));
-    verticalLayout->addWidget(removePushButton);
-
-    verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-    verticalLayout->addItem(verticalSpacer);
-
-    closePushButton = new QPushButton(this);
-    closePushButton->setObjectName(QString::fromUtf8("closePushButton"));
-
-    verticalLayout->addWidget(closePushButton);
-    horizontalLayout_3->addLayout(verticalLayout);
-    verticalLayout_2->addLayout(horizontalLayout_3);
-
-    retranslate();
-    QObject::connect(closePushButton, SIGNAL(clicked()), this, SLOT(reject()));
-
-    QMetaObject::connectSlotsByName(this);
-}
-
-void QFilterTableViewSettingsDialog::retranslate()
-{
-    setWindowTitle(QApplication::translate("QFilterTableViewSettingsDialog", "Filter Sets", 0, QApplication::UnicodeUTF8));
-    label_2->setText(QApplication::translate("QFilterTableViewSettingsDialog", "Name", 0, QApplication::UnicodeUTF8));
-    renamePushButton->setText(QApplication::translate("QFilterTableViewSettingsDialog", "Rename", 0, QApplication::UnicodeUTF8));
-    groupBox_2->setTitle(QApplication::translate("QFilterTableViewSettingsDialog", "Available Filter Sets", 0, QApplication::UnicodeUTF8));
-    addPushButton->setText(QApplication::translate("QFilterTableViewSettingsDialog", "Add", 0, QApplication::UnicodeUTF8));
-    removePushButton->setText(QApplication::translate("QFilterTableViewSettingsDialog", "Remove", 0, QApplication::UnicodeUTF8));
-    selectPushButton->setText(QApplication::translate("QFilterTableViewSettingsDialog", "Select", 0, QApplication::UnicodeUTF8));
-    closePushButton->setText(QApplication::translate("QFilterTableViewSettingsDialog", "Close", 0, QApplication::UnicodeUTF8));
-} // retranslateUi
 
 //-----------------------------------------------
 // class QAdvancedTableView
@@ -187,12 +80,9 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     ui->setupUi(this);
     //
     ui->splittedDataTableView->hide();
-    //
-    d->selectionModel = 0;
 
     d->autoResizeRowsToContents = true;
-    d->defaultFilterType = QAbstractFilter::Type;
-    d->settingsDialog = 0;
+    d->defaultFilterType = QTextFilter::Type;
     // Create header view (model) proxy
     d->filterModel = new QFilterModel(this);
     // Create horizontal header view
@@ -200,12 +90,12 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     ui->headerTableView->setHorizontalHeader(d->horizontalHeader);
     ui->headerTableView->setItemDelegate(new QFilterViewItemDelegate(this));
     ui->headerTableView->horizontalHeader()->setMovable(true);
-    // Create vertical header view
+    // Create vertical header views
     d->verticalHeader = new QAdvancedHeaderView(Qt::Vertical, this);
-
     ui->headerTableView->setVerticalHeader(d->verticalHeader);
     ui->headerTableView->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 
+//    ui->dataTableView->setVerticalHeader(new QFixedRowsHeaderView(Qt::Vertical, this));
     // set models
     d->dataViewProxy->setSourceModel(ui->fixedRowsTableView->decorationProxy());
     ui->dataTableView->setModel(d->dataViewProxy);
@@ -275,6 +165,8 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->splittedDataTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
 
     updateHeaderViewGeometries();
+    //
+    setFocusProxy(ui->dataTableView);
 }
 
 QAdvancedTableView::~QAdvancedTableView()
@@ -308,7 +200,23 @@ int QAdvancedTableView::columnWidth(int column) const
     return ui->headerTableView->columnWidth(column);
 }
 
-QMenu *QAdvancedTableView::createStandardContextMenu()
+void QAdvancedTableView::contextMenuEvent(QContextMenuEvent *event)
+{
+    QModelIndex i;
+    if (ui->dataTableView->viewport()->rect().contains(event->pos())){
+        qDebug() << event->pos() << ui->dataTableView->viewport()->mapFromParent(event->pos());
+        i = ui->dataTableView->indexAt(ui->dataTableView->viewport()->mapFromParent(event->pos()));
+    } else if (ui->fixedRowsTableView->viewport()->rect().contains(event->pos())){
+        i = ui->fixedRowsTableView->indexAt(event->pos());
+    }
+//    qDebug() << pos() << event->pos() << event->pos() - pos();
+    QMenu* m = createStandardContextMenu(i);
+
+    m->exec(event->globalPos());
+    delete m;
+}
+
+QMenu *QAdvancedTableView::createStandardContextMenu(const QModelIndex & index)
 {
     QAction* a;
     QMenu* m = new QMenu();
@@ -526,6 +434,11 @@ void QAdvancedTableView::horizontalHeaderSortIndicatorChanged( int logicalIndex,
 
 QModelIndex QAdvancedTableView::indexAt(const QPoint & point) const
 {
+    if (focusProxy() == ui->splittedDataTableView){
+        return ui->splittedDataTableView->indexAt(point);
+    } else if (focusProxy() == ui->fixedRowsTableView){
+        return ui->fixedRowsTableView->indexAt(point);
+    }
 	return ui->dataTableView->indexAt(point);
 }
 
@@ -885,14 +798,6 @@ void QAdvancedTableView::setSortingEnabled( bool enable )
     V_CALL(setSortingEnabled(enable))
 }
 
-QFilterTableViewSettingsDialog* QAdvancedTableView::settingsDialog()
-{
-    if (d->settingsDialog == 0){
-        d->settingsDialog = new QFilterTableViewSettingsDialog(d->filterModel, this);
-	}
-    return d->settingsDialog;
-}
-
 void QAdvancedTableView::setTextElideMode(Qt::TextElideMode mode)
 {
     V_CALL(setTextElideMode(mode))
@@ -912,12 +817,6 @@ void QAdvancedTableView::setWordWrap(bool wrap)
 bool QAdvancedTableView::showGrid() const
 {
 	return ui->dataTableView->showGrid();
-}
-
-void QAdvancedTableView::showSettingsDialog()
-{
-	QFilterTableViewSettingsDialog* mDlg = settingsDialog();
-    mDlg->exec();
 }
 
 void QAdvancedTableView::subviewReceivedFocus()
@@ -962,14 +861,6 @@ Qt::TextElideMode QAdvancedTableView::textElideMode() const
 void QAdvancedTableView::update(const QModelIndex & index)
 {
     ui->dataTableView->update(index);
-}
-
-void QAdvancedTableView::contextMenuEvent(QContextMenuEvent *event)
-{
-    QMenu* m = createStandardContextMenu();
-
-    m->exec(event->globalPos());
-    delete m;
 }
 
 void QAdvancedTableView::dataModelLayoutChanged()
