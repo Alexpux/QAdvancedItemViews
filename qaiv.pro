@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS += \
     qaivlib \
-    example
+    example \
+    qaivdesigner
