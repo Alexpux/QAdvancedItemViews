@@ -393,6 +393,8 @@ void MainWindow::initTabAdvancedTableView()
     QVariantList ftypes;
     ftypes << QRangeFilter::Type << QValueFilter::Type;
     ui->filterTableView->setColumnFilterTypes(0, ftypes);
+
+    ui->filterTableView->setItemDelegateForColumn(0, new SpinBoxDelegate(this));
     // ------------------------------------
     // Column 'Qt': All filter types allowed. The default filter type is set to Text Filter
     // ------------------------------------
@@ -408,10 +410,6 @@ void MainWindow::initTabAdvancedTableView()
         selectionListFilter->setValues(values);
         selectionListFilter->setEnabled(false);
     }
-
-    ui->filterTableView->setItemDelegateForColumn(0, new SpinBoxDelegate(this));
-
-    ui->filterTableView->hideColumn(0);
     updateGeometry();
 }
 
@@ -428,9 +426,9 @@ void MainWindow::initTabConditionalDecorationProxyModel()
     proxy->addDecoration(3, decoration);
 
     decoration = new QConditionalDecoration();
-    decoration->addCondition(QConditionalDecoration::Contains, "Linux", "emoticon", "happy");
-    decoration->addCondition(QConditionalDecoration::Contains, "Mac", "emoticon", "neutral");
-    decoration->addCondition(QConditionalDecoration::Contains, "Windows", "emoticon", "unhappy");
+    decoration->addCondition(QConditionalDecoration::Contains, "Linux", "emoticon", "Happy");
+    decoration->addCondition(QConditionalDecoration::Contains, "Mac", "emoticon", "Neutral");
+    decoration->addCondition(QConditionalDecoration::Contains, "Windows", "emoticon", "Unhappy");
     proxy->addDecoration(11, decoration);
 
     proxy->setSourceModel(m_model);
