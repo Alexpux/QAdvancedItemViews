@@ -91,6 +91,9 @@ QVariantMap QConditionalDecorationDialog::properties() const
 
 void QConditionalDecorationDialog::setProperties(const QModelIndex & index)
 {
+	if (!index.isValid()){
+		return;
+	}
     cIndex = index;
     cProperties = index.data(QConditionalDecorationProxyModel::ConditionalDecorationRole).toMap();
     if (cProperties.isEmpty()){
@@ -270,13 +273,13 @@ SelectValueDialog::SelectValueDialog(QAbstractItemModel* model, int column, QWid
     setWindowIcon(QIcon(":/qaiv/dialog/table.select"));
     setWindowTitle(tr("Select Value..."));
 
-    QVBoxLayout* mLayout = new QVBoxLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
-    cView = new QTableView(this);
-    mLayout->addWidget(cView);
-    cView->horizontalHeader()->setStretchLastSection(true);
-    cView->setEditTriggers(QTableView::NoEditTriggers);
-    cView->verticalHeader()->setVisible(false);
+    m_view = new QTableView(this);
+    layout->addWidget(m_view);
+    m_view->horizontalHeader()->setStretchLastSection(true);
+    m_view->setEditTriggers(QTableView::NoEditTriggers);
+    m_view->verticalHeader()->setVisible(false);
 
 //    UngroupProxyModel* mUngroupProxy = new UngroupProxyModel(this);
 //    mUngroupProxy->setSourceModel(model);
@@ -289,23 +292,40 @@ SelectValueDialog::SelectValueDialog(QAbstractItemModel* model, int column, QWid
 //    qDebug() << column << mSingleColumnProxy->rowCount();
 
 
-    QUniqueValuesProxyModel* proxy = new QUniqueValuesProxyModel(this);
-    proxy->setModelColumn(0);
-    proxy->setSourceModel(model);
-    cView->setModel(proxy);
+    QSingleColumnProxyModel* columnProxy = new QSingleColumnProxyModel(this);
+    columnProxy->setSourceModelColumn(column);
+    columnProxy->setSourceModel(model);
+    QUniqueValuesProxyModel* valueProxy = new QUniqueValuesProxyModel(this);
+    valueProxy->setModelColumn(0);
+    valueProxy->setSourceModel(columnProxy);
+    m_view->setModel(valueProxy);
 
-    cView->resizeRowsToContents();
+    m_view->resizeRowsToContents();
 
-    QDialogButtonBox* mButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
-    mLayout->addWidget(mButtonBox);
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
+    layout->addWidget(buttonBox);
 
-    connect(mButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(mButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
 QVariant SelectValueDialog::selectedValue() const
 {
-    return cView->currentIndex().data();
+    return m_view->currentIndex().data();
+}
+
+QVariantList SelectValueDialog::selectedValues() const
+{
+    QVariantList l;
+    Q_FOREACH(QModelIndex i, m_view->selectionModel()->selectedRows()){
+        l << i.data();
+    }
+    return l;
+}
+
+void SelectValueDialog::setSelectionMode(QAbstractItemView::SelectionMode mode)
+{
+    m_view->setSelectionMode(mode);
 }
 
 void SelectValueDialog::doubleClicked(const QModelIndex & index)
@@ -317,39 +337,39 @@ void SelectValueDialog::doubleClicked(const QModelIndex & index)
 ValueEdit::ValueEdit(QAbstractItemModel* model, int column, QWidget *parent) :
     QWidget(parent)
 {
-    cColumn = column;
-    cModel = model;
+    m_column = column;
+    m_model = model;
 
     QHBoxLayout* mLayout = new QHBoxLayout(this);
     mLayout->setContentsMargins(0, 0, 0, 0);
     mLayout->setSpacing(0);
 
-    cEdit = new QLineEdit(this);
+    m_edit = new QLineEdit(this);
 
     QPushButton* mButton = new QPushButton(this);
     mButton->setFlat(true);
     mButton->setIcon(QIcon(":/qaiv/dialog/table.select"));
     connect(mButton, SIGNAL(clicked()), this, SLOT(buttonClicked()));
 
-    mLayout->addWidget(cEdit);
+    mLayout->addWidget(m_edit);
     mLayout->addWidget(mButton);
 }
 
 void ValueEdit::setValue(const QVariant &value)
 {
-    cEdit->setText(value.toString());
+    m_edit->setText(value.toString());
 }
 
 QVariant ValueEdit::value() const
 {
-    return cEdit->text();
+    return m_edit->text();
 }
 
 void ValueEdit::buttonClicked()
 {
-    SelectValueDialog* mDlg = new SelectValueDialog(cModel, cColumn, this);
+    SelectValueDialog* mDlg = new SelectValueDialog(m_model, m_column, this);
     if (mDlg->exec()){
-        cEdit->setText(mDlg->selectedValue().toString());
+        m_edit->setText(mDlg->selectedValue().toString());
     }
     delete mDlg;
 }

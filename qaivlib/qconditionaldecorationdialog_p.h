@@ -21,7 +21,9 @@
 #ifndef QCONDITIONALDECORATIONDIALOG_P_H
 #define QCONDITIONALDECORATIONDIALOG_P_H
 
+#include <QAbstractItemView>
 #include <QDialog>
+#include <QVariant>
 
 class QAbstractItemModel;
 class QLineEdit;
@@ -56,10 +58,14 @@ public:
     SelectValueDialog(QAbstractItemModel* model, int column, QWidget* parent);
 
     QVariant selectedValue() const;
+
+    QVariantList selectedValues() const;
+
+    void setSelectionMode(QAbstractItemView::SelectionMode mode);
 private slots:
     void doubleClicked(const QModelIndex & index);
 private:
-    QTableView* cView;
+    QTableView* m_view;
 };
 
 class ValueEdit : public QWidget
@@ -74,9 +80,9 @@ public:
 private slots:
     void buttonClicked();
 private:
-    int cColumn;
-    QLineEdit* cEdit;
-    QAbstractItemModel* cModel;
+    int m_column;
+    QLineEdit* m_edit;
+    QAbstractItemModel* m_model;
 };
 
 
