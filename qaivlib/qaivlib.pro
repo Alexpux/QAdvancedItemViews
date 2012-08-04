@@ -39,7 +39,8 @@ SOURCES += qaiv.cpp \
     qconditionaldecorationproxymodel.cpp \
     quniquevaluesproxymodel.cpp \
     qfixedrowstableview.cpp \
-    qshareditemselectionmodel.cpp
+    qshareditemselectionmodel.cpp \
+    qfixedrowsheaderview.cpp
 
 HEADERS += qaiv.h\
         qaivlib_global.h \
@@ -81,7 +82,8 @@ HEADERS += qaiv.h\
     qconditionaldecorationproxymodel.h \
     quniquevaluesproxymodel.h \
     qfixedrowstableview.h \
-    qshareditemselectionmodel.h
+    qshareditemselectionmodel.h \
+    qfixedrowsheaderview.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
