@@ -45,22 +45,22 @@ void QFilterViewItemDelegate::comboxBoxItemActivated( int index )
 
 QWidget* QFilterViewItemDelegate::createEditor( QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
-   const QAbstractFilterModel* mModel = qobject_cast<const QAbstractFilterModel*>(index.model());
-    if (mModel){
-        QAbstractFilter* mFilter = mModel->filter(index);
-        if (mFilter){
-            return mFilter->createEditor(parent, option, index);
+   const QAbstractFilterModel* model = qobject_cast<const QAbstractFilterModel*>(index.model());
+    if (model){
+        QAbstractFilter* filter = model->filter(index);
+        if (filter){
+            return filter->createEditor(parent, option, index);
         } else {
-            QFilterView* mFilterView = qobject_cast<QFilterView*>(parent->parentWidget());
-            if (mFilterView){
-                QVariantMap mProperties;
-                mProperties["column"] = index.column();
-                mProperties["row"] = index.row();
-                mProperties["type"] = index.data(QAbstractFilterModel::DefaultFilterTypeRole).toInt();
-                mFilter = mModel->createFilter(index, mProperties);
-                if (mFilter){
-                    mFilter->setEnabled(true);
-                    return mFilter->createEditor(parent, option, index);
+            QFilterView* view = qobject_cast<QFilterView*>(parent->parentWidget());
+            if (view){
+                QVariantMap properties;
+                properties["column"] = index.column();
+                properties["row"] = index.row();
+                properties["type"] = index.data(QAbstractFilterModel::DefaultFilterTypeRole).toInt();
+                filter = model->createFilter(index, properties);
+                if (filter){
+                    filter->setEnabled(true);
+                    return filter->createEditor(parent, option, index);
                 }
             }
         }
@@ -82,36 +82,36 @@ void QFilterViewItemDelegate::listWidgetCurrentItemChanged( QListWidgetItem* cur
 
 void QFilterViewItemDelegate::setEditorData(QWidget* editor, const QModelIndex & index ) const
 {
-    const QAbstractFilterModel* mModel = qobject_cast<const QAbstractFilterModel*>(index.model());
-     if (mModel){
-         QAbstractFilter* mFilter = mModel->filter(index);
-         if (mFilter){
-             return mFilter->setEditorData(editor, index);
+    const QAbstractFilterModel* model = qobject_cast<const QAbstractFilterModel*>(index.model());
+     if (model){
+         QAbstractFilter* filter = model->filter(index);
+         if (filter){
+             return filter->setEditorData(editor, index);
          }
      }
 }
 
 void QFilterViewItemDelegate::setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index) const
 {
-    const QAbstractFilterModel* mModel = qobject_cast<const QAbstractFilterModel*>(index.model());
-     if (mModel){
-         QAbstractFilter* mFilter = mModel->filter(index);
-         if (mFilter){
-             mFilter->setModelData(editor, model, index);
+    const QAbstractFilterModel* m = qobject_cast<const QAbstractFilterModel*>(index.model());
+     if (m){
+         QAbstractFilter* f = m->filter(index);
+         if (f){
+             f->setModelData(editor, model, index);
          }
      }
 }
 
 void QFilterViewItemDelegate::updateEditorGeometry( QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
-    QRect mRect = option.rect;
-    mRect.setHeight(editor->sizeHint().height());
+    QRect r = option.rect;
+    r.setHeight(editor->sizeHint().height());
     editor->setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
-    editor->setGeometry(mRect);
+    editor->setGeometry(r);
 
-    QTableView* mView = qobject_cast<QTableView*>(editor->parentWidget()->parentWidget());
-    if (mView){
-        mRect = QRect(editor->parentWidget()->parentWidget()->mapToGlobal(editor->parentWidget()->parentWidget()->geometry().topLeft()), QSize(100,100));
-        editor->move(mView->viewport()->mapToGlobal(option.rect.topLeft()));
+    QTableView* v = qobject_cast<QTableView*>(editor->parentWidget()->parentWidget());
+    if (v){
+        r = QRect(editor->parentWidget()->parentWidget()->mapToGlobal(editor->parentWidget()->parentWidget()->geometry().topLeft()), QSize(100,100));
+        editor->move(v->viewport()->mapToGlobal(option.rect.topLeft()));
     }
 }
