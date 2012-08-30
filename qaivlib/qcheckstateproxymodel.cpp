@@ -53,6 +53,11 @@ QCheckStateProxyModel::~QCheckStateProxyModel()
     delete d;
 }
 
+int QCheckStateProxyModel::checkableColumnsCount() const
+{
+	return d->columns.size();
+}
+
 QModelIndexList QCheckStateProxyModel::checkedIndexes() const
 {
     return d->checkedIndexes;
@@ -80,6 +85,26 @@ bool QCheckStateProxyModel::isColumnCheckable(int column) const
     return d->columns.contains(column);
 }
 
+void QCheckStateProxyModel::setAllChecked(bool checked)
+{
+	if (rowCount() == 0 || columnCount() == 0){
+		return;
+	}
+	if (checked){
+		for (int c = 0; c < d->columns.size(); c++){
+			for (int r = 0; r < rowCount(); r++){
+				QModelIndex i = index(r, c);
+				if (!d->checkedIndexes.contains(i)){
+					d->checkedIndexes.append(i);
+				}
+			}
+		}
+	} else {
+		d->checkedIndexes.clear();
+	}
+	emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
+}
+
 void QCheckStateProxyModel::setColumnCheckable(int column, bool checkable)
 {
     if (checkable){
@@ -90,6 +115,21 @@ void QCheckStateProxyModel::setColumnCheckable(int column, bool checkable)
         d->columns.removeAt(d->columns.indexOf(column));
     }
     invalidateFilter();
+}
+
+void QCheckStateProxyModel::setChecked(const QModelIndex & index, bool checked)
+{
+	if (d->columns.contains(index.column()) && index.row() < rowCount()){
+		if (checked){
+			d->checkedIndexes.append(index);
+			emit dataChanged(index, index);
+		} else {
+			if (d->checkedIndexes.contains(index)){
+				d->checkedIndexes.removeAt(d->checkedIndexes.indexOf(index));
+				emit dataChanged(index, index);
+			}
+		}
+	}
 }
 
 void QCheckStateProxyModel::setCheckedIndexes(const QModelIndexList & indexes)

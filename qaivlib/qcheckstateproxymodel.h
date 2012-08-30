@@ -37,6 +37,10 @@ public:
       * Destroys the QCheckStateProxyModel object.
       */
     ~QCheckStateProxyModel();
+	/**
+	 * Returns the number of columns checkable.
+	 */
+	int checkableColumnsCount() const;
     /**
       * Returns a list with the checked indexes.
       */
@@ -64,6 +68,10 @@ public:
       * @reimp
       */
     virtual void setSourceModel(QAbstractItemModel *sourceModel);
+public slots:
+	void setAllChecked(bool checked = true);
+
+	void setChecked(const QModelIndex & index, bool checked);
 private slots:
     void sourceModelAboutToBeReset();
 private:
