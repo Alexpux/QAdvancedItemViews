@@ -1,11 +1,11 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qaivlib", "qaivlib\qaivlib.vcproj", "{A1CA05B9-A4C3-3263-A8EE-36BC8C66F22C}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example", "example\example.vcproj", "{19C9FBF3-6FB7-368D-B827-330FFBC1E363}"
 	ProjectSection(ProjectDependencies) = postProject
-		{A1CA05B9-A4C3-3263-A8EE-36BC8C66F22C} = {A1CA05B9-A4C3-3263-A8EE-36BC8C66F22C}
+		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168} = {E1EBF152-8CB3-4230-9C4B-6C1AE0704168}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qaivlib", "qaivlib\qaivlib.vcproj", "{E1EBF152-8CB3-4230-9C4B-6C1AE0704168}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,19 +13,19 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A1CA05B9-A4C3-3263-A8EE-36BC8C66F22C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A1CA05B9-A4C3-3263-A8EE-36BC8C66F22C}.Debug|Win32.Build.0 = Debug|Win32
-		{A1CA05B9-A4C3-3263-A8EE-36BC8C66F22C}.Release|Win32.ActiveCfg = Release|Win32
-		{A1CA05B9-A4C3-3263-A8EE-36BC8C66F22C}.Release|Win32.Build.0 = Release|Win32
 		{19C9FBF3-6FB7-368D-B827-330FFBC1E363}.Debug|Win32.ActiveCfg = Debug|Win32
 		{19C9FBF3-6FB7-368D-B827-330FFBC1E363}.Debug|Win32.Build.0 = Debug|Win32
 		{19C9FBF3-6FB7-368D-B827-330FFBC1E363}.Release|Win32.ActiveCfg = Release|Win32
 		{19C9FBF3-6FB7-368D-B827-330FFBC1E363}.Release|Win32.Build.0 = Release|Win32
+		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168}.Debug|Win32.Build.0 = Debug|Win32
+		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168}.Release|Win32.ActiveCfg = Release|Win32
+		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		QtVersion = 4.8.0
+		QtVersion = 4.8.2
 	EndGlobalSection
 EndGlobal

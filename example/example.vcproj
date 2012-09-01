@@ -165,8 +165,8 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
-				AdditionalDependencies="$(QTDIR)\lib\qtmain.lib qaivlib.lib $(QTDIR)\lib\QtGui4.lib $(QTDIR)\lib\QtCore4.lib"
-				OutputFile="$(OutDir)\example.exe"
+				AdditionalDependencies="$(QTDIR)\lib\qtmain.lib $(QTDIR)\lib\QtGui4.lib $(QTDIR)\lib\QtCore4.lib $(SolutionDir)bin\$(PlatformName)\$(ConfigurationName)\qaivlib.lib"
+				OutputFile="$(SolutionDir)bin\$(PlatformName)\$(ConfigurationName)\example.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(QTDIR)\lib,$(QTDIR)\lib,C:/Users/Martin/Documents/Entwicklung/qaiv/example/../qaivlib/release/"
@@ -457,7 +457,7 @@
 	<Globals>
 		<Global
 			Name="QtVersion Win32"
-			Value="4.8.0"
+			Value="4.8.2"
 		/>
 		<Global
 			Name="RccDir"
