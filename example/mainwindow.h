@@ -22,6 +22,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QIdentityProxyModel>
 
 class QStandardItemModel;
 class QGroupingProxyModel;
@@ -29,6 +30,15 @@ class QGroupingProxyModel;
 namespace Ui {
     class MainWindow;
 }
+
+class SelectionListDataProviderProxy : public QIdentityProxyModel
+{
+	Q_OBJECT
+public:
+	SelectionListDataProviderProxy(QObject* parent);
+	~SelectionListDataProviderProxy();
+	QVariant data(const QModelIndex & proxyIndex, int role = Qt::DisplayRole) const;
+};
 
 class MainWindow : public QMainWindow
 {

@@ -45,6 +45,25 @@
 
 #include "spinboxitemdelegate.h"
 
+SelectionListDataProviderProxy::SelectionListDataProviderProxy(QObject* parent) :
+	QIdentityProxyModel(parent)
+{
+}
+
+SelectionListDataProviderProxy::~SelectionListDataProviderProxy()
+{
+}
+
+QVariant SelectionListDataProviderProxy::data(const QModelIndex & proxyIndex, int role) const
+{
+	if (role == QAdvancedItemViews::SelectionListFilterDataRole){
+		QVariantList l;
+		l << "Qt's tools" << "general software development";
+		return l;
+	}
+	return QIdentityProxyModel::data(proxyIndex, role);
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -384,7 +403,9 @@ void MainWindow::initModel()
 void MainWindow::initTabAdvancedTableView()
 {
     connect(ui->filterTableView->filterProxyModel(), SIGNAL(resultCountChanged(int,int)), this, SLOT(advancedTableViewResultChanged(int,int)));
-    ui->filterTableView->setModel(m_model);
+	SelectionListDataProviderProxy* p = new SelectionListDataProviderProxy(this);
+	p->setSourceModel(m_model);
+    ui->filterTableView->setModel(p);
     ui->filterTableView->horizontalHeader()->setClickable(true);
 
     // ------------------------------------
@@ -400,10 +421,19 @@ void MainWindow::initTabAdvancedTableView()
     // ------------------------------------
     ui->filterTableView->setDefaultFilterType(1, QTextFilter::Type);
     // ------------------------------------
+    // Column 'Qt': All filter types allowed. The default filter type is set to Text Filter
+    // ------------------------------------
+    ui->filterTableView->setFilterType(QSelectionListFilter::Type, 2);
+    QSelectionListFilter* selectionListFilter = qabstractfilter_cast<QSelectionListFilter*>(ui->filterTableView->filterAt(0, 2));
+	if (selectionListFilter){
+		selectionListFilter->setDataSource(QSelectionListFilter::Model);
+        selectionListFilter->setEnabled(false);
+	}
+    // ------------------------------------
     // Column 'Maturity Level'
     // ------------------------------------
     ui->filterTableView->setFilterType(QSelectionListFilter::Type, 3);
-    QSelectionListFilter* selectionListFilter = qabstractfilter_cast<QSelectionListFilter*>(ui->filterTableView->filterAt(0, 3));
+	selectionListFilter = qabstractfilter_cast<QSelectionListFilter*>(ui->filterTableView->filterAt(0, 3));
     if (selectionListFilter){
         QVariantList values;
         values << "Deprecated" << "Done" << "Maintained";
