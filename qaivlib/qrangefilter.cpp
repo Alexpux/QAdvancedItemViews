@@ -27,9 +27,10 @@
 #include <QLineEdit>
 
 #include <qrangefilter_p.h>
+#include <qfilterviewitemdelegate.h>
 
-QRangeFilterEditor::QRangeFilterEditor( QWidget* parent )
-    : QWidget(parent)
+QRangeFilterEditorPopup::QRangeFilterEditorPopup(QWidget* parent) :
+	QFilterEditorPopupWidget(parent)
 {
     m_rangeFrom = new QLineEdit(this);
     m_rangeTo = new QLineEdit(this);
@@ -39,34 +40,61 @@ QRangeFilterEditor::QRangeFilterEditor( QWidget* parent )
     l->addRow(tr("To:"), m_rangeTo);
     setLayout(l);
 
-    setFocusProxy(m_rangeFrom);
-    setFocusPolicy(Qt::StrongFocus);
+	m_rangeFrom->installEventFilter(parent);
+	m_rangeTo->installEventFilter(parent);
+
+	m_rangeFrom->setFocus();
+}
+
+QRangeFilterEditorPopup::~QRangeFilterEditorPopup()
+{
+}
+
+QString QRangeFilterEditorPopup::rangeFrom() const
+{
+	return m_rangeFrom->text();
+}
+
+QString QRangeFilterEditorPopup::rangeTo() const
+{
+	return m_rangeTo->text();
+}
+
+void QRangeFilterEditorPopup::setRangeFrom( const QString & text )
+{
+	m_rangeFrom->setText(text);
+}
+
+void QRangeFilterEditorPopup::setRangeTo( const QString & text )
+{
+	m_rangeTo->setText(text);
+}
+
+
+QRangeFilterEditor::QRangeFilterEditor( QWidget* parent )
+    : QFilterEditorWidget(parent)
+{
+	setPopup(new QRangeFilterEditorPopup(this));
 }
 
 QRangeFilterEditor::~QRangeFilterEditor()
 {
 }
 
-QString QRangeFilterEditor::rangeFrom() const
+bool QRangeFilterEditor::eventFilter(QObject *obj, QEvent *event)
 {
-    return m_rangeFrom->text();
+	if (event->type() == QEvent::KeyPress){
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+		if (keyEvent->key() == Qt::Key_Return){
+			emit commitAndClose();
+			return true;
+		} else {
+			return QObject::eventFilter(obj, event);
+		}
+ 	} else {
+		return QObject::eventFilter(obj, event);
+	}
 }
-
-QString QRangeFilterEditor::rangeTo() const
-{
-    return m_rangeTo->text();
-}
-
-void QRangeFilterEditor::setRangeFrom( const QString & text )
-{
-    m_rangeFrom->setText(text);
-}
-
-void QRangeFilterEditor::setRangeTo( const QString & text )
-{
-    m_rangeTo->setText(text);
-}
-
 //-----------------------------------------------
 // class QRangeFilter
 //-----------------------------------------------
@@ -79,19 +107,27 @@ QRangeFilter::QRangeFilter(int row, int column) :
 
 QRangeFilter::~QRangeFilter()
 {
-
 }
 
-QWidget* QRangeFilter::createEditor( QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QWidget* QRangeFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
     Q_UNUSED(option);
     Q_UNUSED(index);
-    return new QRangeFilterEditor(parent);
+	QRangeFilterEditor* e = new QRangeFilterEditor(parent);
+	QObject::connect(e, SIGNAL(commitAndClose(QAbstractItemDelegate::EndEditHint)), delegate, SLOT(commitAndClose(QAbstractItemDelegate::EndEditHint)));
+    return e;
 }
 
 QVariant QRangeFilter::data(int role) const
 {
     if (role == Qt::DisplayRole){
+		if (property("rangeFrom").toString().isNull() && property("rangeTo").toString().isNull()){
+			return QObject::tr("<any> - <any>");
+		} else if (property("rangeFrom").toString().isNull() && !property("rangeTo").toString().isNull()){
+	        return QString(QObject::tr("<any> - %1")).arg(property("rangeTo").toString());
+		} else if (!property("rangeFrom").toString().isNull() && property("rangeTo").toString().isNull()){
+	        return QString(QObject::tr("%1 - <any>")).arg(property("rangeFrom").toString());
+		}
         return QString("%1 - %2").arg(property("rangeFrom").toString()).arg(property("rangeTo").toString());
     }
     return QVariant();
@@ -99,6 +135,7 @@ QVariant QRangeFilter::data(int role) const
 
 bool QRangeFilter::matches(const QVariant & value, int type) const
 {
+	Q_UNUSED(type);
     if (value.type() == QVariant::Char){
         if (property("rangeFrom").isValid() && property("rangeTo").isValid()){
             return value.toChar() >= property("rangeFrom").toString().at(0) && value.toChar() <= property("rangeTo").toString().at(0);
@@ -185,30 +222,41 @@ bool QRangeFilter::matches(const QVariant & value, int type) const
 
 void QRangeFilter::setEditorData(QWidget * editor, const QModelIndex & index)
 {
+	Q_UNUSED(index);
     QRangeFilterEditor* w = qobject_cast<QRangeFilterEditor*>(editor);
     if (w){
-        w->setRangeFrom(property("rangeFrom").toString());
-        w->setRangeTo(property("rangeTo").toString());
+		QRangeFilterEditorPopup* p = qobject_cast<QRangeFilterEditorPopup*>(w->popup());
+        p->setRangeFrom(property("rangeFrom").toString());
+        p->setRangeTo(property("rangeTo").toString());
     }
 }
 
 void QRangeFilter::setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index)
 {
+	Q_UNUSED(index);
     QRangeFilterEditor* w = qobject_cast<QRangeFilterEditor*>(editor);
     if (w){
-        QVariantMap mProperties(index.data(Qt::EditRole).toMap());
-        if (w->rangeFrom().isEmpty()){
-            mProperties["rangeFrom"] = QVariant();
+		QRangeFilterEditorPopup* p = qobject_cast<QRangeFilterEditorPopup*>(w->popup());
+        QVariantMap properties(index.data(Qt::EditRole).toMap());
+        if (p->rangeFrom().isEmpty()){
+            properties["rangeFrom"] = QVariant();
         } else {
-            mProperties["rangeFrom"] = w->rangeFrom();
+            properties["rangeFrom"] = p->rangeFrom();
         }
-        if (w->rangeTo().isEmpty()){
-            mProperties["rangeTo"] =  QVariant();
+        if (p->rangeTo().isEmpty()){
+            properties["rangeTo"] =  QVariant();
         } else {
-            mProperties["rangeTo"] = w->rangeTo();
+            properties["rangeTo"] = p->rangeTo();
         }
-        model->setData(index, mProperties);
+        model->setData(index, properties);
     }
+}
+
+void QRangeFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
+{
+	QRangeFilterEditor* e = qobject_cast<QRangeFilterEditor*>(editor);
+	e->setGeometry(option.rect);
+	e->showPopup();
 }
 
 QDebug operator<<(QDebug d, const QRangeFilter & f)

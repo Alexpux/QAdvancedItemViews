@@ -141,10 +141,12 @@ QValueFilter::~QValueFilter()
 
 }
 
-QWidget* QValueFilter::createEditor( QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QWidget* QValueFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
     Q_UNUSED(option);
     Q_UNUSED(index);
+	Q_UNUSED(delegate);
+	Q_UNUSED(index);
     return new QValueFilterEditor(parent);
 }
 
@@ -203,10 +205,10 @@ void QValueFilter::setEditorData(QWidget * editor, const QModelIndex & index)
 {
     QValueFilterEditor* w = qobject_cast<QValueFilterEditor*>(editor);
     if (w){
-        QVariantMap mProperties = index.data(Qt::EditRole).toMap();
-        w->setText(mProperties.value("value").toString());
-        w->setMatchFlag(static_cast<Qt::MatchFlag>(mProperties.value("matchFlag").toInt()));
-        w->setCaseSensitivity(static_cast<Qt::CaseSensitivity>(mProperties.value("caseSensitivity").toInt()));
+        QVariantMap p = index.data(Qt::EditRole).toMap();
+        w->setText(p.value("value").toString());
+        w->setMatchFlag(static_cast<Qt::MatchFlag>(p.value("matchFlag").toInt()));
+        w->setCaseSensitivity(static_cast<Qt::CaseSensitivity>(p.value("caseSensitivity").toInt()));
     }
 }
 
@@ -214,10 +216,30 @@ void QValueFilter::setModelData(QWidget* editor, QAbstractItemModel* model, cons
 {
     QValueFilterEditor* w = qobject_cast<QValueFilterEditor*>(editor);
     if (w){
-        QVariantMap mProperties(index.data(Qt::EditRole).toMap());
-        mProperties["value"] = w->text();
-        mProperties["caseSensitivity"] = w->caseSensitivity();
-        mProperties["matchFlag"] = w->matchFlag();
-        model->setData(index, mProperties);
+        QVariantMap p(index.data(Qt::EditRole).toMap());
+        p["value"] = w->text();
+        p["caseSensitivity"] = w->caseSensitivity();
+        p["matchFlag"] = w->matchFlag();
+		if (property("enableOnCommit").toBool()){
+			p["enabled"] = true;
+		}
+        model->setData(index, p);
     }
+}
+
+void QValueFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
+{
+	editor->setGeometry(option.rect);
+}
+
+QDebug operator<<(QDebug d, const QValueFilter & f)
+{
+    d << "(QValueFilter:"
+      << "row:" << f.row()
+      << "column:" << f.column()
+      << "enabled:" << f.isEnabled()
+      << "value:" << f.property("value")
+	  << "matchFlag" << static_cast<Qt::MatchFlag>(f.property("matchFlag").toInt())
+      << ")";
+    return d.space();
 }

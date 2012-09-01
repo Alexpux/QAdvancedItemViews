@@ -94,11 +94,18 @@ public slots:
     void changeProperties();
     void disableSelectedFilters();
     void enableSelectedFilters();
+	/**
+	 * Removes the current filter.
+	 */
     void removeFilter();
     /**
       * If @p visible the filters in the filter model are shown. Otherwise the size of this is reduced to show the header view only.
       */
     void setFilterVisible(bool visible);
+	/**
+	 * Toggles the state (enabled/disabled) of the filter selection.
+	 * @see toggleFilter()
+	 */
     void toggleSelectedFilters();
 protected:
     void contextMenuEvent( QContextMenuEvent* event );

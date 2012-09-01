@@ -49,13 +49,20 @@ public:
 
     void setModelData( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const;
 
+	QSize sizeHint( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+
     void updateEditorGeometry( QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+public slots:
+	void commitAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
+	void cancelAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
 private slots:
     void comboxBoxItemActivated( int index );
 
     void listWidgetCurrentItemChanged( QListWidgetItem* current, QListWidgetItem* previous );
 
     void lineEditReturnPressed();
+private:
+	bool m_enableFilter;
 };
 
 #endif // QFILTERVIEWITEMDELEGATE_H

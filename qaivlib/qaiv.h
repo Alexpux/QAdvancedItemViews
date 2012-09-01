@@ -41,8 +41,9 @@ public:
         ValueFilterTypeRole = Qt::UserRole + 42
         ,DefaultFilterTypeRole
         ,ColumnFilterTypesRole
-        ,ConditionalDecorationRole,
-        IconSetsRole
+        ,ConditionalDecorationRole
+		,SelectionListFilterDataRole
+        ,IconSetsRole
     };
 
 };

@@ -204,6 +204,11 @@ QVariant QFixedRowsDecorationProxyModel::headerData(int section, Qt::Orientation
     return QIdentityProxyModel::headerData(section, orientation, role);
 }
 
+QSize QFixedRowsDecorationProxyModel::iconSize() const
+{
+	return QSize(24, 24);
+}
+
 bool QFixedRowsDecorationProxyModel::isEnabled() const
 {
     return d->enabled;
@@ -221,10 +226,15 @@ void QFixedRowsDecorationProxyModel::setEnabled(bool on)
 
 void QFixedRowsDecorationProxyModel::toggleRow(const QModelIndex & index)
 {
-    QModelIndex i = index;
-    QAbstractProxyModel* proxy;
-    while((proxy = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
-        i = proxy->mapToSource(i);
+    //QModelIndex i = index;
+    //QAbstractProxyModel* proxy;
+    //while((proxy = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
+    //    i = proxy->mapToSource(i);
+    //}
+	QModelIndex i(index);
+	QAbstractProxyModel* p;
+	while(i.model() != sourceModel() && (p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
+        i = p->mapToSource(i);
     }
     d->filterProxy->toggleRow(i);
 }

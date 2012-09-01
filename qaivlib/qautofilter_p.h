@@ -21,17 +21,55 @@
 #ifndef QAUTOFILTER_P_H
 #define QAUTOFILTER_P_H
 
-#include <QComboBox>
+#include <qfiltereditorwidget.h>
+#include <qfiltereditorpopupwidget.h>
 #include <QStandardItemModel>
 
+class QCheckBox;
 class QLineEdit;
 class QListView;
+class QToolButton;
 
 class QCheckStateProxyModel;
 class QUniqueValuesProxyModel;
 class QSingleColumnProxyModel;
 
-class QAutoFilterEditor : public QWidget
+class QAutoFilterEditorPopup : public QFilterEditorPopupWidget
+{
+	Q_OBJECT
+public:
+	QAutoFilterEditorPopup(QWidget* parent);
+	~QAutoFilterEditorPopup();
+
+	int mode() const;
+
+    QVariantList selectedValues(int role = Qt::DisplayRole) const;
+
+    void setSelectedValues(const QVariantList & values);
+
+	void setSourceModel(QAbstractItemModel* model, int column);
+signals:
+	void modeChanged();
+private slots:
+	void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+	void emptyToolButtonClicked();
+	void notEmptyToolButtonClicked();
+    void searchForTextEdited(const QString & text);
+	void selectCheckBoxStateChanged(int state);
+private:
+	QToolButton* m_emptyToolButton;
+    QLineEdit* m_lineEdit;
+    QListView* m_listView;
+	int m_mode;
+	QToolButton* m_notEmptyToolButton;
+	QCheckBox* m_selectCheckBox;
+
+	QCheckStateProxyModel* m_checkStateProxy;
+    QSingleColumnProxyModel* m_singleColumnProxy;
+    QUniqueValuesProxyModel* m_singleValueProxy;
+};
+
+class QAutoFilterEditor : public QFilterEditorWidget
 {
     Q_OBJECT
 public:
@@ -40,16 +78,10 @@ public:
     QVariantList selectedValues(int role = Qt::DisplayRole) const;
 
     void setSourceModel(QAbstractItemModel* model, int column);
-
-    void setSelectedValues(const QVariantList & values);
-private slots:
-    void searchForTextEdited(const QString & text);
-private:
-    QLineEdit* m_lineEdit;
-    QListView* m_listView;
-    QCheckStateProxyModel* m_checkStateProxy;
-    QSingleColumnProxyModel* m_singleColumnProxy;
-    QUniqueValuesProxyModel* m_singleValueProxy;
+public slots:
+	void modeSelected();
+protected:
+	bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif // QAUTOFILTER_P_H

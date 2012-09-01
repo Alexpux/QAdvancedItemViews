@@ -37,7 +37,6 @@ QFilterModel::QFilterModel(QObject* parent)
     registerFilter(QRangeFilter::Type, QIcon(":/qaiv/filter/range"), tr("Range Filter"));
     registerFilter(QValueFilter::Type, QIcon(":/qaiv/filter/value"), tr("Value Filter"));
     registerFilter(QRegExpFilter::Type, QIcon(":/qaiv/filter/regexp"), tr("RegExp Filter"));
-    registerFilter(QAbstractFilter::Type, "-");
     registerFilter(QAutoFilter::Type, QIcon(":/qaiv/filter/auto"), tr("Auto Filter"));
     registerFilter(QSelectionListFilter::Type, QIcon(":/qaiv/filter/selection"), tr("Selection List Filter"));
 }
@@ -69,8 +68,8 @@ QAbstractFilter* QFilterModel::createFilter(const QModelIndex & index, const QVa
         }
     }
     if (filter){
+		filter->setProperty("enableOnCommit", true);
         group->add(filter);
-        filter->setEnabled(true);
     }
     return filter;
 }

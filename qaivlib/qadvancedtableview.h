@@ -343,6 +343,11 @@ public:
       */
     QByteArray saveFilter() const;
 	/**
+	 * Saves the current state of this advanced table view.
+	 * @see restoreState()
+	 */
+	QByteArray saveState();
+	/**
 	 * Returns the current selection mode
 	 * @see setSelectionMode()
 	 */
@@ -656,6 +661,8 @@ private slots:
 
     void verticalHeaderSectionResized(int logicalIndex, int oldSize, int newSize);
 private:
+	QModelIndex mapToSource(const QModelIndex & index) const;
+
     QAdvancedTableViewPrivate* d;
 
     Ui::QAdvancedTableView *ui;

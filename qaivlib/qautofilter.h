@@ -38,7 +38,7 @@ public:
     /**
       * Returns the widget used to edit the filter specified by @p index for editing. The @p parent widget and style @p option are used to control how the editor widget appears.
       */
-    QWidget* createEditor( QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
 
     QVariant data(int role = Qt::DisplayRole) const;
 
@@ -47,6 +47,8 @@ public:
     void setEditorData(QWidget * editor, const QModelIndex & index);
 
     void setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index);
+
+	void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index);
 };
 
 #endif // QAUTOFILTER_H

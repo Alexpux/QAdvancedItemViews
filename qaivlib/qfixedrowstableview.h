@@ -97,6 +97,8 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
+	QSize iconSize() const;
+
     bool isEnabled() const;
 
     void setEnabled(bool on);

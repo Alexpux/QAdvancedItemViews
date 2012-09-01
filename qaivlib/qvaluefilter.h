@@ -40,7 +40,7 @@ public:
       */
     ~QValueFilter();
 
-    QWidget* createEditor( QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
 
     QVariant data(int role = Qt::DisplayRole) const;
 
@@ -49,6 +49,10 @@ public:
     void setEditorData(QWidget * editor, const QModelIndex & index);
 
     void setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index);
+
+	void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index);
 };
+
+QDebug operator<<(QDebug dbg, const QValueFilter & f);
 
 #endif // QVALUEFILTER_H

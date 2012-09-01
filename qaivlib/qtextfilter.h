@@ -38,7 +38,7 @@ public:
     /**
       *  @reimp
       */
-    QWidget* createEditor( QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
 
     void addContextMenuActions(QMenu* menu, QWidget* receiver);
     /**
@@ -53,6 +53,10 @@ public:
     void setEditorData(QWidget * editor, const QModelIndex & index);
 
     void setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index);
+
+	void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index);
 };
+
+QDebug operator<<(QDebug dbg, const QTextFilter & f);
 
 #endif // QTEXTFILTER_H

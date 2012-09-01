@@ -259,10 +259,9 @@ void QFilterView::mousePressEvent( QMouseEvent* event )
         QRect r = visualRect(index);
         r.setWidth(16);
         if (r.contains(event->pos())){
-            event->accept();
-        } else {
-            QTableView::mousePressEvent(event);
+			toggleFilter(index);
         }
+		QTableView::mousePressEvent(event);
     } else {
         QTableView::mousePressEvent(event);
     }
@@ -344,6 +343,18 @@ void QFilterView::setFilterVisible(bool visible)
         d->filterVisible = visible;
         emit visibilityChanged(d->filterVisible);
     }
+}
+
+void QFilterView::toggleFilter(const QModelIndex & index)
+{
+	if (index.isValid()){
+	    QVariantMap p;
+        p = index.data(Qt::EditRole).toMap();
+        if (!p.isEmpty()){
+            p["enabled"] = !p.value("enabled").toBool();
+            model()->setData(index, p);
+        }
+	}
 }
 
 void QFilterView::toggleSelectedFilters()

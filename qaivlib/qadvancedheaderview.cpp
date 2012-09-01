@@ -253,11 +253,6 @@ void QAdvancedHeaderView::showFilterActionTriggered()
     }
 }
 
-int QAdvancedHeaderView::sizeHintForRow(int row) const
-{
-    return 25;
-}
-
 void QAdvancedHeaderView::toggleSortOrderActionTriggered()
 {
     QAction* a = qobject_cast<QAction*>(sender());

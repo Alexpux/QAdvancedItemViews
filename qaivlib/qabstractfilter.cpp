@@ -60,6 +60,7 @@ QAbstractFilter::QAbstractFilter() :
 QAbstractFilter::QAbstractFilter(int type, int row, int column) :
     d(new QAbstractFilterPrivate(this))
 {
+    d->properties["enabled"] = false;
     d->properties["type"] = type;
     d->properties["row"] = row;
     d->properties["column"] = column;
@@ -118,7 +119,6 @@ int QAbstractFilter::row() const
     return d->properties.value("row", -1).toInt();
 }
 
-
 QVariant QAbstractFilter::property(const QString & key, const QVariant & defaultValue) const
 {
     return d->properties.value(key, defaultValue);
@@ -136,7 +136,7 @@ void QAbstractFilter::setHighlightColor(const QColor & color)
 
 void QAbstractFilter::setProperty(const QString & name, const QVariant & value)
 {
-    d->properties[name] = value;
+	d->properties[name] = value;
 }
 
 void QAbstractFilter::setRow(int row)

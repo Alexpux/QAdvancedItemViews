@@ -49,6 +49,7 @@
         <file alias="starts_with">resources/starts_with.ico</file>
         <file alias="sortorder.toggle">resources/togglesortorder.ico</file>
         <file alias="contains">resources/contains.ico</file>
+        <file alias="expand">resources/expand.ico</file>
     </qresource>
     <qresource prefix="/qaiv/pin">
         <file alias="disabled">resources/pin_rows_disabled.ico</file>

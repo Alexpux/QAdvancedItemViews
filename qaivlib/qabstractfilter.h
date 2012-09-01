@@ -29,6 +29,7 @@
 #include <qaivlib_global.h>
 
 class QFilterGroup;
+class QFilterViewItemDelegate;
 class QAbstractFilterPrivate;
 
 //! The QAbstractFilter class provides a base class for filter definitions used with a QAdvancedTableView.
@@ -68,7 +69,7 @@ public:
       * Returns the editor to be used for editing the filter data.
       * The editor's parent widget is specified by @p parent, and the item options by @p option.
       */
-    virtual QWidget* createEditor( QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const = 0;
+    virtual QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const = 0;
     /**
       * Returns the filter's data for the given @p role, or an invalid QVariant if there is no data for the role.
       */
@@ -126,6 +127,8 @@ public:
      * Returns the filter defintion's type.
      */
     int type() const;
+
+	virtual void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) = 0;
 protected:
     /**
       * Constructs a filter definition with the given @p type and @p column index.

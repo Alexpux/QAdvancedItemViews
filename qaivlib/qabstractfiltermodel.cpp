@@ -77,7 +77,7 @@ QAbstractFilterModel::~QAbstractFilterModel()
 int QAbstractFilterModel::columnCount(const QModelIndex & parent) const
 {
     if (d->sourceModel){
-        return d->sourceModel->columnCount();
+        return d->sourceModel->columnCount(parent);
     }
     return 1;
 }
@@ -146,6 +146,7 @@ QList<QAbstractFilter*> QAbstractFilterModel::filtersAtRow(int row) const
 
 Qt::ItemFlags QAbstractFilterModel::flags(const QModelIndex & index) const
 {
+	Q_UNUSED(index);
     Qt::ItemFlags f;
     f |= Qt::ItemIsEditable;
     f |= Qt::ItemIsEnabled;
@@ -179,6 +180,7 @@ QVariant QAbstractFilterModel::headerData( int section, Qt::Orientation orientat
 
 QModelIndex QAbstractFilterModel::index(int row, int column, const QModelIndex & parent) const
 {
+	Q_UNUSED(parent);
     return createIndex(row, column);
 }
 
@@ -249,6 +251,7 @@ bool QAbstractFilterModel::removeRows(int row, int count, const QModelIndex & pa
 
 int QAbstractFilterModel::rowCount(const QModelIndex & parent) const
 {
+	Q_UNUSED(parent);
     return d->filterGroupList.size();
 }
 
@@ -270,7 +273,6 @@ bool QAbstractFilterModel::setData(const QModelIndex & index, const QVariant & v
                 if (filter == 0){
                     return false;
                 }
-                filter->setEnabled(true);
             } else {
                 QMapIterator<QString,QVariant> it(value.toMap());
                 while(it.hasNext()){

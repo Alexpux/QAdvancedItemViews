@@ -21,20 +21,29 @@
 #ifndef QSELECTIONLISTFILTER_P_H
 #define QSELECTIONLISTFILTER_P_H
 
-#include <QWidget>
-#include <QLineEdit>
-#include <QListView>
+#include <qfiltereditorwidget.h>
+#include <qfiltereditorpopupwidget.h>
 #include <QStandardItemModel>
 
 #include <qcheckstateproxymodel.h>
 
-class QSelectionListFilterEditor : public QWidget
-{
-    Q_OBJECT
-public:
-    QSelectionListFilterEditor(QWidget* parent = 0);
+class QCheckBox;
+class QLineEdit;
+class QListView;
+class QToolButton;
 
-    QVariantList values(int role = Qt::DisplayRole) const;
+class QSelectionListFilterEditorPopup : public QFilterEditorPopupWidget
+{
+	Q_OBJECT
+public:
+	QSelectionListFilterEditorPopup(QWidget* parent);
+	~QSelectionListFilterEditorPopup();
+
+	bool cancelAndClose(QObject* obj, int key) const;
+
+	bool commitAndClose(QObject* obj, int key) const;
+
+	int mode() const;
 
     QVariantList selectedValues() const;
 
@@ -43,13 +52,35 @@ public:
     void setSelectedValues(const QVariantList & selectedValues);
 
     void setValues(const QVariantList & values);
+
+    QVariantList values(int role = Qt::DisplayRole) const;
+signals:
+	void modeChanged();
 private slots:
+	void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+	void emptyToolButtonClicked();
+	void notEmptyToolButtonClicked();
     void searchForTextEdited(const QString & text);
+	void selectCheckBoxStateChanged(int state);
 private:
-    QCheckStateProxyModel* cCheckStateProxy;
-    QLineEdit* cLineEdit;
-    QListView* cListView;
-    QStandardItemModel* cModel;
+    QCheckStateProxyModel* m_checkStateProxy;
+	QToolButton* m_emptyToolButton;
+    QLineEdit* m_lineEdit;
+    QListView* m_listView;
+	int m_mode;
+	QToolButton* m_notEmptyToolButton;
+	QCheckBox* m_selectCheckBox;
+    QStandardItemModel* m_model;
+};
+
+class QSelectionListFilterEditor : public QFilterEditorWidget
+{
+    Q_OBJECT
+public:
+    QSelectionListFilterEditor(QWidget* parent = 0);
+	~QSelectionListFilterEditor();
+public slots:
+	void modeSelected();
 };
 
 #endif // QSELECTIONLISTFILTER_P_H

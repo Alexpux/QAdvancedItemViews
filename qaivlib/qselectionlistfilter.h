@@ -31,20 +31,33 @@ public:
     enum {
         Type = 6
     };
+	enum DataSource {
+		Model,
+		Filter
+	};
     QSelectionListFilter(int row, int column);
 
-    QWidget* createEditor( QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
 
     QVariant data(int role = Qt::DisplayRole) const;
+	/**
+	 * Returns the data source used to populate the selection list.
+	 */
+	QSelectionListFilter::DataSource dataSource() const;
 
     bool matches(const QVariant & value, int type) const;
+	/**
+	 * Sets the database @p source for the selection list.
+	 */
+	void setDataSource(QSelectionListFilter::DataSource source);
 
     void setEditorData(QWidget * editor, const QModelIndex & index);
 
     void setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index);
 
     void setValues(const QVariantList & values);
-private:
+
+	void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index);
 };
 
 #endif // QSELECTIONLISTFILTER_H

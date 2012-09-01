@@ -29,7 +29,7 @@
 #include <qfiltermodelproxy.h>
 #include <qfiltermodel.h>
 #include <qfilterviewitemdelegate.h>
-#include <qfixrowheaderview.h>
+#include <qfixedrowsheaderview.h>
 #include <qfixedrowstableview.h>
 #include <qshareditemselectionmodel.h>
 #include "qtextfilter.h"
@@ -256,6 +256,11 @@ void QAdvancedTableView::clearSelection()
 
 QModelIndex QAdvancedTableView::currentIndex() const
 {
+	if (ui->fixedRowsTableView->hasFocus()){
+		return mapToSource(ui->fixedRowsTableView->currentIndex());
+	} else if (ui->splittedDataTableView->hasFocus()){
+		return mapToSource(ui->splittedDataTableView->currentIndex());
+	}
     return ui->dataTableView->currentIndex();
 }
 
@@ -435,11 +440,11 @@ void QAdvancedTableView::horizontalHeaderSortIndicatorChanged( int logicalIndex,
 QModelIndex QAdvancedTableView::indexAt(const QPoint & point) const
 {
     if (focusProxy() == ui->splittedDataTableView){
-        return ui->splittedDataTableView->indexAt(point);
+        return mapToSource(ui->splittedDataTableView->indexAt(point));
     } else if (focusProxy() == ui->fixedRowsTableView){
-        return ui->fixedRowsTableView->indexAt(point);
+        return mapToSource(ui->fixedRowsTableView->indexAt(point));
     }
-	return ui->dataTableView->indexAt(point);
+	return mapToSource(ui->dataTableView->indexAt(point));
 }
 
 bool QAdvancedTableView::isColumnHidden(int column) const
@@ -480,6 +485,16 @@ QAbstractItemDelegate *QAdvancedTableView::itemDelegateForColumn(int column) con
 QAbstractItemDelegate *QAdvancedTableView::itemDelegateForRow(int row) const
 {
     return ui->dataTableView->itemDelegateForRow(row);
+}
+
+QModelIndex QAdvancedTableView::mapToSource(const QModelIndex & index) const
+{
+	QModelIndex i(index);
+	QAbstractProxyModel* p;
+	while(i.model() != d->model && (p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
+        i = p->mapToSource(i);
+    }
+	return i;
 }
 
 QSize QAdvancedTableView::minimumSizeHint() const
@@ -607,6 +622,13 @@ QByteArray QAdvancedTableView::saveFilter() const
         }
     }
     return mData;
+}
+
+QByteArray QAdvancedTableView::saveState()
+{
+	QByteArray d;
+	//d << ui->headerTableView->horizontalHeader()->saveState();
+	return d;
 }
 
 void QAdvancedTableView::scrollToBottom()
@@ -926,7 +948,12 @@ void QAdvancedTableView::updateHeaderViewVerticalScrollBar( int min, int max )
 
 void QAdvancedTableView::verticalHeaderSectionClicked(int section)
 {
-    ui->fixedRowsTableView->decorationProxy()->toggleRow(ui->dataTableView->model()->index(section, 0));
+	QPoint p = mapFromGlobal(QCursor::pos());
+	if (ui->fixedRowsTableView->decorationProxy()->isEnabled()){
+		if (p.x() < ui->fixedRowsTableView->decorationProxy()->iconSize().width()){
+			ui->fixedRowsTableView->decorationProxy()->toggleRow(ui->dataTableView->model()->index(section, 0));
+		}
+	}
 }
 
 void QAdvancedTableView::verticalHeaderSectionResized(int logicalIndex, int oldSize, int newSize)

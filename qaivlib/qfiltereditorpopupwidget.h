@@ -18,45 +18,23 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#ifndef QREGEXPFILTER_P_H
-#define QREGEXPFILTER_P_H
+#ifndef QFILTEREDITORPOPUPWIDGET_H
+#define QFILTEREDITORPOPUPWIDGET_H
 
-#include <QWidget>
+#include <QFrame>
 
-class QCheckBox;
-class QComboBox;
-class QLineEdit;
-class QToolButton;
-class QRegExp;
-class QFrame;
-
-class QClickableLabel;
-
-class QRegExpFilterEditor : public QWidget
+class QFilterEditorPopupWidget : public QFrame
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    QRegExpFilterEditor(QWidget* parent = 0);
-    ~QRegExpFilterEditor();
+	QFilterEditorPopupWidget(QWidget *parent);
+	~QFilterEditorPopupWidget();
 
-    Qt::CaseSensitivity caseSenstivity() const;
+	virtual bool cancelAndClose(QObject* obj, int key) const;
 
-    QString pattern() const;
-
-    QRegExp::PatternSyntax patternSyntax() const;
-
-    void setCaseSensitivity(Qt::CaseSensitivity caseSenstivity);
-
-    void setPattern(const QString & pattern);
-
-    void setPatternSyntax(QRegExp::PatternSyntax patternSyntax);
-private slots:
-    void sensitivityLabelClicked(Qt::MouseButtons buttons);
+	virtual bool commitAndClose(QObject* obj, int key) const;
 private:
-    Qt::CaseSensitivity m_sensitivity;
-    QLineEdit* m_patternEdit;
-    QCheckBox* m_wildcardCheckBox;
-    QClickableLabel* m_sensitivityLabel;
+	
 };
 
-#endif // QREGEXPFILTER_P_H
+#endif // QFILTEREDITORPOPUPWIDGET_H

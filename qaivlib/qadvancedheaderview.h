@@ -38,8 +38,6 @@ public:
       * Destroys the header.
       */
     ~QAdvancedHeaderView();
-
-    int sizeHintForRow(int row) const;
 public slots:
     /**
       * Shows all columns.
