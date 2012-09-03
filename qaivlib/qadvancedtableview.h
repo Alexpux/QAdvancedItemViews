@@ -660,6 +660,11 @@ private slots:
     void verticalHeaderSectionClicked(int section);
 
     void verticalHeaderSectionResized(int logicalIndex, int oldSize, int newSize);
+	void viewActivated(const QModelIndex & index);
+	void viewClicked(const QModelIndex & index);
+	void viewDoubleClicked(const QModelIndex & index);
+	void viewEntered(const QModelIndex & index);
+	void viewPressed(const QModelIndex & index);
 private:
 	QModelIndex mapToSource(const QModelIndex & index) const;
 

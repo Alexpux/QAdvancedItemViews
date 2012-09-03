@@ -140,28 +140,28 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(sliderMoved(int)), this, SLOT(headerViewHorizontalScrollBarSilderMoved(int)));
     connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(headerViewHorizontalScrollBarValueChanged(int)));
     // Forward data view signals
-    connect(ui->dataTableView, SIGNAL(activated(QModelIndex)), this, SIGNAL(activated(QModelIndex)));
-    connect(ui->dataTableView, SIGNAL(clicked(QModelIndex)), this, SIGNAL(clicked(QModelIndex)));
+    connect(ui->dataTableView, SIGNAL(activated(QModelIndex)), this, SLOT(viewActivated(QModelIndex)));
+    connect(ui->dataTableView, SIGNAL(clicked(QModelIndex)), this, SLOT(viewClicked(QModelIndex)));
     connect(ui->dataTableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(customContextMenuRequested(QPoint)));
-    connect(ui->dataTableView, SIGNAL(doubleClicked(QModelIndex)), this, SIGNAL(doubleClicked(QModelIndex)));
-    connect(ui->dataTableView, SIGNAL(entered(QModelIndex)), this, SIGNAL(entered(QModelIndex)));
-    connect(ui->dataTableView, SIGNAL(pressed(QModelIndex)), this, SIGNAL(pressed(QModelIndex)));
+    connect(ui->dataTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(viewDoubleClicked(QModelIndex)));
+    connect(ui->dataTableView, SIGNAL(entered(QModelIndex)), this, SLOT(viewEntered(QModelIndex)));
+    connect(ui->dataTableView, SIGNAL(pressed(QModelIndex)), this, SLOT(viewPressed(QModelIndex)));
     connect(ui->dataTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
     // Forward fixed rows view signals
-    connect(ui->fixedRowsTableView, SIGNAL(activated(QModelIndex)), this, SIGNAL(activated(QModelIndex)));
-    connect(ui->fixedRowsTableView, SIGNAL(clicked(QModelIndex)), this, SIGNAL(clicked(QModelIndex)));
+    connect(ui->fixedRowsTableView, SIGNAL(activated(QModelIndex)), this, SLOT(viewActivated(QModelIndex)));
+    connect(ui->fixedRowsTableView, SIGNAL(clicked(QModelIndex)), this, SLOT(viewClicked(QModelIndex)));
     connect(ui->fixedRowsTableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(customContextMenuRequested(QPoint)));
-    connect(ui->fixedRowsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SIGNAL(doubleClicked(QModelIndex)));
-    connect(ui->fixedRowsTableView, SIGNAL(entered(QModelIndex)), this, SIGNAL(entered(QModelIndex)));
-    connect(ui->fixedRowsTableView, SIGNAL(pressed(QModelIndex)), this, SIGNAL(pressed(QModelIndex)));
+    connect(ui->fixedRowsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(viewDoubleClicked(QModelIndex)));
+    connect(ui->fixedRowsTableView, SIGNAL(entered(QModelIndex)), this, SLOT(viewEntered(QModelIndex)));
+    connect(ui->fixedRowsTableView, SIGNAL(pressed(QModelIndex)), this, SLOT(viewPressed(QModelIndex)));
     connect(ui->fixedRowsTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
     // Forward splitted data table view signals
-    connect(ui->splittedDataTableView, SIGNAL(activated(QModelIndex)), this, SIGNAL(activated(QModelIndex)));
-    connect(ui->splittedDataTableView, SIGNAL(clicked(QModelIndex)), this, SIGNAL(clicked(QModelIndex)));
+    connect(ui->splittedDataTableView, SIGNAL(activated(QModelIndex)), this, SLOT(viewActivated(QModelIndex)));
+    connect(ui->splittedDataTableView, SIGNAL(clicked(QModelIndex)), this, SLOT(viewClicked(QModelIndex)));
     connect(ui->splittedDataTableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(customContextMenuRequested(QPoint)));
-    connect(ui->splittedDataTableView, SIGNAL(doubleClicked(QModelIndex)), this, SIGNAL(doubleClicked(QModelIndex)));
-    connect(ui->splittedDataTableView, SIGNAL(entered(QModelIndex)), this, SIGNAL(entered(QModelIndex)));
-    connect(ui->splittedDataTableView, SIGNAL(pressed(QModelIndex)), this, SIGNAL(pressed(QModelIndex)));
+    connect(ui->splittedDataTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(viewDoubleClicked(QModelIndex)));
+    connect(ui->splittedDataTableView, SIGNAL(entered(QModelIndex)), this, SLOT(viewEntered(QModelIndex)));
+    connect(ui->splittedDataTableView, SIGNAL(pressed(QModelIndex)), this, SLOT(viewPressed(QModelIndex)));
     connect(ui->splittedDataTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
 
     updateHeaderViewGeometries();
@@ -261,7 +261,7 @@ QModelIndex QAdvancedTableView::currentIndex() const
 	} else if (ui->splittedDataTableView->hasFocus()){
 		return mapToSource(ui->splittedDataTableView->currentIndex());
 	}
-    return ui->dataTableView->currentIndex();
+    return mapToSource(ui->dataTableView->currentIndex());
 }
 
 int QAdvancedTableView::defaultFilterType(int column) const
@@ -431,7 +431,6 @@ void QAdvancedTableView::horizontalHeaderViewSectionMoved( int logicalIndex, int
 
 void QAdvancedTableView::horizontalHeaderSortIndicatorChanged( int logicalIndex, Qt::SortOrder order )
 {
-    qDebug() << Q_FUNC_INFO;
     ui->dataTableView->sortByColumn(logicalIndex, order);
     ui->fixedRowsTableView->sortByColumn(logicalIndex, order);
     ui->splittedDataTableView->sortByColumn(logicalIndex, order);
@@ -969,6 +968,31 @@ void QAdvancedTableView::verticalHeaderSectionResized(int logicalIndex, int oldS
 QHeaderView* QAdvancedTableView::verticalHeader() const
 {
 	return ui->dataTableView->verticalHeader();
+}
+
+void QAdvancedTableView::viewActivated(const QModelIndex & index)
+{
+	emit activated(mapToSource(index));
+}
+
+void QAdvancedTableView::viewClicked(const QModelIndex & index)
+{
+	emit clicked(mapToSource(index));
+}
+
+void QAdvancedTableView::viewDoubleClicked(const QModelIndex & index)
+{
+	emit doubleClicked(mapToSource(index));
+}
+
+void QAdvancedTableView::viewEntered(const QModelIndex & index)
+{
+	emit entered(mapToSource(index));
+}
+
+void QAdvancedTableView::viewPressed(const QModelIndex & index)
+{
+	emit pressed(mapToSource(index));
 }
 
 QWidget* QAdvancedTableView::viewport() const
