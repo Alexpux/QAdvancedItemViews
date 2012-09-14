@@ -36,3 +36,12 @@ QModelIndex qSourceIndex(const QModelIndex & index)
     return i;
 }
 
+const QAbstractItemModel* qSourceModel(const QModelIndex & index)
+{
+	QModelIndex i(index);
+	QAbstractProxyModel* p;
+	while((p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
+        i = p->mapToSource(i);
+    }
+	return i.model();
+}
