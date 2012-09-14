@@ -23,6 +23,8 @@
 
 #include <qaivlib_global.h>
 
+#include <QAbstractProxyModel>
+
 class QAIVLIBSHARED_EXPORT QAdvancedItemViews
 {
 public:
@@ -49,5 +51,44 @@ public:
 };
 
 QAIVLIBSHARED_EXPORT QModelIndex qSourceIndex(const QModelIndex & index);
+QAIVLIBSHARED_EXPORT const QAbstractItemModel* qSourceModel(const QModelIndex & index);
+
+template <class T>
+inline T qsourcemodel_cast(const QModelIndex & index)
+{
+	QModelIndex i(index);
+	T s = qobject_cast<T>(i.model());
+	if (s){
+		return s;
+	}
+	QAbstractProxyModel* p;
+	while((p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
+		T s = qobject_cast<T>(p);
+		if (s){
+			return s;
+		}
+        i = p->mapToSource(i);
+    }
+	return 0;
+}
+
+template <class T>
+inline T qsourcemodel_cast(QAbstractItemModel* model)
+{
+	QAbstractItemModel* m = model;
+	T s = qobject_cast<T>(m);
+	if (s){
+		return s;
+	}
+	QAbstractProxyModel* p;
+	while((p = qobject_cast<QAbstractProxyModel*>(m))){
+		T s = qobject_cast<T>(p->sourceModel());
+		if (s){
+			return s;
+		}
+        m = p->sourceModel();
+    }
+	return 0;
+}
 
 #endif // QADVANCEDITEMVIEWS_H
