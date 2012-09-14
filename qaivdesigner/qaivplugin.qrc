@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/qaivdesigner">
+        <file alias="qadvancedtableview">resources/table.ico</file>
+    </qresource>
+</RCC>
