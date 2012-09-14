@@ -7,6 +7,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example", "example\example.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qaivlib", "qaivlib\qaivlib.vcproj", "{E1EBF152-8CB3-4230-9C4B-6C1AE0704168}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_qadvancedtableview", "test\qadvancedtableview\qadvancedtableview.vcproj", "{AEC570A7-AB38-4EBF-AD34-4726D676E8EB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168} = {E1EBF152-8CB3-4230-9C4B-6C1AE0704168}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{9E0F72AB-A587-4E49-B073-D31550CB31BC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_qaiv", "test\qaiv\qaiv.vcproj", "{BD39DD88-2357-4FD1-A771-993A1DE439D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,9 +30,21 @@ Global
 		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168}.Debug|Win32.Build.0 = Debug|Win32
 		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168}.Release|Win32.ActiveCfg = Release|Win32
 		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168}.Release|Win32.Build.0 = Release|Win32
+		{AEC570A7-AB38-4EBF-AD34-4726D676E8EB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AEC570A7-AB38-4EBF-AD34-4726D676E8EB}.Debug|Win32.Build.0 = Debug|Win32
+		{AEC570A7-AB38-4EBF-AD34-4726D676E8EB}.Release|Win32.ActiveCfg = Release|Win32
+		{AEC570A7-AB38-4EBF-AD34-4726D676E8EB}.Release|Win32.Build.0 = Release|Win32
+		{BD39DD88-2357-4FD1-A771-993A1DE439D7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BD39DD88-2357-4FD1-A771-993A1DE439D7}.Debug|Win32.Build.0 = Debug|Win32
+		{BD39DD88-2357-4FD1-A771-993A1DE439D7}.Release|Win32.ActiveCfg = Release|Win32
+		{BD39DD88-2357-4FD1-A771-993A1DE439D7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AEC570A7-AB38-4EBF-AD34-4726D676E8EB} = {9E0F72AB-A587-4E49-B073-D31550CB31BC}
+		{BD39DD88-2357-4FD1-A771-993A1DE439D7} = {9E0F72AB-A587-4E49-B073-D31550CB31BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		QtVersion = 4.8.2
