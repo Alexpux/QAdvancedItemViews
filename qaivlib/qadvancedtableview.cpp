@@ -163,7 +163,8 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->splittedDataTableView, SIGNAL(entered(QModelIndex)), this, SLOT(viewEntered(QModelIndex)));
     connect(ui->splittedDataTableView, SIGNAL(pressed(QModelIndex)), this, SLOT(viewPressed(QModelIndex)));
     connect(ui->splittedDataTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
-
+	// Install event filter
+	ui->dataTableView->verticalHeader()->installEventFilter(this);
     updateHeaderViewGeometries();
     //
     setFocusProxy(ui->dataTableView);
@@ -312,7 +313,19 @@ QAbstractItemView::EditTriggers QAdvancedTableView::editTriggers () const
     return ui->dataTableView->editTriggers();
 }
 
-QAbstractFilter *QAdvancedTableView::filterAt(int row, int col) const
+bool QAdvancedTableView::eventFilter(QObject* obj, QEvent* event)
+{
+	if (event->type() == QEvent::Hide){
+		if (obj == ui->dataTableView->verticalHeader()){
+			ui->fixedRowsTableView->verticalHeader()->setVisible(false);
+			ui->headerTableView->verticalHeader()->setVisible(false);
+			ui->splittedDataTableView->verticalHeader()->setVisible(false);
+		}
+	}
+	return QObject::eventFilter(obj, event);
+}
+
+QAbstractFilter* QAdvancedTableView::filterAt(int row, int col) const
 {
     return d->filterModel->filter(d->filterModel->index(row, col));
 }
@@ -771,6 +784,14 @@ void QAdvancedTableView::setRootIndex(const QModelIndex & index)
 void QAdvancedTableView::showColumn(int column)
 {
     horizontalHeader()->showSection(column);
+}
+
+void QAdvancedTableView::showEvent(QShowEvent* event)
+{
+	QWidget::showEvent(event);
+	ui->fixedRowsTableView->verticalHeader()->setVisible(ui->dataTableView->verticalHeader()->isVisible());
+	ui->splittedDataTableView->verticalHeader()->setVisible(ui->dataTableView->verticalHeader()->isVisible());
+	d->verticalHeader->setVisible(ui->dataTableView->verticalHeader()->isVisible());
 }
 
 void QAdvancedTableView::showRow(int row)

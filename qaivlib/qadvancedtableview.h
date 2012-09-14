@@ -640,26 +640,28 @@ public slots:
 	 */
 	void update(const QModelIndex & index);
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent* event);
+	virtual void contextMenuEvent(QContextMenuEvent* event);
+	bool eventFilter(QObject *obj, QEvent *event);
+	void showEvent(QShowEvent* event);
 private slots:
-    void dataModelLayoutChanged();
-    void dataViewHorizontalScrollBarRangeChanged(int minimum, int maximum);
-    void dataViewHorizontalScrollBarSilderMoved( int value );
-    void dataViewHorizontalScrollBarValueChanged( int value );
+	void dataModelLayoutChanged();
+	void dataViewHorizontalScrollBarRangeChanged(int minimum, int maximum);
+	void dataViewHorizontalScrollBarSilderMoved( int value );
+	void dataViewHorizontalScrollBarValueChanged( int value );
 	void filterAdded(const QModelIndex & parent, int start, int end);
-    void headerViewHorizontalScrollBarRangeChanged( int min, int max );
-    void headerViewHorizontalScrollBarSilderMoved( int value );
-    void headerViewHorizontalScrollBarValueChanged( int value );
-    void headerViewSectionResized( int logicalIndex, int oldSize, int newSize );
-    void horizontalHeaderViewSectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex );
-    void horizontalHeaderSortIndicatorChanged( int logicalIndex, Qt::SortOrder order );
-    void modelReset();
-    void subviewReceivedFocus();
-    void updateHeaderViewGeometries();
-    void updateHeaderViewVerticalScrollBar( int min, int max );
-    void verticalHeaderSectionClicked(int section);
+	void headerViewHorizontalScrollBarRangeChanged( int min, int max );
+	void headerViewHorizontalScrollBarSilderMoved( int value );
+	void headerViewHorizontalScrollBarValueChanged( int value );
+	void headerViewSectionResized( int logicalIndex, int oldSize, int newSize );
+	void horizontalHeaderViewSectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex );
+	void horizontalHeaderSortIndicatorChanged( int logicalIndex, Qt::SortOrder order );
+	void modelReset();
+	void subviewReceivedFocus();
+	void updateHeaderViewGeometries();
+	void updateHeaderViewVerticalScrollBar( int min, int max );
+	void verticalHeaderSectionClicked(int section);
 
-    void verticalHeaderSectionResized(int logicalIndex, int oldSize, int newSize);
+	void verticalHeaderSectionResized(int logicalIndex, int oldSize, int newSize);
 	void viewActivated(const QModelIndex & index);
 	void viewClicked(const QModelIndex & index);
 	void viewDoubleClicked(const QModelIndex & index);
