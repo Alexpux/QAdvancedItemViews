@@ -34,6 +34,7 @@ QSelectionListFilterEditorPopup::QSelectionListFilterEditorPopup(QWidget* parent
     m_checkStateProxy = new QCheckStateProxyModel(this);
 	connect(m_checkStateProxy, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(checkStateProxyDataChanged(QModelIndex, QModelIndex)));
     m_checkStateProxy->setSourceModel(m_model);
+	m_checkStateProxy->setColumnCheckable(0);
 
     QVBoxLayout* l = new QVBoxLayout();
     l->setContentsMargins(6, 6, 6, 6);
