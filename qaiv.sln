@@ -19,7 +19,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_qaiv", "test\qaiv\qaiv
 		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168} = {E1EBF152-8CB3-4230-9C4B-6C1AE0704168}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qaivplugin", "qaivdesigner\qaivdesigner.vcproj", "{1F17631A-0119-3C47-A697-F21538335E2E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qaivdesigner", "qaivdesigner\qaivdesigner.vcproj", "{1F17631A-0119-3C47-A697-F21538335E2E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168} = {E1EBF152-8CB3-4230-9C4B-6C1AE0704168}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qaivproxymodels ", "test\qaivproxymodels\qaivproxymodels.vcproj", "{42DA8916-2E97-432F-8984-D6D196E8AADA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E1EBF152-8CB3-4230-9C4B-6C1AE0704168} = {E1EBF152-8CB3-4230-9C4B-6C1AE0704168}
 	EndProjectSection
@@ -50,6 +55,10 @@ Global
 		{1F17631A-0119-3C47-A697-F21538335E2E}.Debug|Win32.Build.0 = Debug|Win32
 		{1F17631A-0119-3C47-A697-F21538335E2E}.Release|Win32.ActiveCfg = Release|Win32
 		{1F17631A-0119-3C47-A697-F21538335E2E}.Release|Win32.Build.0 = Release|Win32
+		{42DA8916-2E97-432F-8984-D6D196E8AADA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{42DA8916-2E97-432F-8984-D6D196E8AADA}.Debug|Win32.Build.0 = Debug|Win32
+		{42DA8916-2E97-432F-8984-D6D196E8AADA}.Release|Win32.ActiveCfg = Release|Win32
+		{42DA8916-2E97-432F-8984-D6D196E8AADA}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +66,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{AEC570A7-AB38-4EBF-AD34-4726D676E8EB} = {9E0F72AB-A587-4E49-B073-D31550CB31BC}
 		{BD39DD88-2357-4FD1-A771-993A1DE439D7} = {9E0F72AB-A587-4E49-B073-D31550CB31BC}
+		{42DA8916-2E97-432F-8984-D6D196E8AADA} = {9E0F72AB-A587-4E49-B073-D31550CB31BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		QtVersion = 4.8.2
