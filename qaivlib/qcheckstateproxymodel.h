@@ -21,18 +21,21 @@
 #ifndef QCHECKSTATEPROXYMODEL_H
 #define QCHECKSTATEPROXYMODEL_H
 
-#include <QSortFilterProxyModel>
+#include <QIdentityProxyModel>
 
 #include <qaivlib_global.h>
 
 class QCheckStateProxyModelPrivate;
 
 //! The QCheckStateProxyModel class adds check boxes to a model.
-class QAIVLIBSHARED_EXPORT QCheckStateProxyModel : public QSortFilterProxyModel
+class QAIVLIBSHARED_EXPORT QCheckStateProxyModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit QCheckStateProxyModel(QObject *parent = 0);
+	/**
+	 * Constructs a QCheckStateProxyModel with the given @p parent.
+	 */
+    explicit QCheckStateProxyModel(QObject* parent = 0);
     /**
       * Destroys the QCheckStateProxyModel object.
       */
@@ -45,34 +48,54 @@ public:
       * Returns a list with the checked indexes.
       */
     QModelIndexList checkedIndexes() const;
-
+	/**
+	 * @reimp
+	 */
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
     /**
       * @reimp
       */
     virtual Qt::ItemFlags flags( const QModelIndex & index ) const;
+	/**
+	 * Returns true if the given model item @p index is checked.
+	 */
+	bool isChecked(const QModelIndex & index) const;
     /**
       * Returns true if the column @p column is checkable. Otherwise false.
       * @see setColumnCheckable()
       */
     bool isColumnCheckable(int column) const;
-
+	/**
+	 * If @p checkable is true the items in the specified @p column are checkable.
+	 */
     void setColumnCheckable(int column, bool checkable = true);
-
+	/**
+	 * Checks the item specified by the list of @p indexes.
+	 */
     void setCheckedIndexes(const QModelIndexList & indexes);
-
+	/**
+	 * Checks all items in the specifed @p column matching the list of @p values.
+	 */
     void setCheckedValues(int column, const QVariantList & values);
-
+    /**
+      * @reimp
+      */
     virtual bool setData( const QModelIndex & index, const QVariant & value, int role );
     /**
       * @reimp
       */
     virtual void setSourceModel(QAbstractItemModel *sourceModel);
 public slots:
+	/**
+	 * If @p checked is true, all checkable items are checked.
+	 */
 	void setAllChecked(bool checked = true);
-
+	/**
+	 * If @p checked is true, the item specified by the given @p index is checked.
+	 */
 	void setChecked(const QModelIndex & index, bool checked);
 private slots:
+	void sourceModelRowsAboutToBeRemoved(const QModelIndex & parent, int start, int end);
     void sourceModelAboutToBeReset();
 private:
     QCheckStateProxyModelPrivate* d;
