@@ -45,3 +45,14 @@ const QAbstractItemModel* qSourceModel(const QModelIndex & index)
     }
 	return i.model();
 }
+
+QAbstractItemModel* qSourceModel(QAbstractItemModel* model)
+{
+	QAbstractItemModel*m = model;
+    QAbstractProxyModel* p;
+	while((p = qobject_cast<QAbstractProxyModel*>(m))){
+		m = p->sourceModel();
+	}
+	return m;
+}	
+

@@ -52,6 +52,7 @@ public:
 
 QAIVLIBSHARED_EXPORT QModelIndex qSourceIndex(const QModelIndex & index);
 QAIVLIBSHARED_EXPORT const QAbstractItemModel* qSourceModel(const QModelIndex & index);
+QAIVLIBSHARED_EXPORT QAbstractItemModel* qSourceModel(QAbstractItemModel* model);
 
 template <class T>
 inline T qsourcemodel_cast(const QModelIndex & index)
