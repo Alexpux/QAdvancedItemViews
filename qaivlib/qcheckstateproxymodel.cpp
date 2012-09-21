@@ -44,7 +44,7 @@ QCheckStateProxyModelPrivate::~QCheckStateProxyModelPrivate()
 }
 
 QCheckStateProxyModel::QCheckStateProxyModel(QObject *parent) :
-    QSortFilterProxyModel(parent), d(new QCheckStateProxyModelPrivate(this))
+QIdentityProxyModel(parent), d(new QCheckStateProxyModelPrivate(this))
 {
 }
 
@@ -68,16 +68,21 @@ QVariant QCheckStateProxyModel::data(const QModelIndex & index, int role) const
     if (role == Qt::CheckStateRole && d->columns.contains(index.column())){
         return d->checkedIndexes.contains(index)?Qt::Checked:Qt::Unchecked;
     }
-    return QSortFilterProxyModel::data(index, role);
+	return QIdentityProxyModel::data(index, role);
 }
 
 Qt::ItemFlags QCheckStateProxyModel::flags(const QModelIndex & index) const
 {
-    Qt::ItemFlags f = QSortFilterProxyModel::flags(index);
+	Qt::ItemFlags f = QIdentityProxyModel::flags(index);
     if (index.isValid() && d->columns.contains(index.column())){
         f |= Qt::ItemIsUserCheckable;
     }
     return f;
+}
+
+bool QCheckStateProxyModel::isChecked(const QModelIndex & index) const
+{
+	return d->checkedIndexes.contains(index);
 }
 
 bool QCheckStateProxyModel::isColumnCheckable(int column) const
@@ -107,14 +112,15 @@ void QCheckStateProxyModel::setAllChecked(bool checked)
 
 void QCheckStateProxyModel::setColumnCheckable(int column, bool checkable)
 {
-    if (checkable){
-        if (!d->columns.contains(column)){
-            d->columns << column;
-        }
-    } else {
-        d->columns.removeAt(d->columns.indexOf(column));
-    }
-    invalidateFilter();
+	if (column < columnCount()){
+		if (checkable){
+			if (!d->columns.contains(column)){
+				d->columns << column;
+			}
+		} else {
+			d->columns.removeAt(d->columns.indexOf(column));
+		}
+	}
 }
 
 void QCheckStateProxyModel::setChecked(const QModelIndex & index, bool checked)
@@ -134,29 +140,36 @@ void QCheckStateProxyModel::setChecked(const QModelIndex & index, bool checked)
 
 void QCheckStateProxyModel::setCheckedIndexes(const QModelIndexList & indexes)
 {
+	beginResetModel();
     d->checkedIndexes = indexes;
+	endResetModel();
 }
 
 void QCheckStateProxyModel::setCheckedValues(int column, const QVariantList & values)
 {
-    if (sourceModel() == 0){
-        return;
-    }
-    d->checkedIndexes.clear();
-    QModelIndex mIndex;
-    for(int iRow = 0; iRow < sourceModel()->rowCount(); iRow++){
-        mIndex = mapFromSource(sourceModel()->index(iRow, column));
-        if (values.contains(mIndex.data())){
-            d->checkedIndexes.append(mIndex);
-        }
-    }
-    if (!d->checkedIndexes.isEmpty()){
-        emit dataChanged(d->checkedIndexes.first(), d->checkedIndexes.last());
-    }
+	if (sourceModel() == 0){
+		return;
+	}
+	if (column < columnCount()){
+		d->checkedIndexes.clear();
+		QModelIndex mIndex;
+		for(int iRow = 0; iRow < sourceModel()->rowCount(); iRow++){
+			mIndex = mapFromSource(sourceModel()->index(iRow, column));
+			if (values.contains(mIndex.data())){
+				d->checkedIndexes.append(mIndex);
+			}
+		}
+		if (!d->checkedIndexes.isEmpty()){
+			emit dataChanged(d->checkedIndexes.first(), d->checkedIndexes.last());
+		}
+	}
 }
 
 bool QCheckStateProxyModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
+	if (index.row() >= rowCount() || index.column() >= columnCount()){
+		return false;
+	}
     if (role == Qt::CheckStateRole){
         if (value.toInt() == Qt::Checked){
             d->checkedIndexes.append(index);
@@ -166,16 +179,40 @@ bool QCheckStateProxyModel::setData(const QModelIndex & index, const QVariant & 
         emit dataChanged(index, index);
         return true;
     }
-    return QSortFilterProxyModel::setData(index, value, role);
+	return QIdentityProxyModel::setData(index, value, role);
 }
 
 void QCheckStateProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 {
-    connect(sourceModel, SIGNAL(modelAboutToBeReset()), this, SLOT(sourceModelAboutToBeReset()));
-    QSortFilterProxyModel::setSourceModel(sourceModel);
+	beginResetModel();
+	if (sourceModel){
+		if (QCheckStateProxyModel::sourceModel()){
+			disconnect(QCheckStateProxyModel::sourceModel(), 0, this, 0);
+		}
+		connect(sourceModel, SIGNAL(modelAboutToBeReset()), this, SLOT(sourceModelAboutToBeReset()));
+	}
+	QIdentityProxyModel::setSourceModel(sourceModel);
+
+	d->checkedIndexes.clear();
+	d->columns.clear();
+
+	endResetModel();
 }
 
 void QCheckStateProxyModel::sourceModelAboutToBeReset()
 {
     d->checkedIndexes.clear();
+}
+
+void QCheckStateProxyModel::sourceModelRowsAboutToBeRemoved(const QModelIndex & parent, int start, int end)
+{
+	for (int i = start; i <= end; i++){
+		QListIterator<QModelIndex> it(d->checkedIndexes);
+		while(it.hasNext()){
+			QModelIndex index = it.next();
+			if (index.row() == i){
+				d->checkedIndexes.removeAt(d->checkedIndexes.indexOf(index));
+			}
+		}
+	}
 }
