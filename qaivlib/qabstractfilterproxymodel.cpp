@@ -78,7 +78,7 @@ void QAbstractFilterProxyModel::setFilterModel(QAbstractFilterModel* filterModel
 void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 {
 	if (d->filterModel->sourceModel()){
-		disconnect(d->filterModel->sourceModel, 0, this, 0);
+		disconnect(d->filterModel->sourceModel(), 0, this, 0);
 	}
     QSortFilterProxyModel::setSourceModel(sourceModel);
     d->filterModel->setSourceModel(sourceModel);
