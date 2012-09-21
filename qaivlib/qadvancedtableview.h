@@ -378,6 +378,10 @@ public:
       * Sets the default filter @p type for the specified @p column.
       */
     void setDefaultFilterType(int column, int type);
+    /**
+      * Sets the default filter @p type for the specified @p column.
+      */
+    void setDefaultFilterType(const QString & name, int type);
 	/**
 	 *
 	 */
@@ -545,6 +549,10 @@ public slots:
 	 * @see showColumn() hideRow()
 	 */
 	void hideColumn(int column);
+	/**
+	 *
+	 */
+	void hideColumns(const QStringList & names);
 	/**
      * Hides the filter view.
 	 */

@@ -418,6 +418,13 @@ void QAdvancedTableView::hideColumn(int column)
     ui->headerTableView->horizontalHeader()->hideSection(ui->headerTableView->horizontalHeader()->logicalIndex(column));
 }
 
+void QAdvancedTableView::hideColumns(const QStringList & names)
+{
+	for (int i = 0; i < horizontalHeader()->count(); i++){
+		horizontalHeader()->setSectionHidden(i, names.contains(horizontalHeader()->model()->headerData(i, Qt::Horizontal).toString()));
+	}
+}
+
 void QAdvancedTableView::hideFilterView()
 {
     setShowFilter(false);
@@ -708,6 +715,14 @@ void QAdvancedTableView::setDefaultFilterType(int column, int type)
     d->filterModel->setData(d->filterModel->index(0, column), type, QAbstractFilterModel::DefaultFilterTypeRole);
 }
 
+void QAdvancedTableView::setDefaultFilterType(const QString & name, int type)
+{
+	for (int i = 0; i < ui->headerTableView->model()->columnCount(); i++){
+		if (ui->headerTableView->model()->headerData(i, Qt::Horizontal) == name){
+			setDefaultFilterType(i, type);
+		}
+	}
+}
 void QAdvancedTableView::setDragEnabled(bool enable)
 {
     V_CALL(setDragEnabled(enable))
@@ -912,6 +927,11 @@ void QAdvancedTableView::dataModelLayoutChanged()
         ui->fixedRowsTableView->resizeRowsToContents();
         ui->splittedDataTableView->resizeRowsToContents();
     }
+	for (int i = 0; i < ui->headerTableView->horizontalHeader()->count(); i++){
+		ui->dataTableView->horizontalHeader()->setSectionHidden(i, ui->headerTableView->horizontalHeader()->isSectionHidden(i));
+		ui->fixedRowsTableView->horizontalHeader()->setSectionHidden(i, ui->headerTableView->horizontalHeader()->isSectionHidden(i));
+		ui->splittedDataTableView->horizontalHeader()->setSectionHidden(i, ui->headerTableView->horizontalHeader()->isSectionHidden(i));
+	}
 }
 
 void QAdvancedTableView::updateHeaderViewGeometries()
