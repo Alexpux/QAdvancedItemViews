@@ -205,12 +205,10 @@ void QAdvancedTableView::contextMenuEvent(QContextMenuEvent *event)
 {
     QModelIndex i;
     if (ui->dataTableView->viewport()->rect().contains(event->pos())){
-        qDebug() << event->pos() << ui->dataTableView->viewport()->mapFromParent(event->pos());
         i = ui->dataTableView->indexAt(ui->dataTableView->viewport()->mapFromParent(event->pos()));
     } else if (ui->fixedRowsTableView->viewport()->rect().contains(event->pos())){
         i = ui->fixedRowsTableView->indexAt(event->pos());
     }
-//    qDebug() << pos() << event->pos() << event->pos() - pos();
     QMenu* m = createStandardContextMenu(i);
 
     m->exec(event->globalPos());
@@ -575,6 +573,28 @@ bool QAdvancedTableView::restoreFilter(const QByteArray & data)
     return true;
 }
 
+bool QAdvancedTableView::restoreState(const QByteArray & data)
+{
+	QByteArray d;
+	QByteArray ds(data);
+	bool splitted;
+	bool fixed;
+	bool filter;
+	bool grid;
+    QDataStream s(&ds, QIODevice::ReadOnly);
+	if (s.atEnd()){
+		return false;
+	}
+	s >> d >> splitted >> fixed >> filter >> grid;
+	if (ui->headerTableView->horizontalHeader()->restoreState(d)){
+		splitView(splitted);
+		setShowFixedRows(fixed);
+		setShowFilter(filter);
+		setShowGrid(grid);
+	}
+	return false;
+}
+
 QModelIndex QAdvancedTableView::rootIndex() const
 {
     return ui->dataTableView->rootIndex();
@@ -646,7 +666,13 @@ QByteArray QAdvancedTableView::saveFilter() const
 QByteArray QAdvancedTableView::saveState()
 {
 	QByteArray d;
-	//d << ui->headerTableView->horizontalHeader()->saveState();
+    QDataStream s(&d, QIODevice::WriteOnly);
+	
+	s << ui->headerTableView->horizontalHeader()->saveState();
+	s << viewSplitted();
+	s << showFixedRows();
+	s << showFilter();
+	s << showGrid();
 	return d;
 }
 

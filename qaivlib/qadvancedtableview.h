@@ -324,6 +324,10 @@ public:
       * @see saveState()
       */
     bool restoreFilter(const QByteArray & data);
+	/**
+	 * Restores the state of this advanced table view. This function returns true if the state was restored; otherwise returns false.
+	 */
+	bool restoreState(const QByteArray & data);
     /**
       * Returns the model index of the model's root item. The root item is the parent item to the view's toplevel items. The root can be invalid.
       */
