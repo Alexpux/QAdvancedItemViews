@@ -163,6 +163,7 @@ void QAutoFilterEditorPopup::setSourceModel(QAbstractItemModel *model, int colum
     m_singleValueProxy->setSourceModel(model);
     m_singleColumnProxy->setSourceModelColumn(column);
     m_singleColumnProxy->sort(0);
+	m_checkStateProxy->setColumnCheckable(0);
 }
 
 QAutoFilterEditor::QAutoFilterEditor(QWidget *parent) :
