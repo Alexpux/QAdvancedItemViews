@@ -34,15 +34,20 @@ QFilterEditorWidget::~QFilterEditorWidget()
 
 bool QFilterEditorWidget::eventFilter(QObject *obj, QEvent *event)
 {
-	if (m_popup && event->type() == QEvent::KeyPress){
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-		if (popup()->cancelAndClose(obj, keyEvent->key())){
-			emit cancelAndClose();
-			return true;
-		}
-		if (popup()->commitAndClose(obj, keyEvent->key())){
+	if (m_popup){
+		if (event->type() == QEvent::Hide){
 			emit commitAndClose();
 			return true;
+		} else if ( event->type() == QEvent::KeyPress){
+			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+			if (popup()->cancelAndClose(obj, keyEvent->key())){
+				emit cancelAndClose();
+				return true;
+			}
+			if (popup()->commitAndClose(obj, keyEvent->key())){
+				emit commitAndClose();
+				return true;
+			}
 		}
 	}
 	return QObject::eventFilter(obj, event);
