@@ -112,7 +112,7 @@ void QCheckStateProxyModel::setAllChecked(bool checked)
 
 void QCheckStateProxyModel::setColumnCheckable(int column, bool checkable)
 {
-	if (column < columnCount()){
+	//if (column < columnCount()){
 		if (checkable){
 			if (!d->columns.contains(column)){
 				d->columns << column;
@@ -120,7 +120,7 @@ void QCheckStateProxyModel::setColumnCheckable(int column, bool checkable)
 		} else {
 			d->columns.removeAt(d->columns.indexOf(column));
 		}
-	}
+	//}
 }
 
 void QCheckStateProxyModel::setChecked(const QModelIndex & index, bool checked)
