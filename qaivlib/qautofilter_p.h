@@ -80,8 +80,6 @@ public:
     void setSourceModel(QAbstractItemModel* model, int column);
 public slots:
 	void modeSelected();
-protected:
-	bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif // QAUTOFILTER_P_H
