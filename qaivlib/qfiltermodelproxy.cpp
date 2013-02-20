@@ -36,29 +36,39 @@ QFilterModelProxy::~QFilterModelProxy()
 QVariant QFilterModelProxy::data(const QModelIndex & index, int role) const
 {    
     if (role == Qt::BackgroundRole && filterModel()->mode() == QAdvancedItemViews::HighlightMode){
-        QBrush mBrush = qvariant_cast<QBrush>(QAbstractFilterProxyModel::data(index, role));
-        int mType = -1;
+        QBrush b = qvariant_cast<QBrush>(QAbstractFilterProxyModel::data(index, role));
+        int t = -1;
 		QModelIndex mSourceIndex = mapToSource(index);
+		QList<QColor> cl;
         for(int iRow = 0; iRow < filterModel()->rowCount(); iRow++){
-            Q_FOREACH(QAbstractFilter* mFilter, filterModel()->filtersAtRow(iRow)){
-                mType = filterModel()->index(0, mFilter->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
-                if (mFilter->isEnabled()){
+            Q_FOREACH(QAbstractFilter* f, filterModel()->filtersAtRow(iRow)){
+                t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
+                if (f->isEnabled()){
                     if (filterModel()->matchMode() == QAdvancedItemViews::MatchNormal){
-                        if (mFilter->matches(sourceModel()->index(mSourceIndex.row(), mFilter->column()).data(), mType)){
-                            mBrush.setColor(mFilter->highlightColor());
-                            mBrush.setStyle(Qt::SolidPattern);
-                            return mBrush;
+                        if (f->matches(sourceModel()->index(mSourceIndex.row(), f->column()).data(), t)){
+							cl << f->highlightColor();
                         }
                     } else if (filterModel()->matchMode() == QAdvancedItemViews::MatchInverted){
-                        if (!mFilter->matches(sourceModel()->index(mSourceIndex.row(), mFilter->column()).data(), mType)){
-                            mBrush.setColor(mFilter->highlightColor());
-                            mBrush.setStyle(Qt::SolidPattern);
-                            return mBrush;
+                        if (!f->matches(sourceModel()->index(mSourceIndex.row(), f->column()).data(), t)){
+							cl << f->highlightColor();
                         }
                     }
                 }
             }
         }
+		if (cl.size() == 1){
+			return QBrush(cl.first());
+		} else if (cl.size() > 1){
+			QLinearGradient g(QPointF(0, 50), QPointF(100, 50));
+			qreal s = 1 / ((qreal)cl.size() - 1);
+			g.setColorAt(0, cl.first());
+			g.setColorAt(1, cl.last());
+			for (qreal i  = 1; i < cl.size() - 1; i++){
+				g.setColorAt(s * i, cl.at(i));
+			}
+			return QBrush(g);
+		}
+		return b;
     }
     return QAbstractFilterProxyModel::data(index, role);
 }
@@ -68,26 +78,41 @@ bool QFilterModelProxy::filterAcceptsRow( int source_row, const QModelIndex & so
     if (filterModel()->mode() == QAdvancedItemViews::HighlightMode){
         return true;
     }
-    int mType = -1;
+    int t = -1;
+	int r = -1;
     for(int iRow = 0; iRow < filterModel()->rowCount(); iRow++){
-        Q_FOREACH(QAbstractFilter* mFilter, filterModel()->filtersAtRow(iRow)){
-            mType = filterModel()->index(0, mFilter->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
-            if (mFilter->isEnabled()){
+		int rr = -1;
+		int fc = 0;
+        Q_FOREACH(QAbstractFilter* f, filterModel()->filtersAtRow(iRow)){
+            t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
+            if (f->isEnabled()){
+				fc++;
                 if (filterModel()->matchMode() == QAdvancedItemViews::MatchNormal){
-                    if (mFilter->matches(sourceModel()->data(sourceModel()->index(source_row, mFilter->column())), mType)){
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    if (f->matches(sourceModel()->data(sourceModel()->index(source_row, f->column())), t)){
+                        rr++;
+					}
                 } else if (filterModel()->matchMode() == QAdvancedItemViews::MatchInverted){
-                    if (!mFilter->matches(sourceModel()->data(sourceModel()->index(source_row, mFilter->column())), mType)){
-                        return true;
-                    } else {
-                        return false;
+                    if (!f->matches(sourceModel()->data(sourceModel()->index(source_row, f->column())), t)){
+                        rr++;
                     }
                 }
-            }
+			}
         }
+		// fc == 0 && rr == -1 -> all filter in the current row are disabled
+		// fc > 0 && rc == -1 -> at least on filter in the current row is enabled, but no match -> if r == -1 the r = 0
+		// fc > 0 && rr + 1 == fc -> all filter in current row have matched -> if r == -1 set r = 0 -> inc r
+		if (fc > 0){
+			if (r == -1){
+				r = 0;
+			}
+			if (rr + 1 == fc){
+				r++;
+			}
+		}
+
     }
-    return true;
+	if (r == -1){
+		return true;
+	}
+    return r > 0;
 }
