@@ -17,6 +17,7 @@ private slots:
 	void initTestCase();
 	void model();
 	void pressed();
+	void selectionModel();
 	void setFilterType();
 	void viewport();
 
@@ -64,6 +65,16 @@ void QAdvancedTableViewTest::pressed()
 	QSignalSpy spy(m_view, SIGNAL(pressed(QModelIndex)));
 	QTest::mousePress(m_view->viewport(), Qt::LeftButton, 0, QPoint(20, 20));
 	QCOMPARE(spy.count(), 1);
+}
+
+void QAdvancedTableViewTest::selectionModel()
+{
+	m_view->selectAll();
+	QCOMPARE(m_view->selectionModel()->selectedRows().size(), m_view->model()->rowCount());
+	for (int i = 0; i < m_view->model()->rowCount(); i++){
+		m_view->selectionModel()->select(m_view->selectionModel()->model()->index(0,0), QItemSelectionModel::Deselect);
+		QCOMPARE(m_view->selectionModel()->selectedRows().size(), m_view->model()->rowCount() - 1);
+	}
 }
 
 void QAdvancedTableViewTest::setFilterType()

@@ -59,6 +59,9 @@ public slots:
     void pinRowsToolButtonClicked();
     void populatePushButtonClicked();
 
+	void restoreStateToolButtonClicked();
+
+	void saveStateToolButtonClicked();
     void splitActionTriggered();
 private:
     void initModel();
@@ -72,6 +75,7 @@ private:
 
     void initTabUniqueValuesProxyModel();
 
+	QByteArray m_state;
     QGroupingProxyModel* m_groupingProxy;
     QStandardItemModel* m_model;
     Ui::MainWindow *ui;

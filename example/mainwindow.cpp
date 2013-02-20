@@ -527,3 +527,13 @@ void MainWindow::initTabUniqueValuesProxyModel()
     uniqueValuesProxyModel->setModelColumn(8);
     uniqueValuesProxyModel->setSourceModel(m_model);
 }
+
+void MainWindow::restoreStateToolButtonClicked()
+{
+	ui->filterTableView->restoreState(m_state);
+}
+
+void MainWindow::saveStateToolButtonClicked()
+{
+	m_state = ui->filterTableView->saveState();
+}
