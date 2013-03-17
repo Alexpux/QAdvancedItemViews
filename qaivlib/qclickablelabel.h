@@ -26,7 +26,7 @@
 #include <qaivlib_global.h>
 
 //! The QClickableLabel widget provides a text or image display and responses to mouse button clicks.
-/**
+/** @ingroup widgets
   * QClickableLabel is used for displaying text or an image. User interaction functionality is provided.
   * The visual appearance of the label can be configured in various ways, and it can be used for specifying a focus mnemonic key for another widget.
   *

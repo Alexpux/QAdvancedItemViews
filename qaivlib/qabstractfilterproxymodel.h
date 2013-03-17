@@ -38,6 +38,9 @@ public:
       * Constructs a QAbstractFilterProxyModel with the given @p parent.
       */
     QAbstractFilterProxyModel(QObject* parent = 0);
+	/**
+	 * Destroys the filter proxy model.
+	 */
     ~QAbstractFilterProxyModel();
     /**
       * Returns the filter model accosiated with proxy model.
@@ -49,7 +52,9 @@ public:
       * @see filterModel()
       */
     void setFilterModel(QAbstractFilterModel* model);
-
+	/**
+	 * @reimp QSortFilterProxyModel
+	 */
     virtual void setSourceModel(QAbstractItemModel* sourceModel);
 signals:
     /**

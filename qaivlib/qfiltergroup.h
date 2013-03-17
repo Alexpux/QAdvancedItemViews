@@ -31,19 +31,19 @@ class QAIVLIBSHARED_EXPORT QFilterGroup
 {
 public:
     /**
-     * Constructs an invalid QFilterTableViewFilterGroup.
+     * Constructs an invalid QFilterGroup.
      */
     QFilterGroup();
     /**
-     * Constructs a QFilterTableViewFilterGroup with the given @p name.
+     * Constructs a QFilterGroup with the given @p name.
      */
     QFilterGroup(const QString & name);
     /**
-     * Constructs a QFilterTableViewFilterGroup with the given @p name.
+     * Constructs a QFilterGroup with the given @p name.
      */
 //    QFilterTableViewFilterGroup(const QString & name, const QList<QFilterTableViewFilterDefinition> & filters);
     /**
-     * Destroys the QFilterTableViewFilterGroup.
+     * Destroys the QFilterGroup.
      */
     ~QFilterGroup();
     /**
@@ -57,12 +57,12 @@ public:
     int count() const;
     /**
      * Returns the filter at the given @p index. If @p index is out of range, an invalid QFilterTableViewColumnFilter is returned.
-     * @see QFilterTableViewColumnFilter::isValid()
+     * @see QFilterGroup::isValid()
      */
     QAbstractFilter* filter(int index) const;
     /**
      * Returns the filter for the specified @p column. If no filter is defined for the specified @p column, an invalid filter is returned.
-     * @see QFilterTableViewColumnFilter::isValid()
+     * @see QFilterGroup::isValid()
      */
     QAbstractFilter* filterAtColumn(int column) const;
     /**

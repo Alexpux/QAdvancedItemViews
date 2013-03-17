@@ -138,7 +138,11 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item>
-          <widget class="QTableView" name="uniqueValuesTableView"/>
+          <widget class="QTableView" name="uniqueValuesTableView">
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

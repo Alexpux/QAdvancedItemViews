@@ -27,32 +27,53 @@
 
 class QUniqueValuesProxyModelPrivate;
 
-//! The QUniqueValuesProxyModel class
+//! The QUniqueValuesProxyModel provides a filter model remove duplicate values from a source model.
 /**
-  * @todo
+  * @ingroup proxy
   */
 class QAIVLIBSHARED_EXPORT QUniqueValuesProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
+	Q_PROPERTY(bool emptyItemsAllowed READ emptyItemsAllowed WRITE setEmptyItemsAllowed)
+	Q_PROPERTY(int modelColumn READ modelColumn WRITE setModelColumn)
 public:
-    explicit QUniqueValuesProxyModel(QObject *parent = 0);
-    
+	/**
+	 * Contructs a unqiue values model with the given @p parent.
+	 */
+    QUniqueValuesProxyModel(QObject *parent = 0);
+    /**
+	 * Destroys the unique values model.
+	 */
     ~QUniqueValuesProxyModel();
 
     QVariant data(const QModelIndex &index, int role) const;
 
+	bool emptyItemsAllowed() const;
+	/**
+	 * Returns true if the item in the row indicated by the given source_row and source_parent contains a unique value in the model; otherwise returns false.
+	 * @note By default, the Qt::DisplayRole is used to determine if the row should be accepted or not.
+	 */
     bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
 
     virtual bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
-
+	/**
+	 * Returns model column used to determine unique value.
+	 * @see setModelColumn()
+	 */
     int modelColumn() const;
-
+	/**
+	 *
+	 */
+	void setEmptyItemsAllowed(bool on);
+	/**
+	 * Sets model column used to determine unique value to @p column.
+	 * @see modelColumn()
+	 */
     void setModelColumn(int colum);
-
+	/**
+	 * @reimp
+	 */
     void setSourceModel(QAbstractItemModel* sourceModel);
-signals:
-    
-public slots:
 private slots:
     bool isDuplicate(int row) const;
     void buildMap();

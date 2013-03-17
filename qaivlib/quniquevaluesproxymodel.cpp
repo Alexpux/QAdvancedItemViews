@@ -29,14 +29,15 @@ public:
     QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel* pm);
     ~QUniqueValuesProxyModelPrivate();
 
+	bool emptyValues;
     int modelColumn;
     QMap<QString,QList<int> > valueMap;
-
     QUniqueValuesProxyModel* m;
 };
 
 QUniqueValuesProxyModelPrivate::QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel *pm)
 {
+	emptyValues = true;
     modelColumn = 0;
     m = pm;
 }
@@ -59,6 +60,11 @@ QUniqueValuesProxyModel::~QUniqueValuesProxyModel()
 QVariant QUniqueValuesProxyModel::data(const QModelIndex & index, int role) const
 {
     return mapToSource(index).data(role);
+}
+
+bool QUniqueValuesProxyModel::emptyItemsAllowed() const
+{
+	return d->emptyValues;
 }
 
 bool QUniqueValuesProxyModel::filterAcceptsRow(int source_row, const QModelIndex & source_parent) const
@@ -95,7 +101,13 @@ void QUniqueValuesProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 
 bool QUniqueValuesProxyModel::isDuplicate(int row) const
 {
-    QMap<QString, QList<int> >::ConstIterator mIt = d->valueMap.constFind(sourceModel()->index(row, d->modelColumn).data(filterRole()).toString());
+	QVariant v = sourceModel()->index(row, d->modelColumn).data(filterRole());
+	if (!d->emptyValues){
+		if (v.toString().isEmpty()){
+			return false;
+		}
+	}
+    QMap<QString, QList<int> >::ConstIterator mIt = d->valueMap.constFind(v.toString());
     if (mIt == d->valueMap.constEnd()){
         return true;
     }
@@ -114,17 +126,25 @@ void QUniqueValuesProxyModel::buildMap()
     }
     QMap<QString, QList<int> >::Iterator it;
     for(int iRow = 0; iRow < sourceModel()->rowCount(); iRow++){
-        it = d->valueMap.find(sourceModel()->index(iRow, d->modelColumn).data(filterRole()).toString());
-        if (it == d->valueMap.end()){
-            QList<int> l;
-            l << iRow;
-            d->valueMap[sourceModel()->index(iRow, d->modelColumn).data(filterRole()).toString()] = l;
-        } else {
-            it.value().append(iRow);
-        }
-    }
+		QVariant v = sourceModel()->index(iRow, d->modelColumn).data(filterRole());
+		it = d->valueMap.find(v.toString());
+		if (it == d->valueMap.end()){
+			QList<int> l;
+			l << iRow;
+			d->valueMap[v.toString()] = l;
+		} else {
+			it.value().append(iRow);
+		}
+	}
     endResetModel();
     invalidate();
+}
+
+void QUniqueValuesProxyModel::setEmptyItemsAllowed(bool on)
+{
+	if (d->emptyValues != on){
+		buildMap();
+	}
 }
 
 void QUniqueValuesProxyModel::sourceModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)

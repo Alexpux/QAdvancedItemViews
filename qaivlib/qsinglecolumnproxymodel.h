@@ -27,6 +27,9 @@
 class QSingleColumnProxyModelPrivate;
 
 //! The QSingleColumnProxyModel class provides a proxy model which represent a single column of the source model.
+/**
+ * @ingroup proxy
+ */
 class QAIVLIBSHARED_EXPORT QSingleColumnProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT

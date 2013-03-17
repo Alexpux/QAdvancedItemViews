@@ -80,7 +80,7 @@ void QAdvancedTableViewTest::selectionModel()
 void QAdvancedTableViewTest::setFilterType()
 {
     m_view->setFilterType(QTextFilter::Type, 1);
-    QTextFilter* f = qabstractfilter_cast<QTextFilter*>(m_view->filterAt(0, 1));
+    QTextFilter* f = qfilter_cast<QTextFilter*>(m_view->filterAt(0, 1));
 	QVERIFY(f != 0);
 }
 

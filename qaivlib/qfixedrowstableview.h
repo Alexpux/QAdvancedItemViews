@@ -35,6 +35,9 @@ class QFixedRowsDecorationProxyModelPrivate;
 class QFixedRowsFilterProxyModelPrivate;
 class QFixedRowsTableViewPrivate;
 
+/**
+ * @ingroup views
+ */
 class QAIVLIBSHARED_EXPORT QFixedRowsTableView : public QTableView
 {
     Q_OBJECT

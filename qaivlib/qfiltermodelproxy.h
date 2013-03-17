@@ -27,15 +27,28 @@
 
 class QAbstractFilterModel;
 
+//! The QFilterModelProxy provides for filtering or highlighting data passed between a model and a view.
+/**
+ *
+ */
 class QAIVLIBSHARED_EXPORT QFilterModelProxy : public QAbstractFilterProxyModel
 {
     Q_OBJECT
 public:
+	/**
+	 * Constructs a filter model with the given @p parent.
+	 */
     QFilterModelProxy(QObject* parent = 0);
+	/**
+	 * Destroys the filter model.
+	 */
     ~QFilterModelProxy();
 
     QVariant data(const QModelIndex & index, int role) const;
 protected:
+	/**
+	 * @reimp
+	 */
     bool filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const;
 };
 

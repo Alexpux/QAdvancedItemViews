@@ -25,6 +25,10 @@
 #include <qaivlib_global.h>
 
 //! The QSelectionListFilter class implements the filter with a fixed selection list.
+/**
+ * @ingroup filter
+ * QSelectionListFilter provides a filter based on predefined values.
+ */
 class QAIVLIBSHARED_EXPORT QSelectionListFilter : public QAbstractFilter
 {
 public:
@@ -38,7 +42,11 @@ public:
     QSelectionListFilter(int row, int column);
 
     QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
-
+    /**
+      * Returns the data stored under the given @p role for this filter.
+      * @see setData()
+      * @remarks Returns an invalid QVariant if the no data exists for the given @p role.
+      */
     QVariant data(int role = Qt::DisplayRole) const;
 	/**
 	 * Returns the data source used to populate the selection list.
@@ -50,13 +58,19 @@ public:
 	 * Sets the database @p source for the selection list.
 	 */
 	void setDataSource(QSelectionListFilter::DataSource source);
-
+	/**
+	 * Sets the contents of the given @p editor to the data for the filter at the given @p index. Note that the @p index contains information about the filter model being used.
+	 */
     void setEditorData(QWidget * editor, const QModelIndex & index);
-
+	/**
+	 * Sets the data for the filter at the given @p index in the filter @p model to the contents of the given @p editor.
+	 */
     void setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index);
 
     void setValues(const QVariantList & values);
-
+	/**
+	 * Updates the filter's @p editor geometry specified by index according to the style option given.
+	 */
 	void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index);
 };
 

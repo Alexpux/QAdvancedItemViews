@@ -100,6 +100,9 @@ QColor QAbstractFilter::highlightColor() const
 
 bool QAbstractFilter::isEnabled() const
 {
+	if (!isValid()){
+		return  false;
+	}
     return d->properties.value("enabled", false).toBool();
 }
 

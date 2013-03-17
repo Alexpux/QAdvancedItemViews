@@ -35,20 +35,33 @@ class QAbstractFilterPrivate;
 //! The QAbstractFilter class provides a base class for filter definitions used with a QAdvancedTableView.
 /**
   * A QAbstractFilter provides the interface and common functionality for filters used with the QAdvancedTableView or QFilterModel.
+  * @section Properties
+  * Properties of a QAbstractFilter can be saved and retrieved using setProperty() and property().
   */
 class QAIVLIBSHARED_EXPORT QAbstractFilter
 {
 public:
+	/**
+	 * The lowest permitted type value for custom items (subclasses of QAbstractFilter or any of the standard filter). This value is used in conjunction with a reimplementation of QGraphicsItem::type() and declaring a Type enum value. Example:
+	 * @code
+	 * class CustomFilter : public QAbstractFilter
+	 * {
+	 *		....
+	 *		enum { Type = UserType + 1};
+	 *		...
+	 * };
+	 * @endcode
+	 */
+	static const int UserType = 65536;
     enum {
-        Type = -1,
-        UserType = 65536
+        Type = -1        
     };
     /**
-      * Constructs an abstract filter.
+      * Constructs an abstract (invalid) filter.
       */
     QAbstractFilter();
     /**
-     * Constructs a QAbstractFilterDefinition with the given @p properties.
+     * Constructs a QAbstractFilter with the given @p properties.
      */
     QAbstractFilter(const QMap<QString,QVariant> & properties);
     /**
@@ -84,7 +97,7 @@ public:
       */
     bool isEnabled() const;
     /**
-     * Returns true if the QFilterTableViewColumnFilter object contains a valid filter definition. Otherwise false.
+     * Returns true if the filter definition is valid. Otherwise false.
      */
     bool isValid() const;
     /**
@@ -141,16 +154,26 @@ private:
     QAbstractFilterPrivate* d;
 };
 
-template <class T> inline T qabstractfilter_cast(QAbstractFilter *item)
+/**
+ * @ingroup utils
+ * Returns the given @p filter cast to type T if @p filter is of type T; otherwise, 0 is returned.
+ * @note  To make this function work correctly with custom filter, reimplement the type() function for each custom QAbstractFilter subclass.
+ */
+template <class T> inline T qfilter_cast(QAbstractFilter* filter)
 {
     return int(static_cast<T>(0)->Type) == int(QAbstractFilter::Type)
-        || (item && int(static_cast<T>(0)->Type) == item->type()) ? static_cast<T>(item) : 0;
+        || (filter && int(static_cast<T>(0)->Type) == filter->type()) ? static_cast<T>(filter) : 0;
 }
 
-template <class T> inline T qabstractfilter_cast(const QAbstractFilter *item)
+/**
+ * @ingroup utils
+ * Returns the given const @p filter cast to type T if @p filter is of type T; otherwise, 0 is returned.
+ * @note  To make this function work correctly with custom filter, reimplement the type() function for each custom QAbstractFilter subclass.
+ */
+template <class T> inline T qfilter_cast(const QAbstractFilter* filter)
 {
     return int(static_cast<T>(0)->Type) == int(QAbstractFilter::Type)
-        || (item && int(static_cast<T>(0)->Type) == item->type()) ? static_cast<T>(item) : 0;
+        || (filter && int(static_cast<T>(0)->Type) == filter->type()) ? static_cast<T>(filter) : 0;
 }
 
 #endif // QABSTRACTFILTER_H

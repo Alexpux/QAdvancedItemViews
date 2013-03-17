@@ -424,7 +424,7 @@ void MainWindow::initTabAdvancedTableView()
     // Column 'Qt': All filter types allowed. The default filter type is set to Text Filter
     // ------------------------------------
     ui->filterTableView->setFilterType(QSelectionListFilter::Type, 2);
-    QSelectionListFilter* selectionListFilter = qabstractfilter_cast<QSelectionListFilter*>(ui->filterTableView->filterAt(0, 2));
+    QSelectionListFilter* selectionListFilter = qfilter_cast<QSelectionListFilter*>(ui->filterTableView->filterAt(0, 2));
 	if (selectionListFilter){
 		selectionListFilter->setDataSource(QSelectionListFilter::Model);
         selectionListFilter->setEnabled(false);
@@ -433,7 +433,7 @@ void MainWindow::initTabAdvancedTableView()
     // Column 'Maturity Level'
     // ------------------------------------
     ui->filterTableView->setFilterType(QSelectionListFilter::Type, 3);
-	selectionListFilter = qabstractfilter_cast<QSelectionListFilter*>(ui->filterTableView->filterAt(0, 3));
+	selectionListFilter = qfilter_cast<QSelectionListFilter*>(ui->filterTableView->filterAt(0, 3));
     if (selectionListFilter){
         QVariantList values;
         values << "Deprecated" << "Done" << "Maintained";
@@ -526,6 +526,7 @@ void MainWindow::initTabUniqueValuesProxyModel()
     ui->uniqueValuesTableView->setModel(uniqueValuesProxyModel);
     uniqueValuesProxyModel->setModelColumn(8);
     uniqueValuesProxyModel->setSourceModel(m_model);
+	ui->uniqueValuesTableView->resizeRowsToContents();
 }
 
 void MainWindow::restoreStateToolButtonClicked()

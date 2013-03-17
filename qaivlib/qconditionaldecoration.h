@@ -26,7 +26,7 @@
 #include "qaivlib_global.h"
 
 class QConditionalDecorationProxyModel;
-//! The QConditionalDecoration provides a conditional decorartion for model items.
+//! The QConditionalDecoration provides a conditional decorarion for model items.
 class QAIVLIBSHARED_EXPORT QConditionalDecoration : public QAbstractItemModelDecoration
 {
 public:
@@ -54,7 +54,7 @@ public:
       */
     QConditionalDecoration();
     /**
-      *
+      * Constructs a QConditionalDecoration with the specified @p column.
       */
     QConditionalDecoration(int column);
 

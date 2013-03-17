@@ -49,6 +49,9 @@ public:
 	 */
 	void setPopup(QFilterEditorPopupWidget* widget);	
 signals:
+	/**
+	 * This signal must be emitted when the editor widget has completed editing the data, wants to write it back into the model.
+	 */
 	void commit();
 	/**
 	 * This signal must be emitted when the editor widget has completed editing the data, wants to write it back into the model
@@ -59,7 +62,9 @@ signals:
 	 * For example, if EditNextItem is specified, the view should use a delegate to open an editor on the next item in the model.
 	 */
 	void commitAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
-
+	/**
+	 * This signal must be emitted when editing shall be canceled and to close the editor.
+	 */
 	void cancelAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
 public slots:
 	/**

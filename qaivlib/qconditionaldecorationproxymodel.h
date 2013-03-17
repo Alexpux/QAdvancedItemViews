@@ -32,7 +32,7 @@ class QAbstractItemModelDecoration;
 class QConditionalDecorationProxyModelPrivate;
 
 //! The QConditionalDecorationProxyModel class implements a proxy model for conditional decorations.
-/**
+/** @ingroup proxy
   * <h2>Default Icon Sets</h2>
   * <table>
   * <tr><th>Icon Set</th><th>Icon Name</th><th>Icon</th></tr>

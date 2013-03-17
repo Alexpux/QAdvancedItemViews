@@ -28,6 +28,9 @@
 class QCheckStateProxyModelPrivate;
 
 //! The QCheckStateProxyModel class adds check boxes to a model.
+/**
+ * @ingroup proxy
+ */
 class QAIVLIBSHARED_EXPORT QCheckStateProxyModel : public QIdentityProxyModel
 {
     Q_OBJECT

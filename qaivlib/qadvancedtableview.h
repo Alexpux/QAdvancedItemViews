@@ -40,27 +40,28 @@ namespace Ui {
 }
 
 //! The QAdvancedTableView class provides an advanced model/view implementation of a table view.
-/**
-  * <h2>Features</h2>
-  * QAdvancedTableView provides the following features.
-  * <ul><li>Filter</li>
-  * <li>Fixed Rows</li>
-  * <li>Splitted View</li></ul>
-  * <h2>Visual Appearance</h2>
-  * <h3>QTable View Compatibility</h3>
-  * With all features disabled, the QAbvancedTableView provides with same look and feel as Qt's QTableView class.
-  * @image html qadvancedtableview01.png "Compatibility Mode" width=5cm
-  * <h3>Filter</h3>
-  * The visibility of the filter is controlled with setShowFilter().
-  * @image html qadvancedtableview02.png "Filter View Visible"
-  * <h3>Fixed Rows</h3>
-  * @image html qadvancedtableview03.png Fixed Rows Enabled
-  * A list
-  * <h3>Splitted View</h3>
-  * @image html qadvancedtableview04.png Splitted View Enabled
-  * <h2>Filter</h2>
-  *
-  */
+/** @ingroup views
+ * QAdvancedTableView is not deribed from QAbstractItemView, but the current implementation provides maximum compatibility with QAbstractItemView.
+ * <h2>Features</h2>
+ * QAdvancedTableView provides the following features.
+ * <ul><li>Filter</li>
+ * <li>Fixed Rows</li>
+ * <li>Splitted View</li></ul>
+ * <h2>Visual Appearance</h2>
+ * <h3>QTable View Compatibility</h3>
+ * With all features disabled, the QAbvancedTableView provides with same look and feel as Qt's QTableView class.
+ * @image html qadvancedtableview01.png "Compatibility Mode" width=5cm
+ * <h3>Filter</h3>
+ * The visibility of the filter is controlled with setShowFilter().
+ * @image html qadvancedtableview02.png "Filter View Visible"
+ * <h3>Fixed Rows</h3>
+ * @image html qadvancedtableview03.png Fixed Rows Enabled
+ * A list
+ * <h3>Splitted View</h3>
+ * @image html qadvancedtableview04.png Splitted View Enabled
+ * <h2>Filter</h2>
+ *
+ */
 class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
 {
     Q_OBJECT
@@ -109,6 +110,13 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
       * Setting this property when the view is visible will cause the items to be laid out again.
       */
     Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
+	//! @property(selectionBehavior)
+	/**
+	 * This property holds which selection behavior the view uses.
+	 * This property holds whether selections are done in terms of single items, rows or columns.
+	 * @see QTableView::selectionBehavior()
+	 */
+	Q_PROPERTY(QAbstractItemView::SelectionBehavior selectionBehavior READ selectionBehavior WRITE setSelectionBehavior)
 	//! @property(selectionMode)
 	/**
 	 * This property holds which selection mode the view operates in.
@@ -177,14 +185,6 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
 	 Q_PROPERTY(bool wordWrap READ wordWrap WRITE setWordWrap)
 public:
 	/**
-     * The QAdvancedTableView defined additional item data roles for data needed by the view.
-	 */
-	enum ItemDataRole {
-		AutoFilterRole = Qt::UserRole + 42,
-		SelectionFilterRole,
-		ValueRole
-	};
-	/**
 	 * Constructs a filter table view with a @p parent to represent the data.
 	 */
     explicit QAdvancedTableView(QWidget *parent = 0);
@@ -230,21 +230,24 @@ public:
       */
     int defaultFilterType(int column) const;
 	/**
-	 *
+	 * Returns true if drag is enabled. Otherwise false.
 	 */
 	bool dragEnabled() const;
-
+	/**
+	 * Returns the current edit trigger settings.
+	 * @see QAbstractItemView::editTriggers()
+	 */
 	QAbstractItemView::EditTriggers editTriggers() const;
     /**
-      *
+      * Returns the filter at the specified @p row and @p column, or 0 if no filter exists at @p row and @p column.
       */
-    QAbstractFilter* filterAt(int row, int col) const;
+    QAbstractFilter* filterAt(int row, int column) const;
     /**
       * Returns the filter model that this view is using for filtering.
       */
     QAbstractFilterModel* filterModel() const;
     /**
-      *
+      * Retunr the filter proxy model that this view is using.
       */
     QAbstractFilterProxyModel* filterProxyModel() const;
     /**
@@ -252,7 +255,8 @@ public:
       */
     QModelIndexList fixedRows(int column = 0) const;
     /**
-     *
+     * Returns true if autoscrolling in drag move events is enabled.
+	 * @see setAutoScroll()
      */
     bool hasAutoScroll() const;
     /**
@@ -310,15 +314,13 @@ public:
       */
     QAbstractItemDelegate* itemDelegateForRow(int row) const;
 	/**
-	 *
+	 * @reimp QWidget::minimumSizeHint()
 	 */
 	QSize minimumSizeHint() const;
     /**
       * Returns the model used by this view.
       */
     QAbstractItemModel* model() const;
-
-    void removeFilter( int column );
     /**
       * Restores the filter definition of this table view. This function returns true if the filter definition was restored; otherwise returns false.
       * @see saveState()
@@ -351,6 +353,8 @@ public:
 	 * @see restoreState()
 	 */
 	QByteArray saveState();
+
+	QAbstractItemView::SelectionBehavior selectionBehavior() const;
 	/**
 	 * Returns the current selection mode
 	 * @see setSelectionMode()
@@ -361,12 +365,12 @@ public:
      */
     QItemSelectionModel* selectionModel() const;
     /**
-	 * If @p enabled is true, the item background will be drawn using QPalette::Base and QPalette::AlternateBase; otherwise the background will be drawn using the QPalette::Base color.
+	 * If @p enable is true, the item background will be drawn using QPalette::Base and QPalette::AlternateBase; otherwise the background will be drawn using the QPalette::Base color.
 	 * @see alternatingRowColors()
 	 */
     void setAlternatingRowColors(bool enable);
 	/**
-	 *
+	 * If @p enable is true auto scroll is enabled.
 	 */
 	void setAutoScroll(bool enable);
     /**
@@ -375,7 +379,7 @@ public:
       */
     void setColumnWidth(int column, int width);
     /**
-      *
+      * Sets the custom context menu policy to @p policy.
       */
 	void setContextMenuPolicy(Qt::ContextMenuPolicy policy);
     /**
@@ -387,7 +391,7 @@ public:
       */
     void setDefaultFilterType(const QString & name, int type);
 	/**
-	 *
+	 * If @p is true drag is enabled.
 	 */
 	void setDragEnabled(bool enable);
 	/**
@@ -439,8 +443,9 @@ public:
       * @see rowHeight()
       */
     void setRowHeight(int row, int height);
-
+	/*! @cond property */
 	void setSelectionBehavior(QAbstractItemView::SelectionBehavior behavior);
+	//! @endcond
 	/**
 	 * Sets the selection @p mode.
 	 */
@@ -450,7 +455,7 @@ public:
 	 */
     void setSortIndicatorShown(bool show);
 	/**
-	 * If @p enable is true sorting is enabled. Otherwise sorting is disabled.
+	 * If @p enable is true sorting i#s enabled. Otherwise sorting is disabled.
 	 * @see isSortingEnabled()
 	 */
     void setSortingEnabled(bool enable);
@@ -484,7 +489,8 @@ public:
       */
     void sortByColumn(int column, Qt::SortOrder order);
 	/**
-	 *
+	 * Return the vies's text elide mode.
+	 * @see setTextElideMode()
 	 */
 	Qt::TextElideMode textElideMode() const;
 	/**
@@ -541,7 +547,7 @@ public slots:
     void addFilterGroup();
 	/**
 	 * Deselects all selected items. The current index will not be changed.
-	 * @see setSelection()selectAll()
+	 * @see setSelection(), selectAll()
 	 */
 	void clearSelection();
     /**
@@ -550,11 +556,11 @@ public slots:
 	void edit(const QModelIndex & index);
 	/**
      * Hide the given @p column.
-	 * @see showColumn() hideRow()
+	 * @see showColumn(), hideRow()
 	 */
 	void hideColumn(int column);
 	/**
-	 *
+	 * Hide the columns specified by the list of column @p names.
 	 */
 	void hideColumns(const QStringList & names);
 	/**
@@ -563,7 +569,7 @@ public slots:
     void hideFilterView();
     /**
       * Hide the given @p row.
-      * @see showRow() hideColum()
+      * @see showRow(), hideColumn()
       */
     void hideRow(int row);
 	/**
@@ -615,7 +621,10 @@ public slots:
       * Sets the current item to be the item at @p index.
       */
 	void setCurrentIndex(const QModelIndex & index);
-
+	/**
+	 * If @p is true the filter specified by the given @p row and @p column is enabled.
+	 * @note @p row and @p column specify a cell in the view's filter view.
+	 */
     void setFilterEnabled(int row, int column, bool enable);
 	/**
 	 * If @p visible is true the filter is shown. Otherwise the filter is hidden.
@@ -652,8 +661,17 @@ public slots:
 	 */
 	void update(const QModelIndex & index);
 protected:
+	/**
+	 * @reimp QWidget::contextMenuEvent().
+	 */
 	virtual void contextMenuEvent(QContextMenuEvent* event);
+	/**
+	 * @reimp QWidget::contextMenuEvent().
+	 */
 	bool eventFilter(QObject *obj, QEvent *event);
+	/**
+	 * @reimp QWidget::contextMenuEvent().
+	 */
 	void showEvent(QShowEvent* event);
 private slots:
 	void dataModelLayoutChanged();

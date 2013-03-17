@@ -24,7 +24,13 @@
 #include <qabstractfilter.h>
 #include <qaivlib_global.h>
 
-//! The QAutoFilter class implements an auto filter.
+//! QAutoFilter implements a filter based on the values found in the column specified.
+/**
+ * @ingroup filter
+ * QAutoFilter provides a filter based on the values found in the column specified.
+ * @image html autofilter01.png "QAutoFilter Editor"
+ * The Editor allows to filter on empty item, not empty items or a set of OR-combined values found in the specified column.
+ */
 class QAIVLIBSHARED_EXPORT QAutoFilter : public QAbstractFilter
 {
 public:
@@ -39,15 +45,25 @@ public:
       * Returns the widget used to edit the filter specified by @p index for editing. The @p parent widget and style @p option are used to control how the editor widget appears.
       */
     QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
-
+    /**
+      * Returns the data stored under the given @p role for this filter.
+      * @see setData()
+      * @remarks Returns an invalid QVariant if the no data exists for the given @p role.
+      */
     QVariant data(int role = Qt::DisplayRole) const;
 
     bool matches(const QVariant & value, int type) const;
-
-    void setEditorData(QWidget * editor, const QModelIndex & index);
-
-    void setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index);
-
+	/**
+	 * Sets the contents of the given @p editor to the data for the filter at the given @p index. Note that the @p index contains information about the filter model being used.
+	 */
+    void setEditorData(QWidget* editor, const QModelIndex & index);
+	/**
+	 * Sets the data for the filter at the given @p index in the filter @p model to the contents of the given @p editor.
+	 */
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index);
+	/**
+	 * Updates the filter's @p editor geometry specified by index according to the style option given.
+	 */
 	void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index);
 };
 

@@ -538,11 +538,6 @@ void QAdvancedTableView::modelReset()
     }
 }
 
-void QAdvancedTableView::removeFilter( int column )
-{
-    ui->dataTableView->resizeRowsToContents();
-}
-
 bool QAdvancedTableView::restoreFilter(const QByteArray & data)
 {
     QByteArray mData(data);
@@ -701,6 +696,11 @@ void QAdvancedTableView::selectRow(int row)
     ui->dataTableView->selectRow(row);
 }
 
+QAbstractItemView::SelectionBehavior QAdvancedTableView::selectionBehavior() const
+{
+	return ui->dataTableView->selectionBehavior();
+}
+
 QAbstractItemView::SelectionMode QAdvancedTableView::selectionMode() const
 {
 	return ui->dataTableView->selectionMode();
@@ -829,10 +829,10 @@ void QAdvancedTableView::showColumn(int column)
 
 void QAdvancedTableView::showEvent(QShowEvent* event)
 {
-	QWidget::showEvent(event);
 	ui->fixedRowsTableView->verticalHeader()->setVisible(ui->dataTableView->verticalHeader()->isVisible());
 	ui->splittedDataTableView->verticalHeader()->setVisible(ui->dataTableView->verticalHeader()->isVisible());
 	d->verticalHeader->setVisible(ui->dataTableView->verticalHeader()->isVisible());
+	QWidget::showEvent(event);
 }
 
 void QAdvancedTableView::showRow(int row)

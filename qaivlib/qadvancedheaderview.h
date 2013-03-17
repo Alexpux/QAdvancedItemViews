@@ -25,7 +25,16 @@
 
 #include <qaivlib_global.h>
 
-//! The QAdvancedHeaderView class provides a advanced header row or advanced header column for item views.
+//! The QAdvancedHeaderView class provides a header view to manage to appearance of the related view.
+/**
+ * @image html qadvancedheaderview01.png QAdvancedHeaderView
+ * <h2>Features</h2>
+ * <h3>Context Menus</h3>
+ * The header view provides context menus to manage the view settings and to create, edit and delete filter.
+ * @image html qadvancedheaderview02.png QAdvancedHeaderView Context Menu - Column Header
+ * @image html qadvancedheaderview03.png QAdvancedHeaderView Context Menu - Filter Model
+ *
+ */
 class QAIVLIBSHARED_EXPORT QAdvancedHeaderView : public QHeaderView
 {
     Q_OBJECT

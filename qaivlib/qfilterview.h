@@ -32,6 +32,7 @@ class QFilterViewPrivate;
 
 //! The QFilterView class provides a widget that is used to view and edit filter definitions.
 /**
+  * @ingroup views
   * @image html qfilterview01.png
   */
 class QAIVLIBSHARED_EXPORT QFilterView : public QTableView

@@ -72,6 +72,7 @@ QAutoFilterEditorPopup::QAutoFilterEditorPopup(QWidget* parent) :
 
 	m_singleColumnProxy = new QSingleColumnProxyModel(this);
     m_singleValueProxy = new QUniqueValuesProxyModel(this);
+	m_singleValueProxy->setEmptyItemsAllowed(false);
 
     m_singleColumnProxy->setSourceModel(m_singleValueProxy);
     m_checkStateProxy->setSourceModel(m_singleColumnProxy);

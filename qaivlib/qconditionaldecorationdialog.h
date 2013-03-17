@@ -37,16 +37,21 @@ class ValueEdit;
 
 //! The QConditionalDecorationDialog class provides a dialog that allow users to modify conditional decorations.
 /**
-  * @code
-  * QConditionalDecorationDialog* dlg = new QConditionalDecorationDialog(index, this);
-  * if (dlg->exec()){
-  *  QAbstractItemModel* model = (QAbstractItemModel*)index.model();
-  *     model->setData(index, dlg->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
-  * }
-  * delete dlg;
-  * @endcode
-  * @image html qconditionaldecorationdialog01.png
-  */
+ * @ingroup widgets
+ * @code
+ * QConditionalDecorationDialog* d = new QConditionalDecorationDialog(index, this);
+ * if (d->exec()){
+ *		QAbstractItemModel* m = (QAbstractItemModel*)index.model();
+ *		m->setData(index, d->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
+ * }
+ * delete d;
+ * @endcode
+ * @image html qconditionaldecorationdialog01.png "Example: using the QConditionalDecorationDialog"
+ * <table border="0">
+ * <tr><td>Clicking on the select value tool button </td><td><img src="table_select.png"/></td><td>opens the select value dialog to select a value for the condition being build.</td></tr>
+ * </table>
+ * @image html qconditionaldecorationdialog02.png "QConditionalDecorationDialog: Select Value"
+ */
 class QAIVLIBSHARED_EXPORT QConditionalDecorationDialog : public QDialog
 {
     Q_OBJECT
@@ -64,7 +69,7 @@ public:
       * Returns the properties.
       */
     QVariantMap properties() const;
-
+	
     void setProperties(const QModelIndex & index);
 private slots:
     void addPushButtonClicked();

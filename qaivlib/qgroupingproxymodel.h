@@ -29,21 +29,22 @@ class QGroupingProxyModelPrivate;
 
 //! The QGroupingProxyModel class implements a grouping proxy model.
 /**
+  * @ingroup proxy
   * The QGroupingProxyModel can be used for grouping items. A tree structure is created to arrange the source items as defined by the group definitions.
   *
   * Let's assume that we want to group the items provided by a custom model. The code to set up the model and the view, without grouping, would look like this:
   * @code
-  * QTreeView* mGroupView = new QTreeView;
-  * QStandardItemModel* mItemModel = new QStandardItemModel(this);
-  * mGroupView->setModel(mItemModel);
+  * QTreeView* treeView = new QTreeView;
+  * QStandardItemModel* model = new QStandardItemModel(this);
+  * treeView->setModel(model);
   * @endcode
   * To add grouping support to mDataModel, we need to create a QGroupingProxyModel, call setSourceModel() with the mDataModel as argument, and install the QGroupingProxyModel on the view:
   * @code
-  * QTreeView* mGroupView = new QTreeView;
-  * QStandardItemModel* mDataModel = new QStandardItemModel(this);
-  * QGroupingProxyModel* mGroupingProxy = new QGroupingProxyModel(this);
-  * mGroupingProxy->setSourceModel(mItemModel);
-  * mGroupView->setModel(mGroupingProxy);
+  * QTreeView* treeView = new QTreeView;
+  * QStandardItemModel* model = new QStandardItemModel(this);
+  * QGroupingProxyModel* proxy = new QGroupingProxyModel(this);
+  * proxy->setSourceModel(model);
+  * treeiew->setModel(proxy);
   * @endcode
   *
   * At this point no grouping is applied and the source model items are displayed in the tree view as children of the group "Ungrouped".
@@ -51,20 +52,20 @@ class QGroupingProxyModelPrivate;
   * <h2>Grouping</h2>
   * To enable grouping it is required to call setModelColumn() to determine the source model colum the proxy shall operate on.
   * @code
-  * mGroupingProxy->setModelColumn(2);
+  * proxy->setModelColumn(2);
   * @endcode
   * Once the model column is set, groups can be added by calling addGroup().
   *
   * @code
-  * QTreeView* mGroupView = new QTreeView;
-  * QStandardItemModel* mDataModel = new QStandardItemModel(this);
-  * QGroupingProxyModel* mGroupingProxy = new QGroupingProxyModel(this);
+  * QTreeView* treeView = new QTreeView;
+  * QStandardItemModel* model = new QStandardItemModel(this);
+  * QGroupingProxyModel* proxy = new QGroupingProxyModel(this);
   *
-  * mGroupingProxy->setModelColumn(2);
-  * mGroupingProxy->addGroup(QIcon(":/icons/folder"), "Qt's Tools", "Qt's tools");
+  * proxy->setModelColumn(2);
+  * proxy->addGroup(QIcon(":/icons/folder"), "Qt's Tools", "Qt's tools");
   *
-  * mGroupingProxy->setSourceModel(mItemModel);
-  * mGroupView->setModel(mGroupingProxy);
+  * proxy->setSourceModel(mItemModel);
+  * treeView->setModel(mGroupingProxy);
   * @endcode
   *
   * A second group 'Qt's Tools' is added to the tree listing all source items matching the value 'Qt's tools' in the selected model column.
@@ -75,19 +76,19 @@ class QGroupingProxyModelPrivate;
   * <h2>Sorting</h2>
   * Sorting can be achieved by cascading proxy models. The first proxy will group the model items and the second sorts them.
   * @code
-  * QTreeView* mGroupView = new QTreeView;
-  * QStandardItemModel* mDataModel = new QStandardItemModel(this);
-  * QGroupingProxyModel* mGroupingProxy = new QGroupingProxyModel(this);
+  * QTreeView* treeView = new QTreeView;
+  * QStandardItemModel* model = new QStandardItemModel(this);
+  * QGroupingProxyModel* goupingProxy = new QGroupingProxyModel(this);
   *
-  * mGroupingProxy->setModelColumn(2);
-  * mGroupingProxy->addGroup(QIcon(":/icons/folder"), "Qt's Tools", "Qt's tools");
+  * goupingProxy->setModelColumn(2);
+  * goupingProxy->addGroup(QIcon(":/icons/folder"), "Qt's Tools", "Qt's tools");
   *
-  * mGroupingProxy->setSourceModel(mItemModel);
+  * proxy->setSourceModel(model);
   *
-  * QSortFilterProxyModel* mSortFilterProxy = new QSortFilterProxyModel(this);
-  * mSortFilterProxy->setSourceModel(mGroupingProxy);
+  * QSortFilterProxyModel* sortFilterProxy = new QSortFilterProxyModel(this);
+  * sortFilterProxy->setSourceModel(goupingProxy);
   *
-  * mGroupView->setModel(mSortFilterProxy);
+  * treeView->setModel(sortFilterProxy);
   * @endcode
   * <h2>Save and Restore Groups</h2>
   * Group definitions can be saved and restored calling saveGroups() or restoreGroups().
