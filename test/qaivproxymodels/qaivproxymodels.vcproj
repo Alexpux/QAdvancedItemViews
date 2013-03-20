@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="qaivproxymodels "
+	Name="test_qaivproxymodels"
 	ProjectGUID="{42DA8916-2E97-432F-8984-D6D196E8AADA}"
 	RootNamespace="qaivproxymodels"
 	Keyword="Qt4VSv1.0"
