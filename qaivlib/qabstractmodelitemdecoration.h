@@ -23,8 +23,10 @@
 
 class QAbstractItemModelDecorationPrivate;
 
+#include "qaivlib_global.h"
+
 //! The QDecoration class is a base class for item model decorations.
-class QAbstractItemModelDecoration
+class QAIVLIBSHARED_EXPORT QAbstractItemModelDecoration
 {
 public:
     /**
