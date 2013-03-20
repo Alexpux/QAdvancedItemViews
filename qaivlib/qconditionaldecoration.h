@@ -58,7 +58,7 @@ public:
       */
     QConditionalDecoration(int column);
 
-    void addCondition( QConditionalDecoration::MatchFlag matchFlag, const QVariant & value, const QString & iconSet, const QString & iconName);
+    void addCondition( QConditionalDecoration::MatchFlag matchFlag, const QVariant & value, const QString & set, const QString & name);
     /**
       * Returns the match flag for the given @p index or QModelItemDecoration::MatchFlagInvalid if @p index does not exists.
       */
@@ -67,7 +67,9 @@ public:
       * Returns the number of conditions.
       */
     int count() const;
-
+	/**
+	 * Returns the decoration for the given @p index.
+	 */
     QVariant decorate(const QModelIndex & index, int role = Qt::DecorationRole) const;
     /**
       * Returns the icon name of the condition at the given @p index or QString::null if @p index does not exists.
@@ -84,7 +86,7 @@ public:
       */
     void setHighlightRole(int role);
 
-    void setDefaultIcon(const QString & set, const QString & name);
+    void setDefaultDecoration(const QString & set, const QString & name);
     /**
       * Returns the value at the given @p index.
       */

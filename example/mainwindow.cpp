@@ -452,7 +452,7 @@ void MainWindow::initTabConditionalDecorationProxyModel()
     decoration->addCondition(QConditionalDecoration::IsEqual, "Deprecated", "leds", "red (on)");
     decoration->addCondition(QConditionalDecoration::IsEqual, "Done", "leds", "yellow (on)");
     decoration->addCondition(QConditionalDecoration::IsEqual, "Maintained", "leds", "orange (on)");
-    decoration->setDefaultIcon("leds", "white (on)");
+    decoration->setDefaultDecoration("leds", "white (on)");
     proxy->addDecoration(3, decoration);
 
     decoration = new QConditionalDecoration();

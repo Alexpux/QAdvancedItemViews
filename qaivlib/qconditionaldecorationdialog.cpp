@@ -76,11 +76,11 @@ QVariantMap QConditionalDecorationDialog::properties() const
         }
 
         comboBox = qobject_cast<QComboBox*>(ui->conditionsTableWidget->cellWidget(iRows, 2));
-        mondition["iconSet"] = comboBox->currentText();
+        mondition["set"] = comboBox->currentText();
 
         comboBox = qobject_cast<QComboBox*>(ui->conditionsTableWidget->cellWidget(iRows, 3));
         if (comboBox){
-            mondition["iconName"] = comboBox->currentText();
+            mondition["name"] = comboBox->currentText();
         }
 
         conditions << mondition;
@@ -125,14 +125,14 @@ void QConditionalDecorationDialog::setProperties(const QModelIndex & index)
         mComboBox->addItems(cIconSets.keys());
         connect(mComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(iconSetComboBoxActivated(QString)));
         ui->conditionsTableWidget->setCellWidget(iCondition, 2, mComboBox);
-        mComboBox->setCurrentIndex(mComboBox->findText(mConditions.at(iCondition).toMap().value("iconSet").toString()));
+        mComboBox->setCurrentIndex(mComboBox->findText(mConditions.at(iCondition).toMap().value("set").toString()));
         if (mComboBox->currentIndex() == 0){
-             ui->conditionsTableWidget->setCellWidget(iCondition, 3, iconSetComboBox(mConditions.at(iCondition).toMap().value("iconSet").toString()));
+             ui->conditionsTableWidget->setCellWidget(iCondition, 3, iconSetComboBox(mConditions.at(iCondition).toMap().value("set").toString()));
         }
 
         mComboBox = qobject_cast<QComboBox*>(ui->conditionsTableWidget->cellWidget(iCondition, 3));
         if (mComboBox){
-            mComboBox->setCurrentIndex(mComboBox->findText(mConditions.at(iCondition).toMap().value("iconName").toString()));
+            mComboBox->setCurrentIndex(mComboBox->findText(mConditions.at(iCondition).toMap().value("name").toString()));
         }
     }
     ui->conditionsTableWidget->resizeColumnToContents(0);
