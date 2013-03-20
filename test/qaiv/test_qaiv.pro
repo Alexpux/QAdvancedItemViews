@@ -19,11 +19,36 @@
 #** If not, see <http://www.gnu.org/licenses/>.
 #******************************************************************************/
 
-TEMPLATE = subdirs
-CONFIG += ordered
-SUBDIRS += qaivlib/qaivlib.pro \
-    test/qadvancedtableview/test_qadvancedtableview.pro \
-    test/qaiv/test_qaiv.pro \
-    test/qaivproxymodels/test_qaivproxymodels.pro \
-    qaivdesigner/qaivdesigner.pro \
-    example/example.pro
+TEMPLATE = app
+TARGET = test_qaiv
+QT += core gui
+
+CONFIG += qtestlib console debug_and_release
+DEFINES += QT_LARGEFILE_SUPPORT QT_DLL
+
+CONFIG(debug, debug|release) {
+    win32 {
+        DESTDIR = ./../../bin/Win32/Debug
+        MOC_DIR += ./GeneratedFiles/debug
+        OBJECTS_DIR += debug
+    }
+    INCLUDEPATH += . \
+        ./GeneratedFiles/Debug \
+        ./../../qaivlib
+} else {
+    win32 {
+        DESTDIR = ./../../bin/Win32/Release
+        MOC_DIR += ./GeneratedFiles/release
+        OBJECTS_DIR += release
+    }
+    INCLUDEPATH += . \
+        ./GeneratedFiles/Release \
+        ./../../qaivlib
+}
+
+LIBS += -l$(DESTDIR)/qaivlib
+
+DEPENDPATH += .
+UI_DIR += ./GeneratedFiles
+RCC_DIR += ./GeneratedFiles
+include(test_qaiv.pri)

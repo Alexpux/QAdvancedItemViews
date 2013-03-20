@@ -19,11 +19,5 @@
 #** If not, see <http://www.gnu.org/licenses/>.
 #******************************************************************************/
 
-TEMPLATE = subdirs
-CONFIG += ordered
-SUBDIRS += qaivlib/qaivlib.pro \
-    test/qadvancedtableview/test_qadvancedtableview.pro \
-    test/qaiv/test_qaiv.pro \
-    test/qaivproxymodels/test_qaivproxymodels.pro \
-    qaivdesigner/qaivdesigner.pro \
-    example/example.pro
+
+SOURCES += ./main.cpp

@@ -20,35 +20,43 @@
 #******************************************************************************/
 
 TEMPLATE = lib
-TARGET = qaivlib
-QT += core gui
-CONFIG += debug_and_release
+TARGET = qaivdesigner
 
-DEFINES += QT_LARGEFILE_SUPPORT QT_DLL QAIVLIB_LIBRARY
+QT += core gui xml script
+CONFIG += designer plugin
 
 CONFIG(debug, debug|release) {
     win32 {
-        DESTDIR = ./../bin/Win32/Debug
+        DESTDIR = ../bin/Win32/Debug/plugins/designer
+        INCLUDEPATH += ./../qaivlib \
+            ./debug \
+            $(QTDIR)/mkspecs/win32-msvc2008
+        LIBS += -L"../../qaivlib/debug" \
+            -l../bin/Win32/Debug/qaivlib
     }
-    INCLUDEPATH += ./GeneratedFiles \
-        . \
-        ./GeneratedFiles/Debug
-    MOC_DIR += ./GeneratedFiles/debug
+    MOC_DIR += debug
     OBJECTS_DIR += debug
 } else {
     win32 {
-        DESTDIR = ./../bin/Win32/Release
+        DESTDIR = ../bin/Win32/Release/plugins/designer
+        INCLUDEPATH += ./../qaivlib \
+            ./release \
+            $(QTDIR)/mkspecs/win32-msvc2008
+        LIBS += -L"../../qaivlib/release" \
+            -l../bin/Win32/Release/qaivlib
     }
-    INCLUDEPATH += ./GeneratedFiles \
-        . \
-        ./GeneratedFiles/Release
-    MOC_DIR += ./GeneratedFiles/release
+    MOC_DIR += release
     OBJECTS_DIR += release
 }
 
 
-PRECOMPILED_HEADER = stdafx.h
+DEFINES += _WINDOWS QT_LARGEFILE_SUPPORT QT_DLL QT_SCRIPT_LIB QT_XML_LIB QT_HAVE_MMX QT_HAVE_3DNOW QT_HAVE_SSE QT_HAVE_MMXEXT QT_HAVE_SSE2
+
 DEPENDPATH += .
 UI_DIR += ./GeneratedFiles
 RCC_DIR += ./GeneratedFiles
-include(qaivlib.pri)
+include(qaivdesigner.pri)
+
+#Install the plugin in the designer plugins directory.
+target.path = $$[QT_INSTALL_PLUGINS]/designer
+INSTALLS += target

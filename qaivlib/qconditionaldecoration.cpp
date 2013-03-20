@@ -26,6 +26,8 @@ QConditionalDecoration::QConditionalDecoration() :
     QAbstractItemModelDecoration()
 {
     setProperty("dataRole", Qt::DisplayRole);
+    setProperty("pixmapSize", QSize(16, 16));
+    setProperty("column", -1);
 }
 
 QConditionalDecoration::QConditionalDecoration(int column) :
@@ -33,16 +35,17 @@ QConditionalDecoration::QConditionalDecoration(int column) :
 {
     setProperty("dataRole", Qt::DisplayRole);
     setProperty("column", column);
+    setProperty("pixmapSize", QSize(16, 16));
 }
 
-void QConditionalDecoration::addCondition(QConditionalDecoration::MatchFlag matchFlag, const QVariant & value, const QString & iconSet, const QString &iconName)
+void QConditionalDecoration::addCondition(QConditionalDecoration::MatchFlag matchFlag, const QVariant & value, const QString & set, const QString & name)
 {
     QVariantList conditions  = property("conditions").toList();
     QVariantMap condition;
     condition["matchFlag"] = matchFlag;
     condition["value"] = value;
-    condition["iconSet"] = iconSet;
-    condition["iconName"] = iconName;
+    condition["set"] = set;
+    condition["name"] = name;
     conditions.append(condition);
     setProperty("conditions", conditions);
 }
@@ -67,23 +70,36 @@ QVariant QConditionalDecoration::decorate(const QModelIndex & index, int role) c
         return QVariant();
     }
     QVariantList definitions  = property("conditions").toList();
-    QVariantMap p;
+    QVariantMap m;
+	QList<QPixmap> pl;
+	QSize s = property("pixmapSize").toSize();
     for (int iDefinitions = 0; iDefinitions < definitions.size(); iDefinitions++){
-        p = definitions.at(iDefinitions).toMap();
-        if (matches(index, p)){
-            return model->icon(p.value("iconSet").toString(), p.value("iconName").toString());
+        m = definitions.at(iDefinitions).toMap();
+        if (matches(index, m)){
+			pl << model->icon(m.value("set").toString(), m.value("name").toString()).pixmap(s);
+			//return model->icon(p.value("set").toString(), p.value("name").toString()).pixmap(property("pixmapSize").toSize());
         }
     }
-    if (property("defaultIconSet").isNull()){
-        return QVariant();
-    }
-    return model->icon(property("defaultIconSet").toString(), property("defaultIconName").toString());
+	if (!pl.isEmpty()){
+		QPixmap p(s.width() * pl.size(), s.height());
+		p.fill(Qt::transparent);
+		QPainter painter(&p);
+		for (int i = 0; i < pl.size(); i++){
+			painter.drawPixmap(s.width() * i, 0, pl.at(i));
+		}
+		return p;
+	} else {
+		if (property("defaultSet").isNull()){
+			return QVariant();
+		}
+	    return model->icon(property("defaultSet").toString(), property("defaultName").toString());
+	}
 }
 
 QString QConditionalDecoration::iconName(int index) const
 {
     if (index < property("conditions").toList().size()){
-        return property("conditions").toList().at(index).toMap().value("iconName").toString();
+        return property("conditions").toList().at(index).toMap().value("name").toString();
     }
     return QString::null;
 }
@@ -173,10 +189,10 @@ void QConditionalDecoration::setHighlightRole(int role)
     setProperty("dataRole", role);
 }
 
-void QConditionalDecoration::setDefaultIcon(const QString &set, const QString &name)
+void QConditionalDecoration::setDefaultDecoration(const QString & set, const QString & name)
 {
-    setProperty("defaultIconSet", set);
-    setProperty("defaultIconName", name);
+    setProperty("defaultSet", set);
+    setProperty("defaultName", name);
 }
 
 QVariant QConditionalDecoration::value(int index) const
