@@ -1,7 +1,7 @@
 /******************************************************************************
 ** This file is part of qadvanceditemviews.
 **
-** Copyright (c) 2011-2012 Martin Hoppe martin@2x2hoppe.de
+** Copyright (c) 2011-2013 Martin Hoppe martin@2x2hoppe.de
 **
 ** qadvanceditemviews is free software: you can redistribute it
 ** and/or modify it under the terms of the GNU Lesser General
@@ -43,18 +43,18 @@
  * <li>@ref screenshot3 "Unique Values Proxy Model"</li>
  * </li>
  * @section Download
- * You will find stable releases at QAIV's project site.
- * @section Installation
- * The current version does not provide an installer.
- * @subsection qdesigner Qt Designer Plugin
- * QAIV provides a plugin for Qt's designer.
- * @section building Building QAIV
- * @subsection qtc Qt Project
+ * You will find stable releases at <a href="http://qaiv.berlios.de">QAIV's project site</a>.
+ * @section buildinstall Build and Install QAIV
+ * @subsection requirements Requirements
+ * QAIV requires Qt version 4.8.2 or greater.
+ * @subsection platforms Platforms
+ * QAIV shall build on all platforms supported by Qt. The current version is tested on Windows XP/7 only.
+ * @subsection qmake Qt Creator / qmake
  * Use qaiv.pro to either build the library, the example application and the Qt designer plugin from the command line or open the qaiv.pro using Qt creator.
  * @subsection msvs Visual Studio
  * The repository contains the Visual Studio solution file to build the library, the example application, Qt designer plugin and test cases.
- * @section Support
- * 
+ * @subsection installer Installer
+ * The current version does not provide an installer.
  * @page screenshot1 Conditional Decoration Proxy Model
  * The QConditionalDecorationProxyModel allows a user to decorate items in a table model by defining conditional decorations.
  * @image html conditional01.png "Conditional Decoration Proxy Model"
