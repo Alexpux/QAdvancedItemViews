@@ -33,12 +33,14 @@ public:
     QMap<int,QAbstractItemModelDecoration*> columnDecorationMap;
 
     QMap<QString,QVariant> iconSets;
+	QSize iconSize;
 
     QConditionalDecorationProxyModel* m;
 };
 
 QConditionalDecorationProxyModelPrivate::QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel *pm)
 {
+	iconSize = QSize(16, 16);
     m = pm;
 }
 
@@ -150,6 +152,11 @@ QMap<QString, QVariant> QConditionalDecorationProxyModel::iconSets() const
     return d->iconSets;
 }
 
+QSize QConditionalDecorationProxyModel::iconSize() const
+{
+	return d->iconSize;
+}
+
 bool QConditionalDecorationProxyModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
     if (role == QConditionalDecorationProxyModel::ConditionalDecorationRole){
@@ -166,7 +173,10 @@ bool QConditionalDecorationProxyModel::setData(const QModelIndex & index, const 
     return QSortFilterProxyModel::setData(index, value, role);
 }
 
-QIcon QConditionalDecorationProxyModel::mergeIcon(const QIcon & first, const QIcon & second)
+void QConditionalDecorationProxyModel::setIconSize(const QSize & size)
 {
-    return QIcon();
+	if (size != d->iconSize){
+		d->iconSize = size;
+		invalidateFilter();
+	}
 }

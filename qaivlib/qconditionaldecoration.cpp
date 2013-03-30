@@ -72,20 +72,19 @@ QVariant QConditionalDecoration::decorate(const QModelIndex & index, int role) c
     QVariantList definitions  = property("conditions").toList();
     QVariantMap m;
 	QList<QPixmap> pl;
-	QSize s = property("pixmapSize").toSize();
     for (int iDefinitions = 0; iDefinitions < definitions.size(); iDefinitions++){
         m = definitions.at(iDefinitions).toMap();
         if (matches(index, m)){
-			pl << model->icon(m.value("set").toString(), m.value("name").toString()).pixmap(s);
+			pl << model->icon(m.value("set").toString(), m.value("name").toString()).pixmap(model->iconSize());
 			//return model->icon(p.value("set").toString(), p.value("name").toString()).pixmap(property("pixmapSize").toSize());
         }
     }
 	if (!pl.isEmpty()){
-		QPixmap p(s.width() * pl.size(), s.height());
+		QPixmap p(model->iconSize().width() * pl.size(), model->iconSize().height());
 		p.fill(Qt::transparent);
 		QPainter painter(&p);
 		for (int i = 0; i < pl.size(); i++){
-			painter.drawPixmap(s.width() * i, 0, pl.at(i));
+			painter.drawPixmap(model->iconSize().width() * i, 0, pl.at(i));
 		}
 		return p;
 	} else {

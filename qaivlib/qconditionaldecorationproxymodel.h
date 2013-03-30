@@ -66,6 +66,12 @@ class QConditionalDecorationProxyModelPrivate;
 class QAIVLIBSHARED_EXPORT QConditionalDecorationProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
+	//! @property(iconSize: QSize)
+	/**
+	 * This property holds the size of item's icons.
+	 * @remark The default is QSize(16, 16)
+	 */
+	Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
 public:
     enum ItemDataRole {
         ConditionalDecorationRole = Qt::UserRole + 421,
@@ -103,18 +109,23 @@ public:
     virtual QVariant data(const QModelIndex & index, int role) const;
 
     QIcon icon(const QString & set, const QString & name) const;
+	/**
+	 * Returns the size of the icons.
+	 * @see setIconSize()
+	 */
+	QSize iconSize() const;
     /**
       * Returns a map of icon sets defined for this proxy.
       */
     QMap<QString, QVariant> iconSets() const;
 
     virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
-signals:
-    
-public slots:
+	/**
+	 * Sets the icon size to @p size.
+	 * @see iconSize()
+	 */
+	void setIconSize(const QSize & size);
 private:
-    QIcon mergeIcon(const QIcon & first, const QIcon & second);
-
     QConditionalDecorationProxyModelPrivate* d;
 };
 
