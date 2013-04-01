@@ -1,0 +1,36 @@
+#-------------------------------------------------
+#
+# Project created by QtCreator 2012-01-20T23:01:33
+#
+#-------------------------------------------------
+
+TARGET = qaiv
+TEMPLATE = lib
+
+DEFINES += QAIV_LIBRARY
+
+PRECOMPILED_HEADER = stdafx.h
+
+SOURCES += 
+
+HEADERS += 
+
+symbian {
+    MMP_RULES += EXPORTUNFROZEN
+    TARGET.UID3 = 0xED9A3556
+    TARGET.CAPABILITY = 
+    TARGET.EPOCALLOWDLLDATA = 1
+    addFiles.sources = qadvanceditemviews.dll
+    addFiles.path = !:/sys/bin
+    DEPLOYMENT += addFiles
+}
+
+unix:!symbian {
+    maemo5 {
+        target.path = /opt/usr/lib
+    } else {
+        target.path = /usr/lib
+    }
+    INSTALLS += target
+}
+
