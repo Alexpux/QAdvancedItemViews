@@ -80,11 +80,11 @@ QVariant QConditionalDecoration::decorate(const QModelIndex & index, int role) c
         }
     }
 	if (!pl.isEmpty()){
-		QPixmap p(model->iconSize().width() * pl.size(), model->iconSize().height());
+		QPixmap p(model->iconSize().width() * pl.size() + (pl.size() * model->iconSpacing()), model->iconSize().height());
 		p.fill(Qt::transparent);
-		QPainter painter(&p);
+		QPainter painter(&p);	
 		for (int i = 0; i < pl.size(); i++){
-			painter.drawPixmap(model->iconSize().width() * i, 0, pl.at(i));
+			painter.drawPixmap(model->iconSize().width() * i + (i * model->iconSpacing()), 0, pl.at(i));
 		}
 		return p;
 	} else {

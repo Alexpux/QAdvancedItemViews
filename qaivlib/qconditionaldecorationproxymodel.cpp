@@ -34,13 +34,14 @@ public:
 
     QMap<QString,QVariant> iconSets;
 	QSize iconSize;
-
+	int iconSpacing;
     QConditionalDecorationProxyModel* m;
 };
 
 QConditionalDecorationProxyModelPrivate::QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel *pm)
 {
 	iconSize = QSize(16, 16);
+	iconSpacing = 3;
     m = pm;
 }
 
@@ -157,6 +158,11 @@ QSize QConditionalDecorationProxyModel::iconSize() const
 	return d->iconSize;
 }
 
+int QConditionalDecorationProxyModel::iconSpacing() const
+{
+	return d->iconSpacing;
+}
+
 bool QConditionalDecorationProxyModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
     if (role == QConditionalDecorationProxyModel::ConditionalDecorationRole){
@@ -177,6 +183,14 @@ void QConditionalDecorationProxyModel::setIconSize(const QSize & size)
 {
 	if (size != d->iconSize){
 		d->iconSize = size;
+		invalidateFilter();
+	}
+}
+
+void QConditionalDecorationProxyModel::setIconSpacing(int spacing)
+{
+	if (spacing != d->iconSpacing){
+		d->iconSpacing = spacing;
 		invalidateFilter();
 	}
 }

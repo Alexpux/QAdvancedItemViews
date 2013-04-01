@@ -72,6 +72,12 @@ class QAIVLIBSHARED_EXPORT QConditionalDecorationProxyModel : public QSortFilter
 	 * @remark The default is QSize(16, 16)
 	 */
 	Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
+	//! @property(iconSize: int)
+	/**
+	 * This property holds the spacing between the icons of an item.
+	 * @remark The default is 3.
+	 */
+	Q_PROPERTY(int iconSpacing READ iconSpacing WRITE setIconSpacing)
 public:
     enum ItemDataRole {
         ConditionalDecorationRole = Qt::UserRole + 421,
@@ -114,6 +120,10 @@ public:
 	 * @see setIconSize()
 	 */
 	QSize iconSize() const;
+	/**
+	 * Returns the spacing between the icons of an item.
+	 */
+	int iconSpacing() const;
     /**
       * Returns a map of icon sets defined for this proxy.
       */
@@ -125,6 +135,10 @@ public:
 	 * @see iconSize()
 	 */
 	void setIconSize(const QSize & size);
+	/**
+	 * Sets the spacing between the icons of an item to @p spacing.
+	 */
+	void setIconSpacing(int spacing);
 private:
     QConditionalDecorationProxyModelPrivate* d;
 };
