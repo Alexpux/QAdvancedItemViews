@@ -46,6 +46,7 @@ public:
 	QFilterEditorPopupWidget* popup() const;
 	/**
 	 * Sets the popup widget to @p widget.
+	 * @sa popup();
 	 */
 	void setPopup(QFilterEditorPopupWidget* widget);	
 signals:
@@ -72,9 +73,17 @@ public slots:
 	 */
 	void showPopup(bool visible = true);
 protected:
-	virtual bool eventFilter(QObject *obj, QEvent *event);
+	/**
+	 * @reimp QWidget::eventFilter()
+	 */
+	virtual bool eventFilter(QObject* object, QEvent *event);
+	/**
+	 * @reimp QWidget::moveEvent()
+	 */
 	void moveEvent(QMoveEvent* e);
 private:
+	void movePopup();
+
 	QFilterEditorPopupWidget* m_popup;
 };
 

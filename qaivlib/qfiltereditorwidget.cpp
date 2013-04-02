@@ -32,32 +32,46 @@ QFilterEditorWidget::~QFilterEditorWidget()
 {
 }
 
-bool QFilterEditorWidget::eventFilter(QObject *obj, QEvent *event)
+bool QFilterEditorWidget::eventFilter(QObject* object, QEvent* event)
 {
 	if (m_popup){
 		if (event->type() == QEvent::Hide){
 			emit commitAndClose();
 			return true;
 		} else if ( event->type() == QEvent::KeyPress){
-			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-			if (popup()->cancelAndClose(obj, keyEvent->key())){
+			QKeyEvent* keyEvent = static_cast<QKeyEvent *>(event);
+			if (popup()->cancelAndClose(object, keyEvent->key())){
 				emit cancelAndClose();
 				return true;
 			}
-			if (popup()->commitAndClose(obj, keyEvent->key())){
+			if (popup()->commitAndClose(object, keyEvent->key())){
 				emit commitAndClose();
 				return true;
 			}
 		}
 	}
-	return QObject::eventFilter(obj, event);
+	return QObject::eventFilter(object, event);
 }
 
 void QFilterEditorWidget::moveEvent(QMoveEvent* e)
 {
 	QWidget::moveEvent(e);
 	if (m_popup){
-		m_popup->move(mapToGlobal(rect().bottomLeft()));
+		movePopup();
+	}
+}
+
+void QFilterEditorWidget::movePopup()
+{
+	if (m_popup){
+		QPoint p;
+		if (m_popup->geometry().height() + mapToGlobal(pos()).y() > QApplication::desktop()->availableGeometry(this).height()){
+			p = mapToGlobal(rect().topLeft());
+			p.setY(p.y() - m_popup->geometry().height());
+		} else {
+			p = mapToGlobal(rect().bottomLeft());
+		}
+		m_popup->move(p);
 	}
 }
 
@@ -76,7 +90,7 @@ void QFilterEditorWidget::showPopup(bool visible)
 	if (m_popup){
 		if (visible){
 			m_popup->show();
-			m_popup->move(mapToGlobal(rect().bottomLeft()));
+			movePopup();
 		} else {
 			m_popup->hide();
 		}
