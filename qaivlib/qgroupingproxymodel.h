@@ -124,24 +124,37 @@ public:
       */
     void addGroup(const QIcon & icon, const QString & text, const QVariant & value = QVariant());
     /**
-      * @reimp
+      * Returns the number of columns for the children of the given @p parent.
+	  * @sa rowCount()
       */
     int columnCount(const QModelIndex & parent = QModelIndex()) const;
     /**
-      * @reimp
+      * @reimp QAbstractItemModel::data()
       */
     QVariant data(const QModelIndex & proxyIndex, int role) const;
-
+    /**
+      * @reimp QAbstractItemModel::data()
+      */
     Qt::ItemFlags flags(const QModelIndex & index) const;
-
+    /**
+      * @reimp QAbstractItemModel::data()
+      */
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-
+    /**
+      * @reimp QAbstractItemModel::data()
+      */
     QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
 
     int findText(const QString & text) const;
-
+    /**
+      * Returns the model index in the proxy model that corresponds to the @p sourceIndex from the source model.
+	  * @sa mapToSource()
+      */
     QModelIndex mapFromSource(const QModelIndex & sourceIndex) const;
-
+	/**
+	 * Returns the model index in the source model that corresponds to the @p proxyIndex in the proxy model.
+	 * @sa mapToSource()
+	 */
     QModelIndex mapToSource(const QModelIndex & proxyIndex) const;
     /**
       * Returns the source model column used for grouping items.
@@ -149,8 +162,7 @@ public:
       */
     int modelColumn() const;
     /**
-      * dsghds
-      * @reimp
+      * Returns the parent of the model item with the given @p index. If the item has no parent, an invalid QModelIndex is returned.
       */
     QModelIndex parent(const QModelIndex & child) const;
     /**
@@ -169,7 +181,8 @@ public:
       */
     bool restoreGroups(const QByteArray & data);
     /**
-      * @reimp
+      * Returns the number of rows under the given @p parent. When the parent is valid it means that rowCount is returning the number of children of @p parent.
+	  * @sa columnCount()
       */
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     /**
@@ -192,12 +205,9 @@ public:
       */
     void setModelColumn(int column);
     /**
-      * @reimp
+      * Sets the given @p sourceModel to be processed by the proxy model.
       */
     virtual void setSourceModel( QAbstractItemModel* sourceModel );
-signals:
-    
-public slots:
 private slots:
     void dataChangedHandler(const QModelIndex & topLeft, const QModelIndex & bottomRight);
     void rowsAboutToBeInsertedHandler( const QModelIndex & parent, int start, int end );
