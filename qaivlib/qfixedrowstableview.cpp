@@ -149,6 +149,9 @@ void QFixedRowsFilterProxyModel::setEnabled(bool on)
 
 void QFixedRowsFilterProxyModel::sourceModelReset()
 {
+	/**
+	 * @todo slot sourceModelReset() should not be public
+	 */
     d->rows.clear();
     invalidateFilter();
 }
@@ -219,18 +222,13 @@ void QFixedRowsDecorationProxyModel::setEnabled(bool on)
     if (d->enabled != on){
         emit layoutAboutToBeChanged();
         d->enabled = on;
-        emit pinRowsEnabled(d->enabled);
+        emit modelToggled(d->enabled);
         emit layoutChanged();
     }
 }
 
 void QFixedRowsDecorationProxyModel::toggleRow(const QModelIndex & index)
 {
-    //QModelIndex i = index;
-    //QAbstractProxyModel* proxy;
-    //while((proxy = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
-    //    i = proxy->mapToSource(i);
-    //}
 	QModelIndex i(index);
 	QAbstractProxyModel* p;
 	while(i.model() != sourceModel() && (p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
@@ -255,7 +253,7 @@ QFixedRowsTableView::QFixedRowsTableView(QWidget *parent) :
     connect(d->filterProxy, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(updateHeight()));
     connect(d->filterProxy, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(updateHeight()));
 
-    connect(d->decorationProxy, SIGNAL(pinRowsEnabled(bool)), d->filterProxy, SLOT(setEnabled(bool)));
+    connect(d->decorationProxy, SIGNAL(modelToggled(bool)), d->filterProxy, SLOT(setEnabled(bool)));
 
     updateHeight();
 }
@@ -293,10 +291,20 @@ void QFixedRowsTableView::closeEditor(QWidget *editor, QAbstractItemDelegate::En
     }
 }
 
+bool QFixedRowsTableView::fixedRowsMode() const
+{
+	return d->filterProxy->isEnabled();
+}
+
 void QFixedRowsTableView::focusInEvent(QFocusEvent *event)
 {
     QTableView::focusInEvent(event);
     emit focusReceived();
+}
+
+void QFixedRowsTableView::setFixedRowsMode(bool on)
+{
+	d->filterProxy->setEnabled(on);
 }
 
 void QFixedRowsTableView::updateHeight()
