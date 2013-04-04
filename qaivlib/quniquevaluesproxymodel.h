@@ -35,6 +35,12 @@ class QAIVLIBSHARED_EXPORT QUniqueValuesProxyModel : public QSortFilterProxyMode
 {
     Q_OBJECT
 	Q_PROPERTY(bool emptyItemsAllowed READ emptyItemsAllowed WRITE setEmptyItemsAllowed)
+	//! @property(modelColumn)
+	/**
+	 * This property holds the column in the model that is use for filtering.
+	 * @sa int modelColumn() const
+	 * @sa void setModelColumn(int)
+	 */
 	Q_PROPERTY(int modelColumn READ modelColumn WRITE setModelColumn)
 public:
 	/**
@@ -45,7 +51,9 @@ public:
 	 * Destroys the unique values model.
 	 */
     ~QUniqueValuesProxyModel();
-
+	/**
+	 * @reimp QSortFilterProxyModel::data()
+	 */
     QVariant data(const QModelIndex &index, int role) const;
 
 	bool emptyItemsAllowed() const;
@@ -71,7 +79,7 @@ public:
 	 */
     void setModelColumn(int colum);
 	/**
-	 * @reimp
+	 * @reimp QSortFilterProxyModel::setSourceModel()
 	 */
     void setSourceModel(QAbstractItemModel* sourceModel);
 private slots:
