@@ -146,17 +146,19 @@ void QConditionalDecorationDialog::setProperties(const QModelIndex & index)
 void QConditionalDecorationDialog::addPushButtonClicked()
 {
     ui->conditionsTableWidget->insertRow(ui->conditionsTableWidget->rowCount());
-    ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, 0, conditionsComboBox());
+	ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, 0, conditionsComboBox());
     ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, 1, valueEdit());
-    QComboBox* mComboBox = new QComboBox(this);
-    mComboBox->addItems(cIconSets.keys());
-    connect(mComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(iconSetComboBoxActivated(QString)));
-    ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, 2, mComboBox);
-    ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, 3, iconSetComboBox(mComboBox->currentText()));
+    QComboBox* cb = new QComboBox(this);
+    cb->addItems(cIconSets.keys());
+    connect(cb, SIGNAL(currentIndexChanged(QString)), this, SLOT(iconSetComboBoxActivated(QString)));
+    ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, 2, cb);
+    ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, 3, iconSetComboBox(cb->currentText()));
     ui->conditionsTableWidget->resizeColumnToContents(0);
     ui->conditionsTableWidget->resizeColumnToContents(1);
     ui->conditionsTableWidget->resizeColumnToContents(2);
     ui->conditionsTableWidget->resizeRowToContents(ui->conditionsTableWidget->rowCount() - 1);
+	// Ensure that the new row is visible
+	ui->conditionsTableWidget->scrollTo(ui->conditionsTableWidget->model()->index(ui->conditionsTableWidget->rowCount() - 1, 0));
 
     ui->removePushButton->setEnabled(true);
 }
