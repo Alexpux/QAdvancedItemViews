@@ -50,7 +50,7 @@ public:
     ~QFilterModel();
 protected:
     /**
-      * \reimp
+      * @reimp QAbstractFilterModel::createFilter()
       */
     QAbstractFilter* createFilter(const QModelIndex & index, const QVariantMap & properties) const;
 };

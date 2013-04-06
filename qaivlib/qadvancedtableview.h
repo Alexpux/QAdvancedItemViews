@@ -71,8 +71,7 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
      *
      * By default this property is false.
      *
-     * @see alternatingRowColors()
-     * @see setAlternatingRowColors()
+     * @see alternatingRowColors(), setAlternatingRowColors()
 	 */
     Q_PROPERTY(bool alternatingRowColors READ alternatingRowColors WRITE setAlternatingRowColors)
 	//! @property(autoScroll)

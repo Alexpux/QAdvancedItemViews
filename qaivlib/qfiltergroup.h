@@ -27,6 +27,7 @@
 
 #include <qabstractfilter.h>
 
+//! The QFilterGroup class groups filter definitions.
 class QAIVLIBSHARED_EXPORT QFilterGroup
 {
 public:
@@ -39,10 +40,6 @@ public:
      */
     QFilterGroup(const QString & name);
     /**
-     * Constructs a QFilterGroup with the given @p name.
-     */
-//    QFilterTableViewFilterGroup(const QString & name, const QList<QFilterTableViewFilterDefinition> & filters);
-    /**
      * Destroys the QFilterGroup.
      */
     ~QFilterGroup();
@@ -50,7 +47,6 @@ public:
       * Adds the given @p filter to this group. The group takes the ownership of the @p filter.
       */
     void add(QAbstractFilter* filter);
-//    void add(int column, const QFilterTableViewFilterDefinition & filter);
     /**
      * Returns the number of filter defined in this group.
      */
@@ -66,7 +62,7 @@ public:
      */
     QAbstractFilter* filterAtColumn(int column) const;
     /**
-      *
+      * Returns a list of filter included in this gorup.
       */
     QList<QAbstractFilter*> filters() const;
     /**
@@ -74,10 +70,6 @@ public:
      * no filter is defined.
      */
     bool hasFilter(int index) const;
-    /**
-     * Returns true if this row filter is enabled. Otherwise false.
-     */
-//	bool isEnabled() const;
     /**
      * Returns the filter group's name.
      * @see setName()
@@ -87,18 +79,12 @@ public:
      * Removes the filter for the speicified @p column.
      */
     bool remove(int column);
-
-//	void setEnabled(bool on);
-
-//	void setColumnFilterEnabled(int column, bool on);
     /**
      * Sets the filter group's @p name.
      * @see name()
      */
     void setName(const QString & name);
 private:
-
-//    QMap<int,QFilterTableViewFilterDefinition> cColumnFilterMap;
     QList<QAbstractFilter*> cFilterList;
     bool cEnabled;
     QString cName;
