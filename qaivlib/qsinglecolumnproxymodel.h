@@ -35,7 +35,8 @@ class QAIVLIBSHARED_EXPORT QSingleColumnProxyModel : public QSortFilterProxyMode
     Q_OBJECT
     //! @property(sourceModelColumn)
     /**
-      *
+	  * This property holds the column of the source model that is used.
+      * By default, this property contains 0, indicating that the first column of the source model is used.
       */
     Q_PROPERTY(int sourceModelColumn READ sourceModelColumn WRITE setSourceModelColumn)
 public:
@@ -51,8 +52,9 @@ public:
       * Returns source model's column used by this proxy.
       */
     int sourceModelColumn() const;
-    /**
-      *
+public slots:
+	/**
+      * Sets the source model @p column used by this proxy.
       */
     void setSourceModelColumn(int column);
 private:   
