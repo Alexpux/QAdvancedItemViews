@@ -441,7 +441,6 @@ QHeaderView* QAdvancedTableView::horizontalHeader() const
 void QAdvancedTableView::horizontalHeaderViewSectionMoved( int logicalIndex, int oldVisualIndex, int newVisualIndex )
 {
     Q_UNUSED(logicalIndex);
-    qDebug() << Q_FUNC_INFO;
     ui->dataTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
     ui->fixedRowsTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
     ui->splittedDataTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
