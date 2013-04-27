@@ -63,5 +63,6 @@
     </qresource>
     <qresource prefix="/qaiv/dialog">
         <file alias="table.select">resources/table_select.ico</file>
+        <file alias="row.remove">resources/bullet_delete.ico</file>
     </qresource>
 </RCC>

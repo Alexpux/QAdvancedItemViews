@@ -1268,6 +1268,26 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\resources\bullet_delete.ico"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\resources\case_insensitive.ico"
 				>
 				<FileConfiguration
@@ -1797,7 +1817,7 @@
 						Name="VCCustomBuildTool"
 						Description="Rcc&apos;ing $(InputFileName)..."
 						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);.\resources\emoticon_neutral.ico;.\resources\emoticon_smile.ico;.\resources\emoticon_unhappy.ico;.\resources\flag_blue.ico;.\resources\flag_green.ico;.\resources\flag_orange.ico;.\resources\flag_pink.ico;.\resources\flag_purple.ico;.\resources\flag_red.ico;.\resources\flag_yellow.ico;.\resources\tag_blue.ico;.\resources\tag_green.ico;.\resources\tag_orange.ico;.\resources\tag_pink.ico;.\resources\tag_purple.ico;.\resources\tag_red.ico;.\resources\tag_yellow.ico;.\resources\amber-on.ico;.\resources\blue-on.ico;.\resources\green-on.ico;.\resources\red-on.ico;.\resources\white-on.ico;.\resources\yellow-on.ico;.\resources\filter_regexp.ico;.\resources\range.ico;.\resources\selection.ico;.\resources\textfilter.ico;.\resources\value.ico;.\resources\case_insensitive.ico;.\resources\case_sensitive.ico;.\resources\ends_with.ico;.\resources\filter_add.ico;.\resources\filter_delete.ico;.\resources\filter_disable_row.ico;.\resources\filter_disabled.ico;.\resources\filter_enable_row.ico;.\resources\filter_enabled.ico;.\resources\filter_toggle.ico;.\resources\starts_with.ico;.\resources\togglesortorder.ico;.\resources\contains.ico;.\resources\expand.ico;.\resources\pin_rows_disabled.ico;.\resources\pin_rows_enabled.ico;.\resources\row_fixed.ico;.\resources\row_free.ico;.\resources\single_view.ico;.\resources\splitted_view.ico;.\resources\table_select.ico"
+						AdditionalDependencies="$(InputPath);.\resources\emoticon_neutral.ico;.\resources\emoticon_smile.ico;.\resources\emoticon_unhappy.ico;.\resources\flag_blue.ico;.\resources\flag_green.ico;.\resources\flag_orange.ico;.\resources\flag_pink.ico;.\resources\flag_purple.ico;.\resources\flag_red.ico;.\resources\flag_yellow.ico;.\resources\tag_blue.ico;.\resources\tag_green.ico;.\resources\tag_orange.ico;.\resources\tag_pink.ico;.\resources\tag_purple.ico;.\resources\tag_red.ico;.\resources\tag_yellow.ico;.\resources\amber-on.ico;.\resources\blue-on.ico;.\resources\green-on.ico;.\resources\red-on.ico;.\resources\white-on.ico;.\resources\yellow-on.ico;.\resources\filter_regexp.ico;.\resources\range.ico;.\resources\selection.ico;.\resources\textfilter.ico;.\resources\value.ico;.\resources\case_insensitive.ico;.\resources\case_sensitive.ico;.\resources\ends_with.ico;.\resources\filter_add.ico;.\resources\filter_delete.ico;.\resources\filter_disable_row.ico;.\resources\filter_disabled.ico;.\resources\filter_enable_row.ico;.\resources\filter_enabled.ico;.\resources\filter_toggle.ico;.\resources\starts_with.ico;.\resources\togglesortorder.ico;.\resources\contains.ico;.\resources\expand.ico;.\resources\pin_rows_disabled.ico;.\resources\pin_rows_enabled.ico;.\resources\row_fixed.ico;.\resources\row_free.ico;.\resources\single_view.ico;.\resources\splitted_view.ico;.\resources\table_select.ico;.\resources\bullet_delete.ico"
 						Outputs=".\GeneratedFiles\qrc_$(InputName).cpp"
 					/>
 				</FileConfiguration>
@@ -1808,7 +1828,7 @@
 						Name="VCCustomBuildTool"
 						Description="Rcc&apos;ing $(InputFileName)..."
 						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);.\resources\emoticon_neutral.ico;.\resources\emoticon_smile.ico;.\resources\emoticon_unhappy.ico;.\resources\flag_blue.ico;.\resources\flag_green.ico;.\resources\flag_orange.ico;.\resources\flag_pink.ico;.\resources\flag_purple.ico;.\resources\flag_red.ico;.\resources\flag_yellow.ico;.\resources\tag_blue.ico;.\resources\tag_green.ico;.\resources\tag_orange.ico;.\resources\tag_pink.ico;.\resources\tag_purple.ico;.\resources\tag_red.ico;.\resources\tag_yellow.ico;.\resources\amber-on.ico;.\resources\blue-on.ico;.\resources\green-on.ico;.\resources\red-on.ico;.\resources\white-on.ico;.\resources\yellow-on.ico;.\resources\filter_regexp.ico;.\resources\range.ico;.\resources\selection.ico;.\resources\textfilter.ico;.\resources\value.ico;.\resources\case_insensitive.ico;.\resources\case_sensitive.ico;.\resources\ends_with.ico;.\resources\filter_add.ico;.\resources\filter_delete.ico;.\resources\filter_disable_row.ico;.\resources\filter_disabled.ico;.\resources\filter_enable_row.ico;.\resources\filter_enabled.ico;.\resources\filter_toggle.ico;.\resources\starts_with.ico;.\resources\togglesortorder.ico;.\resources\contains.ico;.\resources\expand.ico;.\resources\pin_rows_disabled.ico;.\resources\pin_rows_enabled.ico;.\resources\row_fixed.ico;.\resources\row_free.ico;.\resources\single_view.ico;.\resources\splitted_view.ico;.\resources\table_select.ico"
+						AdditionalDependencies="$(InputPath);.\resources\emoticon_neutral.ico;.\resources\emoticon_smile.ico;.\resources\emoticon_unhappy.ico;.\resources\flag_blue.ico;.\resources\flag_green.ico;.\resources\flag_orange.ico;.\resources\flag_pink.ico;.\resources\flag_purple.ico;.\resources\flag_red.ico;.\resources\flag_yellow.ico;.\resources\tag_blue.ico;.\resources\tag_green.ico;.\resources\tag_orange.ico;.\resources\tag_pink.ico;.\resources\tag_purple.ico;.\resources\tag_red.ico;.\resources\tag_yellow.ico;.\resources\amber-on.ico;.\resources\blue-on.ico;.\resources\green-on.ico;.\resources\red-on.ico;.\resources\white-on.ico;.\resources\yellow-on.ico;.\resources\filter_regexp.ico;.\resources\range.ico;.\resources\selection.ico;.\resources\textfilter.ico;.\resources\value.ico;.\resources\case_insensitive.ico;.\resources\case_sensitive.ico;.\resources\ends_with.ico;.\resources\filter_add.ico;.\resources\filter_delete.ico;.\resources\filter_disable_row.ico;.\resources\filter_disabled.ico;.\resources\filter_enable_row.ico;.\resources\filter_enabled.ico;.\resources\filter_toggle.ico;.\resources\starts_with.ico;.\resources\togglesortorder.ico;.\resources\contains.ico;.\resources\expand.ico;.\resources\pin_rows_disabled.ico;.\resources\pin_rows_enabled.ico;.\resources\row_fixed.ico;.\resources\row_free.ico;.\resources\single_view.ico;.\resources\splitted_view.ico;.\resources\table_select.ico;.\resources\bullet_delete.ico"
 						Outputs=".\GeneratedFiles\qrc_$(InputName).cpp"
 					/>
 				</FileConfiguration>
@@ -3000,6 +3020,17 @@
 					</FileConfiguration>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Lokalisierungs Dateien"
+			Filter="ts"
+			UniqueIdentifier="{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}"
+			ParseFiles="false"
+			>
+			<File
+				RelativePath=".\qaivlib_de.ts"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
