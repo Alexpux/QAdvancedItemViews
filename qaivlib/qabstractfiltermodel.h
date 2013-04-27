@@ -84,7 +84,7 @@ public:
       * Returns the filter group for the given @p index or 0 if no filter group exists for the specified @p index.
       */
     QFilterGroup* filterGroup(const QModelIndex & index) const;
-    /**
+    /**	
       * Return the filter group at @p row or 0 if there is no filter group at the specified @p row.
       */
     QFilterGroup* groupAt(int row) const;
@@ -154,6 +154,7 @@ protected:
       */
     bool registerFilter(int type, const QIcon & icon, const QString & text, const QString & toolTip = QString());
 private:
+	void sourceModelLayoutChanged();
     QAbstractFilterModelPrivate* d;
 };
 

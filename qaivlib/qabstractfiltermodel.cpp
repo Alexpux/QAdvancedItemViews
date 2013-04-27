@@ -329,13 +329,21 @@ void QAbstractFilterModel::setSourceModel(QAbstractItemModel* model)
 {
     if (model){
         d->sourceModel = model;
-        headerDataChanged(Qt::Horizontal, 0, model->columnCount() - 1);
+		connect(d->sourceModel, SIGNAL(layoutChanged()), this, SLOT(sourceModelLayoutChanged()));
+        headerDataChanged(Qt::Horizontal, 0, d->sourceModel->columnCount() - 1);
     }
 }
 
 QAbstractItemModel* QAbstractFilterModel::sourceModel() const
 {
     return d->sourceModel;
+}
+
+void QAbstractFilterModel::sourceModelLayoutChanged()
+{
+	if (d->sourceModel){
+		headerDataChanged(Qt::Horizontal, 0, d->sourceModel->columnCount() - 1);
+	}
 }
 
 bool QAbstractFilterModel::registerFilter(int type, const QString & text, const QString & toolTip)
