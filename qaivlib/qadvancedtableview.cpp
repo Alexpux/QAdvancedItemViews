@@ -81,7 +81,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     //
     ui->splittedDataTableView->hide();
 
-    d->autoResizeRowsToContents = true;
+    d->autoResizeRowsToContents = false;
     d->defaultFilterType = QTextFilter::Type;
     // Create header view (model) proxy
     d->filterModel = new QFilterModel(this);
