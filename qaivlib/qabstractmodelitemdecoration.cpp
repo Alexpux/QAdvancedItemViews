@@ -66,6 +66,23 @@ QMap<QString, QVariant> QAbstractItemModelDecoration::properties() const
     return d->properties;
 }
 
+bool QAbstractItemModelDecoration::restoreState(const QByteArray & state)
+{
+	QDataStream s(state);
+	QVariantMap m;
+	s >> m;
+	setProperties(m);
+	return true;
+}
+
+QByteArray QAbstractItemModelDecoration::saveState() const
+{
+	QByteArray ba;
+	QDataStream s(ba);
+	s << d->properties;
+	return ba;
+}
+
 void QAbstractItemModelDecoration::setProperty(const QString & name, const QVariant & value)
 {
     d->properties[name] = value;

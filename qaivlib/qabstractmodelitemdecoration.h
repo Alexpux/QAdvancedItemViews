@@ -51,6 +51,16 @@ public:
       * Returns the filter's properties.
       */
     QMap<QString,QVariant> properties() const;
+	/**
+	 * Restore the decoration's state and properties to the @p state specified.
+	 * @sa saveState()
+	 */
+	bool restoreState(const QByteArray & state);
+	/**
+	 * Saves the decoration's state and properties.
+	 * @sa restoreState()
+	 */
+	QByteArray saveState() const;
     /**
       * Sets the filter definition's property specified by @p key to the given @p value.
       */

@@ -38,16 +38,18 @@ class RangeEdit : public QWidget
 public:
     RangeEdit(QAbstractItemModel* model, int column, QWidget* parent = 0);
 
+	void setColumn(int col);
+
     void setRange(const QVariant & from, const QVariant & to);
 
     QVariant rangeFrom() const;
 
     QVariant rangeTo() const;
 private:
-    int cColumn;
-    ValueEdit* cFromEdit;
-    ValueEdit* cToEdit;
-    QAbstractItemModel* cModel;
+    int m_column;
+    ValueEdit* m_fromEdit;
+    ValueEdit* m_toEdit;
+    QAbstractItemModel* m_model;
 };
 
 
@@ -57,14 +59,18 @@ class SelectValueDialog : public QDialog
 public:
     SelectValueDialog(QAbstractItemModel* model, int column, QWidget* parent);
 
+	int selectedColumn() const;
+
     QVariant selectedValue() const;
 
     QVariantList selectedValues() const;
 
     void setSelectionMode(QAbstractItemView::SelectionMode mode);
 private slots:
+	//void columnsComboBoxActivate(int index);
     void doubleClicked(const QModelIndex & index);
 private:
+	QComboBox* m_columnsComboBox;
     QTableView* m_view;
 };
 
@@ -73,6 +79,10 @@ class ValueEdit : public QWidget
     Q_OBJECT
 public:
     ValueEdit(QAbstractItemModel* model, int column, QWidget* parent = 0);
+
+	int column() const;
+
+	void setColumn(int col);
 
     void setValue(const QVariant & value);
 

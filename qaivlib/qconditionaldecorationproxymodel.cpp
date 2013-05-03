@@ -24,6 +24,8 @@
 #include "qabstractmodelitemdecoration.h"
 #include "qconditionaldecoration.h"
 
+#define MAGICNUMBER 0x544156
+
 class QConditionalDecorationProxyModelPrivate
 {
 public:
@@ -94,9 +96,10 @@ QConditionalDecorationProxyModel::~QConditionalDecorationProxyModel()
     delete d;
 }
 
-void QConditionalDecorationProxyModel::addDecoration(int column, QAbstractItemModelDecoration *highlighter)
+void QConditionalDecorationProxyModel::addDecoration(int column, QAbstractItemModelDecoration* decoration)
 {
-    d->columnDecorationMap[column] = highlighter;
+	decoration->setProperty("column", column);
+    d->columnDecorationMap[column] = decoration;
     invalidate();
 }
 
@@ -161,6 +164,47 @@ QSize QConditionalDecorationProxyModel::iconSize() const
 int QConditionalDecorationProxyModel::iconSpacing() const
 {
 	return d->iconSpacing;
+}
+
+bool QConditionalDecorationProxyModel::restoreState(const QByteArray & state)
+{
+	QDataStream s(state);
+	int count;
+	quint32 mn;
+	quint32 v;
+	s >> mn;
+	if (mn != MAGICNUMBER){
+		qWarning() << Q_FUNC_INFO << "magic number invalid";
+		return false;
+	}
+	s >> v;
+	if (v =! 1){
+		qWarning() << Q_FUNC_INFO << "version" << v << "not supported";
+		return false;
+	}
+	s >> d->iconSize >> d->iconSpacing >> count;
+	for (int i = 0; i < count; i++){
+		QVariantMap p;
+		s >> p;
+		QConditionalDecoration* deco = new QConditionalDecoration();
+		deco->setProperties(p);
+	}
+	return true;
+}
+
+QByteArray QConditionalDecorationProxyModel::stateState() const
+{
+	QByteArray ba;
+	QDataStream s(ba);
+
+	s << (quint32)MAGICNUMBER << (quint32)1 << d->iconSize << d->iconSpacing << d->columnDecorationMap.size();
+
+	QMapIterator<int,QAbstractItemModelDecoration*> it(d->columnDecorationMap);
+	while(it.hasNext()){
+		s << it.value()->properties();
+		it.next();
+	}
+	return ba;
 }
 
 bool QConditionalDecorationProxyModel::setData(const QModelIndex & index, const QVariant & value, int role)

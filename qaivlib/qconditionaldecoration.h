@@ -30,24 +30,27 @@ class QConditionalDecorationProxyModel;
 class QAIVLIBSHARED_EXPORT QConditionalDecoration : public QAbstractItemModelDecoration
 {
 public:
+	/**
+	 * This enum describes the type of matches that can be used when decorating an item.
+	 */
     enum MatchFlag {
-        MatchFlagInvalid = -1,
-        Contains = 1,
-        ContainsNot,
-        EndsWith,
-        EndsNotWith,
-        IsBetween,
-        IsEmpty,
-        IsEqual,
-        IsGreator,
-        IsGreatorOrEqual,
-        IsLessOrEqual,
-        IsLess,
-        IsNotBetween,
-        IsNotEmpty,
-        IsNotEqual,
-        StartsWith,
-        StartsNotWith
+        MatchFlagInvalid = -1, 
+        Contains = 1, /**< The data provided by the item contains the value. */
+        ContainsNot, /**< The data provided by the item does not contain the value. */
+        EndsWith, /**< The data provided by the item ends with the value. */
+        EndsNotWith, /**< The data provided by the item does not end with the value. */
+        IsBetween, /**< The data provided by the item is between the range specified. */
+        IsEmpty, /**< The item contains empty data. */
+        IsEqual, /**< The data provided by the item is equal to the value. */
+        IsGreater, /**< The data provided by the item is greater than the value. */
+        IsGreaterOrEqual, /**< The data provided by the item is greater or equal to value. */
+        IsLessOrEqual, /**< The data provided by the item is less or equal to the value. */
+        IsLess, /*!< The data provided is less than the value. */
+        IsNotBetween, /**< The data provided by the item is not between the specified range. */
+        IsNotEmpty, /**< The item contains data. */
+        IsNotEqual, /**< The data provided by the item is not equal to the value. */
+        StartsWith, /*!< The data provided by the item starts with the search term. */
+        StartsNotWith /**< The data provided by the item does not start the value. */
     };
     /**
       * Constructs an invalid QConditionalDecoration.
@@ -57,7 +60,9 @@ public:
       * Constructs a QConditionalDecoration with the specified @p column.
       */
     QConditionalDecoration(int column);
-
+	/**
+	 * Adds a condition with the given @p matchFlag and @p value.
+	 */
     void addCondition( QConditionalDecoration::MatchFlag matchFlag, const QVariant & value, const QString & set, const QString & name);
     /**
       * Returns the match flag for the given @p index or QModelItemDecoration::MatchFlagInvalid if @p index does not exists.

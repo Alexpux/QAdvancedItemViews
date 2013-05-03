@@ -73,17 +73,22 @@ public:
     void setProperties(const QModelIndex & index);
 private slots:
     void addPushButtonClicked();
+    void columnComboBoxActivated(int index);
     void comparisonComboBoxActivated(int index);
     void iconSetComboBoxActivated(const QString & text);
     void removePushButtonClicked();
 private:
+	int column(int row) const;
+
+	QComboBox* columnComboBox();
     QComboBox* conditionsComboBox();
     QComboBox* iconSetComboBox(const QString & name);
     ValueEdit* valueEdit();
 
     QVariantMap value(int row) const;
 
-    QModelIndex cIndex;
+	int m_defaultColumn;
+    QModelIndex m_index;
     QVariantMap cIconSets;
     QVariantMap cProperties;
 

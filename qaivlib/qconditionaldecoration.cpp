@@ -42,6 +42,7 @@ void QConditionalDecoration::addCondition(QConditionalDecoration::MatchFlag matc
 {
     QVariantList conditions  = property("conditions").toList();
     QVariantMap condition;
+	condition["column"] = property("column").toInt();
     condition["matchFlag"] = matchFlag;
     condition["value"] = value;
     condition["set"] = set;
@@ -103,9 +104,10 @@ QString QConditionalDecoration::iconName(int index) const
     return QString::null;
 }
 
-bool QConditionalDecoration::matches(const QModelIndex &index, const QVariantMap &properties) const
+bool QConditionalDecoration::matches(const QModelIndex & index, const QVariantMap & properties) const
 {
-    QVariant data = index.data(property("dataRole").toInt());
+    QVariant data;
+	data = index.model()->index(index.row(), properties.value("column", index.column()).toInt()).data(property("dataRole").toInt());
     QConditionalDecoration::MatchFlag matchFlag = static_cast<QConditionalDecoration::MatchFlag>(properties.value("matchFlag").toInt());
     if (matchFlag == QConditionalDecoration::Contains){
         if (data.toString().contains(properties.value("value").toString())){
@@ -135,11 +137,11 @@ bool QConditionalDecoration::matches(const QModelIndex &index, const QVariantMap
         if (data == properties.value("value")){
             return true;
         }
-    } else if(matchFlag == QConditionalDecoration::IsGreator){
+    } else if(matchFlag == QConditionalDecoration::IsGreater){
         if (greaterThan(data, properties.value("value"))){
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::IsGreatorOrEqual){
+    } else if (matchFlag == QConditionalDecoration::IsGreaterOrEqual){
         if (greaterOrEqualThan(data, properties.value("value"))){
             return true;
         }

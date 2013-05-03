@@ -33,6 +33,36 @@ class QConditionalDecorationProxyModelPrivate;
 
 //! The QConditionalDecorationProxyModel class implements a proxy model for conditional decorations.
 /** @ingroup proxy
+  * Lets assume we want to decorate colum 'Maturity Level' in the source model show below:
+  * @image html qconditionaldecorationproxymodel01.png "Source Model"
+  * The code to set up the model and the view would look like this:
+  * @code
+  * QTableView* tableView = new QTableView(this);
+  * QStandardItemModel* model = new QStandardItemModel();
+  * ...
+  * QConditionalDecorationProxyModel* proxy = new QConditionalDecorationProxyModel(this);
+  * proxy->setSourceModel(model);
+  * view->setModel(proxy);
+  * @endcode
+  * To add a decoration, we need to create a QConditionalDecoration and add condition defining the match conditions and values:
+  * @code
+  * QConditionalDecoration* decoration = new QConditionalDecoration();
+  * decoration->addCondition(QConditionalDecoration::IsEqual, "Active", "leds", "green (on)");
+  * decoration->addCondition(QConditionalDecoration::IsEqual, "Deprecated", "leds", "red (on)");
+  * decoration->addCondition(QConditionalDecoration::IsEqual, "Done", "leds", "yellow (on)");
+  * decoration->addCondition(QConditionalDecoration::IsEqual, "Maintained", "leds", "orange (on)");
+  * @endcode
+  * For all items matching none of the previously defined conditions, we set a default decoration:
+  * @code
+  * decoration->setDefaultDecoration("leds", "white (on)");
+  * @endcode
+  * Finally we add the decoration to the proxy model:
+  * @code
+  * proxy->addDecoration(3, decoration);
+  * @endcode
+  * After adding the decoration the view is updated and shows the decorations.
+  * @image html qconditionaldecorationproxymodel02.png "Decorated Model"
+  *
   * <h2>Default Icon Sets</h2>
   * <table>
   * <tr><th>Icon Set</th><th>Icon Name</th><th>Icon</th></tr>
@@ -91,8 +121,10 @@ public:
       * Destroys the QConditionalDecorationProxyModel object.
       */
     ~QConditionalDecorationProxyModel();
-
-    void addDecoration(int column, QAbstractItemModelDecoration* highlighter);
+	/**
+	 * Adds a @p decoration for the specified @p column.
+	 */
+    void addDecoration(int column, QAbstractItemModelDecoration* decoration);
     /**
       *
       */
@@ -111,9 +143,14 @@ public:
       * @see addIcon()
       */
     void addIconSet(const QString & name, const QVariantMap icons);
-
+	/**
+	 * @reimp QSortFilterProxyModel::data()
+	 */
     virtual QVariant data(const QModelIndex & index, int role) const;
-
+	/**
+	 * Returns the icon specified by the given @p set and @p name.
+	 * An invalid QIcon is returned if the iconset @p set or the icon @p name cannot be retrieved.
+	 */
     QIcon icon(const QString & set, const QString & name) const;
 	/**
 	 * Returns the size of the icons.
@@ -128,7 +165,17 @@ public:
       * Returns a map of icon sets defined for this proxy.
       */
     QMap<QString, QVariant> iconSets() const;
-
+	/**
+	 * Restores the proxy model's state and decoratrions.
+	 */
+	bool restoreState(const QByteArray & state);
+	/**
+	 * Saves the proxy model's state and decorations.
+	 */
+	QByteArray stateState() const;
+	/**
+	 * @reimp QSortFilterProxyModel::setData()
+	 */
     virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
 	/**
 	 * Sets the icon size to @p size.
