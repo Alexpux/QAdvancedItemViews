@@ -172,7 +172,7 @@ void MainWindow::pinRowsToolButtonClicked()
 void MainWindow::populatePushButtonClicked()
 {
     QList<QByteArray> w;
-    QFile f(QApplication::applicationDirPath() + "/../lorem_ipsum.txt");
+    QFile f(QApplication::applicationDirPath() + "/lorem_ipsum.txt");
     if (f.open(QIODevice::ReadOnly)){
         w = f.readAll().split(' ');
         f.close();
@@ -187,7 +187,7 @@ void MainWindow::populatePushButtonClicked()
     l << "Lorem ipsum" << "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum"<< "Lorem ipsum";
     m->setHorizontalHeaderLabels(l);
     int wi = 0;
-    for (int i = 0; i < 3000 && !d->wasCanceled(); i++){
+    for (int i = 0; i < 30000 && !d->wasCanceled(); i++){
         d->setValue(wi);
         QList<QStandardItem*> items;
         for (int c = 0; c < 10; c++){
