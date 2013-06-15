@@ -1,0 +1,39 @@
+QAIV (QAdvanced Item Views) Change Log
+======================================
+
+Version 0.2 - 2013-05-15
+
++ bug fixes
+  - QAbstractFilterModel: layout change of the source model is not recognized by the filter model
+  - QConditionalDecorationDialog: icons disapear after changing a conditional decoration
+  - QConditionalDecorationDialog: a new condition is hidden if the number of conditions is larger than the visible space 
+  - QFilterEditorWidget: filter editor popup widget does not recognize desktop geometry
+  - QUniqueValuesProxyModel: model is not updated after a layout change of the source model
+
+ + changes
+   - example application: hint added to tab 'QConditionalDecorationProxyModel'
+
++ new features
+  - QAbstractItemModelDecoration: methods restoreState() and saveState() added
+  - QConditionalDecoration: the definition is no longer bound to the column it is bind to
+  - QConditionalDecorationProxyModel: support for multiple icons per item decoration added
+  - QConditionalDecorationProxyModel: property iconSpacing added to class QConditionalDecorationProxyModel
+  - QConditionalDecorationProxyModel: methods restoreState() and saveState() added
+  - QMimeData utilities add (see qmimedatautil.h)
+  - Translation de-de added (WIP)
+  
++ documentation updated
+  - images added to repository
+  - QConditionalDecoration
+  - QFilterGroup
+  - QFixedRowsTableView
+  - QFixedRowsFilterProxyModel
+  - QFixedRowsDecorationProxyModel
+  - QGroupingProxyModel
+  - QSharedItemSelectionModel
+  - QSingleColumnProxyModel
+  - QUniqueValuesProxyModel
+
+Version 0.1 - 2013-03-20
+
++ First release
