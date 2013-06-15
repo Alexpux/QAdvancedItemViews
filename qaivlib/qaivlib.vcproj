@@ -133,6 +133,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="qtmaind.lib QtCored4.lib QtGuid4.lib"
 				OutputFile="$(SolutionDir)bin\$(PlatformName)\$(ConfigurationName)\$(ProjectName).dll"
+				Version="0.2"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -266,6 +267,10 @@
 			</File>
 			<File
 				RelativePath=".\qheaderviewconnector.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\qmimedatautil.cpp"
 				>
 			</File>
 			<File
@@ -929,6 +934,10 @@
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\qmimedatautil.h"
+				>
 			</File>
 			<File
 				RelativePath=".\qrangefilter.h"

@@ -20,6 +20,7 @@ Version 0.2 - 2013-05-15
   - QConditionalDecorationProxyModel: property iconSpacing added to class QConditionalDecorationProxyModel
   - QConditionalDecorationProxyModel: methods restoreState() and saveState() added
   - QMimeData utilities add (see qmimedatautil.h)
+  - example application: copy to clipboard added (format aware copy)
   - Translation de-de added (WIP)
   
 + documentation updated
