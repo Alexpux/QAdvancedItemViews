@@ -47,6 +47,8 @@ public:
       * @see setFilterModel()
       */
     QAbstractFilterModel* filterModel() const;
+
+	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     /**
       * Sets the filter @p model providing the filter definitions.
       * @see filterModel()

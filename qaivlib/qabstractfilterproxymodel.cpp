@@ -62,6 +62,18 @@ QAbstractFilterModel* QAbstractFilterProxyModel::filterModel() const
     return d->filterModel;
 }
 
+QVariant QAbstractFilterProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+	if (orientation == Qt::Vertical){
+		if (role == Qt::SizeHintRole){
+			QSize s = QSortFilterProxyModel::headerData(section, orientation, role).toSize();
+			s.setHeight(50);
+			return s;
+		}
+	}
+	return QSortFilterProxyModel::headerData(section, orientation, role);
+}
+
 void QAbstractFilterProxyModel::setFilterModel(QAbstractFilterModel* filterModel)
 {
     if (d->filterModel){
