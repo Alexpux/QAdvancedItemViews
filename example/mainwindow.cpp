@@ -21,8 +21,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QClipboard>
 #include <QDebug>
 #include <QFile>
+#include <QMimeData>
 #include <QProgressDialog>
 #include <QScrollBar>
 #include <QStandardItemModel>
@@ -37,6 +39,7 @@
 #include <qgroupingproxymodel.h>
 #include <qconditionaldecoration.h>
 #include <qfixedrowstableview.h>
+#include <qmimedatautil.h>
 #include <qrangefilter.h>
 #include <quniquevaluesproxymodel.h>
 #include <qselectionlistfilter.h>
@@ -109,6 +112,20 @@ void MainWindow::aboutQtActionTriggered()
 void MainWindow::advancedTableViewResultChanged(int filterRows, int unfilteredRows)
 {
     ui->advancedTableViewResultLabel->setText(tr("Result: %1 of %2").arg(filterRows).arg(unfilteredRows));
+}
+
+void MainWindow::copy()
+{
+	QTableView* v = qobject_cast<QTableView*>(QApplication::focusWidget());
+	if (v == 0){
+		return;
+	}
+	QClipboard* clipboard = QApplication::clipboard();
+	QMimeData* mimeData = new QMimeData();
+	qMimeDataAddCsv(mimeData, v);
+	qMimeDataAddHtml(mimeData, v);
+	qMimeDataAddPlainText(mimeData, v);
+	clipboard->setMimeData(mimeData);
 }
 
 void MainWindow::decoratedTableViewCustomContextMenuRequested(const QPoint & point)
@@ -202,6 +219,11 @@ void MainWindow::populatePushButtonClicked()
     ui->populatePushButton->setEnabled(false);
     ui->largeTableView->setModel(m);
     QApplication::restoreOverrideCursor();
+}
+
+void MainWindow::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
+{
+	ui->copyAction->setEnabled(!selected.isEmpty());
 }
 
 void MainWindow::splitActionTriggered()
@@ -421,6 +443,8 @@ void MainWindow::initModel()
 void MainWindow::initTabAdvancedTableView()
 {
     connect(ui->filterTableView->filterProxyModel(), SIGNAL(resultCountChanged(int,int)), this, SLOT(advancedTableViewResultChanged(int,int)));
+	connect(ui->filterTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
+
 	SelectionListDataProviderProxy* p = new SelectionListDataProviderProxy(this);
 	p->setSourceModel(m_model);
     ui->filterTableView->setModel(p);
@@ -481,6 +505,7 @@ void MainWindow::initTabConditionalDecorationProxyModel()
 
     proxy->setSourceModel(m_model);
     ui->decorationProxyModelTableView->setModel(proxy);
+	connect(ui->decorationProxyModelTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
 }
 
 void MainWindow::initTabGroupingProxyModel()
@@ -536,6 +561,7 @@ void MainWindow::initTabLargeTableView()
 //    QStandardItemModel* model = new QStandardItemModel(this);
 //    ui->largeTableView->setModel(model);
     ui->largeTableView->setShowFixedRows(true);
+	connect(ui->largeTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
 }
 
 void MainWindow::initTabUniqueValuesProxyModel()
@@ -545,6 +571,7 @@ void MainWindow::initTabUniqueValuesProxyModel()
     uniqueValuesProxyModel->setModelColumn(8);
     uniqueValuesProxyModel->setSourceModel(m_model);
 	ui->uniqueValuesTableView->resizeRowsToContents();
+	connect(ui->uniqueValuesTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
 }
 
 void MainWindow::restoreStateToolButtonClicked()

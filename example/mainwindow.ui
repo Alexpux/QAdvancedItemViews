@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1349</width>
-    <height>577</height>
+    <height>613</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,10 +35,12 @@
             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* Column 'Int': Filter types are limited to Range and Value filter. All other types are disabled.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* Column 'Qt': All filter types are allowed. The default filter is set to QTextFilter. Select the cell, start typing and the text filter is created automatically.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;* Column 'Maturity Level': The filter type is set to Selection List. The selection list is populated with the values&lt;/span&gt;&lt;span style=&quot; font-size:8pt; color:#000000;&quot;&gt; 'Deprecated', 'Done' and 'Maintained'. 'Activte'is omitted. The filter is disabled programmatically.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;* Column 'Int': Filter types are limited to Range and Value filter. All other types are disabled.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;* Column 'Qt': All filter types are allowed. The default filter is set to QTextFilter. Select the cell, start typing and the text filter is created automatically.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;* Column 'Maturity Level': The filter type is set to Selection List. The selection list is populated with the values&lt;span style=&quot; color:#000000;&quot;&gt; 'Deprecated', 'Done' and 'Maintained'. 'Activte'is omitted. The filter is disabled programmatically.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#000000;&quot;&gt;------------------------------&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#000000;&quot;&gt;* Use menu entry Edit -&amp;gt; Copy to copy the view's current selection to the clipboard (see qMimeDataAdd... for further details)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -368,7 +370,14 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="aboutQtAction"/>
    </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="copyAction"/>
+   </widget>
    <addaction name="fileMenu"/>
+   <addaction name="menu_Edit"/>
    <addaction name="helpMenu"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -418,6 +427,14 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Vertical Split</string>
+   </property>
+  </action>
+  <action name="copyAction">
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
    </property>
   </action>
  </widget>
@@ -642,6 +659,22 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>copyAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>copy()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>exitActionTriggered()</slot>
@@ -656,5 +689,6 @@ p, li { white-space: pre-wrap; }
   <slot>populatePushButtonClicked()</slot>
   <slot>restoreStateToolButtonClicked()</slot>
   <slot>saveStateToolButtonClicked()</slot>
+  <slot>copy()</slot>
  </slots>
 </ui>

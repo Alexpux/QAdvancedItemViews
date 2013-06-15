@@ -50,6 +50,9 @@ public:
 public slots:
     void aboutQtActionTriggered();
     void advancedTableViewResultChanged(int filterRows, int unfilteredRows);
+
+	void copy();
+
     void decoratedTableViewCustomContextMenuRequested(const QPoint & point);
     void decoratedGroupingTreeViewCustomContextMenuRequested(const QPoint & point);
     void exitActionTriggered();
@@ -62,6 +65,7 @@ public slots:
 	void restoreStateToolButtonClicked();
 
 	void saveStateToolButtonClicked();
+	void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
     void splitActionTriggered();
 private:
     void initModel();
