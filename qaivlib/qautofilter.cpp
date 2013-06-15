@@ -31,6 +31,8 @@
 QAutoFilterEditorPopup::QAutoFilterEditorPopup(QWidget* parent) :
 	QFilterEditorPopupWidget(parent)
 {
+	m_progress = new QProgressDialog(this);
+	m_progress->setMaximum(100);
 	m_mode = 0; // 0 = Selected values 1 = empty 2 = not empty
     QVBoxLayout* l = new QVBoxLayout();
     l->setContentsMargins(6, 6, 6, 6);
@@ -72,6 +74,7 @@ QAutoFilterEditorPopup::QAutoFilterEditorPopup(QWidget* parent) :
 
 	m_singleColumnProxy = new QSingleColumnProxyModel(this);
     m_singleValueProxy = new QUniqueValuesProxyModel(this);
+	connect(m_singleValueProxy, SIGNAL(progressChanged(int)), this, SLOT(uniqueValueModelProgressChanged(int)));
 	m_singleValueProxy->setEmptyItemsAllowed(false);
 
     m_singleColumnProxy->setSourceModel(m_singleValueProxy);
@@ -165,6 +168,11 @@ void QAutoFilterEditorPopup::setSourceModel(QAbstractItemModel *model, int colum
     m_singleColumnProxy->setSourceModelColumn(column);
     m_singleColumnProxy->sort(0);
 	m_checkStateProxy->setColumnCheckable(0);
+}
+
+void QAutoFilterEditorPopup::uniqueValueModelProgressChanged(int progress)
+{
+	m_progress->setValue(progress);
 }
 
 QAutoFilterEditor::QAutoFilterEditor(QWidget *parent) :

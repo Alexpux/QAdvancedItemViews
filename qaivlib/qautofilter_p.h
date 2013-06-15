@@ -31,6 +31,7 @@ class QListView;
 class QToolButton;
 
 class QCheckStateProxyModel;
+class QProgressDialog;
 class QUniqueValuesProxyModel;
 class QSingleColumnProxyModel;
 
@@ -51,6 +52,7 @@ public:
 signals:
 	void modeChanged();
 private slots:
+	void uniqueValueModelProgressChanged(int progress);
 	void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
 	void emptyToolButtonClicked();
 	void notEmptyToolButtonClicked();
@@ -62,6 +64,7 @@ private:
     QListView* m_listView;
 	int m_mode;
 	QToolButton* m_notEmptyToolButton;
+	QProgressDialog* m_progress;
 	QCheckBox* m_selectCheckBox;
 
 	QCheckStateProxyModel* m_checkStateProxy;

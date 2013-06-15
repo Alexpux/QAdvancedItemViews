@@ -126,7 +126,8 @@ void QUniqueValuesProxyModel::buildMap()
         return;
     }
     QMap<QString, QList<int> >::Iterator it;
-    for(int iRow = 0; iRow < sourceModel()->rowCount(); iRow++){
+	int c = sourceModel()->rowCount();
+    for(int iRow = 0; iRow < c; iRow++){
 		QVariant v = sourceModel()->index(iRow, d->modelColumn).data(filterRole());
 		it = d->valueMap.find(v.toString());
 		if (it == d->valueMap.end()){
@@ -136,7 +137,9 @@ void QUniqueValuesProxyModel::buildMap()
 		} else {
 			it.value().append(iRow);
 		}
+		emit progressChanged(iRow * 100 / c);
 	}
+	emit progressChanged(100);
     endResetModel();
     invalidate();
 }

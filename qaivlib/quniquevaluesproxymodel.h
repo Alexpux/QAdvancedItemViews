@@ -82,6 +82,8 @@ public:
 	 * @reimp QSortFilterProxyModel::setSourceModel()
 	 */
     void setSourceModel(QAbstractItemModel* sourceModel);
+signals:
+	void progressChanged(int progress);
 private slots:
     bool isDuplicate(int row) const;
     void buildMap();
