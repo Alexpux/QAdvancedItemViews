@@ -21,13 +21,11 @@
 #include "qaivdesignercollection.h"
 
 #include "qadvancedtableviewplugin.h"
-#include "qfixedrowstableviewplugin.h"
 
 QAIVDesignerCollection::QAIVDesignerCollection(QObject *parent) :
     QObject(parent)
 {
     m_widgets.append(new QAdvancedTableViewPlugin());
-	m_widgets.append(new QFixedRowsTableViewPlugin());
 }
 
 QList<QDesignerCustomWidgetInterface *> QAIVDesignerCollection::customWidgets() const
