@@ -153,8 +153,9 @@ protected:
       * @overload registerFilter(int type, const QIcon & icon, const QString & text, const QString & toolTip = QString())
       */
     bool registerFilter(int type, const QIcon & icon, const QString & text, const QString & toolTip = QString());
-private:
+private slots:
 	void sourceModelLayoutChanged();
+private:
     QAbstractFilterModelPrivate* d;
 };
 
