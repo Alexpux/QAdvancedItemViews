@@ -1,7 +1,12 @@
 QAIV (QAdvanced Item Views) Change Log
 ======================================
 
-Version 0.2 - 2013-05-15
+Version 0.3 - 2013-xx-xx
+
++ new features
+  - show more columns dialog improved
+  
+Version 0.2 - 2013-06-15
 
 + bug fixes
   - QAbstractFilterModel: layout change of the source model is not recognized by the filter model

@@ -20,9 +20,75 @@
 ******************************************************************************/
 #include "stdafx.h"
 #include "qadvancedheaderview.h"
+#include "qadvancedheaderview_p.h"
 
 #include "qabstractfiltermodel.h"
 #include "qfilterview.h"
+
+ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView* headerView)
+	: QDialog(headerView)
+{
+    setWindowTitle(tr("More columns..."));
+    QVBoxLayout* l = new QVBoxLayout(this);
+
+	QLineEdit* e = new QLineEdit(this);
+	e->setPlaceholderText(tr("Search for..."));
+	connect(e, SIGNAL(textEdited(QString)), this, SLOT(textEdited(QString)));
+	l->addWidget(e);
+	//
+    m_view = new QTableView(this);
+	m_view->setSelectionMode(QAbstractItemView::SingleSelection);
+	m_view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    l->addWidget(m_view);
+
+	m_view->setFocus();
+
+    QDialogButtonBox* b = new QDialogButtonBox(this);
+    b->setOrientation(Qt::Horizontal);
+    b->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+    l->addWidget(b);
+
+    connect(b, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(b, SIGNAL(rejected()), this, SLOT(reject()));
+
+    QStandardItemModel* m = new QStandardItemModel(this);
+    m->setColumnCount(1);
+    m->setRowCount(headerView->model()->columnCount());
+    m_view->setModel(m);
+    m_view->horizontalHeader()->setStretchLastSection(true);
+    m_view->horizontalHeader()->setVisible(false);
+    m_view->verticalHeader()->setVisible(false);
+
+    QStandardItem* item;
+    for (int iColumn = 0; iColumn < headerView->model()->columnCount(); iColumn++){
+        item = new QStandardItem(headerView->model()->headerData(iColumn, Qt::Horizontal).toString());
+        item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+        item->setData(headerView->isSectionHidden(iColumn)?Qt::Unchecked:Qt::Checked, Qt::CheckStateRole);
+        m->setItem(iColumn, 0, item);
+    }
+}
+
+ShowMoreColumnsDialog::~ShowMoreColumnsDialog()
+{
+}
+
+bool ShowMoreColumnsDialog::isHidden(int index) const
+{
+	if (index < m_view->model()->rowCount()){
+		return m_view->model()->index(index, 0).data(Qt::CheckStateRole).toInt() == Qt::Unchecked;
+	}
+	return false;
+}
+
+void ShowMoreColumnsDialog::textEdited(const QString & text)
+{
+	for (int i = 0; i < m_view->model()->rowCount(); i++){
+		if (m_view->model()->index(i, 0).data().toString().startsWith(text, Qt::CaseInsensitive)){
+			m_view->selectRow(i);
+			break;
+		}
+	}
+}
 
 QAdvancedHeaderView::QAdvancedHeaderView( Qt::Orientation orientation, QWidget* parent )
     : QHeaderView(orientation, parent)
@@ -162,51 +228,13 @@ void QAdvancedHeaderView::invertedMatchModeActionTriggered()
 
 void QAdvancedHeaderView::moreColumnsActionTriggered()
 {
-    QDialog* dlg = new QDialog(this,Qt::Widget);
-    dlg->setWindowTitle(tr("More columns..."));
-    QVBoxLayout* l = new QVBoxLayout(dlg);
-
-    QTableView* v = new QTableView(dlg);
-    l->addWidget(v);
-
-    QDialogButtonBox* b = new QDialogButtonBox(dlg);
-    b->setOrientation(Qt::Horizontal);
-    b->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
-    l->addWidget(b);
-
-    QObject::connect(b, SIGNAL(accepted()), dlg, SLOT(accept()));
-    QObject::connect(b, SIGNAL(rejected()), dlg, SLOT(reject()));
-
-    QAbstractItemModel* m = model();
-    QAbstractFilterModel* hp;
-    QSortFilterProxyModel* p = qobject_cast<QSortFilterProxyModel*>(model());
-    if (p){
-        m = p->sourceModel();
-        hp = qobject_cast<QAbstractFilterModel*>(p);
-    }
-    QStandardItemModel* cm = new QStandardItemModel(dlg);
-    cm->setColumnCount(1);
-    cm->setRowCount(m->columnCount());
-
-    v->setModel(cm);
-    v->horizontalHeader()->setStretchLastSection(true);
-    v->horizontalHeader()->setVisible(false);
-    v->verticalHeader()->setVisible(false);
-
-    QStandardItem* item;
-    for (int iColumn = 0; iColumn < m->columnCount(); iColumn++){
-        item = new QStandardItem(m->headerData(iColumn, Qt::Horizontal).toString());
-        item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
-        item->setData(isSectionHidden(iColumn)?Qt::Unchecked:Qt::Checked, Qt::CheckStateRole);
-        cm->setItem(iColumn, 0, item);
-    }
-    v->resizeRowsToContents();
-    if (dlg->exec()){
-        for (int iRow = 0; iRow < cm->rowCount(); iRow++){
-            setSectionHidden(iRow, cm->index(iRow, 0).data(Qt::CheckStateRole).toInt() == Qt::Unchecked);
+	ShowMoreColumnsDialog* d = new ShowMoreColumnsDialog(this);
+	if (d->exec()){
+        for (int i = 0; i < model()->columnCount(); i++){
+			setSectionHidden(i, d->isHidden(i));
         }
-    }
-    delete dlg;
+	}
+	delete d;
 }
 
 void QAdvancedHeaderView::removeFilterSetActionTriggered()
