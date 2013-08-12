@@ -34,6 +34,7 @@ public:
 private slots:
 	void textEdited(const QString & text);
 private:
+	QSortFilterProxyModel* m_proxy;
 	QTableView* m_view;
 };
 

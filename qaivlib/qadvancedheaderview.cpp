@@ -54,7 +54,11 @@ ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView* headerView)
     QStandardItemModel* m = new QStandardItemModel(this);
     m->setColumnCount(1);
     m->setRowCount(headerView->model()->columnCount());
-    m_view->setModel(m);
+
+	m_proxy = new QSortFilterProxyModel(this);
+	m_proxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+	m_proxy->setSourceModel(m);
+    m_view->setModel(m_proxy);
     m_view->horizontalHeader()->setStretchLastSection(true);
     m_view->horizontalHeader()->setVisible(false);
     m_view->verticalHeader()->setVisible(false);
@@ -82,12 +86,13 @@ bool ShowMoreColumnsDialog::isHidden(int index) const
 
 void ShowMoreColumnsDialog::textEdited(const QString & text)
 {
-	for (int i = 0; i < m_view->model()->rowCount(); i++){
-		if (m_view->model()->index(i, 0).data().toString().startsWith(text, Qt::CaseInsensitive)){
-			m_view->selectRow(i);
-			break;
-		}
-	}
+	//for (int i = 0; i < m_view->model()->rowCount(); i++){
+	//	if (m_view->model()->index(i, 0).data().toString().contains(text, Qt::CaseInsensitive)){
+	//		m_view->selectRow(i);
+	//		break;
+	//	}
+	//}
+	m_proxy->setFilterRegExp(text);
 }
 
 QAdvancedHeaderView::QAdvancedHeaderView( Qt::Orientation orientation, QWidget* parent )
