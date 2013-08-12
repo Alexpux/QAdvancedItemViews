@@ -81,6 +81,13 @@ QSelectionListFilterEditorPopup::QSelectionListFilterEditorPopup(QWidget* parent
 	m_listView->setFocus();
 	m_listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	m_listView->installEventFilter(parent);
+
+	QDialogButtonBox* b = new QDialogButtonBox(this);
+	b->addButton(QDialogButtonBox::Ok);
+	b->addButton(QDialogButtonBox::Cancel);
+	connect(b, SIGNAL(accepted()), this, SIGNAL(accepted()));
+	connect(b, SIGNAL(rejected()), this, SIGNAL(rejected()));
+	l->addWidget(b);
 }
 
 QSelectionListFilterEditorPopup::~QSelectionListFilterEditorPopup()
@@ -187,6 +194,8 @@ QSelectionListFilterEditor::QSelectionListFilterEditor(QWidget* parent) :
 	setPopup(new QSelectionListFilterEditorPopup(this));
 	setFocusProxy(popup());
 	connect(popup(), SIGNAL(modeChanged()), this, SLOT(modeSelected()));
+	connect(popup(), SIGNAL(accepted()), this, SIGNAL(commitAndClose()));
+	connect(popup(), SIGNAL(rejected()), this, SIGNAL(cancelAndClose()));
 }
 
 QSelectionListFilterEditor::~QSelectionListFilterEditor()

@@ -55,7 +55,9 @@ public:
 
     QVariantList values(int role = Qt::DisplayRole) const;
 signals:
+	void accepted();
 	void modeChanged();
+	void rejected();
 private slots:
 	void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
 	void emptyToolButtonClicked();
