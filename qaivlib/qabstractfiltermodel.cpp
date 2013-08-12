@@ -330,7 +330,7 @@ void QAbstractFilterModel::setSourceModel(QAbstractItemModel* model)
     if (model){
         d->sourceModel = model;
 		connect(d->sourceModel, SIGNAL(layoutChanged()), this, SLOT(sourceModelLayoutChanged()));
-        headerDataChanged(Qt::Horizontal, 0, d->sourceModel->columnCount() - 1);
+        emit headerDataChanged(Qt::Horizontal, 0, d->sourceModel->columnCount() - 1);
     }
 }
 
