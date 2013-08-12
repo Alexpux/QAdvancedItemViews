@@ -90,6 +90,13 @@ QAutoFilterEditorPopup::QAutoFilterEditorPopup(QWidget* parent) :
 	l->addWidget(m_selectCheckBox);
 	m_listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	m_listView->installEventFilter(parent);
+
+	QDialogButtonBox* b = new QDialogButtonBox(this);
+	b->addButton(QDialogButtonBox::Ok);
+	b->addButton(QDialogButtonBox::Cancel);
+	connect(b, SIGNAL(accepted()), this, SIGNAL(accepted()));
+	connect(b, SIGNAL(rejected()), this, SIGNAL(rejected()));
+	l->addWidget(b);
 }
 
 QAutoFilterEditorPopup::~QAutoFilterEditorPopup()
@@ -181,6 +188,8 @@ QAutoFilterEditor::QAutoFilterEditor(QWidget *parent) :
 	setPopup(new QAutoFilterEditorPopup(this));
 	setFocusProxy(popup());
 	connect(popup(), SIGNAL(modeChanged()), this, SLOT(modeSelected()));
+	connect(popup(), SIGNAL(accepted()), this, SIGNAL(commitAndClose()));
+	connect(popup(), SIGNAL(rejected()), this, SIGNAL(cancelAndClose()));
 	setFocusPolicy(Qt::StrongFocus);
 }
 

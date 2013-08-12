@@ -50,7 +50,9 @@ public:
 
 	void setSourceModel(QAbstractItemModel* model, int column);
 signals:
+	void accepted();
 	void modeChanged();
+	void rejected();
 private slots:
 	void uniqueValueModelProgressChanged(int progress);
 	void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
