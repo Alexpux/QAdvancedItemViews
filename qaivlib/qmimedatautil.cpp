@@ -3,23 +3,20 @@
 
 #include "qadvancedtableview.h"
 
-/**
- * @ingroup utils
- * Adds the @view's selection as CSV data to the given QMimeData container @p mimeData.
- */
-void qMimeDataAddCsv(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole role)
+
+void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, Qt::ItemDataRole role)
 {
-	if (mimeData == 0 || view == 0){
+	if (mimeData == 0 || model == 0 || horizontalHeader == 0){
 		return;
 	}
 	QByteArray d;
 	QTextStream stream(&d);
-	QPair<QModelIndex, QModelIndex> e = selectionEdges(view->selectionModel()->selection());
+	QPair<QModelIndex, QModelIndex> e = selectionEdges(selectionModel->selection());
 	for (int r = e.first.row(); r <= e.second.row(); r++){
 		QStringList l;
 		for (int c = e.first.column(); c <= e.second.column(); c++){
-			if (!view->horizontalHeader()->isSectionHidden(c)){
-				l << "\"" + view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(role).toString() + "\"";
+			if (!horizontalHeader->isSectionHidden(c)){
+				l << "\"" + model->index(r, horizontalHeader->visualIndex(c)).data(role).toString() + "\"";
 			}
 		}
 		stream << l.join(";") << endl;
@@ -27,13 +24,9 @@ void qMimeDataAddCsv(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole rol
 	mimeData->setData("text/csv", d);
 }
 
-/**
- * @ingroup utils
- * Adds the current @view's selection as a HTML table to the given QMimeData container @p mimeData.
- */
-void qMimeDataAddHtml(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole role)
+void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, Qt::ItemDataRole role)
 {
-	if (mimeData == 0 || view == 0){
+	if (mimeData == 0 || model == 0 || horizontalHeader == 0){
 		return;
 	}
 	QByteArray d;
@@ -49,12 +42,12 @@ void qMimeDataAddHtml(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole ro
 	stream.writeStartElement("body");
 	stream.writeStartElement("table");
 
-	QPair<QModelIndex, QModelIndex> e = selectionEdges(view->selectionModel()->selection());
+	QPair<QModelIndex, QModelIndex> e = selectionEdges(selectionModel->selection());
 	for (int r = e.first.row(); r <= e.second.row(); r++){
 		stream.writeStartElement("tr");
 		for (int c = e.first.column(); c <= e.second.column(); c++){
-			if (!view->horizontalHeader()->isSectionHidden(c)){
-				stream.writeTextElement("td", view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(role).toString());
+			if (!horizontalHeader->isSectionHidden(c)){
+				stream.writeTextElement("td", model->index(r, horizontalHeader->visualIndex(c)).data(role).toString());
 			}
 		}
 		// close tag tr
@@ -69,28 +62,77 @@ void qMimeDataAddHtml(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole ro
 	mimeData->setData("text/html", d);
 }
 
+void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, Qt::ItemDataRole role)
+{
+	if (mimeData == 0 || model == 0 || horizontalHeader == 0){
+		return;
+	}
+	QByteArray d;
+	QTextStream stream(&d);
+	QPair<QModelIndex, QModelIndex> e = selectionEdges(selectionModel->selection());
+	for (int r = e.first.row(); r <= e.second.row(); r++){
+		QStringList l;
+		for (int c = e.first.column(); c <= e.second.column(); c++){
+			if (!horizontalHeader->isSectionHidden(c)){
+				l << model->index(r, horizontalHeader->visualIndex(c)).data(role).toString();
+			}
+		}
+		stream << l.join("\t") << endl;
+	}
+	mimeData->setData("text/plain", d);
+}
+
+/**
+ * @ingroup utils
+ * Adds the @view's selection as CSV data to the given QMimeData container @p mimeData.
+ */
+void qMimeDataAddCsv(QMimeData* mimeData, QAdvancedTableView* view, Qt::ItemDataRole role)
+{
+	qMimeDataAddCsv(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
+}
+/**
+ * @ingroup utils
+ * Adds the @view's selection as CSV data to the given QMimeData container @p mimeData.
+ */
+void qMimeDataAddCsv(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole role)
+{
+	qMimeDataAddCsv(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
+}
+
+/**
+ * @ingroup utils
+ * Adds the current @view's selection as a HTML table to the given QMimeData container @p mimeData.
+ */
+void qMimeDataAddHtml(QMimeData* mimeData, QAdvancedTableView* view, Qt::ItemDataRole role)
+{
+	qMimeDataAddHtml(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
+}
+
+/**
+ * @ingroup utils
+ * Adds the current @view's selection as a HTML table to the given QMimeData container @p mimeData.
+ */
+void qMimeDataAddHtml(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole role)
+{
+	qMimeDataAddHtml(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
+}
+
+/**
+ * @ingroup utils
+ * Adds the current @view's selection as plain text the given QMimeData container @p mimeData.
+ */
+void qMimeDataAddPlainText(QMimeData* mimeData, QAdvancedTableView* view, Qt::ItemDataRole role)
+{
+	qMimeDataAddPlainText(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
+}
+
 /**
  * @ingroup utils
  * Adds the current @view's selection as plain text the given QMimeData container @p mimeData.
  */
 void qMimeDataAddPlainText(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole role)
 {
-	if (mimeData == 0 || view == 0){
-		return;
-	}
-	QByteArray d;
-	QTextStream stream(&d);
-	QPair<QModelIndex, QModelIndex> e = selectionEdges(view->selectionModel()->selection());
-	for (int r = e.first.row(); r <= e.second.row(); r++){
-		QStringList l;
-		for (int c = e.first.column(); c <= e.second.column(); c++){
-			if (!view->horizontalHeader()->isSectionHidden(c)){
-				l << view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(role).toString();
-			}
-		}
-		stream << l.join("\t") << endl;
-	}
-	mimeData->setData("text/plain", d);
+	qMimeDataAddPlainText(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
 }
 
 /**
