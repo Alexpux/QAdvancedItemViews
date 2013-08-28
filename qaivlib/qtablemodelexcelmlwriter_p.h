@@ -1,5 +1,5 @@
 /******************************************************************************
-** This file is part of QAIV (QAdvanced Item Views).
+** This file is part of qadvanceditemviews.
 **
 ** Copyright (c) 2011-2013 Martin Hoppe martin@2x2hoppe.de
 **
@@ -18,22 +18,27 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "qaivdesignercollection.h"
+#ifndef QTABLEMODELXMLWRITER_P_H
+#define QTABLEMODELXMLWRITER_P_H
 
-#include "qadvancedtableviewplugin.h"
-#include "qtablemodelexportpushbuttonplugin.h"
+class QAdvancedTableView;
+class QTableView;
 
-QAIVDesignerCollection::QAIVDesignerCollection(QObject *parent) :
-    QObject(parent)
+class QTableModelExcelMLWriter
 {
-    m_widgets.append(new QAdvancedTableViewPlugin());
-	m_widgets.append(new QTableModelExportPushButtonPlugin(0));
-}
+public:
+	QTableModelExcelMLWriter(QIODevice* device);
+	~QTableModelExcelMLWriter();
 
-QList<QDesignerCustomWidgetInterface *> QAIVDesignerCollection::customWidgets() const
-{
-    return m_widgets;
-}
+	void setIncludeHeader(bool on);
 
-Q_EXPORT_PLUGIN2(qaivdesignerplugin, QAIVDesignerCollection)
+	bool write(QAdvancedTableView* view);
 
+	bool write(QTableView* view);
+
+private:
+	QIODevice* m_device;
+	bool m_includeHeader;
+};
+
+#endif // QTABLEMODELXMLWRITER_P_H

@@ -65,4 +65,9 @@
         <file alias="table.select">resources/table_select.ico</file>
         <file alias="row.remove">resources/bullet_delete.ico</file>
     </qresource>
+    <qresource prefix="/qaiv">
+        <file alias="export.excel">resources/export_excel.ico</file>
+        <file alias="export.word">resources/export_word.ico</file>
+        <file alias="table.export">resources/table_export.ico</file>
+    </qresource>
 </RCC>

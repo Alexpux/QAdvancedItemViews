@@ -46,8 +46,28 @@ p, li { white-space: pre-wrap; }
          </item>
          <item>
           <layout class="QGridLayout" name="gridLayout_2">
-           <item row="0" column="0" rowspan="5">
-            <widget class="QAdvancedTableView" name="filterTableView"/>
+           <item row="5" column="1">
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="advancedTableViewResultLabel">
+             <property name="text">
+              <string>Result: 0 of 0</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
            </item>
            <item row="0" column="1">
             <widget class="QToolButton" name="splitModeToolButton">
@@ -61,6 +81,9 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
             </widget>
+           </item>
+           <item row="0" column="0" rowspan="6">
+            <widget class="QAdvancedTableView" name="filterTableView"/>
            </item>
            <item row="1" column="1">
             <widget class="QToolButton" name="pinRowsToolButton">
@@ -82,29 +105,6 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="advancedTableViewResultLabel">
-             <property name="text">
-              <string>Result: 0 of 0</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="1">
             <widget class="QToolButton" name="saveStateToolButton">
              <property name="text">
@@ -116,6 +116,16 @@ p, li { white-space: pre-wrap; }
             <widget class="QToolButton" name="restoreStateToolButton">
              <property name="text">
               <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QTableModelExportPushButton" name="exportPushButton">
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
              </property>
             </widget>
            </item>
@@ -444,6 +454,11 @@ p, li { white-space: pre-wrap; }
    <class>QAdvancedTableView</class>
    <extends>QWidget</extends>
    <header>qadvancedtableview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QTableModelExportPushButton</class>
+   <extends>QPushButton</extends>
+   <header>qtablemodelexportpushbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources>

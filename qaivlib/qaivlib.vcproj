@@ -294,6 +294,30 @@
 				>
 			</File>
 			<File
+				RelativePath=".\qtablemodecsvwriter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\qtablemodelexcelmlwriter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\qtablemodelexportpushbutton.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\qtablemodeltmlwriter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\qtablemodelwordmlwriter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\qtablemodelwriter.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\qtextfilter.cpp"
 				>
 			</File>
@@ -1108,6 +1132,52 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\qtablemodecsvwriter_p.h"
+				>
+			</File>
+			<File
+				RelativePath=".\qtablemodelexcelmlwriter_p.h"
+				>
+			</File>
+			<File
+				RelativePath=".\qtablemodelexportpushbutton.h"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing qtablemodelexportpushbutton.h..."
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fStdAfx.h&quot; &quot;-f../../qtablemodelexportpushbutton.h&quot;  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQAIVLIB_LIBRARY -D_WINDLL &quot;-I.\GeneratedFiles&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I.\GeneratedFiles\$(ConfigurationName)\.&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing qtablemodelexportpushbutton.h..."
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fStdAfx.h&quot; &quot;-f../../qtablemodelexportpushbutton.h&quot;  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQAIVLIB_LIBRARY -D_WINDLL &quot;-I.\GeneratedFiles&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I.\GeneratedFiles\$(ConfigurationName)\.&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\qtablemodelhtmlwriter_p.h"
+				>
+			</File>
+			<File
+				RelativePath=".\qtablemodelwordmlwriter_p.h"
+				>
+			</File>
+			<File
+				RelativePath=".\qtablemodelwriter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\qtextfilter.h"
 				>
 			</File>
@@ -1464,6 +1534,46 @@
 			</File>
 			<File
 				RelativePath=".\resources\expand.ico"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\resources\export_excel.ico"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\resources\export_word.ico"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -1852,7 +1962,7 @@
 						Name="VCCustomBuildTool"
 						Description="Rcc&apos;ing $(InputFileName)..."
 						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);.\resources\emoticon_neutral.ico;.\resources\emoticon_smile.ico;.\resources\emoticon_unhappy.ico;.\resources\flag_blue.ico;.\resources\flag_green.ico;.\resources\flag_orange.ico;.\resources\flag_pink.ico;.\resources\flag_purple.ico;.\resources\flag_red.ico;.\resources\flag_yellow.ico;.\resources\tag_blue.ico;.\resources\tag_green.ico;.\resources\tag_orange.ico;.\resources\tag_pink.ico;.\resources\tag_purple.ico;.\resources\tag_red.ico;.\resources\tag_yellow.ico;.\resources\amber-on.ico;.\resources\blue-on.ico;.\resources\green-on.ico;.\resources\red-on.ico;.\resources\white-on.ico;.\resources\yellow-on.ico;.\resources\filter_regexp.ico;.\resources\range.ico;.\resources\selection.ico;.\resources\textfilter.ico;.\resources\value.ico;.\resources\case_insensitive.ico;.\resources\case_sensitive.ico;.\resources\ends_with.ico;.\resources\filter_add.ico;.\resources\filter_delete.ico;.\resources\filter_disable_row.ico;.\resources\filter_disabled.ico;.\resources\filter_enable_row.ico;.\resources\filter_enabled.ico;.\resources\filter_toggle.ico;.\resources\starts_with.ico;.\resources\togglesortorder.ico;.\resources\contains.ico;.\resources\expand.ico;.\resources\pin_rows_disabled.ico;.\resources\pin_rows_enabled.ico;.\resources\row_fixed.ico;.\resources\row_free.ico;.\resources\single_view.ico;.\resources\splitted_view.ico;.\resources\table_select.ico;.\resources\bullet_delete.ico"
+						AdditionalDependencies="$(InputPath);.\resources\emoticon_neutral.ico;.\resources\emoticon_smile.ico;.\resources\emoticon_unhappy.ico;.\resources\flag_blue.ico;.\resources\flag_green.ico;.\resources\flag_orange.ico;.\resources\flag_pink.ico;.\resources\flag_purple.ico;.\resources\flag_red.ico;.\resources\flag_yellow.ico;.\resources\tag_blue.ico;.\resources\tag_green.ico;.\resources\tag_orange.ico;.\resources\tag_pink.ico;.\resources\tag_purple.ico;.\resources\tag_red.ico;.\resources\tag_yellow.ico;.\resources\amber-on.ico;.\resources\blue-on.ico;.\resources\green-on.ico;.\resources\red-on.ico;.\resources\white-on.ico;.\resources\yellow-on.ico;.\resources\filter_regexp.ico;.\resources\range.ico;.\resources\selection.ico;.\resources\textfilter.ico;.\resources\value.ico;.\resources\case_insensitive.ico;.\resources\case_sensitive.ico;.\resources\ends_with.ico;.\resources\filter_add.ico;.\resources\filter_delete.ico;.\resources\filter_disable_row.ico;.\resources\filter_disabled.ico;.\resources\filter_enable_row.ico;.\resources\filter_enabled.ico;.\resources\filter_toggle.ico;.\resources\starts_with.ico;.\resources\togglesortorder.ico;.\resources\contains.ico;.\resources\expand.ico;.\resources\pin_rows_disabled.ico;.\resources\pin_rows_enabled.ico;.\resources\row_fixed.ico;.\resources\row_free.ico;.\resources\single_view.ico;.\resources\splitted_view.ico;.\resources\table_select.ico;.\resources\bullet_delete.ico;.\resources\export_excel.ico;.\resources\export_word.ico;.\resources\table_export.ico"
 						Outputs=".\GeneratedFiles\qrc_$(InputName).cpp"
 					/>
 				</FileConfiguration>
@@ -1863,7 +1973,7 @@
 						Name="VCCustomBuildTool"
 						Description="Rcc&apos;ing $(InputFileName)..."
 						CommandLine="&quot;$(QTDIR)\bin\rcc.exe&quot; -name &quot;$(InputName)&quot; -no-compress &quot;$(InputPath)&quot; -o .\GeneratedFiles\qrc_$(InputName).cpp&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputPath);.\resources\emoticon_neutral.ico;.\resources\emoticon_smile.ico;.\resources\emoticon_unhappy.ico;.\resources\flag_blue.ico;.\resources\flag_green.ico;.\resources\flag_orange.ico;.\resources\flag_pink.ico;.\resources\flag_purple.ico;.\resources\flag_red.ico;.\resources\flag_yellow.ico;.\resources\tag_blue.ico;.\resources\tag_green.ico;.\resources\tag_orange.ico;.\resources\tag_pink.ico;.\resources\tag_purple.ico;.\resources\tag_red.ico;.\resources\tag_yellow.ico;.\resources\amber-on.ico;.\resources\blue-on.ico;.\resources\green-on.ico;.\resources\red-on.ico;.\resources\white-on.ico;.\resources\yellow-on.ico;.\resources\filter_regexp.ico;.\resources\range.ico;.\resources\selection.ico;.\resources\textfilter.ico;.\resources\value.ico;.\resources\case_insensitive.ico;.\resources\case_sensitive.ico;.\resources\ends_with.ico;.\resources\filter_add.ico;.\resources\filter_delete.ico;.\resources\filter_disable_row.ico;.\resources\filter_disabled.ico;.\resources\filter_enable_row.ico;.\resources\filter_enabled.ico;.\resources\filter_toggle.ico;.\resources\starts_with.ico;.\resources\togglesortorder.ico;.\resources\contains.ico;.\resources\expand.ico;.\resources\pin_rows_disabled.ico;.\resources\pin_rows_enabled.ico;.\resources\row_fixed.ico;.\resources\row_free.ico;.\resources\single_view.ico;.\resources\splitted_view.ico;.\resources\table_select.ico;.\resources\bullet_delete.ico"
+						AdditionalDependencies="$(InputPath);.\resources\emoticon_neutral.ico;.\resources\emoticon_smile.ico;.\resources\emoticon_unhappy.ico;.\resources\flag_blue.ico;.\resources\flag_green.ico;.\resources\flag_orange.ico;.\resources\flag_pink.ico;.\resources\flag_purple.ico;.\resources\flag_red.ico;.\resources\flag_yellow.ico;.\resources\tag_blue.ico;.\resources\tag_green.ico;.\resources\tag_orange.ico;.\resources\tag_pink.ico;.\resources\tag_purple.ico;.\resources\tag_red.ico;.\resources\tag_yellow.ico;.\resources\amber-on.ico;.\resources\blue-on.ico;.\resources\green-on.ico;.\resources\red-on.ico;.\resources\white-on.ico;.\resources\yellow-on.ico;.\resources\filter_regexp.ico;.\resources\range.ico;.\resources\selection.ico;.\resources\textfilter.ico;.\resources\value.ico;.\resources\case_insensitive.ico;.\resources\case_sensitive.ico;.\resources\ends_with.ico;.\resources\filter_add.ico;.\resources\filter_delete.ico;.\resources\filter_disable_row.ico;.\resources\filter_disabled.ico;.\resources\filter_enable_row.ico;.\resources\filter_enabled.ico;.\resources\filter_toggle.ico;.\resources\starts_with.ico;.\resources\togglesortorder.ico;.\resources\contains.ico;.\resources\expand.ico;.\resources\pin_rows_disabled.ico;.\resources\pin_rows_enabled.ico;.\resources\row_fixed.ico;.\resources\row_free.ico;.\resources\single_view.ico;.\resources\splitted_view.ico;.\resources\table_select.ico;.\resources\bullet_delete.ico;.\resources\export_excel.ico;.\resources\export_word.ico;.\resources\table_export.ico"
 						Outputs=".\GeneratedFiles\qrc_$(InputName).cpp"
 					/>
 				</FileConfiguration>
@@ -2010,6 +2120,26 @@
 			</File>
 			<File
 				RelativePath=".\resources\starts_with.ico"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\resources\table_export.ico"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -2665,6 +2795,18 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\GeneratedFiles\Release\moc_qtablemodelexportpushbutton.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath=".\GeneratedFiles\Release\moc_qtextfilter_p.cpp"
 					>
 					<FileConfiguration
@@ -3032,6 +3174,18 @@
 				</File>
 				<File
 					RelativePath=".\GeneratedFiles\Debug\moc_qsinglecolumnproxymodel.cpp"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\GeneratedFiles\Debug\moc_qtablemodelexportpushbutton.cpp"
 					>
 					<FileConfiguration
 						Name="Release|Win32"

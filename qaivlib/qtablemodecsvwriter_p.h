@@ -1,5 +1,5 @@
 /******************************************************************************
-** This file is part of QAIV (QAdvanced Item Views).
+** This file is part of qadvanceditemviews.
 **
 ** Copyright (c) 2011-2013 Martin Hoppe martin@2x2hoppe.de
 **
@@ -18,22 +18,23 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "qaivdesignercollection.h"
+#ifndef QTABLEMODELCSVWRITER_P_H
+#define QTABLEMODELCSVWRITER_P_H
 
-#include "qadvancedtableviewplugin.h"
-#include "qtablemodelexportpushbuttonplugin.h"
+class QAdvancedTableView;
+class QTableView;
 
-QAIVDesignerCollection::QAIVDesignerCollection(QObject *parent) :
-    QObject(parent)
+class QTableModelCsvWriter
 {
-    m_widgets.append(new QAdvancedTableViewPlugin());
-	m_widgets.append(new QTableModelExportPushButtonPlugin(0));
-}
+public:
+	QTableModelCsvWriter(QIODevice* device);
+	~QTableModelCsvWriter();
 
-QList<QDesignerCustomWidgetInterface *> QAIVDesignerCollection::customWidgets() const
-{
-    return m_widgets;
-}
+	bool writeAll(QAdvancedTableView* view);
 
-Q_EXPORT_PLUGIN2(qaivdesignerplugin, QAIVDesignerCollection)
+	bool writeAll(QTableView* view);
+private:
+	QIODevice* m_device;
+};
 
+#endif // QTABLEMODELCSVWRITER_P_H

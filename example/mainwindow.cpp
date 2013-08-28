@@ -43,6 +43,7 @@
 #include <qrangefilter.h>
 #include <quniquevaluesproxymodel.h>
 #include <qselectionlistfilter.h>
+#include <qtablemodelwriter.h>
 #include <qtextfilter.h>
 #include <qvaluefilter.h>
 
@@ -126,6 +127,19 @@ void MainWindow::copy()
 	qMimeDataAddHtml(mimeData, v);
 	qMimeDataAddPlainText(mimeData, v);
 	clipboard->setMimeData(mimeData);
+
+//	QTableModelWriter w("c:/temp/excel.xml");
+	QFile file;
+	file.setFileName("c:/temp/word.xml");
+	QTableModelWriter writer(&file, "WordML");
+	if (ui->tabWidget->currentIndex() == 0){
+		writer.writeAll(ui->filterTableView);
+
+		QTableModelWriter html("c:/temp/qaiv.html");
+		html.writeAll(ui->filterTableView);
+	} else if (ui->tabWidget->currentIndex() == 3){
+		writer.writeAll(ui->decorationProxyModelTableView);
+	}
 }
 
 void MainWindow::decoratedTableViewCustomContextMenuRequested(const QPoint & point)

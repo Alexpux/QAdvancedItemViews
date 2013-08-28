@@ -5,6 +5,14 @@ Version 0.3 - 2013-xx-xx
 
 + new features
   - show more columns dialog improved
+  - QAutoFilter: Ok and Cancel buttons added to filter editor dialog
+  - QSelectionListFilter: Ok and Cancel buttons added to filter editor dialog
+  - class QTableModelExportPushButton added
+  - class QTableModelWriter added
+  - QMimeData utils extended for class QAdvancedTableView
+
++ changes
+  - QMimeData utilities extended (see qmimedatautil.h)
   
 Version 0.2 - 2013-06-15
 

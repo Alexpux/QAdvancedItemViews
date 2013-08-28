@@ -140,7 +140,7 @@ FULL_PATH_NAMES        = YES
 # relative paths, which will be relative from the directory where doxygen is 
 # started.
 
-STRIP_FROM_PATH        = 
+STRIP_FROM_PATH        = D:/Entwicklung/qaiv/qaivlib/
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of 
 # the path mentioned in the documentation of a class, which tells 
@@ -205,7 +205,7 @@ TAB_SIZE               = 8
 # will result in a user-defined paragraph with heading "Side Effects:". 
 # You can put \n's in the value part of an alias to insert newlines.
 
-ALIASES                = reimp=Reimplements:
+ALIASES                = 
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only). 
 # A mapping has the form "name=value". For example adding 
