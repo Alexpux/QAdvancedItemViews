@@ -95,12 +95,18 @@ void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
     QSortFilterProxyModel::setSourceModel(sourceModel);
     d->filterModel->setSourceModel(sourceModel);
 	connect(d->filterModel->sourceModel(), SIGNAL(modelReset()), this, SLOT(updateResult()));
+	connect(d->filterModel->sourceModel(), SIGNAL(rowsInserted(QModelIndex, int , int)), this, SLOT(updateResult()));
+	connect(d->filterModel->sourceModel(), SIGNAL(rowsRemoved(QModelIndex, int , int)), this, SLOT(updateResult()));
     emitResultCountChanged();
 }
 
 void QAbstractFilterProxyModel::updateResult()
 {
-    invalidate();
+	// reset last result count
+	d->lastResultCount = -1;
+	// invalidate filter
+    invalidateFilter();
+	// emit result count changed
     emitResultCountChanged();
 }
 
