@@ -28,7 +28,7 @@
         <attribute name="title">
          <string>QAdvancedTableView</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout">
+        <layout class="QVBoxLayout" name="verticalLayout_7">
          <item>
           <widget class="QLabel" name="label">
            <property name="text">
@@ -46,86 +46,106 @@ p, li { white-space: pre-wrap; }
          </item>
          <item>
           <layout class="QGridLayout" name="gridLayout_2">
-           <item row="5" column="1">
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
+           <item row="0" column="0">
+            <widget class="QAdvancedTableView" name="filterTableView"/>
            </item>
-           <item row="6" column="0">
+           <item row="0" column="1">
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <item>
+              <widget class="QToolButton" name="splitModeToolButton">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="pinRowsToolButton">
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../qaivlib/qaiv.qrc">
+                 <normaloff>:/qaiv/pin/enabled</normaloff>:/qaiv/pin/enabled</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTableModelExportPushButton" name="exportPushButton">
+               <property name="iconSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                <widget class="QToolButton" name="saveStateToolButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string>Save table view state</string>
+                 </property>
+                 <property name="text">
+                  <string>S</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QToolButton" name="restoreStateToolButton">
+                 <property name="toolTip">
+                  <string>Restore table view state</string>
+                 </property>
+                 <property name="text">
+                  <string>R</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
             <widget class="QLabel" name="advancedTableViewResultLabel">
              <property name="text">
               <string>Result: 0 of 0</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QToolButton" name="splitModeToolButton">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>24</width>
-               <height>24</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0" rowspan="6">
-            <widget class="QAdvancedTableView" name="filterTableView"/>
-           </item>
-           <item row="1" column="1">
-            <widget class="QToolButton" name="pinRowsToolButton">
-             <property name="text">
-              <string>...</string>
-             </property>
-             <property name="icon">
-              <iconset resource="../qaivlib/qaiv.qrc">
-               <normaloff>:/qaiv/pin/enabled</normaloff>:/qaiv/pin/enabled</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>24</width>
-               <height>24</height>
-              </size>
-             </property>
-             <property name="checkable">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QToolButton" name="saveStateToolButton">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QToolButton" name="restoreStateToolButton">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QTableModelExportPushButton" name="exportPushButton">
-             <property name="iconSize">
-              <size>
-               <width>24</width>
-               <height>24</height>
-              </size>
              </property>
             </widget>
            </item>
@@ -553,8 +573,8 @@ p, li { white-space: pre-wrap; }
    <slot>groupUnixCheckBoxToggled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1072</x>
-     <y>176</y>
+     <x>1325</x>
+     <y>203</y>
     </hint>
     <hint type="destinationlabel">
      <x>589</x>
@@ -569,8 +589,8 @@ p, li { white-space: pre-wrap; }
    <slot>groupWindowsCheckBoxToggled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1076</x>
-     <y>172</y>
+     <x>1325</x>
+     <y>180</y>
     </hint>
     <hint type="destinationlabel">
      <x>589</x>
@@ -633,40 +653,8 @@ p, li { white-space: pre-wrap; }
    <slot>pinRowsToolButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1313</x>
-     <y>156</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>674</x>
-     <y>288</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>restoreStateToolButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>restoreStateToolButtonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
      <x>1307</x>
-     <y>225</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>674</x>
-     <y>288</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>saveStateToolButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>saveStateToolButtonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1307</x>
-     <y>200</y>
+     <y>211</y>
     </hint>
     <hint type="destinationlabel">
      <x>674</x>
@@ -687,6 +675,38 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>674</x>
      <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>saveStateToolButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveStateToolButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1287</x>
+     <y>266</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1348</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>restoreStateToolButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>restoreStateToolButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1311</x>
+     <y>268</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1344</x>
+     <y>311</y>
     </hint>
    </hints>
   </connection>
