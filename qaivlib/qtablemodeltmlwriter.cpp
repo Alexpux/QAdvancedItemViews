@@ -59,11 +59,19 @@ bool QTableModelHtmlWriter::write(QAdvancedTableView* view, bool all)
 	if (view->showGrid()){
 		stream.writeAttribute("style", "border-style:none");
 	}
+	//
+	QPair<QModelIndex, QModelIndex> e;
+	if (!all){
+		e = selectionEdges(view->selectionModel()->selection());
+	} else {
+		e.first = view->model()->index(0, 0);
+		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
+	}
 	if (m_includeHeader){
 		// start tag <tr>
 		stream.writeStartElement("tr");
 		writeBorderStyle(stream, view->gridStyle());
-		for (int c = 0; c < view->horizontalHeader()->count(); c++){
+		for (int c = e.first.column(); c <= e.second.column(); c++){
 			if (all || !view->horizontalHeader()->isSectionHidden(c)){
 				stream.writeStartElement("th");
 				writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::TextAlignmentRole).toInt()));
@@ -77,14 +85,6 @@ bool QTableModelHtmlWriter::write(QAdvancedTableView* view, bool all)
 		}
 		// end tag <tr>
 		stream.writeEndElement();
-	}
-	//
-	QPair<QModelIndex, QModelIndex> e;
-	if (!all){
-		e = selectionEdges(view->selectionModel()->selection());
-	} else {
-		e.first = view->model()->index(0, 0);
-		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
 	}
 	for (int r = e.first.row(); r <= e.second.row(); r++){
 		stream.writeStartElement("tr");

@@ -24,6 +24,7 @@
 #include <QClipboard>
 #include <QDebug>
 #include <QFile>
+#include <QMessageBox>
 #include <QMimeData>
 #include <QProgressDialog>
 #include <QScrollBar>
@@ -127,19 +128,6 @@ void MainWindow::copy()
 	qMimeDataAddHtml(mimeData, v);
 	qMimeDataAddPlainText(mimeData, v);
 	clipboard->setMimeData(mimeData);
-
-//	QTableModelWriter w("c:/temp/excel.xml");
-	QFile file;
-	file.setFileName("c:/temp/word.xml");
-	QTableModelWriter writer(&file, "WordML");
-	if (ui->tabWidget->currentIndex() == 0){
-		writer.writeAll(ui->filterTableView);
-
-		QTableModelWriter html("c:/temp/qaiv.html");
-		html.writeAll(ui->filterTableView);
-	} else if (ui->tabWidget->currentIndex() == 3){
-		writer.writeAll(ui->decorationProxyModelTableView);
-	}
 }
 
 void MainWindow::decoratedTableViewCustomContextMenuRequested(const QPoint & point)
@@ -167,6 +155,44 @@ void MainWindow::decoratedGroupingTreeViewCustomContextMenuRequested(const QPoin
 void MainWindow::exitActionTriggered()
 {
     qApp->exit();
+}
+
+void MainWindow::exportAll(const QByteArray & format)
+{
+	QFile file;
+	if (format == "CSV"){
+		file.setFileName("c:/temp/qaiv.csv");
+	} else if (format == "HTML"){
+		file.setFileName("c:/temp/qaiv.html");
+	} else if (format == "WordML"){
+		file.setFileName("c:/temp/qaiv_word.xml");
+	} else if (format == "SpreadsheetML"){
+		file.setFileName("c:/temp/qaiv_excel.xml");
+	}
+	QTableModelWriter writer(&file, format);
+	if (ui->tabWidget->currentIndex() == 0){
+		writer.writeAll(ui->filterTableView);
+	}
+	QMessageBox::information(this, tr("File saved"), tr("View saved as %1").arg(file.fileName()));
+}
+
+void MainWindow::exportSelection(const QByteArray & format)
+{
+	QFile file;
+	if (format == "CSV"){
+		file.setFileName("c:/temp/qaiv.csv");
+	} else if (format == "HTML"){
+		file.setFileName("c:/temp/qaiv.html");
+	} else if (format == "WordML"){
+		file.setFileName("c:/temp/qaiv_word.xml");
+	} else if (format == "SpreadsheetML"){
+		file.setFileName("c:/temp/qaiv_excel.xml");
+	}
+	QTableModelWriter writer(&file, format);
+	if (ui->tabWidget->currentIndex() == 0){
+		writer.writeSelection(ui->filterTableView);
+	}
+	QMessageBox::information(this, tr("File saved"), tr("View saved as %1").arg(file.fileName()));
 }
 
 void MainWindow::groupWindowsCheckBoxToggled(bool on)

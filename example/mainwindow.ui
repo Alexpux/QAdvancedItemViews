@@ -573,7 +573,7 @@ p, li { white-space: pre-wrap; }
    <slot>groupUnixCheckBoxToggled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1325</x>
+     <x>1303</x>
      <y>203</y>
     </hint>
     <hint type="destinationlabel">
@@ -589,7 +589,7 @@ p, li { white-space: pre-wrap; }
    <slot>groupWindowsCheckBoxToggled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1325</x>
+     <x>1303</x>
      <y>180</y>
     </hint>
     <hint type="destinationlabel">
@@ -605,8 +605,8 @@ p, li { white-space: pre-wrap; }
    <slot>decoratedTableViewCustomContextMenuRequested(QPoint)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>673</x>
-     <y>228</y>
+     <x>101</x>
+     <y>94</y>
     </hint>
     <hint type="destinationlabel">
      <x>674</x>
@@ -621,8 +621,8 @@ p, li { white-space: pre-wrap; }
    <slot>decoratedGroupingTreeViewCustomContextMenuRequested(QPoint)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>673</x>
-     <y>228</y>
+     <x>101</x>
+     <y>107</y>
     </hint>
     <hint type="destinationlabel">
      <x>674</x>
@@ -638,7 +638,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>1289</x>
-     <y>84</y>
+     <y>75</y>
     </hint>
     <hint type="destinationlabel">
      <x>674</x>
@@ -710,6 +710,38 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>exportPushButton</sender>
+   <signal>exportAllTriggered(QByteArray)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportAll(QByteArray)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1300</x>
+     <y>224</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1346</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportPushButton</sender>
+   <signal>exportSelectionTriggered(QByteArray)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportSelection(QByteArray)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1285</x>
+     <y>235</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1344</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>exitActionTriggered()</slot>
@@ -725,5 +757,7 @@ p, li { white-space: pre-wrap; }
   <slot>restoreStateToolButtonClicked()</slot>
   <slot>saveStateToolButtonClicked()</slot>
   <slot>copy()</slot>
+  <slot>exportAll(QByteArray)</slot>
+  <slot>exportSelection(QByteArray)</slot>
  </slots>
 </ui>

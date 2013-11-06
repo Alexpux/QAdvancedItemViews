@@ -55,7 +55,12 @@ public slots:
 
     void decoratedTableViewCustomContextMenuRequested(const QPoint & point);
     void decoratedGroupingTreeViewCustomContextMenuRequested(const QPoint & point);
+
+	void exportAll(const QByteArray & format);
+	void exportSelection(const QByteArray & format);
+
     void exitActionTriggered();
+
     void groupWindowsCheckBoxToggled(bool on);
     void groupUnixCheckBoxToggled(bool on);
 

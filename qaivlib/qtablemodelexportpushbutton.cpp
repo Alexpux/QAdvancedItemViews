@@ -24,6 +24,10 @@ QTableModelExportPushButton::QTableModelExportPushButton(QWidget *parent)
 	a->setData(QByteArray("CSV"));
 	connect(a, SIGNAL(triggered()), this, SLOT(exportSelectionTriggered()));
 
+	a = m->addAction(tr("HTML (Selection)"));
+	a->setData(QByteArray("HTML"));
+	connect(a, SIGNAL(triggered()), this, SLOT(exportSelectionTriggered()));
+
 	m->addSeparator();
 
 	a = m->addAction(tr("Excel XML (All)"));
@@ -38,6 +42,10 @@ QTableModelExportPushButton::QTableModelExportPushButton(QWidget *parent)
 
 	a = m->addAction(tr("CSV (All)"));
 	a->setData(QByteArray("CSV"));
+	connect(a, SIGNAL(triggered()), this, SLOT(exportAllTriggered()));
+
+	a = m->addAction(tr("HTML (All)"));
+	a->setData(QByteArray("HTML"));
 	connect(a, SIGNAL(triggered()), this, SLOT(exportAllTriggered()));
 
 	setMenu(m);

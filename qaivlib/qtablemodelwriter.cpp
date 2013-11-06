@@ -171,6 +171,13 @@ bool QTableModelWriter::writeSelection(QAdvancedTableView* view)
 /**
  * Writes the selected cells of the specified @p view.
  */
+bool QTableModelWriter::writeSelection(QTableView* view)
+{
+	return write(view, false);
+}
+/**
+ * Writes the selected cells of the specified @p view.
+ */
 bool QTableModelWriter::write(QAdvancedTableView* view, bool all)
 {
     QByteArray suffix;
@@ -188,7 +195,7 @@ bool QTableModelWriter::write(QAdvancedTableView* view, bool all)
             return false;
         }
 		QTableModelCsvWriter w(d->device);
-		return w.writeAll(view);
+		return w.writeAll(view, all);
 	}
 	if (format == "html"){
         if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
@@ -207,13 +214,13 @@ bool QTableModelWriter::write(QAdvancedTableView* view, bool all)
 		return w.write(view, all);
 		
 	}
-	if (format == "SpreadsheetML"){
+	if (format == "spreadsheetml"){
         if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
             qWarning() << "QTableModelWriter::write: the device can not be opened for writing";
             return false;
         }
 		QTableModelExcelMLWriter w(d->device);
-		return w.write(view);
+		return w.write(view, all);
 	}
 
 	return false;
@@ -236,7 +243,7 @@ bool QTableModelWriter::write(QTableView* view, bool all)
             return false;
         }
 		QTableModelCsvWriter w(d->device);
-		return w.writeAll(view);
+		return w.writeAll(view, all);
 	}
 	if (format == "html"){
         if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
@@ -255,13 +262,13 @@ bool QTableModelWriter::write(QTableView* view, bool all)
 		return w.write(view, all);
 		
 	}
-	if (format == "SpreadsheetML"){
+	if (format == "spreadsheetml"){
         if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
             qWarning() << "QTableModelWriter::write: the device can not be opened for writing";
             return false;
         }
 		QTableModelExcelMLWriter w(d->device);
-		return w.write(view);
+		return w.write(view, all);
 	}
 
 	return false;

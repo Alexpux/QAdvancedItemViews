@@ -38,7 +38,7 @@ void QTableModelExcelMLWriter::setIncludeHeader(bool on)
 	m_includeHeader = on;
 }
 
-bool QTableModelExcelMLWriter::write(QAdvancedTableView* view)
+bool QTableModelExcelMLWriter::write(QAdvancedTableView* view, bool all)
 {
     if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelExcelMLWriter::writeAll: the device can not be opened for writing";
@@ -49,7 +49,7 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView* view)
 	stream.setAutoFormattingIndent(2);
 
 	stream.writeStartDocument("1.0");
-	stream.writeProcessingInstruction("mso-application progid\"Excel.Sheet\"");
+	stream.writeProcessingInstruction("mso-application progid=\"Excel.Sheet\"");
 	
 	stream.writeStartElement("Workbook");
 	stream.writeAttribute("xmlns", "urn:schemas-microsoft-com:office:spreadsheet");
@@ -84,7 +84,13 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView* view)
 	stream.writeAttribute("ss:Name", QObject::tr("Sheet1"));
 
 	stream.writeStartElement("Table");
-	QPair<QModelIndex, QModelIndex> e = selectionEdges(view->selectionModel()->selection());
+	QPair<QModelIndex, QModelIndex> e;
+	if (!all){
+		e = selectionEdges(view->selectionModel()->selection());
+	} else {
+		e.first = view->model()->index(0, 0);
+		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
+	}
 	for (int r = e.first.row(); r <= e.second.row(); r++){
 		stream.writeStartElement("Row");
 		for (int c = e.first.column(); c <= e.second.column(); c++){
@@ -111,7 +117,7 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView* view)
 	return true;
 }
 
-bool QTableModelExcelMLWriter::write(QTableView* view)
+bool QTableModelExcelMLWriter::write(QTableView* view, bool all)
 {
     if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelExcelMLWriter::writeAll: the device can not be opened for writing";
@@ -157,7 +163,13 @@ bool QTableModelExcelMLWriter::write(QTableView* view)
 	stream.writeAttribute("ss:Name", QObject::tr("Sheet1"));
 
 	stream.writeStartElement("Table");
-	QPair<QModelIndex, QModelIndex> e = selectionEdges(view->selectionModel()->selection());
+	QPair<QModelIndex, QModelIndex> e;
+	if (!all){
+		e = selectionEdges(view->selectionModel()->selection());
+	} else {
+		e.first = view->model()->index(0, 0);
+		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
+	}
 	for (int r = e.first.row(); r <= e.second.row(); r++){
 		stream.writeStartElement("Row");
 		for (int c = e.first.column(); c <= e.second.column(); c++){

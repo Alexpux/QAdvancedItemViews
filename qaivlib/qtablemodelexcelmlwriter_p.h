@@ -32,9 +32,9 @@ public:
 
 	void setIncludeHeader(bool on);
 
-	bool write(QAdvancedTableView* view);
+	bool write(QAdvancedTableView* view, bool all);
 
-	bool write(QTableView* view);
+	bool write(QTableView* view, bool all);
 
 private:
 	QIODevice* m_device;

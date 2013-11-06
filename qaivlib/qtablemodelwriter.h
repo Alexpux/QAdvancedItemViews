@@ -75,6 +75,8 @@ public:
 
 	bool writeAll(QTableView* view);
 
+	bool writeSelection(QTableView* view);
+
 	bool writeSelection(QAdvancedTableView* view);
 private:
 	Q_DISABLE_COPY(QTableModelWriter);

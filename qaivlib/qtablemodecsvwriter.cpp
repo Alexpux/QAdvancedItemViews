@@ -33,7 +33,7 @@ QTableModelCsvWriter::~QTableModelCsvWriter()
 {
 }
 
-bool QTableModelCsvWriter::writeAll(QAdvancedTableView* view)
+bool QTableModelCsvWriter::writeAll(QAdvancedTableView* view, bool all)
 {
     if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelCsvWriter::writeAll: the device can not be opened for writing";
@@ -41,7 +41,13 @@ bool QTableModelCsvWriter::writeAll(QAdvancedTableView* view)
     }
 	QTextStream stream(m_device);
 
-	QPair<QModelIndex, QModelIndex> e = selectionEdges(view->selectionModel()->selection());
+	QPair<QModelIndex, QModelIndex> e;
+	if (!all){
+		e = selectionEdges(view->selectionModel()->selection());
+	} else {
+		e.first = view->model()->index(0, 0);
+		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
+	}
 	for (int r = e.first.row(); r <= e.second.row(); r++){
 		QStringList l;
 		for (int c = e.first.column(); c <= e.second.column(); c++){
@@ -54,7 +60,7 @@ bool QTableModelCsvWriter::writeAll(QAdvancedTableView* view)
 	return true;
 }
 
-bool QTableModelCsvWriter::writeAll(QTableView* view)
+bool QTableModelCsvWriter::writeAll(QTableView* view, bool all)
 {
     if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelCsvWriter::writeAll: the device can not be opened for writing";
@@ -62,7 +68,13 @@ bool QTableModelCsvWriter::writeAll(QTableView* view)
     }
 	QTextStream stream(m_device);
 
-	QPair<QModelIndex, QModelIndex> e = selectionEdges(view->selectionModel()->selection());
+	QPair<QModelIndex, QModelIndex> e;
+	if (!all){
+		e = selectionEdges(view->selectionModel()->selection());
+	} else {
+		e.first = view->model()->index(0, 0);
+		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
+	}
 	for (int r = e.first.row(); r <= e.second.row(); r++){
 		QStringList l;
 		for (int c = e.first.column(); c <= e.second.column(); c++){
