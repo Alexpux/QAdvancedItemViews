@@ -688,6 +688,7 @@ private slots:
 	void subviewReceivedFocus();
 	void updateHeaderViewGeometries();
 	void updateHeaderViewVerticalScrollBar( int min, int max );
+	void updateHorizontalHeaderSectionSize();
 	void verticalHeaderSectionClicked(int section);
 
 	void verticalHeaderSectionResized(int logicalIndex, int oldSize, int newSize);

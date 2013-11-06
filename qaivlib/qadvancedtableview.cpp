@@ -585,6 +585,8 @@ bool QAdvancedTableView::restoreState(const QByteArray & data)
 		setShowFixedRows(fixed);
 		setShowFilter(filter);
 		setShowGrid(grid);
+		updateHorizontalHeaderSectionSize();
+		ui->headerTableView->viewport()->update();
 	}
 	return false;
 }
@@ -1009,6 +1011,14 @@ void QAdvancedTableView::updateHeaderViewVerticalScrollBar( int min, int max )
         ui->headerTableView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
         ui->fixedRowsTableView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     }
+}
+
+void QAdvancedTableView::updateHorizontalHeaderSectionSize()
+{
+	for (int i = 0; i < ui->headerTableView->horizontalHeader()->count(); i++){
+		ui->dataTableView->horizontalHeader()->resizeSection(i, ui->headerTableView->horizontalHeader()->sectionSize(i));
+		ui->fixedRowsTableView->horizontalHeader()->resizeSection(i, ui->headerTableView->horizontalHeader()->sectionSize(i));
+	}
 }
 
 void QAdvancedTableView::verticalHeaderSectionClicked(int section)
