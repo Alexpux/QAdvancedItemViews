@@ -74,6 +74,6 @@ Global
 		{42DA8916-2E97-432F-8984-D6D196E8AADA} = {9E0F72AB-A587-4E49-B073-D31550CB31BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		QtVersion = 4.8.2
+		QtVersion = $(DefaultQtVersion)
 	EndGlobalSection
 EndGlobal
