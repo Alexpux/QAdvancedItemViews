@@ -619,12 +619,12 @@ void QAdvancedTableView::reset()
 
 void QAdvancedTableView::resizeColumnToContents(int column)
 {
-    ui->dataTableView->resizeColumnToContents(column);
+    ui->headerTableView->resizeColumnToContents(column);
 }
 
 void QAdvancedTableView::resizeColumnsToContents()
 {
-    ui->dataTableView->resizeColumnsToContents();
+	ui->headerTableView->resizeColumnsToContents();
 }
 
 void QAdvancedTableView::resizeRowToContents(int row)
