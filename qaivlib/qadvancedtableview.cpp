@@ -630,11 +630,15 @@ void QAdvancedTableView::resizeColumnsToContents()
 void QAdvancedTableView::resizeRowToContents(int row)
 {
     ui->dataTableView->resizeRowToContents(row);
+	ui->fixedRowsTableView->resizeRowToContents(row);
+	ui->splittedDataTableView->resizeRowToContents(row);
 }
 
 void QAdvancedTableView::resizeRowsToContents()
 {
 	ui->dataTableView->resizeRowsToContents();
+	ui->fixedRowsTableView->resizeRowsToContents();
+	ui->splittedDataTableView->resizeRowsToContents();
 }
 
 QByteArray QAdvancedTableView::saveFilter() const
