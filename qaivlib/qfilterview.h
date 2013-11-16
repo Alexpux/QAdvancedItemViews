@@ -44,13 +44,7 @@ class QAIVLIBSHARED_EXPORT QFilterView : public QTableView
       */
     Q_PROPERTY(int maxVisibileFilterSets READ maxVisibileFilterSets WRITE setMaxVisibileFilterSets)
 public:
-    /**
-      * Constructs a QFilterView with the given @p parent.
-      */
     QFilterView( QWidget* parent = 0 );
-    /**
-      * Destroys the filter view.
-      */
     ~QFilterView();
 
     void connectToView(QAbstractItemView* view);
@@ -60,11 +54,8 @@ public:
     QFilterViewConnector* filterViewConnector() const;
 
     bool filterVisible() const;
-    /**
-      * Returns the maximum number of visible filter sets.
-      * @see setMaxVisibileFilterSets()
-      */
-    int maxVisibileFilterSets() const;
+
+	int maxVisibileFilterSets() const;
 
     void setAllowedFilterTypes(int types);
 
@@ -73,10 +64,8 @@ public:
     void setMaxVisibileFilterSets(int rows);
 
     void setModel(QAbstractItemModel* model);
-    /**
-      * Toggles the state (enabled/disabled) of the filter specified by the given @p index.
-      */
-    void toggleFilter( const QModelIndex & index );
+
+	void toggleFilter( const QModelIndex & index );
 signals:
     void calcGeometryRequested();
     void cornerButtonClicked();

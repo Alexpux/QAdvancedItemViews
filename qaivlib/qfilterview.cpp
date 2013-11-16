@@ -58,7 +58,9 @@ QFilterViewPrivate::~QFilterViewPrivate()
 {
 
 }
-
+/**
+* Constructs a QFilterView with the given @p parent.
+*/
 QFilterView::QFilterView( QWidget* parent )
     : QTableView(parent), d(new QFilterViewPrivate(this))
 {
@@ -77,7 +79,9 @@ QFilterView::QFilterView( QWidget* parent )
     updateGeometry();
 
 }
-
+/**
+* Destroys the filter view.
+*/
 QFilterView::~QFilterView()
 {
     delete d;
@@ -130,7 +134,10 @@ void QFilterView::changeProperties()
         }
     }
 }
-
+/**
+ * Disables the selected filter definitions.
+ * @see enableSelectedFilters()
+ */
 void QFilterView::disableSelectedFilters()
 {
     QVariantMap properties;
@@ -142,7 +149,10 @@ void QFilterView::disableSelectedFilters()
         }
     }
 }
-
+/**
+ * Enables the selected filter definitions.
+ * @see disableSelectedFilters()
+ */
 void QFilterView::enableSelectedFilters()
 {
     QVariantMap properties;
@@ -231,7 +241,10 @@ void QFilterView::focusInEvent(QFocusEvent *event)
     QTableView::focusInEvent(event);
     emit focusReceived();
 }
-
+/**
+ * Returns the default filter type or -1 is no default type is set.
+ * @see setDefaultFilterType()
+ */
 int QFilterView::defaultFilterType() const
 {
     return d->defaultFilterType;
@@ -246,7 +259,10 @@ bool QFilterView::filterVisible() const
 {
     return d->filterVisible;
 }
-
+/**
+* Returns the maximum number of visible filter sets.
+* @see setMaxVisibileFilterSets()
+*/
 int QFilterView::maxVisibileFilterSets() const
 {
     return d->maxFilterVisible;
@@ -266,7 +282,10 @@ void QFilterView::mousePressEvent( QMouseEvent* event )
         QTableView::mousePressEvent(event);
     }
 }
-
+/**
+ * Hides the filter definitions.
+ * @see showFilter()
+ */
 void QFilterView::hideFilter()
 {
     setFilterVisible(false);
@@ -276,7 +295,10 @@ void QFilterView::setDefaultFilterType(int type)
 {
     d->defaultFilterType = type;
 }
-
+/**
+ * Sets the maximum number of filter definition visible in this view to @p rows.
+* @see maxVisibileFilterSets()
+ */
 void QFilterView::setMaxVisibileFilterSets(int rows)
 {
     d->maxFilterVisible = rows;
@@ -292,7 +314,10 @@ void QFilterView::setModel(QAbstractItemModel* model)
 //    calcGeometry();
     updateGeometry();
 }
-
+/**
+ * Shows the filter definitions.
+ * @see hideFilter()
+ */
 void QFilterView::showFilter()
 {
     setFilterVisible(true);
@@ -344,7 +369,9 @@ void QFilterView::setFilterVisible(bool visible)
         emit visibilityChanged(d->filterVisible);
     }
 }
-
+/**
+* Toggles the state (enabled/disabled) of the filter specified by the given @p index.
+*/
 void QFilterView::toggleFilter(const QModelIndex & index)
 {
 	if (index.isValid()){
