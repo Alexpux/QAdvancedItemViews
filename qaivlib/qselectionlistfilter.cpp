@@ -291,6 +291,7 @@ void QSelectionListFilter::setModelData(QWidget* editor, QAbstractItemModel* mod
     if (w){
 		QSelectionListFilterEditorPopup* p = qobject_cast<QSelectionListFilterEditorPopup*>(w->popup());
         QVariantMap properties(index.data(Qt::EditRole).toMap());
+		properties["mode"] = p->mode();
 		if (p->mode() > 0){
 			properties["selectedValues"] = QVariantList();
 		} else {
