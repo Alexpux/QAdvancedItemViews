@@ -23,6 +23,7 @@
 
 #include <QFrame>
 
+//! The QFilterEditorPopupWidget class provides a base class for filter editor popup widgets.
 class QFilterEditorPopupWidget : public QFrame
 {
 	Q_OBJECT
