@@ -490,6 +490,7 @@ void QGroupingProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
     connect(d->sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChangedHandler(QModelIndex,QModelIndex)));
     connect(d->sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)), this, SLOT(rowsAboutToBeInsertedHandler(QModelIndex,int,int)));
     connect(d->sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInsertedHandler(QModelIndex,int,int)));
+    connect(d->sourceModel, SIGNAL(modelReset()), this, SLOT(sourceModelResetHandler()));
 }
 
 void QGroupingProxyModel::dataChangedHandler(const QModelIndex & topLeft, const QModelIndex & bottomRight)
@@ -585,4 +586,9 @@ void QGroupingProxyModel::removeSourceModelRow(int sourceModelRow)
     for (int iGroup = 0; iGroup < d->root->childCount(); iGroup++){
         d->root->child(iGroup)->removeChildAtSourceModelRow(sourceModelRow);
     }
+}
+
+void QGroupingProxyModel::sourceModelResetHandler()
+{
+	buildGroups();
 }

@@ -210,6 +210,7 @@ public:
     virtual void setSourceModel( QAbstractItemModel* sourceModel );
 private slots:
     void dataChangedHandler(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+	void sourceModelResetHandler();
     void rowsAboutToBeInsertedHandler( const QModelIndex & parent, int start, int end );
     void rowsInsertedHandler(const QModelIndex & parent, int first, int last);
 private:
