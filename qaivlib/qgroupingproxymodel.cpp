@@ -237,8 +237,10 @@ QGroupingProxyModel::QGroupingProxyModel(QObject *parent) :
 
     d->sourceModel = new QStandardItemModel(this);
     d->root = new QGroupingProxyModelGroup();
-    QGroupingProxyModelGroup* item = new QGroupingProxyModelGroup(d->root);
-    item->setData(tr("Ungrouped"), Qt::DisplayRole);
+    m_groupUngroupedItem = new QGroupingProxyModelGroup(d->root);
+    m_groupUngroupedItem->setData(tr("Ungrouped"), Qt::DisplayRole);
+
+	m_groupSectionHeader = tr("Group");
 }
 
 QGroupingProxyModel::~QGroupingProxyModel()
@@ -330,7 +332,7 @@ QVariant QGroupingProxyModel::headerData(int section, Qt::Orientation orientatio
 {
     if (section == 0){
         if (role == Qt::DisplayRole){
-            return tr("Group");
+            return m_groupSectionHeader;
         }
         return QVariant();
     }
@@ -586,6 +588,14 @@ void QGroupingProxyModel::removeSourceModelRow(int sourceModelRow)
     for (int iGroup = 0; iGroup < d->root->childCount(); iGroup++){
         d->root->child(iGroup)->removeChildAtSourceModelRow(sourceModelRow);
     }
+}
+
+void QGroupingProxyModel::setGroupSectionHeader(const QString & header)
+{
+	if (header != m_groupSectionHeader){
+		m_groupSectionHeader = header;
+		emit headerDataChanged(Qt::Horizontal, 0, 0);
+	}
 }
 
 void QGroupingProxyModel::sourceModelResetHandler()

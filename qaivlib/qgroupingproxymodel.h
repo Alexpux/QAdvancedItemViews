@@ -199,6 +199,8 @@ public:
       * Sets the @p role data for the item at @p index to @p value.
       */
     bool setData(const QModelIndex & index, const QVariant &value, int role);
+
+	void setGroupSectionHeader(const QString & header);
     /**
       * Sets the source model @p column that is used for grouping items.
       * @see modelColumn()
@@ -220,6 +222,8 @@ private:
     void moveRows(int row, int count);
     void removeSourceModelRow(int sourceModelRow);
 
+	QString m_groupSectionHeader;
+	QGroupingProxyModelGroup* m_groupUngroupedItem;
     QGroupingProxyModelPrivate* d;
 };
 
