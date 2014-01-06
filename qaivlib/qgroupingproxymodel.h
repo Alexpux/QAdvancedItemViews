@@ -96,6 +96,8 @@ class QGroupingProxyModelPrivate;
 class QAIVLIBSHARED_EXPORT QGroupingProxyModel : public QAbstractItemModel
 {
     Q_OBJECT
+	//! @property(groupsSpanned)
+	Q_PROPERTY(bool groupsSpanned READ groupsSpanned WRITE setGroupsSpanned)
     //! @property(modelColumn)
     /**
       * This property holds the column in the source model that is used for grouping items.
@@ -136,6 +138,7 @@ public:
       * @reimp QAbstractItemModel::data()
       */
     Qt::ItemFlags flags(const QModelIndex & index) const;
+	bool groupsSpanned() const;
     /**
       * @reimp QAbstractItemModel::data()
       */
@@ -201,6 +204,7 @@ public:
     bool setData(const QModelIndex & index, const QVariant &value, int role);
 
 	void setGroupSectionHeader(const QString & header);
+	void setGroupsSpanned(bool on);
     /**
       * Sets the source model @p column that is used for grouping items.
       * @see modelColumn()
@@ -210,9 +214,9 @@ public:
       * Sets the given @p sourceModel to be processed by the proxy model.
       */
     virtual void setSourceModel( QAbstractItemModel* sourceModel );
-
 	void setUngroupedItemTitle(const QString & title);
 	void setUngroupedItemTitle(const QString & title, const QIcon & icon);
+	virtual QSize span(const QModelIndex & index) const;
 private slots:
     void dataChangedHandler(const QModelIndex & topLeft, const QModelIndex & bottomRight);
 	void sourceModelResetHandler();

@@ -202,6 +202,9 @@ void MainWindow::groupWindowsCheckBoxToggled(bool on)
     } else {
         m_groupingProxy->removeGroup(m_groupingProxy->findText(tr("Windows Developers")));
     }
+	for (int i = 0; i < m_groupingProxy->rowCount(); i++){
+		ui->groupingTreeView->setFirstColumnSpanned(i, QModelIndex(), true);
+	}
 }
 
 void MainWindow::groupUnixCheckBoxToggled(bool on)

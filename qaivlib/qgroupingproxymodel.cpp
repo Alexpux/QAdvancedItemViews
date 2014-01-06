@@ -28,6 +28,7 @@ public:
     QGroupingProxyModelPrivate(QGroupingProxyModel* pm);
     ~QGroupingProxyModelPrivate();
 
+	bool groupsSpanned;
     int modelColumn;
     int groupItemDataRole;
     QGroupingProxyModelGroup* root;
@@ -38,7 +39,7 @@ public:
 
 QGroupingProxyModelPrivate::QGroupingProxyModelPrivate(QGroupingProxyModel *pm)
 {
-
+	groupsSpanned = false;
 }
 
 QGroupingProxyModelPrivate::~QGroupingProxyModelPrivate()
@@ -327,6 +328,14 @@ Qt::ItemFlags QGroupingProxyModel::flags(const QModelIndex & index) const
     }
     return d->sourceModel->flags(mapToSource(index));
 }
+/**
+ * Returns true if the groups are spanned over all columns. Otherwise false.
+ * @see span()
+ */
+bool QGroupingProxyModel::groupsSpanned() const
+{
+	return d->groupsSpanned;
+}
 
 QVariant QGroupingProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -608,8 +617,28 @@ void QGroupingProxyModel::setGroupSectionHeader(const QString & header)
 		emit headerDataChanged(Qt::Horizontal, 0, 0);
 	}
 }
+/**
+ * If @p on is true, the groups are spanned over all columns.
+ * @see span()
+ */
+void QGroupingProxyModel::setGroupsSpanned(bool on)
+{
+	d->groupsSpanned = on;
+}
 
 void QGroupingProxyModel::sourceModelResetHandler()
 {
 	buildGroups();
+}
+/**
+ * Returns the row and column span of the item represented by @p index.
+ * If groupsSpanned is enabled QSize(columnCount(), 1) is returned for all root indexes.
+ */
+QSize QGroupingProxyModel::span(const QModelIndex & index) const
+{
+	if (index.parent().isValid() || !d->groupsSpanned){
+		return QAbstractItemModel::span(index);
+	} else {
+		return QSize(columnCount(), 1);
+	}
 }
