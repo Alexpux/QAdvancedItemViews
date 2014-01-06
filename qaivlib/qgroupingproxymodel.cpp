@@ -495,6 +495,17 @@ void QGroupingProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
     connect(d->sourceModel, SIGNAL(modelReset()), this, SLOT(sourceModelResetHandler()));
 }
 
+void QGroupingProxyModel::setUngroupedItemTitle(const QString & title)
+{
+	m_groupUngroupedItem->setData(title, Qt::DisplayRole);
+}
+
+void QGroupingProxyModel::setUngroupedItemTitle(const QString & title, const QIcon & icon)
+{
+	m_groupUngroupedItem->setData(title, Qt::DisplayRole);
+	m_groupUngroupedItem->setData(icon, Qt::DecorationRole);
+}
+
 void QGroupingProxyModel::dataChangedHandler(const QModelIndex & topLeft, const QModelIndex & bottomRight)
 {
     if (topLeft.column() != d->modelColumn){

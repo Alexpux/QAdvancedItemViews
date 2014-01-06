@@ -210,6 +210,9 @@ public:
       * Sets the given @p sourceModel to be processed by the proxy model.
       */
     virtual void setSourceModel( QAbstractItemModel* sourceModel );
+
+	void setUngroupedItemTitle(const QString & title);
+	void setUngroupedItemTitle(const QString & title, const QIcon & icon);
 private slots:
     void dataChangedHandler(const QModelIndex & topLeft, const QModelIndex & bottomRight);
 	void sourceModelResetHandler();
