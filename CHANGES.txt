@@ -1,11 +1,20 @@
 QAIV (QAdvanced Item Views) Change Log
 ======================================
 
-Version 0.3 - 2013-xx-xx
+Version 0.3 - 2014-01-06
 
++ bug fixes
+  - 019220: source model reset not recognized
+  - 019179: header size different from vcolumn size when restoring state
+  - 019183: Doc errors setDefaultFilterType 
+  - 019194: QAIV tableView no effect with resizeColumnsToContents
+  
 + new features
   - show more columns dialog improved
   - QAutoFilter: Ok and Cancel buttons added to filter editor dialog
+  - QGroupingProxyModel: custom section header for group column added
+  - QGroupingProxyModel: custom title and icon for ungrouped items folder added
+  - QGroupingProxyModel: property groupsSpanned added
   - QSelectionListFilter: Ok and Cancel buttons added to filter editor dialog
   - class QTableModelExportPushButton added
   - class QTableModelWriter added
@@ -13,6 +22,9 @@ Version 0.3 - 2013-xx-xx
 
 + changes
   - QMimeData utilities extended (see qmimedatautil.h)
+
++ documentation updated
+  - QFilterView
   
 Version 0.2 - 2013-06-15
 
