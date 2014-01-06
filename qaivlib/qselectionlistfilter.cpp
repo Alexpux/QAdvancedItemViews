@@ -210,7 +210,7 @@ void QSelectionListFilterEditor::modeSelected()
 QSelectionListFilter::QSelectionListFilter(int row, int column) :
     QAbstractFilter(QSelectionListFilter::Type, row, column)
 {
-	setProperty("dataSource", QSelectionListFilter::Filter);
+	setProperty("dataSource", QSelectionListFilter::Model);
 }
 
 QWidget* QSelectionListFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const
