@@ -4,7 +4,7 @@
 #include "qadvancedtableview.h"
 
 
-void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, Qt::ItemDataRole role)
+void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, int role)
 {
 	if (mimeData == 0 || model == 0 || horizontalHeader == 0){
 		return;
@@ -24,7 +24,7 @@ void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelect
 	mimeData->setData("text/csv", d);
 }
 
-void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, Qt::ItemDataRole role)
+void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, int role)
 {
 	if (mimeData == 0 || model == 0 || horizontalHeader == 0){
 		return;
@@ -62,7 +62,7 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelec
 	mimeData->setData("text/html", d);
 }
 
-void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, Qt::ItemDataRole role)
+void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, int role)
 {
 	if (mimeData == 0 || model == 0 || horizontalHeader == 0){
 		return;
@@ -86,7 +86,7 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItem
  * @ingroup utils
  * Adds the @view's selection as CSV data to the given QMimeData container @p mimeData.
  */
-void qMimeDataAddCsv(QMimeData* mimeData, QAdvancedTableView* view, Qt::ItemDataRole role)
+void qMimeDataAddCsv(QMimeData* mimeData, QAdvancedTableView* view, int role)
 {
 	qMimeDataAddCsv(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
 }
@@ -94,7 +94,7 @@ void qMimeDataAddCsv(QMimeData* mimeData, QAdvancedTableView* view, Qt::ItemData
  * @ingroup utils
  * Adds the @view's selection as CSV data to the given QMimeData container @p mimeData.
  */
-void qMimeDataAddCsv(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole role)
+void qMimeDataAddCsv(QMimeData* mimeData, QTableView* view, int role)
 {
 	qMimeDataAddCsv(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
 }
@@ -103,7 +103,7 @@ void qMimeDataAddCsv(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole rol
  * @ingroup utils
  * Adds the current @view's selection as a HTML table to the given QMimeData container @p mimeData.
  */
-void qMimeDataAddHtml(QMimeData* mimeData, QAdvancedTableView* view, Qt::ItemDataRole role)
+void qMimeDataAddHtml(QMimeData* mimeData, QAdvancedTableView* view, int role)
 {
 	qMimeDataAddHtml(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
 }
@@ -112,7 +112,7 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAdvancedTableView* view, Qt::ItemDat
  * @ingroup utils
  * Adds the current @view's selection as a HTML table to the given QMimeData container @p mimeData.
  */
-void qMimeDataAddHtml(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole role)
+void qMimeDataAddHtml(QMimeData* mimeData, QTableView* view, int role)
 {
 	qMimeDataAddHtml(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
 }
@@ -121,7 +121,7 @@ void qMimeDataAddHtml(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole ro
  * @ingroup utils
  * Adds the current @view's selection as plain text the given QMimeData container @p mimeData.
  */
-void qMimeDataAddPlainText(QMimeData* mimeData, QAdvancedTableView* view, Qt::ItemDataRole role)
+void qMimeDataAddPlainText(QMimeData* mimeData, QAdvancedTableView* view, int role)
 {
 	qMimeDataAddPlainText(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
 }
@@ -130,7 +130,7 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QAdvancedTableView* view, Qt::It
  * @ingroup utils
  * Adds the current @view's selection as plain text the given QMimeData container @p mimeData.
  */
-void qMimeDataAddPlainText(QMimeData* mimeData, QTableView* view, Qt::ItemDataRole role)
+void qMimeDataAddPlainText(QMimeData* mimeData, QTableView* view, int role)
 {
 	qMimeDataAddPlainText(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
 }
