@@ -70,6 +70,8 @@ public slots:
 	void restoreStateToolButtonClicked();
 
 	void saveStateToolButtonClicked();
+	void search();
+	void search(const QString & expression);
 	void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
     void splitActionTriggered();
 private:

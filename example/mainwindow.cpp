@@ -74,6 +74,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+	// hide search bar
+	ui->searchBar->hide();
 
     QMenu* m = new QMenu(this);
     m->addAction(ui->singleViewAction);
@@ -625,4 +627,18 @@ void MainWindow::restoreStateToolButtonClicked()
 void MainWindow::saveStateToolButtonClicked()
 {
 	m_state = ui->filterTableView->saveState();
+}
+
+void MainWindow::search()
+{
+	ui->searchBar->show();
+}
+
+void MainWindow::search(const QString & expression)
+{
+	QSearchBar* searchBar = qobject_cast<QSearchBar*>(sender());
+	if (searchBar == 0){
+		return;
+	}
+	searchBar->match(ui->filterTableView->model());
 }

@@ -377,6 +377,9 @@ p, li { white-space: pre-wrap; }
       </widget>
      </widget>
     </item>
+    <item>
+     <widget class="QSearchBar" name="searchBar"/>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -405,6 +408,7 @@ p, li { white-space: pre-wrap; }
      <string>&amp;Edit</string>
     </property>
     <addaction name="copyAction"/>
+    <addaction name="searchAction"/>
    </widget>
    <addaction name="fileMenu"/>
    <addaction name="menu_Edit"/>
@@ -467,6 +471,14 @@ p, li { white-space: pre-wrap; }
     <string>Ctrl+C</string>
    </property>
   </action>
+  <action name="searchAction">
+   <property name="text">
+    <string>Search</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -474,6 +486,11 @@ p, li { white-space: pre-wrap; }
    <class>QAdvancedTableView</class>
    <extends>QWidget</extends>
    <header>qadvancedtableview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QSearchBar</class>
+   <extends>QWidget</extends>
+   <header>qsearchbar.h</header>
   </customwidget>
   <customwidget>
    <class>QTableModelExportPushButton</class>
@@ -742,6 +759,38 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>searchBar</sender>
+   <signal>expressionChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>search(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>288</x>
+     <y>573</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>294</x>
+     <y>616</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>searchAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>search()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>306</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>exitActionTriggered()</slot>
@@ -759,5 +808,7 @@ p, li { white-space: pre-wrap; }
   <slot>copy()</slot>
   <slot>exportAll(QByteArray)</slot>
   <slot>exportSelection(QByteArray)</slot>
+  <slot>search(QString)</slot>
+  <slot>search()</slot>
  </slots>
 </ui>

@@ -21,12 +21,14 @@
 #include "qaivdesignercollection.h"
 
 #include "qadvancedtableviewplugin.h"
+#include "qsearchbarplugin.h"
 #include "qtablemodelexportpushbuttonplugin.h"
 
 QAIVDesignerCollection::QAIVDesignerCollection(QObject *parent) :
     QObject(parent)
 {
     m_widgets.append(new QAdvancedTableViewPlugin());
+	m_widgets.append(new QSearchBarPlugin());
 	m_widgets.append(new QTableModelExportPushButtonPlugin(0));
 }
 

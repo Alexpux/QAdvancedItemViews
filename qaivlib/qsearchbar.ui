@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QSearchBar</class>
+ <widget class="QWidget" name="QSearchBar">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>748</width>
+    <height>22</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>QSearchBar</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QToolButton" name="hideSearchPaneToolButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="icon">
+      <iconset resource="qaiv.qrc">
+       <normaloff>:/qaiv/searchbar/tab.close</normaloff>:/qaiv/searchbar/tab.close</iconset>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Search:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="expressionLineEdit">
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QToolButton" name="clearSearchLineEditToolButton">
+     <property name="icon">
+      <iconset resource="qaiv.qrc">
+       <normaloff>:/qaiv/searchbar/clear</normaloff>:/qaiv/searchbar/clear</iconset>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QToolButton" name="searchPreviousToolButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Previous</string>
+     </property>
+     <property name="icon">
+      <iconset resource="qaiv.qrc">
+       <normaloff>:/qaiv/searchbar/previous</normaloff>:/qaiv/searchbar/previous</iconset>
+     </property>
+     <property name="shortcut">
+      <string>Shift+F3</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextBesideIcon</enum>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QToolButton" name="searchNextToolButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Next</string>
+     </property>
+     <property name="icon">
+      <iconset resource="qaiv.qrc">
+       <normaloff>:/qaiv/searchbar/next</normaloff>:/qaiv/searchbar/next</iconset>
+     </property>
+     <property name="shortcut">
+      <string>F3</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextBesideIcon</enum>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="caseSensitiveCheckBox">
+     <property name="text">
+      <string>Ma&amp;tch case</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="wholeWordsCheckBox">
+     <property name="text">
+      <string>Whole wor&amp;ds only</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="horizontalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Maximum</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>146</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="qaiv.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>hideSearchPaneToolButton</sender>
+   <signal>clicked()</signal>
+   <receiver>QSearchBar</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>18</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>4</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clearSearchLineEditToolButton</sender>
+   <signal>clicked()</signal>
+   <receiver>QSearchBar</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>244</x>
+     <y>8</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>252</x>
+     <y>27</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>expressionLineEdit</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>QSearchBar</receiver>
+   <slot>expressionChangedHandler(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>121</x>
+     <y>7</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>25</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>clear()</slot>
+  <slot>expressionChangedHandler(QString)</slot>
+ </slots>
+</ui>
