@@ -10,6 +10,7 @@ HEADERS += ./qabstractfilter.h \
     ./qabstractfilterproxymodel.h \
     ./qabstractmodelitemdecoration.h \
     ./qadvancedheaderview.h \
+    ./qadvancedheaderview_p.h \
     ./qadvancedtableview.h \
     ./qadvancedtableview_p.h \
     ./qaiv.h \
@@ -43,12 +44,19 @@ HEADERS += ./qabstractfilter.h \
     ./qselectionlistfilter_p.h \
     ./qshareditemselectionmodel.h \
     ./qsinglecolumnproxymodel.h \
+    ./qtablemodelwriter.h \
+    ./qtablemodecsvwriter_p.h \
+    ./qtablemodelhtmlwriter_p.h \
+    ./qtablemodelwordmlwriter_p.h \
+    ./qtablemodelexcelmlwriter_p.h \
     ./qtextfilter.h \
     ./qtextfilter_p.h \
     ./quniquevaluesproxymodel.h \
     ./qvaluefilter.h \
     ./qvaluefilter_p.h \
-    ./stdafx.h
+    ./stdafx.h \
+    ./qmimedatautil.h \
+    ./qtablemodelexportpushbutton.h
 SOURCES += ./qabstractfilter.cpp \
     ./qabstractfiltermodel.cpp \
     ./qabstractfilterproxymodel.cpp \
@@ -79,10 +87,17 @@ SOURCES += ./qabstractfilter.cpp \
     ./qselectionlistfilter.cpp \
     ./qshareditemselectionmodel.cpp \
     ./qsinglecolumnproxymodel.cpp \
+    ./qtablemodelwriter.cpp \
+    ./qtablemodecsvwriter.cpp \
+    ./qtablemodeltmlwriter.cpp \
+    ./qtablemodelwordmlwriter.cpp \
+    ./qtablemodelexcelmlwriter.cpp \
     ./qtextfilter.cpp \
     ./quniquevaluesproxymodel.cpp \
     ./qvaluefilter.cpp \
-    ./stdafx.cpp
+    ./stdafx.cpp \
+    ./qmimedatautil.cpp \
+    ./qtablemodelexportpushbutton.cpp
 FORMS += ./qadvancedtableview.ui \
     ./qconditionaldecorationdialog.ui
 RESOURCES += ./qaiv.qrc

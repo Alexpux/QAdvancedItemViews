@@ -155,7 +155,7 @@ template <class T> inline T qsourcemodel_cast(QAbstractItemModel* model)
 template <class T>
 inline T qsourcemodel_cast(const QAbstractItemModel* model)
 {
-	QAbstractItemModel* m = model;
+	const QAbstractItemModel* m = model;
 	T s = qobject_cast<T>(m);
 	if (s){
 		return s;

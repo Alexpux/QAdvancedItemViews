@@ -22,6 +22,10 @@
 #define QADVANCEDHEADERVIEW_P_H
 
 #include <QDialog>
+#include <QHeaderView>
+
+class QSortFilterProxyModel;
+class QTableView;
 
 class ShowMoreColumnsDialog : public QDialog
 {

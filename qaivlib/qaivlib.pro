@@ -24,11 +24,19 @@ TARGET = qaivlib
 QT += core gui
 CONFIG += debug_and_release
 
-DEFINES += QT_LARGEFILE_SUPPORT QT_DLL QAIVLIB_LIBRARY
+unix {
+    DEFINES += QAIVLIB_LIBRARY
+}
+else {
+    DEFINES += QT_LARGEFILE_SUPPORT QT_DLL QAIVLIB_LIBRARY
+}
 
 CONFIG(debug, debug|release) {
     win32 {
         DESTDIR = ./../bin/Win32/Debug
+    }
+    else {
+        DESTDIR = ./../Debug
     }
     INCLUDEPATH += ./GeneratedFiles \
         . \
@@ -38,6 +46,9 @@ CONFIG(debug, debug|release) {
 } else {
     win32 {
         DESTDIR = ./../bin/Win32/Release
+    }
+    else {
+        DESTDIR = ./../Release
     }
     INCLUDEPATH += ./GeneratedFiles \
         . \
