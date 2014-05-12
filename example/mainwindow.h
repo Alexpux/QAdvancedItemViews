@@ -26,10 +26,19 @@
 
 class QStandardItemModel;
 class QGroupingProxyModel;
+#include <qfiltermodelproxy.h>
 
 namespace Ui {
     class MainWindow;
 }
+
+class FilterProxyModel : public QFilterModelProxy
+{
+	Q_OBJECT
+public:
+	FilterProxyModel(QObject* parent = 0);
+	~FilterProxyModel();
+};
 
 class SelectionListDataProviderProxy : public QIdentityProxyModel
 {

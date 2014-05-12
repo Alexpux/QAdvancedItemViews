@@ -50,6 +50,15 @@
 
 #include "spinboxitemdelegate.h"
 
+FilterProxyModel::FilterProxyModel(QObject* parent)
+	: QFilterModelProxy(parent)
+{
+}
+
+FilterProxyModel::~FilterProxyModel()
+{
+}
+
 SelectionListDataProviderProxy::SelectionListDataProviderProxy(QObject* parent) :
 	QIdentityProxyModel(parent)
 {
@@ -493,7 +502,9 @@ void MainWindow::initTabAdvancedTableView()
 	SelectionListDataProviderProxy* p = new SelectionListDataProviderProxy(this);
 	p->setSourceModel(m_model);
     ui->filterTableView->setModel(p);
+	ui->filterTableView->setFilterProxyModel(new FilterProxyModel(this));
     ui->filterTableView->horizontalHeader()->setClickable(true);
+
 
     // ------------------------------------
     // Column 'Int'
