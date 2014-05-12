@@ -29,6 +29,7 @@ class QAbstractItemModel;
 class QLineEdit;
 class QModelIndex;
 class QTableView;
+class QComboBox;
 
 class ValueEdit;
 

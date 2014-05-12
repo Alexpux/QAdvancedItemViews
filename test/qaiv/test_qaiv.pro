@@ -24,13 +24,21 @@ TARGET = test_qaiv
 QT += core gui
 
 CONFIG += qtestlib console debug_and_release
-DEFINES += QT_LARGEFILE_SUPPORT QT_DLL
+CONFIG -= app_bundle
+win32 {
+    DEFINES += QT_LARGEFILE_SUPPORT QT_DLL
+}
 
 CONFIG(debug, debug|release) {
     win32 {
         DESTDIR = ./../../bin/Win32/Debug
         MOC_DIR += ./GeneratedFiles/debug
         OBJECTS_DIR += debug
+        LIBS += -l$(DESTDIR)/qaivlib
+    }
+    else {
+        DESTDIR = ../../Debug
+        LIBS += -L./../../Debug -lqaivlib
     }
     INCLUDEPATH += . \
         ./GeneratedFiles/Debug \
@@ -41,12 +49,14 @@ CONFIG(debug, debug|release) {
         MOC_DIR += ./GeneratedFiles/release
         OBJECTS_DIR += release
     }
+    else {
+        DESTDIR = ../../Release
+        LIBS += -L./../../Release -lqaivlib
+    }
     INCLUDEPATH += . \
         ./GeneratedFiles/Release \
         ./../../qaivlib
 }
-
-LIBS += -l$(DESTDIR)/qaivlib
 
 DEPENDPATH += .
 UI_DIR += ./GeneratedFiles

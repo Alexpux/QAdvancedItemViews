@@ -34,6 +34,11 @@ CONFIG(debug, debug|release) {
         LIBS += -L"../../qaivlib/debug" \
             -l../bin/Win32/Debug/qaivlib
     }
+    else {
+        DESTDIR = ../Debug
+        INCLUDEPATH += ../qaivlib
+        LIBS += -L./../Debug -lqaivlib
+    }
     MOC_DIR += debug
     OBJECTS_DIR += debug
 } else {
@@ -45,12 +50,18 @@ CONFIG(debug, debug|release) {
         LIBS += -L"../../qaivlib/release" \
             -l../bin/Win32/Release/qaivlib
     }
+    else {
+        DESTDIR = ../Release
+        INCLUDEPATH += ../qaivlib
+        LIBS += -L./../Release -lqaivlib
+    }
     MOC_DIR += release
     OBJECTS_DIR += release
 }
 
-
-DEFINES += _WINDOWS QT_LARGEFILE_SUPPORT QT_DLL QT_SCRIPT_LIB QT_XML_LIB QT_HAVE_MMX QT_HAVE_3DNOW QT_HAVE_SSE QT_HAVE_MMXEXT QT_HAVE_SSE2
+win32 {
+    DEFINES += _WINDOWS QT_LARGEFILE_SUPPORT QT_DLL QT_SCRIPT_LIB QT_XML_LIB QT_HAVE_MMX QT_HAVE_3DNOW QT_HAVE_SSE QT_HAVE_MMXEXT QT_HAVE_SSE2
+}
 
 DEPENDPATH += .
 UI_DIR += ./GeneratedFiles

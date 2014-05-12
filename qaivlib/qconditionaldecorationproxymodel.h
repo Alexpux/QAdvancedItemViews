@@ -24,6 +24,7 @@
 #include <Qt>
 
 #include <QSortFilterProxyModel>
+#include <QSize>
 
 #include <qaivlib_global.h>
 
