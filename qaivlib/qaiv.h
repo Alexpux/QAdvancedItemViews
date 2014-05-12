@@ -43,7 +43,7 @@
  * <li>@ref screenshot3 "Unique Values Proxy Model"</li>
  * </li>
  * @section Download
- * You will find stable releases at <a href="http://qaiv.berlios.de">QAIV's project site</a>.
+ * You will find stable releases at <a href="https://sourceforge.net/projects/qadvanceditemviews/">QAIV's project site</a>.
  * @section buildinstall Build and Install QAIV
  * @subsection requirements Requirements
  * QAIV requires Qt version 4.8.2 or greater.
