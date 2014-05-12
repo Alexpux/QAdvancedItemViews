@@ -84,7 +84,8 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     d->autoResizeRowsToContents = false;
     d->defaultFilterType = QTextFilter::Type;
     // Create header view (model) proxy
-    d->filterModel = new QFilterModel(this);
+	setFilterModel(new QFilterModel(this));
+    //d->filterModel = new QFilterModel(this);
     // Create horizontal header view
     d->horizontalHeader = new QAdvancedHeaderView(Qt::Horizontal, this);
     ui->headerTableView->setHorizontalHeader(d->horizontalHeader);
@@ -100,9 +101,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     d->dataViewProxy->setSourceModel(ui->fixedRowsTableView->decorationProxy());
     ui->dataTableView->setModel(d->dataViewProxy);
     ui->splittedDataTableView->setModel(d->dataViewProxy);
-    ui->headerTableView->setModel(d->filterModel);
 
-    d->dataViewProxy->setFilterModel(d->filterModel);
     // set selection models
     ui->splittedDataTableView->setSelectionModel(new QSharedItemSelectionModel(ui->splittedDataTableView->model(), ui->dataTableView->selectionModel(), this));
     ui->fixedRowsTableView->setSelectionModel(new QSharedItemSelectionModel(ui->fixedRowsTableView->model(), ui->dataTableView->selectionModel(), this));
@@ -120,7 +119,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->splittedDataTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
     connect(ui->splittedDataTableView->verticalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(verticalHeaderSectionResized(int,int,int)));
     connect(ui->splittedDataTableView->verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
-    // filter model
+    //// filter model
     connect(d->filterModel, SIGNAL(modelReset()), this, SLOT(updateHeaderViewGeometries()));
     connect(d->filterModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(updateHeaderViewGeometries()));
     // data view proxy
@@ -804,7 +803,7 @@ void QAdvancedTableView::setModel( QAbstractItemModel* model )
 {
     d->model = model;
     ui->fixedRowsTableView->setModel(d->model);
-    d->dataViewProxy->setSourceModel(ui->fixedRowsTableView->decorationProxy());
+//    d->dataViewProxy->setSourceModel(ui->fixedRowsTableView->decorationProxy());
 //    d->dataViewProxy->setSourceModel(d->model);
 
     d->filterModel->setSourceModel(d->model);
@@ -853,6 +852,35 @@ void QAdvancedTableView::setSelectionBehavior(QAbstractItemView::SelectionBehavi
 void QAdvancedTableView::setSelectionMode(QAbstractItemView::SelectionMode mode)
 {
     V_CALL(setSelectionMode(mode))
+}
+
+void QAdvancedTableView::setFilterModel(QAbstractFilterModel* model)
+{
+	if (d->filterModel){
+		disconnect(d->filterModel);
+	}
+	d->filterModel = model;
+    d->dataViewProxy->setFilterModel(d->filterModel);
+    ui->headerTableView->setModel(d->filterModel);
+    // filter model
+    connect(d->filterModel, SIGNAL(modelReset()), this, SLOT(updateHeaderViewGeometries()));
+    connect(d->filterModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(updateHeaderViewGeometries()));
+}
+
+void QAdvancedTableView::setFilterProxyModel(QAbstractFilterProxyModel* proxy)
+{
+	if (d->dataViewProxy){
+		disconnect(d->dataViewProxy);
+	}
+	d->dataViewProxy = proxy;
+    d->dataViewProxy->setFilterModel(d->filterModel);
+    d->dataViewProxy->setSourceModel(ui->fixedRowsTableView->decorationProxy());
+    ui->dataTableView->setModel(d->dataViewProxy);
+    ui->splittedDataTableView->setModel(d->dataViewProxy);
+
+	connect(d->dataViewProxy, SIGNAL(modelReset()), this, SLOT(modelReset()));
+    connect(d->dataViewProxy, SIGNAL(layoutChanged()), this, SLOT(dataModelLayoutChanged()));
+	dataModelLayoutChanged();
 }
 
 bool QAdvancedTableView::setFilterType(int type, int column, int row)

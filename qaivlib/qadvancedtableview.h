@@ -402,6 +402,8 @@ public:
       * @see columnsFilterTypes()
       */
     void setColumnFilterTypes(int column, const QVariantList & types);
+	void setFilterModel(QAbstractFilterModel* model);
+	void setFilterProxyModel(QAbstractFilterProxyModel* proxy);
     /**
       * Sets the filter @p type for the specified @p column.
       * @see filterType()
