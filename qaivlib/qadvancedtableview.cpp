@@ -803,16 +803,15 @@ void QAdvancedTableView::setModel( QAbstractItemModel* model )
 {
     d->model = model;
     ui->fixedRowsTableView->setModel(d->model);
-//    d->dataViewProxy->setSourceModel(ui->fixedRowsTableView->decorationProxy());
-//    d->dataViewProxy->setSourceModel(d->model);
-
     d->filterModel->setSourceModel(d->model);
     for(int iCol = 0; iCol < d->horizontalHeader->count(); iCol++){
         ui->dataTableView->horizontalHeader()->resizeSection(iCol, d->horizontalHeader->sectionSize(iCol));
         ui->dataTableView->horizontalHeader()->moveSection(ui->dataTableView->horizontalHeader()->visualIndex(iCol), d->horizontalHeader->visualIndex(iCol));
     }
     if (horizontalHeader()->stretchLastSection()){
-        horizontalHeader()->setResizeMode(horizontalHeader()->count() - 1, QHeaderView::Stretch);
+		if (horizontalHeader()->count() > 0){
+			horizontalHeader()->setResizeMode(horizontalHeader()->count() - 1, QHeaderView::Stretch);
+		}
     }
 }
 
