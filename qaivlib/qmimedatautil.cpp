@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "qmimedatautil.h"
 
+#include "qaiv.h"
 #include "qadvancedtableview.h"
+#include "qabstractfilterproxymodel.h"
 
-
-void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, int role)
+void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, QAbstractFilterProxyModel* proxy, int role)
 {
 	if (mimeData == 0 || model == 0 || horizontalHeader == 0){
 		return;
@@ -16,7 +17,13 @@ void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelect
 		QStringList l;
 		for (int c = e.first.column(); c <= e.second.column(); c++){
 			if (!horizontalHeader->isSectionHidden(c)){
-				l << "\"" + model->index(r, horizontalHeader->visualIndex(c)).data(role).toString() + "\"";
+				QModelIndex index;
+				if (proxy == 0){
+					index = qSourceIndex(model->index(r, horizontalHeader->visualIndex(c)));
+				} else {
+					index = proxy->mapToSource(proxy->index(r, horizontalHeader->visualIndex(c)));
+				}
+				l << "\"" + index.data(role).toString() + "\"";
 			}
 		}
 		stream << l.join(";") << endl;
@@ -24,7 +31,7 @@ void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelect
 	mimeData->setData("text/csv", d);
 }
 
-void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, int role)
+void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, QAbstractFilterProxyModel* proxy, int role)
 {
 	if (mimeData == 0 || model == 0 || horizontalHeader == 0){
 		return;
@@ -47,7 +54,60 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelec
 		stream.writeStartElement("tr");
 		for (int c = e.first.column(); c <= e.second.column(); c++){
 			if (!horizontalHeader->isSectionHidden(c)){
-				stream.writeTextElement("td", model->index(r, horizontalHeader->visualIndex(c)).data(role).toString());
+				QModelIndex index;
+				if (proxy == 0){
+					index = qSourceIndex(model->index(r, horizontalHeader->visualIndex(c)));
+				} else {
+					index = proxy->mapToSource(proxy->index(r, horizontalHeader->visualIndex(c)));
+				}
+				stream.writeStartElement("td");
+				QString fragment = index.data(role).toString();
+				if (fragment.left(6) != "<html>"){
+					fragment = QString("<html>%1</html>").arg(fragment);
+				}
+				QXmlStreamReader r(fragment);
+				bool inhibit = false;
+				while(!r.atEnd()){
+					r.readNext();
+					if (r.tokenType() == QXmlStreamReader::Characters){
+						if (!inhibit){
+							if (r.isCDATA()){
+								stream.writeCDATA(r.text().toString());
+							} else if (r.isComment()){
+								stream.writeComment(r.text().toString());
+							} else {
+								stream.writeCharacters(r.text().toString());
+							}
+						}
+					} else if (r.tokenType() == QXmlStreamReader::Comment){
+						stream.writeComment(r.text().toString());
+					} else if (r.tokenType() == QXmlStreamReader::EndElement){
+						if (r.name() == "html"){
+						} else if (r.name() == "body"){
+						} else {
+							if (r.name() == "head"){
+								inhibit = false;
+							} else {
+								stream.writeEndElement();
+							}
+						}
+					} else if (r.tokenType() == QXmlStreamReader::StartElement){
+						if (r.name() == "html"){
+						} else if (r.name() == "body"){
+						} else {
+							if (r.name() == "head"){
+								inhibit = true;
+							}
+							if (!inhibit){
+								stream.writeStartElement(r.name().toString());
+								stream.writeAttributes(r.attributes());
+							}
+						}
+					}
+				}
+				// close tag <td>
+				stream.writeEndElement();
+				//stream.writeTextElement("td", model->index(r, horizontalHeader->visualIndex(c)).data(role).toString());
 			}
 		}
 		// close tag tr
@@ -62,7 +122,7 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelec
 	mimeData->setData("text/html", d);
 }
 
-void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, int role)
+void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, QAbstractFilterProxyModel* proxy, int role)
 {
 	if (mimeData == 0 || model == 0 || horizontalHeader == 0){
 		return;
@@ -74,7 +134,13 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItem
 		QStringList l;
 		for (int c = e.first.column(); c <= e.second.column(); c++){
 			if (!horizontalHeader->isSectionHidden(c)){
-				l << model->index(r, horizontalHeader->visualIndex(c)).data(role).toString();
+				QModelIndex index;
+				if (proxy == 0){
+					index = qSourceIndex(model->index(r, horizontalHeader->visualIndex(c)));
+				} else {
+					index = proxy->mapToSource(proxy->index(r, horizontalHeader->visualIndex(c)));
+				}
+				l << index.data(role).toString();
 			}
 		}
 		stream << l.join("\t") << endl;
@@ -88,7 +154,7 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItem
  */
 void qMimeDataAddCsv(QMimeData* mimeData, QAdvancedTableView* view, int role)
 {
-	qMimeDataAddCsv(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
+	qMimeDataAddCsv(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), view->filterProxyModel(), role);
 }
 /**
  * @ingroup utils
@@ -96,7 +162,7 @@ void qMimeDataAddCsv(QMimeData* mimeData, QAdvancedTableView* view, int role)
  */
 void qMimeDataAddCsv(QMimeData* mimeData, QTableView* view, int role)
 {
-	qMimeDataAddCsv(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
+	qMimeDataAddCsv(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), 0, role);
 }
 
 /**
@@ -105,7 +171,7 @@ void qMimeDataAddCsv(QMimeData* mimeData, QTableView* view, int role)
  */
 void qMimeDataAddHtml(QMimeData* mimeData, QAdvancedTableView* view, int role)
 {
-	qMimeDataAddHtml(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
+	qMimeDataAddHtml(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), view->filterProxyModel(), role);
 }
 
 /**
@@ -114,7 +180,7 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAdvancedTableView* view, int role)
  */
 void qMimeDataAddHtml(QMimeData* mimeData, QTableView* view, int role)
 {
-	qMimeDataAddHtml(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
+	qMimeDataAddHtml(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), 0, role);
 }
 
 /**
@@ -123,7 +189,7 @@ void qMimeDataAddHtml(QMimeData* mimeData, QTableView* view, int role)
  */
 void qMimeDataAddPlainText(QMimeData* mimeData, QAdvancedTableView* view, int role)
 {
-	qMimeDataAddPlainText(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
+	qMimeDataAddPlainText(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), view->filterProxyModel(), role);
 }
 
 /**
@@ -132,7 +198,7 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QAdvancedTableView* view, int ro
  */
 void qMimeDataAddPlainText(QMimeData* mimeData, QTableView* view, int role)
 {
-	qMimeDataAddPlainText(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), role);
+	qMimeDataAddPlainText(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), 0, role);
 }
 
 /**
