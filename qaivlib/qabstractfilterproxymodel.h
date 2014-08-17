@@ -60,6 +60,16 @@ public:
     virtual void setSourceModel(QAbstractItemModel* sourceModel);
 signals:
     /**
+      * This signal is emitted before the filter current filtering is invalidated.
+	  * @see resultChanged()
+      */
+	void resultAboutToChange();
+    /**
+      * This signal is emitted after the filtering has been completed.
+	  * @see resultChanged(), resultCountChanged()
+      */
+	void resultChanged();
+    /**
       * This signal is emitted whenever the number of rows in the filtered result set has changed.
       */
     void resultCountChanged(int filteredRows, int unfilteredRows);
