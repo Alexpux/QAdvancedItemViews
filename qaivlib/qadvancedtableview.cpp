@@ -42,8 +42,17 @@
 class QAdvancedTableViewPrivate
 {
 public:
-    QAdvancedTableViewPrivate(QAdvancedTableView* tv);
-    ~QAdvancedTableViewPrivate();
+    QAdvancedTableViewPrivate(QAdvancedTableView* tv)
+	{
+		autoResizeRowsToContents = false;
+		dataViewProxy = new QFilterModelProxy(tv);
+		defaultFilterType = QTextFilter::Type;
+		horizontalScrollBarPolicy = Qt::ScrollBarAsNeeded;
+		v = tv;
+	};
+    ~QAdvancedTableViewPrivate()
+	{
+	};
 
     bool autoResizeRowsToContents;
     int defaultFilterType;
@@ -58,16 +67,6 @@ public:
     QAdvancedTableView* v;
 };
 
-QAdvancedTableViewPrivate::QAdvancedTableViewPrivate(QAdvancedTableView *tv)
-{
-    dataViewProxy = new QFilterModelProxy(tv);
-    horizontalScrollBarPolicy = Qt::ScrollBarAsNeeded;
-    v = tv;
-}
-
-QAdvancedTableViewPrivate::~QAdvancedTableViewPrivate()
-{
-}
 
 //-----------------------------------------------
 // class QAdvancedTableView
@@ -81,8 +80,6 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     //
     ui->splittedDataTableView->hide();
 
-    d->autoResizeRowsToContents = false;
-    d->defaultFilterType = QTextFilter::Type;
     // Create header view (model) proxy
 	setFilterModel(new QFilterModel(this));
     //d->filterModel = new QFilterModel(this);
