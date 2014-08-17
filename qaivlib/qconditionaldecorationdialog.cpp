@@ -113,11 +113,10 @@ void QConditionalDecorationDialog::setProperties(const QModelIndex & index)
     ui->dataRoleComboBox->setCurrentIndex(ui->dataRoleComboBox->findData(cProperties.value("dataRole", Qt::DisplayRole).toInt()));
     QVariantList mConditions = cProperties.value("conditions").toList();
     ui->conditionsTableWidget->setRowCount(mConditions.size());
-    QComboBox* cb = 0;
     for (int iCondition = 0; iCondition < mConditions.size(); iCondition++){
 		QVariantMap properties = mConditions.at(iCondition).toMap();
 		// add combo box to column 0
-		cb = columnComboBox();
+		QComboBox* cb = columnComboBox();
 		cb->setCurrentIndex(properties.value("column", index.column()).toInt());
 		connect(cb, SIGNAL(activated(int)), this, SLOT(columnComboBoxActivated(int)));
 		ui->conditionsTableWidget->setCellWidget(iCondition, COLUMN_COLUMN, cb);
