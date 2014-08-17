@@ -63,9 +63,8 @@ ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView* headerView)
     m_view->horizontalHeader()->setVisible(false);
     m_view->verticalHeader()->setVisible(false);
 
-    QStandardItem* item;
     for (int iColumn = 0; iColumn < headerView->model()->columnCount(); iColumn++){
-        item = new QStandardItem(headerView->model()->headerData(iColumn, Qt::Horizontal).toString());
+        QStandardItem* item = new QStandardItem(headerView->model()->headerData(iColumn, Qt::Horizontal).toString());
         item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
         item->setData(headerView->isSectionHidden(iColumn)?Qt::Unchecked:Qt::Checked, Qt::CheckStateRole);
         m->setItem(iColumn, 0, item);
