@@ -170,9 +170,7 @@ QVariant QAbstractFilterModel::headerData( int section, Qt::Orientation orientat
         }
     } else if (orientation == Qt::Horizontal){
         if (d->sourceModel){
-            if (role == Qt::DisplayRole){
-                return d->sourceModel->headerData(section, Qt::Horizontal, Qt::DisplayRole);
-            }
+			return d->sourceModel->headerData(section, Qt::Horizontal, role);
         }
     }
     return QAbstractItemModel::headerData(section, orientation, role);
