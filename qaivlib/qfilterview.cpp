@@ -71,10 +71,10 @@ QFilterView::QFilterView( QWidget* parent )
 
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    QAbstractButton* mCornerButton = qFindChild<QAbstractButton*>(this);
-    if (mCornerButton){
-        mCornerButton->disconnect();
-        connect(mCornerButton, SIGNAL(clicked()), this, SIGNAL(cornerButtonClicked()));
+    QAbstractButton* cb = findChild<QAbstractButton*>();
+    if (cb){
+        cb->disconnect();
+        connect(cb, SIGNAL(clicked()), this, SIGNAL(cornerButtonClicked()));
     }
     updateGeometry();
 
