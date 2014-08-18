@@ -299,7 +299,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\qtablemodecsvwriter.cpp"
+				RelativePath=".\qtablemodelcsvwriter.cpp"
 				>
 			</File>
 			<File
@@ -1167,7 +1167,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\qtablemodecsvwriter_p.h"
+				RelativePath=".\qtablemodelcsvwriter_p.h"
 				>
 			</File>
 			<File

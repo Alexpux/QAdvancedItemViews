@@ -19,7 +19,7 @@
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #include "stdafx.h"
-#include "qtablemodecsvwriter_p.h"
+#include "qtablemodelcsvwriter_p.h"
 
 #include "qadvancedtableview.h"
 #include "qmimedatautil.h"

@@ -21,7 +21,7 @@
 #include <stdafx.h>
 #include "qtablemodelwriter.h"
 
-#include "qtablemodecsvwriter_p.h"
+#include "qtablemodelcsvwriter_p.h"
 #include "qtablemodelhtmlwriter_p.h"
 #include "qtablemodelwordmlwriter_p.h"
 #include "qtablemodelexcelmlwriter_p.h"
