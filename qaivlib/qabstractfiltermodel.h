@@ -92,7 +92,8 @@ public:
       * Returns the filter at the specified @p index.
       */
     QAbstractFilter* filter(const QModelIndex & index) const;
-
+	QIcon filterDisabledIcon() const;
+	QIcon filterEnabledIcon() const;
     QList<QAbstractFilter*> filtersAtRow(int row) const;
     /**
       * Returns the item flags for the given @p index.
@@ -126,7 +127,8 @@ public:
       * Sets the default filter type for the specified @p column to @p type.
       */
     void setDefaultFilterType(int column, int type);
-
+	void setFilterDisabledIcon(const QIcon & icon);
+	void setFilterEnabledIcon(const QIcon & icon);
     bool setHeaderData (int section, Qt::Orientation orientation, const QVariant & value, int role = Qt::EditRole);
 
     void setMatchMode(QAdvancedItemViews::FilterMatchMode flag);

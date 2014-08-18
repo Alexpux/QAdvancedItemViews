@@ -332,6 +332,16 @@ void QAdvancedTableView::filterAdded(const QModelIndex & parent, int start, int 
     updateHeaderViewGeometries();
 }
 
+QIcon QAdvancedTableView::filterDisabledIcon() const
+{
+	return d->filterModel->filterDisabledIcon();
+}
+
+QIcon QAdvancedTableView::filterEnabledIcon() const
+{
+	return d->filterModel->filterEnabledIcon();
+}
+
 void QAdvancedTableView::headerViewHorizontalScrollBarRangeChanged(int min, int max)
 {
 //    ui->dataTableView->horizontalScrollBar()->setRange(min, max);
@@ -763,6 +773,15 @@ void QAdvancedTableView::setEditTriggers(QAbstractItemView::EditTriggers trigger
 void QAdvancedTableView::setColumnFilterTypes(int column, const QVariantList &types)
 {
     d->filterModel->setData(d->filterModel->index(0, column), types, QAbstractFilterModel::ColumnFilterTypesRole);
+}
+
+void QAdvancedTableView::setFilterDisabledIcon(const QIcon & icon)
+{
+
+}
+
+void QAdvancedTableView::setFilterEnabledIcon(const QIcon & icon)
+{
 }
 
 void QAdvancedTableView::setFilterEnabled(int row, int column, bool enable )

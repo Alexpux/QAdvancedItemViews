@@ -97,6 +97,16 @@ class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget
       * This property is a selection of flags defined by EditTrigger, combined using the OR operator. The view will only initiate the editing of an item if the action performed is set in this property.
       */
     Q_PROPERTY(QAbstractItemView::EditTriggers editTriggers READ editTriggers WRITE setEditTriggers)
+	//! @property(filterDisabledIcon)
+	/**
+	 * This property holds the icon shown if a filter is disabled.
+	 */
+	Q_PROPERTY(QIcon filterDisabledIcon READ filterDisabledIcon WRITE setFilterDisabledIcon)
+	//! @property(filterEnabledIcon)
+	/**
+	 * This property holds the icon shown if a filter is enabled.
+	 */
+	Q_PROPERTY(QIcon filterEnabledIcon READ filterEnabledIcon WRITE setFilterEnabledIcon)
     //! @property(gridStyle)
 	/**
 	 * This property holds the pen style used to draw the grid.
@@ -241,6 +251,9 @@ public:
       * Returns the filter at the specified @p row and @p column, or 0 if no filter exists at @p row and @p column.
       */
     QAbstractFilter* filterAt(int row, int column) const;
+
+	QIcon filterDisabledIcon() const;
+	QIcon filterEnabledIcon() const;
     /**
       * Returns the filter model that this view is using for filtering.
       */
@@ -402,6 +415,8 @@ public:
       * @see columnsFilterTypes()
       */
     void setColumnFilterTypes(int column, const QVariantList & types);
+	void setFilterDisabledIcon(const QIcon & icon);
+	void setFilterEnabledIcon(const QIcon & icon);
 	void setFilterModel(QAbstractFilterModel* model);
 	void setFilterProxyModel(QAbstractFilterProxyModel* proxy);
     /**

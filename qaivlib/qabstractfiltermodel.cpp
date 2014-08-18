@@ -48,11 +48,16 @@ public:
     QList<QAbstractFilterModel::FilterTypeEntry> filterTypes;
 
     QAbstractFilterModel* m;
+
+	QIcon filterDisabledIcon;
+	QIcon filterEnabledIcon;
 };
 
 QAbstractFilterModelPrivate::QAbstractFilterModelPrivate(QAbstractFilterModel *fm)
 {
     m = fm;
+	filterDisabledIcon = QIcon(":/qaiv/filter/disabled");
+	filterEnabledIcon = QIcon(":/qaiv/filter/enabled");
 }
 
 QAbstractFilterModelPrivate::~QAbstractFilterModelPrivate()
@@ -91,9 +96,9 @@ QVariant QAbstractFilterModel::data(const QModelIndex & index, int role) const
     if (role == Qt::DecorationRole){
         if (filter){
             if (filter->isEnabled()){
-                return QIcon(":/qaiv/filter/enabled");
+                return d->filterEnabledIcon;
             } else {
-                return QIcon(":/qaiv/filter/disabled");
+                return d->filterDisabledIcon;
             }
         }
         return QVariant();
@@ -126,6 +131,22 @@ QAbstractFilter* QAbstractFilterModel::filter(const QModelIndex & index) const
         return d->filterGroupList.at(index.row())->filterAtColumn(index.column());
     }
     return 0;
+}
+/**
+ * Returns the icon shown of a filter is disabled.
+ * @see setFilterDisabledIcon()
+ */
+QIcon QAbstractFilterModel::filterDisabledIcon() const
+{
+	return d->filterDisabledIcon;
+}
+/**
+ * Returns the icon shown of a filter is disabled.
+ * @see setFilterDisabledIcon()
+ */
+QIcon QAbstractFilterModel::filterEnabledIcon() const
+{
+	return d->filterEnabledIcon;
 }
 
 QFilterGroup* QAbstractFilterModel::filterGroup(const QModelIndex & index) const
@@ -292,6 +313,22 @@ bool QAbstractFilterModel::setData(const QModelIndex & index, const QVariant & v
 void QAbstractFilterModel::setDefaultFilterType(int column, int type)
 {
     d->defaultFilterType[column] = type;
+}
+/**
+ * Sets the icon shown if a filter is disabled to @p icon.
+ * @see filterDisabledIcon(), setFilterEnabledIcon()
+ */
+void QAbstractFilterModel::setFilterDisabledIcon(const QIcon & icon)
+{
+	d->filterDisabledIcon = icon;
+}
+/**
+ * Sets the icon shown if a filter is enabled to @p icon.
+ * @see filterEnabledIcon(), setFilterDisabledIcon()
+ */
+void QAbstractFilterModel::setFilterEnabledIcon(const QIcon & icon)
+{
+	d->filterEnabledIcon = icon;
 }
 
 bool QAbstractFilterModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role)
