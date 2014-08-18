@@ -71,8 +71,14 @@ QFixedRowsDecorationProxyModelPrivate::~QFixedRowsDecorationProxyModelPrivate()
 class QFixedRowsFilterProxyModelPrivate
 {
 public:
-    QFixedRowsFilterProxyModelPrivate(QFixedRowsFilterProxyModel* pm);
-    ~QFixedRowsFilterProxyModelPrivate();
+    QFixedRowsFilterProxyModelPrivate(QFixedRowsFilterProxyModel* pm)
+	{
+		enabled = false;
+		m = pm;
+	};
+    ~QFixedRowsFilterProxyModelPrivate()
+	{
+	};
 
     bool enabled;
     QList<QPersistentModelIndex> rows;
@@ -80,20 +86,9 @@ public:
     QFixedRowsFilterProxyModel* m;
 };
 
-QFixedRowsFilterProxyModelPrivate::QFixedRowsFilterProxyModelPrivate(QFixedRowsFilterProxyModel *pm)
-{
-    m = pm;
-}
-
-QFixedRowsFilterProxyModelPrivate::~QFixedRowsFilterProxyModelPrivate()
-{
-
-}
-
 QFixedRowsFilterProxyModel::QFixedRowsFilterProxyModel(QObject *parent) :
     QSortFilterProxyModel(parent), d(new QFixedRowsFilterProxyModelPrivate(this))
 {
-    d->enabled = false;
 }
 
 QFixedRowsFilterProxyModel::~QFixedRowsFilterProxyModel()

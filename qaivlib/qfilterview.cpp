@@ -176,7 +176,6 @@ void QFilterView::contextMenuEvent(QContextMenuEvent* event)
         event->ignore();
         return;
     }
-    QAction* action = 0;
     QMenu* menu = new QMenu(this);
 
     if (selectedIndexes().size() > 1){
@@ -185,6 +184,7 @@ void QFilterView::contextMenuEvent(QContextMenuEvent* event)
         menu->addSeparator();
         menu->addAction(QIcon(":/qaiv/filter/toggle"), tr("Toggle Filter"), this, SLOT(toggleSelectedFilters()));
     } else {
+		QAction* action = 0;
         QVariantMap properties = selectedIndexes().first().data(Qt::EditRole).toMap();
         if (properties.isEmpty()){
             properties["row"] = selectedIndexes().first().row();

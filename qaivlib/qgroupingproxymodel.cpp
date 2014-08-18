@@ -108,11 +108,11 @@ QGroupingProxyModelGroup *QGroupingProxyModelGroup::findSourceModelRow(int sourc
     if (cSourceModelRow == sourceModelRow){
         return const_cast<QGroupingProxyModelGroup*>(this);
     }
-    QGroupingProxyModelGroup* mGroup;
-    Q_FOREACH(QGroupingProxyModelGroup* mItem, cChildren){
-        mGroup = mItem->findSourceModelRow(sourceModelRow);
-        if (mGroup){
-            return mGroup;
+    
+    Q_FOREACH(QGroupingProxyModelGroup* item, cChildren){
+        QGroupingProxyModelGroup* group = item->findSourceModelRow(sourceModelRow);
+        if (group){
+            return group;
         }
     }
     return 0;
@@ -123,11 +123,11 @@ QGroupingProxyModelGroup* QGroupingProxyModelGroup::group(int sourceModelRow) co
     if (cSourceModelRow != -1 && cSourceModelRow == sourceModelRow){
         return parent();
     }
-    QGroupingProxyModelGroup* mGroup;
-    Q_FOREACH(QGroupingProxyModelGroup* mItem, cChildren){
-        mGroup = mItem->findSourceModelRow(sourceModelRow);
-        if (mGroup){
-            return mGroup->parent();
+    
+    Q_FOREACH(QGroupingProxyModelGroup* item, cChildren){
+        QGroupingProxyModelGroup* group = item->findSourceModelRow(sourceModelRow);
+        if (group){
+            return group->parent();
         }
     }
     return 0;
@@ -157,10 +157,10 @@ QGroupingProxyModelGroup* QGroupingProxyModelGroup::matches(const QVariant & val
         return const_cast<QGroupingProxyModelGroup*>(this);
     }
     QGroupingProxyModelGroup* mGroup;
-    Q_FOREACH(QGroupingProxyModelGroup* mItem, cChildren){
-        mGroup = mItem->matches(value);
-        if (mGroup){
-            return mGroup;
+    Q_FOREACH(QGroupingProxyModelGroup* item, cChildren){
+        QGroupingProxyModelGroup* group = item->matches(value);
+        if (group){
+            return group;
         }
     }
     return 0;
@@ -568,9 +568,8 @@ void QGroupingProxyModel::buildGroups()
     beginResetModel();
     d->root->clear();
     if (d->sourceModel){
-        QGroupingProxyModelGroup* group;
         for (int iRow = 0; iRow < d->sourceModel->rowCount(); iRow++){
-            group = d->root->matches(d->sourceModel->index(iRow, d->modelColumn).data(d->groupItemDataRole));
+            QGroupingProxyModelGroup* group = d->root->matches(d->sourceModel->index(iRow, d->modelColumn).data(d->groupItemDataRole));
             if (group == 0){
                 group = d->root->child(0);
             }
