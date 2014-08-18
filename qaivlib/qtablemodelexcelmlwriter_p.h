@@ -31,7 +31,7 @@ public:
 	~QTableModelExcelMLWriter();
 
 	void setIncludeHeader(bool on);
-
+	void setRole(int role);
 	bool write(QAdvancedTableView* view, bool all);
 
 	bool write(QTableView* view, bool all);
@@ -39,6 +39,7 @@ public:
 private:
 	QIODevice* m_device;
 	bool m_includeHeader;
+	int m_role;
 };
 
 #endif // QTABLEMODELXMLWRITER_P_H

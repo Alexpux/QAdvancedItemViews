@@ -25,7 +25,7 @@
 #include "qmimedatautil.h"
 	
 QTableModelExcelMLWriter::QTableModelExcelMLWriter(QIODevice* device)
-: m_device(device), m_includeHeader(true)
+: m_device(device), m_includeHeader(true), m_role(Qt::DisplayRole)
 {
 }
 
@@ -36,6 +36,11 @@ QTableModelExcelMLWriter::~QTableModelExcelMLWriter()
 void QTableModelExcelMLWriter::setIncludeHeader(bool on)
 {
 	m_includeHeader = on;
+}
+
+void QTableModelExcelMLWriter::setRole(int role)
+{
+	m_role = role;
 }
 
 bool QTableModelExcelMLWriter::write(QAdvancedTableView* view, bool all)
@@ -91,6 +96,24 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView* view, bool all)
 		e.first = view->model()->index(0, 0);
 		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
 	}
+	if (m_includeHeader){
+		stream.writeStartElement("Row");
+		for (int c = e.first.column(); c <= e.second.column(); c++){
+			if (!view->horizontalHeader()->isSectionHidden(c)){
+				stream.writeStartElement("Cell");
+
+				stream.writeStartElement("Data");
+				stream.writeAttribute("ss:Type", "String");
+				stream.writeCharacters(view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, m_role).toString());
+				// end tag <Data>
+				stream.writeEndElement();
+				// end tag <Cell>
+				stream.writeEndElement();
+			}
+		}
+		// end tag <Row>
+		stream.writeEndElement();
+	}
 	for (int r = e.first.row(); r <= e.second.row(); r++){
 		stream.writeStartElement("Row");
 		for (int c = e.first.column(); c <= e.second.column(); c++){
@@ -99,7 +122,7 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView* view, bool all)
 
 				stream.writeStartElement("Data");
 				stream.writeAttribute("ss:Type", "String");
-				stream.writeCharacters(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
+				stream.writeCharacters(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(m_role).toString());
 				// end tag <Data>
 				stream.writeEndElement();
 				// end tag <Cell>
@@ -170,6 +193,24 @@ bool QTableModelExcelMLWriter::write(QTableView* view, bool all)
 		e.first = view->model()->index(0, 0);
 		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
 	}
+	if (m_includeHeader){
+		stream.writeStartElement("Row");
+		for (int c = e.first.column(); c <= e.second.column(); c++){
+			if (!view->horizontalHeader()->isSectionHidden(c)){
+				stream.writeStartElement("Cell");
+
+				stream.writeStartElement("Data");
+				stream.writeAttribute("ss:Type", "String");
+				stream.writeCharacters(view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, m_role).toString());
+				// end tag <Data>
+				stream.writeEndElement();
+				// end tag <Cell>
+				stream.writeEndElement();
+			}
+		}
+		// end tag <Row>
+		stream.writeEndElement();
+	}
 	for (int r = e.first.row(); r <= e.second.row(); r++){
 		stream.writeStartElement("Row");
 		for (int c = e.first.column(); c <= e.second.column(); c++){
@@ -179,7 +220,7 @@ bool QTableModelExcelMLWriter::write(QTableView* view, bool all)
 				stream.writeStartElement("Data");
 				stream.writeAttribute("ss:Type", "String");
 				//l << "\"" + view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
-				stream.writeCharacters(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
+				stream.writeCharacters(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(m_role).toString());
 				// end tag <Data>
 				stream.writeEndElement();
 				// end tag <Cell>

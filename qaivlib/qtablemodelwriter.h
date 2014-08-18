@@ -68,7 +68,7 @@ public:
 	void setFormat(const QByteArray & format);
 
 	void setIncludeHeader(bool on);
-
+	void setRole(int role);
 	static QList<QByteArray> supportedFormats();
 
 	bool writeAll(QAdvancedTableView* view);

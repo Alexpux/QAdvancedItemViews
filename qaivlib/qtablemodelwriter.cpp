@@ -35,11 +35,12 @@ public:
 	bool deleteDevice;
 	QByteArray format;
 	bool includeHeader;
+	int role;
 	QTableModelWriter* c;
 };
 
 QTableModelWriterPrivate::QTableModelWriterPrivate(QTableModelWriter* pc) : 
-	device(0), c(pc), deleteDevice(true), includeHeader(true)
+	device(0), c(pc), deleteDevice(true), includeHeader(true), role(Qt::DisplayRole)
 {
 }
 
@@ -124,6 +125,11 @@ void QTableModelWriter::setDevice(QIODevice* device)
 void QTableModelWriter::setFormat(const QByteArray &format)
 {
 	d->format = format;
+}
+
+void QTableModelWriter::setRole(int role)
+{
+	d->role = role;
 }
 /**
  * Returns the list of document formats supported by QTextDocumentWriter.
@@ -220,6 +226,8 @@ bool QTableModelWriter::write(QAdvancedTableView* view, bool all)
             return false;
         }
 		QTableModelExcelMLWriter w(d->device);
+		w.setIncludeHeader(d->includeHeader);
+		w.setRole(d->role);
 		return w.write(view, all);
 	}
 
@@ -268,6 +276,8 @@ bool QTableModelWriter::write(QTableView* view, bool all)
             return false;
         }
 		QTableModelExcelMLWriter w(d->device);
+		w.setIncludeHeader(d->includeHeader);
+		w.setRole(d->role);
 		return w.write(view, all);
 	}
 
