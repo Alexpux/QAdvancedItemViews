@@ -89,6 +89,8 @@ void QFilterViewItemDelegate::lineEditReturnPressed()
 
 void QFilterViewItemDelegate::listWidgetCurrentItemChanged( QListWidgetItem* current, QListWidgetItem* previous )
 {
+    Q_UNUSED(current)
+    Q_UNUSED(previous)
     emit commitData((QWidget*)sender());
     emit closeEditor((QWidget*)sender());
 }

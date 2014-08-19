@@ -221,6 +221,7 @@ void QAdvancedTableView::contextMenuEvent(QContextMenuEvent *event)
 
 QMenu *QAdvancedTableView::createStandardContextMenu(const QModelIndex & index)
 {
+    Q_UNUSED(index)
     QAction* a;
     QMenu* m = new QMenu();
     m = m->addMenu(tr("View"));
