@@ -22,14 +22,13 @@
 
 #include "qadvancedtableviewplugin.h"
 #include "qsearchbarplugin.h"
-#include "qtablemodelexportpushbuttonplugin.h"
+//#include "qtablemodelexportpushbuttonplugin.h"
 
 QAIVDesignerCollection::QAIVDesignerCollection(QObject *parent) :
     QObject(parent)
 {
     m_widgets.append(new QAdvancedTableViewPlugin());
-	m_widgets.append(new QSearchBarPlugin());
-	m_widgets.append(new QTableModelExportPushButtonPlugin(0));
+//    m_widgets.append(new QTableModelExportPushButtonPlugin(0));
 }
 
 QList<QDesignerCustomWidgetInterface *> QAIVDesignerCollection::customWidgets() const
@@ -37,5 +36,7 @@ QList<QDesignerCustomWidgetInterface *> QAIVDesignerCollection::customWidgets() 
     return m_widgets;
 }
 
-Q_EXPORT_PLUGIN2(qaivdesignerplugin, QAIVDesignerCollection)
+#if QT_VERSION < 0x050000
+    Q_EXPORT_PLUGIN2(qaivdesignerplugin, QAIVDesignerCollection)
+#endif
 

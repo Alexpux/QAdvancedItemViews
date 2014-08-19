@@ -1,7 +1,7 @@
 #ifndef QADVANCEDTABLEVIEW_H
 #define QADVANCEDTABLEVIEW_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class QAdvancedTableView : public QWidget
 {

@@ -21,7 +21,14 @@
 
 TEMPLATE = lib
 TARGET = qaivlib
-QT += core gui
+
+equals(QT_MAJOR_VERSION, 4){
+    QT += core gui
+}
+equals(QT_MAJOR_VERSION, 5){
+    QT += core widgets
+}
+
 CONFIG += debug_and_release
 
 unix {
@@ -53,8 +60,8 @@ CONFIG(debug, debug|release) {
     INCLUDEPATH += ./GeneratedFiles \
         . \
         ./GeneratedFiles/Release
-    MOC_DIR += ./GeneratedFiles/release
-    OBJECTS_DIR += release
+    MOC_DIR += ./GeneratedFiles/Release
+    OBJECTS_DIR += Release
 }
 
 

@@ -240,7 +240,11 @@ QFixedRowsTableView::QFixedRowsTableView(QWidget *parent) :
 
     connect(verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
 
+#if QT_VERSION >= 0x050000
+    verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+#else
     verticalHeader()->setResizeMode(QHeaderView::Fixed);
+#endif
     QTableView::setModel(d->filterProxy);
 
     connect(d->filterProxy, SIGNAL(layoutChanged()), this, SLOT(updateHeight()));

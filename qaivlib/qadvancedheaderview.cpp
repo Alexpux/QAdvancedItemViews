@@ -97,7 +97,11 @@ void ShowMoreColumnsDialog::textEdited(const QString & text)
 QAdvancedHeaderView::QAdvancedHeaderView( Qt::Orientation orientation, QWidget* parent )
     : QHeaderView(orientation, parent)
 {
+#if QT_VERSION >= 0x050000
+    setSectionsClickable(true);
+#else
     setClickable(true);
+#endif
 }
 
 QAdvancedHeaderView::~QAdvancedHeaderView()

@@ -21,14 +21,21 @@
 
 TEMPLATE = app
 TARGET = example
-QT += core gui
+
+equals(QT_MAJOR_VERSION, 4){
+    QT += core gui
+}
+equals(QT_MAJOR_VERSION, 5){
+    QT += core widgets
+}
 CONFIG += debug_and_release
 
 CONFIG(debug, debug|release) {
+
     win32 {
         DESTDIR = ../bin/Win32/Debug
-        LIBS += -L"../../qaivlib/debug" \
-            -l$(DESTDIR)/qaivlib
+        LIBS += -L"../bin/Win32/Debug" \
+            -lqaivlib
     }
     else {
         DESTDIR = ../Debug

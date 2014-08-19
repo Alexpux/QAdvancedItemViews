@@ -503,8 +503,12 @@ void MainWindow::initTabAdvancedTableView()
 	p->setSourceModel(m_model);
     ui->filterTableView->setModel(p);
 	ui->filterTableView->setFilterProxyModel(new FilterProxyModel(this));
-    ui->filterTableView->horizontalHeader()->setClickable(true);
 
+#if QT_VERSION >= 0x050000
+    ui->filterTableView->horizontalHeader()->setSectionsClickable(true);
+#else
+    ui->filterTableView->horizontalHeader()->setClickable(true);
+#endif
 
     // ------------------------------------
     // Column 'Int'

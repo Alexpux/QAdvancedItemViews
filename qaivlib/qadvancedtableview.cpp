@@ -47,6 +47,7 @@ public:
 		autoResizeRowsToContents = false;
 		dataViewProxy = new QFilterModelProxy(tv);
 		defaultFilterType = QTextFilter::Type;
+        filterModel = 0;
 		horizontalScrollBarPolicy = Qt::ScrollBarAsNeeded;
 		v = tv;
 	};
@@ -87,12 +88,19 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     d->horizontalHeader = new QAdvancedHeaderView(Qt::Horizontal, this);
     ui->headerTableView->setHorizontalHeader(d->horizontalHeader);
     ui->headerTableView->setItemDelegate(new QFilterViewItemDelegate(this));
+#if QT_VERSION >= 0x050000
+    ui->headerTableView->horizontalHeader()->setSectionsMovable(true);
+#else
     ui->headerTableView->horizontalHeader()->setMovable(true);
+#endif
     // Create vertical header views
     d->verticalHeader = new QAdvancedHeaderView(Qt::Vertical, this);
     ui->headerTableView->setVerticalHeader(d->verticalHeader);
+#if QT_VERSION >= 0x050000
+    ui->headerTableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+#else
     ui->headerTableView->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-
+#endif
 //    ui->dataTableView->setVerticalHeader(new QFixedRowsHeaderView(Qt::Vertical, this));
     // set models
     d->dataViewProxy->setSourceModel(ui->fixedRowsTableView->decorationProxy());
@@ -777,11 +785,12 @@ void QAdvancedTableView::setColumnFilterTypes(int column, const QVariantList &ty
 
 void QAdvancedTableView::setFilterDisabledIcon(const QIcon & icon)
 {
-
+    d->filterModel->setFilterDisabledIcon(icon);
 }
 
 void QAdvancedTableView::setFilterEnabledIcon(const QIcon & icon)
 {
+    d->filterModel->setFilterEnabledIcon(icon);
 }
 
 void QAdvancedTableView::setFilterEnabled(int row, int column, bool enable )
@@ -826,8 +835,12 @@ void QAdvancedTableView::setModel( QAbstractItemModel* model )
     }
     if (horizontalHeader()->stretchLastSection()){
 		if (horizontalHeader()->count() > 0){
-			horizontalHeader()->setResizeMode(horizontalHeader()->count() - 1, QHeaderView::Stretch);
-		}
+#if QT_VERSION >= 0x050000
+            horizontalHeader()->setSectionResizeMode(horizontalHeader()->count() - 1, QHeaderView::Stretch);
+#else
+            horizontalHeader()->setResizeMode(horizontalHeader()->count() - 1, QHeaderView::Stretch);
+#endif
+        }
     }
 }
 

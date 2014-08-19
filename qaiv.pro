@@ -22,8 +22,8 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 SUBDIRS += qaivlib/qaivlib.pro \
+    qaivdesigner/qaivdesigner.pro \
     test/qadvancedtableview/test_qadvancedtableview.pro \
     test/qaiv/test_qaiv.pro \
     test/qaivproxymodels/test_qaivproxymodels.pro \
-    qaivdesigner/qaivdesigner.pro \
     example/example.pro

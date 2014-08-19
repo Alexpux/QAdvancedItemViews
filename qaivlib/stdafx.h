@@ -27,8 +27,11 @@
 #if defined __cplusplus
  // Add C++ includes here
 #include <QtCore>
+#if QT_VERSION >= 0x050000
+#include <QtWidgets>
+#else
 #include <QtGui>
-
+#endif
 #include <QDebug>
 #endif
 

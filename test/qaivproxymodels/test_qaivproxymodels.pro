@@ -21,14 +21,21 @@
 
 TEMPLATE = app
 TARGET = test_qaivproxymodels
-QT += core gui
-CONFIG += qtestlib console debug_and_release
+
+equals(QT_MAJOR_VERSION, 4){
+    CONFIG += qtestlib console debug_and_release
+    QT += core gui
+}
+equals(QT_MAJOR_VERSION, 5){
+    CONFIG += console debug_and_release
+    QT += core widgets testlib
+}
 CONFIG -= app_bundle
 
 CONFIG(debug, debug|release) {
     win32 {
         DESTDIR = ../../bin/Win32/Debug
-        LIBS += -l$(DESTDIR)/qaivlib
+        LIBS += -L../../bin/Win32/Debug -lqaivlib
     }
     else {
         DESTDIR = ../../Debug
@@ -37,8 +44,8 @@ CONFIG(debug, debug|release) {
     INCLUDEPATH += . \
         ./GeneratedFiles/Debug \
         ./../../qaivlib
-    MOC_DIR += ./GeneratedFiles/debug
-    OBJECTS_DIR += debug
+    MOC_DIR += ./GeneratedFiles/Debug
+    OBJECTS_DIR += Debug
 } else {
     win32 {
         DESTDIR = ../../bin/Win32/Release
@@ -51,8 +58,8 @@ CONFIG(debug, debug|release) {
     INCLUDEPATH += . \
         ./GeneratedFiles/Release \
         ./../../qaivlib
-    MOC_DIR += ./GeneratedFiles/release
-    OBJECTS_DIR += release
+    MOC_DIR += ./GeneratedFiles/Release
+    OBJECTS_DIR += Release
 }
 
 win32 {

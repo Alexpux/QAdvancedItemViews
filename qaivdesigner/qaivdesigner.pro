@@ -22,8 +22,14 @@
 TEMPLATE = lib
 TARGET = qaivdesigner
 
-QT += core gui xml script
-CONFIG += designer plugin
+equals(QT_MAJOR_VERSION, 4){
+    CONFIG += designer plugin
+    QT += core gui
+}
+equals(QT_MAJOR_VERSION, 5){
+    CONFIG += plugin
+    QT += core designer widgets
+}
 
 CONFIG(debug, debug|release) {
     win32 {
@@ -31,8 +37,7 @@ CONFIG(debug, debug|release) {
         INCLUDEPATH += ./../qaivlib \
             ./debug \
             $(QTDIR)/mkspecs/win32-msvc2008
-        LIBS += -L"../../qaivlib/debug" \
-            -l../bin/Win32/Debug/qaivlib
+        LIBS += -L"../bin/Win32/Debug" -lqaivlib
     }
     else {
         DESTDIR = ../Debug

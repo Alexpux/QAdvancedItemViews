@@ -21,10 +21,17 @@
 
 TEMPLATE = app
 TARGET = test_qaiv
-QT += core gui
+equals(QT_MAJOR_VERSION, 4){
+    QT += core gui
+    CONFIG += qtestlib console debug_and_release
+}
+equals(QT_MAJOR_VERSION, 5){
+    QT += core widgets testlib
+    CONFIG += debug console
+}
 
-CONFIG += qtestlib console debug_and_release
 CONFIG -= app_bundle
+
 win32 {
     DEFINES += QT_LARGEFILE_SUPPORT QT_DLL
 }
@@ -32,9 +39,9 @@ win32 {
 CONFIG(debug, debug|release) {
     win32 {
         DESTDIR = ./../../bin/Win32/Debug
-        MOC_DIR += ./GeneratedFiles/debug
+        MOC_DIR += ./GeneratedFiles/Debug
         OBJECTS_DIR += debug
-        LIBS += -l$(DESTDIR)/qaivlib
+        LIBS += -L"../../bin/Win32/Debug" -lqaivlib
     }
     else {
         DESTDIR = ../../Debug

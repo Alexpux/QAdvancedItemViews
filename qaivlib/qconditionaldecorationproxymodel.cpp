@@ -178,7 +178,7 @@ bool QConditionalDecorationProxyModel::restoreState(const QByteArray & state)
 		return false;
 	}
 	s >> v;
-	if (v =! 1){
+    if (v != 1){
 		qWarning() << Q_FUNC_INFO << "version" << v << "not supported";
 		return false;
 	}

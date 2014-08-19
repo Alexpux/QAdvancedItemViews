@@ -29,6 +29,7 @@ class TableView;
 
 //! The QTableModelWriter class provides a format-independent interface for writing the content of table views to files or other devices.
 /**
+ * @ingroup export
  * To write the content of a table, construct a QTableModelWriter object with either a file name or a device object, and specify the format to be written.
  * Call writeAll() to write the content to the device. If the content is successfully written, this function returns true. However, if an error occurs when writing the content, it will return false.
  * @code
