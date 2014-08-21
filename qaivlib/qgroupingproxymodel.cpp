@@ -39,7 +39,12 @@ public:
 
 QGroupingProxyModelPrivate::QGroupingProxyModelPrivate(QGroupingProxyModel *pm)
 {
+	groupItemDataRole = Qt::DisplayRole;
 	groupsSpanned = false;
+	modelColumn = 0;
+	root = 0;
+	sourceModel = 0;
+	m = 0;
 }
 
 QGroupingProxyModelPrivate::~QGroupingProxyModelPrivate()
@@ -156,7 +161,6 @@ QGroupingProxyModelGroup* QGroupingProxyModelGroup::matches(const QVariant & val
     if (cParent != 0 && data(Qt::EditRole) == value){
         return const_cast<QGroupingProxyModelGroup*>(this);
     }
-    QGroupingProxyModelGroup* mGroup;
     Q_FOREACH(QGroupingProxyModelGroup* item, cChildren){
         QGroupingProxyModelGroup* group = item->matches(value);
         if (group){

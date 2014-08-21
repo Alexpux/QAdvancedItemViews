@@ -62,7 +62,7 @@ QWidget* QFilterViewItemDelegate::createEditor( QWidget* parent, const QStyleOpt
     if (model){
         QAbstractFilter* filter = model->filter(index);
         if (filter){
-			return filter->createEditor((QFilterViewItemDelegate*)this, parent, option, index);
+			return filter->createEditor(const_cast<QFilterViewItemDelegate*>(this), parent, option, index);
         } else {
             QFilterView* view = qobject_cast<QFilterView*>(parent->parentWidget());
             if (view){
@@ -73,7 +73,7 @@ QWidget* QFilterViewItemDelegate::createEditor( QWidget* parent, const QStyleOpt
                 filter = model->createFilter(index, properties);
                 if (filter){
                     filter->setEnabled(true);
-					return filter->createEditor((QFilterViewItemDelegate*)this, parent, option, index);
+					return filter->createEditor(const_cast<QFilterViewItemDelegate*>(this), parent, option, index);
                 }
             }
         }

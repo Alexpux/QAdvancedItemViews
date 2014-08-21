@@ -35,6 +35,7 @@ public:
 QSharedItemSelectionModelPrivate::QSharedItemSelectionModelPrivate(QSharedItemSelectionModel *sm)
 {
     m = sm;
+	shared = 0;
 }
 
 QSharedItemSelectionModelPrivate::~QSharedItemSelectionModelPrivate()

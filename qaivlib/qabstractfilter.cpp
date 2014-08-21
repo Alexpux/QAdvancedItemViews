@@ -31,7 +31,6 @@ public:
     ~QAbstractFilterPrivate();
 
     QIcon icon;
-    QFilterGroup* group;
     QMap<QString,QVariant> properties;
 
     QAbstractFilter* f;
@@ -50,7 +49,6 @@ QAbstractFilterPrivate::~QAbstractFilterPrivate()
 QAbstractFilter::QAbstractFilter() :
     d(new QAbstractFilterPrivate(this))
 {
-//    cGroup = 0;
     d->properties["enabled"] = false;
     d->properties["type"] = QAbstractFilter::Type;
     d->properties["column"] = -1;

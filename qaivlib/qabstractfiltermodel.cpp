@@ -58,6 +58,7 @@ QAbstractFilterModelPrivate::QAbstractFilterModelPrivate(QAbstractFilterModel *f
     m = fm;
 	filterDisabledIcon = QIcon(":/qaiv/filter/disabled");
 	filterEnabledIcon = QIcon(":/qaiv/filter/enabled");
+	sourceModel = 0;
 }
 
 QAbstractFilterModelPrivate::~QAbstractFilterModelPrivate()
