@@ -1,15 +1,27 @@
 QAIV (QAdvanced Item Views) Change Log
 ======================================
-Version 0.4 - 2014-0x-xx
+Version 0.4 - 2014-08-21
 
 + new features
+  - Qt5 support added
   - QAdvancedTableView: API for custom sort and fiter proxy model implemented
-  
+  - QAdvancedTableView: properties filterDisabledIcon and filterEnabledIcon added
+  - QTableModelWriter: custom role selection added (default role is Qt::DisplayRole)
+
 + changes
   - QMimeData utilities: argument role changed from Qt::ItemDataRole to int
+  - QAbstractFilterModel: support for roles other than Qt:DisplayRole in method headerData enabled
+  - QAbstractFilterProxyModel: signals resultAboutToChange() and resultChanged() implemented
 
 + bug fixes
+  - #3 wrong cell context is copied if a proxy model is used 
+  - #2 debug error is model is empty 
+  - #1 qMimeDataAddHtml inserts html fragments as text instead of html
   - Missing files added
+
++ misc
+  - code cleanup
+  - Qt project files updated
   
 Version 0.3 - 2014-01-06
 

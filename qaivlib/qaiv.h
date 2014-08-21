@@ -31,6 +31,7 @@
  * @defgroup proxy Proxy Models
  * @defgroup filter Filter
  * @defgroup utils Utilities
+ * @defgroup export Export
  * @mainpage
  * The QAIV (Qt Advanced Item Views) library provides GUI and utility classes extending the capabilities of the Qt item views.
  * @image html main01.png Example of QAdvancedTableView with splitted views and fixed rows enabled
@@ -46,9 +47,9 @@
  * You will find stable releases at <a href="https://sourceforge.net/projects/qadvanceditemviews/">QAIV's project site</a>.
  * @section buildinstall Build and Install QAIV
  * @subsection requirements Requirements
- * QAIV requires Qt version 4.8.2 or greater.
+ * QAIV requires Qt4.8.x or Qt5.
  * @subsection platforms Platforms
- * QAIV shall build on all platforms supported by Qt. The current version is tested on Windows XP/7 only.
+ * QAIV shall build on all platforms supported by Qt. The current version is tested on Windows XP/7/8 only.
  * @subsection qmake Qt Creator / qmake
  * Use qaiv.pro to either build the library, the example application and the Qt designer plugin from the command line or open the qaiv.pro using Qt creator.
  * @subsection msvs Visual Studio
