@@ -21,6 +21,7 @@
 #include "stdafx.h"
 #include "qtablemodelexcelmlwriter_p.h"
 
+#include "qaiv.h"
 #include "qadvancedtableview.h"
 #include "qmimedatautil.h"
 	
@@ -96,6 +97,8 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView* view, bool all)
 		e.first = view->model()->index(0, 0);
 		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
 	}
+	e.first = qSourceIndex(e.first);
+	e.second = qSourceIndex(e.second);
 	if (m_includeHeader){
 		stream.writeStartElement("Row");
 		for (int c = e.first.column(); c <= e.second.column(); c++){

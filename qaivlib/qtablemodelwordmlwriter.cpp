@@ -21,6 +21,7 @@
 #include "stdafx.h"
 #include "qtablemodelwordmlwriter_p.h"
 
+#include "qaiv.h"
 #include "qabstractfilterproxymodel.h"
 #include "qadvancedtableview.h"
 #include "qmimedatautil.h"
@@ -179,6 +180,8 @@ bool QTableModelWordMLWriter::write(QAbstractItemModel* model, QItemSelectionMod
 		e.first = model->index(0, 0);
 		e.second = model->index(model->rowCount() - 1, model->columnCount() - 1);
 	}
+	e.first = qSourceIndex(e.first);
+	e.second = qSourceIndex(e.second);
 
 	QMap<int,int> width;
 

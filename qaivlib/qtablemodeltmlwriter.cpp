@@ -21,6 +21,7 @@
 #include "stdafx.h"
 #include "qtablemodelhtmlwriter_p.h"
 
+#include "qaiv.h"
 #include "qabstractfilterproxymodel.h"
 #include "qadvancedtableview.h"
 #include "qmimedatautil.h"
@@ -67,6 +68,8 @@ bool QTableModelHtmlWriter::write(QAdvancedTableView* view, bool all)
 		e.first = view->model()->index(0, 0);
 		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
 	}
+	e.first = qSourceIndex(e.first);
+	e.second = qSourceIndex(e.second);
 	if (m_includeHeader){
 		// start tag <tr>
 		stream.writeStartElement("tr");
