@@ -143,6 +143,8 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(headerViewHorizontalScrollBarRangeChanged(int,int)));
     connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(sliderMoved(int)), this, SLOT(headerViewHorizontalScrollBarSilderMoved(int)));
     connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(headerViewHorizontalScrollBarValueChanged(int)));
+
+	connect(ui->headerTableView, SIGNAL(verticalHeaderWidthChangeRequested(int)), this, SLOT(verticalHeaderWidthChangeRequested(int)));
     // Forward data view signals
     connect(ui->dataTableView, SIGNAL(activated(QModelIndex)), this, SLOT(viewActivated(QModelIndex)));
     connect(ui->dataTableView, SIGNAL(clicked(QModelIndex)), this, SLOT(viewClicked(QModelIndex)));
@@ -602,6 +604,9 @@ bool QAdvancedTableView::restoreState(const QByteArray & data)
 		setShowGrid(grid);
 		updateHorizontalHeaderSectionSize();
 		ui->headerTableView->viewport()->update();
+		ui->dataTableView->horizontalHeader()->restoreState(d);
+		ui->fixedRowsTableView->horizontalHeader()->restoreState(d);
+		ui->splittedDataTableView->horizontalHeader()->restoreState(d);
 	}
 	return false;
 }
@@ -1088,6 +1093,23 @@ void QAdvancedTableView::verticalHeaderSectionClicked(int section)
 	if (ui->fixedRowsTableView->decorationProxy()->isEnabled()){
 		if (p.x() < ui->fixedRowsTableView->decorationProxy()->iconSize().width()){
 			ui->fixedRowsTableView->decorationProxy()->toggleRow(ui->dataTableView->model()->index(section, 0));
+		}
+	}
+}
+
+void QAdvancedTableView::verticalHeaderWidthChangeRequested(int width)
+{
+	if (sender() == ui->headerTableView){
+		if (ui->dataTableView->verticalHeader()->sectionSize(0) < width){
+			int w = width + 12;
+			if (showFixedRows()){
+				w += 22;
+			}
+			ui->dataTableView->verticalHeader()->setFixedWidth(w);
+			ui->headerTableView->verticalHeader()->setFixedWidth(w);
+			ui->fixedRowsTableView->verticalHeader()->setFixedWidth(w);
+			ui->splittedDataTableView->verticalHeader()->setFixedWidth(w);
+			updateHeaderViewGeometries();
 		}
 	}
 }
