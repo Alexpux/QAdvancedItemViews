@@ -23,6 +23,8 @@
 
 #include <QDebug>
 
+#define MT QHash
+
 class QUniqueValuesProxyModelPrivate
 {
 public:
@@ -31,7 +33,7 @@ public:
 
 	bool emptyValues;
     int modelColumn;
-    QMap<QString,QList<int> > valueMap;
+    MT<QString,QList<int> > valueMap;
     QUniqueValuesProxyModel* m;
 };
 
@@ -108,7 +110,7 @@ bool QUniqueValuesProxyModel::isDuplicate(int row) const
 			return false;
 		}
 	}
-    QMap<QString, QList<int> >::ConstIterator mIt = d->valueMap.constFind(v.toString());
+    MT<QString, QList<int> >::ConstIterator mIt = d->valueMap.constFind(v.toString());
     if (mIt == d->valueMap.constEnd()){
         return true;
     }
@@ -125,14 +127,20 @@ void QUniqueValuesProxyModel::buildMap()
     if (sourceModel() == 0){
         return;
     }
-    QMap<QString, QList<int> >::Iterator it;
+	QTime t;
+	t.start();
+    MT<QString, QList<int> >::Iterator it;
 	int c = sourceModel()->rowCount();
+	int max = 0;
     for(int iRow = 0; iRow < c; iRow++){
 		QVariant v = sourceModel()->index(iRow, d->modelColumn).data(filterRole());
 		it = d->valueMap.find(v.toString());
 		if (it == d->valueMap.end()){
 			QList<int> l;
 			l << iRow;
+			if (max < v.toString().size()){
+				max = v.toString().size();
+			}
 			d->valueMap[v.toString()] = l;
 		} else {
 			it.value().append(iRow);
@@ -141,7 +149,7 @@ void QUniqueValuesProxyModel::buildMap()
 	}
 	emit progressChanged(100);
     endResetModel();
-    invalidate();
+//    invalidate();
 }
 
 void QUniqueValuesProxyModel::setEmptyItemsAllowed(bool on)
