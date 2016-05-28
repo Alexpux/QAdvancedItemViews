@@ -37,15 +37,12 @@ public:
 	bool write(QAdvancedTableView* view, bool all);
 
 	bool write(QTableView* view, bool all);
-
-	bool write(QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* headerView, bool all);
 private:
 	void writeBackgroundColor(QXmlStreamWriter & stream, const QBrush & b);
 	void writeDecoration(QXmlStreamWriter & stream, const QVariant & decoration);
 	void writeFont(QXmlStreamWriter & stream, const QFont & font);
 
 	QIODevice* m_device;
-	QAbstractFilterProxyModel* m_filterProxy;
 	int m_imageId;
 	bool m_includeHeader;
 };

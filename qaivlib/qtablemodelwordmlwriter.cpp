@@ -27,7 +27,7 @@
 #include "qmimedatautil.h"
 
 QTableModelWordMLWriter::QTableModelWordMLWriter(QIODevice* device)
-: m_device(device), m_filterProxy(0), m_imageId(1)
+: m_device(device), m_imageId(1)
 {
 }
 
@@ -35,18 +35,7 @@ QTableModelWordMLWriter::~QTableModelWordMLWriter()
 {
 }
 
-bool QTableModelWordMLWriter::write(QTableView* view, bool all)
-{
-	return write(view->model(), view->selectionModel(), view->horizontalHeader(), all);
-}
-
 bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
-{
-	m_filterProxy = view->filterProxyModel();
-	return write(view->filterProxyModel(), view->selectionModel(), view->horizontalHeader(), all);
-}
-
-bool QTableModelWordMLWriter::write(QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* headerView, bool all)
 {
     if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelXmlWriter::writeAll: the device can not be opened for writing";
@@ -175,31 +164,31 @@ bool QTableModelWordMLWriter::write(QAbstractItemModel* model, QItemSelectionMod
 	// get selection range
 	QPair<QModelIndex, QModelIndex> e;
 	if (!all){
-		e = selectionEdges(selectionModel->selection());
+		e = selectionEdges(view->selectionModel()->selection());
 	} else {
-		e.first = model->index(0, 0);
-		e.second = model->index(model->rowCount() - 1, model->columnCount() - 1);
+		e.first = view->filterProxyModel()->index(0, 0);
+		e.second = view->filterProxyModel()->index(view->filterProxyModel()->rowCount() - 1, view->filterProxyModel()->columnCount() - 1);
 	}
-	e.first = qSourceIndex(e.first);
-	e.second = qSourceIndex(e.second);
 
 	QMap<int,int> width;
 
 	stream.writeStartElement("w:tblGrid");
 	for (int c = e.first.column(); c <= e.second.column(); c++){
-		if (all || !headerView->isSectionHidden(c)){
-			int w = 1440 / headerView->logicalDpiX() * headerView->sectionSize(c);
+		if (all || !view->horizontalHeader()->isSectionHidden(c)){
+			int w = 1440 / view->horizontalHeader()->logicalDpiX() * view->horizontalHeader()->sectionSize(c);
 			stream.writeEmptyElement("w:gridCol");
 			stream.writeAttribute("w:w", QString("%1").arg(w));
 			width[c] = w;
 		}
 	}
+
+
 	stream.writeEndElement();
 	// write column header
 	stream.writeStartElement("w:tr");
 	// write column header
 	for (int c = e.first.column(); c <= e.second.column(); c++){
-		if (all || !headerView->isSectionHidden(c)){
+		if (all || !view->horizontalHeader()->isSectionHidden(c)){
 			stream.writeStartElement("w:trPr");
 			stream.writeEmptyElement("w:tblHeader");
 			stream.writeEndElement();
@@ -212,17 +201,17 @@ bool QTableModelWordMLWriter::write(QAbstractItemModel* model, QItemSelectionMod
 			stream.writeEmptyElement("w:shd");
 			stream.writeAttribute("w:val", "clear");
 			stream.writeAttribute("w:color", "auto");
-			writeBackgroundColor(stream, qvariant_cast<QBrush>(model->headerData(headerView->visualIndex(c), Qt::Horizontal, Qt::BackgroundRole)));
+			writeBackgroundColor(stream, qvariant_cast<QBrush>(view->filterProxyModel()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::BackgroundRole)));
 			// end tag <w:tcPr>
 			stream.writeEndElement();
 
 			stream.writeStartElement("w:p");
 			stream.writeStartElement("w:r");
 			stream.writeStartElement("w:rPr");
-			writeFont(stream, qvariant_cast<QFont>(model->headerData(headerView->visualIndex(c), Qt::Horizontal, Qt::FontRole)));
+			writeFont(stream, qvariant_cast<QFont>(view->filterProxyModel()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::FontRole)));
 			// end tag <w:rPr>
 			stream.writeEndElement();
-			stream.writeTextElement("w:t", model->headerData(headerView->visualIndex(c), Qt::Horizontal, Qt::DisplayRole).toString());
+			stream.writeTextElement("w:t", view->filterProxyModel()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::DisplayRole).toString());
 			// end tag <w:r>
 			stream.writeEndElement();
 			// end tag <w:p>
@@ -237,7 +226,7 @@ bool QTableModelWordMLWriter::write(QAbstractItemModel* model, QItemSelectionMod
 	for (int r = e.first.row(); r <= e.second.row(); r++){
 		stream.writeStartElement("w:tr");
 		for (int c = e.first.column(); c <= e.second.column(); c++){
-			if (all || !headerView->isSectionHidden(c)){
+			if (all || !view->horizontalHeader()->isSectionHidden(c)){
 				stream.writeStartElement("w:tc");
 
 				stream.writeStartElement("w:tcPr");
@@ -248,28 +237,265 @@ bool QTableModelWordMLWriter::write(QAbstractItemModel* model, QItemSelectionMod
 				stream.writeAttribute("w:val", "clear");
 				stream.writeAttribute("w:color", "auto");
 				//stream.writeAttribute("w:fill", "auto");
-				if (m_filterProxy){
-					writeBackgroundColor(stream, qvariant_cast<QBrush>(m_filterProxy->index(r, headerView->visualIndex(c)).data(Qt::BackgroundRole)));
-				} else {
-					writeBackgroundColor(stream, qvariant_cast<QBrush>(model->index(r, headerView->visualIndex(c)).data(Qt::BackgroundRole)));
-				}
+				writeBackgroundColor(stream, qvariant_cast<QBrush>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));
 				// end tag <w:tcPr>
 				stream.writeEndElement();
 
 				stream.writeStartElement("w:p");
 				stream.writeStartElement("w:r");
 				stream.writeStartElement("w:rPr");
-				if (m_filterProxy){
-					writeFont(stream, qvariant_cast<QFont>(m_filterProxy->index(r, headerView->visualIndex(c)).data(Qt::FontRole)));
-				} else {
-					writeFont(stream, qvariant_cast<QFont>(model->index(r, headerView->visualIndex(c)).data(Qt::FontRole)));
-				}
+				writeFont(stream, qvariant_cast<QFont>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::FontRole)));
 				// end tag <w:rPr>
 				stream.writeEndElement();
 
-				writeDecoration(stream, model->index(r, headerView->visualIndex(c)).data(Qt::DecorationRole));
+				writeDecoration(stream, view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DecorationRole));
 				// write cell content
-				stream.writeTextElement("w:t", model->index(r, headerView->visualIndex(c)).data(Qt::DisplayRole).toString());
+				stream.writeTextElement("w:t", view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
+				//writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::TextAlignmentRole).toInt()));
+				//writeBorderStyle(stream, view->gridStyle());
+				//writeBackgroundColor(stream, qvariant_cast<QBrush>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));
+				//writeDecoration(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DecorationRole));
+				//stream.writeStartElement("font");
+				//writeFontAttributes(stream, qvariant_cast<QFont>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::FontRole)));
+				//writeCharacters(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
+				// end tag <w:r>
+				stream.writeEndElement();
+				// end tag <w:p>
+				stream.writeEndElement();
+				// end tag <tc>
+				stream.writeEndElement();
+			}
+		}
+		// end tag <tr>
+		stream.writeEndElement();
+	}
+	// end tag <tbl>
+	stream.writeEndElement();
+	// end tag <sect>
+	//stream.writeEndElement();
+	// end tag <body>
+	stream.writeEndElement();
+	// end tag <wordDocument>
+	stream.writeEndElement();
+	return true;
+}
+
+bool QTableModelWordMLWriter::write(QTableView* view, bool all)
+{
+    if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
+        qWarning() << "QTableModelXmlWriter::writeAll: the device can not be opened for writing";
+        return false;
+    }
+	QXmlStreamWriter stream(m_device);
+	stream.setAutoFormatting(true);
+	stream.setAutoFormattingIndent(2);
+
+	stream.writeStartDocument("1.0", true);
+	stream.writeProcessingInstruction("mso-application progid=\"Word.Document\"");
+	stream.writeStartElement("w:wordDocument");
+	//
+	stream.writeAttribute("xmlns:w", "http://schemas.microsoft.com/office/word/2003/wordml");
+	stream.writeAttribute("xmlns:v", "urn:schemas-microsoft-com:vml");
+	//stream.writeAttribute("xmlns:w10", "urn:schemas-microsoft-com:office:word");
+	//stream.writeAttribute("xmlns:sl", "http://schemas.microsoft.com/schemaLibrary/2003/core");
+	//stream.writeAttribute("xmlns:aml", "http://schemas.microsoft.com/aml/2001/core");
+	stream.writeAttribute("xmlns:wx", "http://schemas.microsoft.com/office/word/2003/auxHint");
+	stream.writeAttribute("xmlns:o", "urn:schemas-microsoft-com:office:office");
+	//stream.writeAttribute("xmlns:dt", "uuid:C2F41010-65B3-11d1-A29F-00AA00C14882");
+	//stream.writeAttribute("w:macrosPresent", "no");
+	//stream.writeAttribute("w:embeddedObjPresent", "no");
+	//stream.writeAttribute("w:ocxPresent", "no");
+	//stream.writeAttribute("xml:space","preserve");
+
+	//stream.writeEmptyElement("w:ignoreSubtree");
+	//stream.writeAttribute("w:val", "http://schemas.microsoft.com/office/word/2003/wordml/sp2");
+	// document properties
+	stream.writeStartElement("o:DocumentProperties");
+	stream.writeTextElement("o:Author", "qaiv");
+	stream.writeTextElement("o:LastAuthor", "qaiv");
+		//<o:Revision>2</o:Revision>
+		//<o:TotalTime>0</o:TotalTime>
+		//<o:Created>2013-08-23T16:21:00Z</o:Created>
+		//<o:LastSaved>2013-08-23T16:21:00Z</o:LastSaved>
+	//stream.writeTextElement("o:Pages", "1");
+		//<o:Words>1</o:Words>
+		//<o:Characters>12</o:Characters>
+		//<o:Lines>1</o:Lines>
+		//<o:Paragraphs>1</o:Paragraphs>
+		//<o:CharactersWithSpaces>12</o:CharactersWithSpaces>
+	stream.writeTextElement("o:Version", "14");
+
+	stream.writeEndElement();
+	//// fonts
+	//stream.writeStartElement("w:fonts");
+	//stream.writeStartElement("w:defaultFonts");
+ //   stream.writeAttribute("w:ascii", "Times New Roman");
+ //   stream.writeAttribute("w:fareast", "Times New Roman");
+ //   stream.writeAttribute("w:h-ansi", "Times New Roman");
+ //   stream.writeAttribute("w:cs", "Times New Roman");
+	//stream.writeEndElement();
+	//stream.writeEndElement();
+	//// lists
+	//stream.writeStartElement("lists");
+
+	//stream.writeEndElement();
+	//// styles
+	//stream.writeStartElement("styles");
+
+	//stream.writeEndElement();
+	// start body
+	stream.writeStartElement("w:body");
+
+	stream.writeStartElement("w:tbl");
+
+	stream.writeStartElement("w:tblPr");
+	// define table borders
+	stream.writeStartElement("w:tblBorders");
+	stream.writeEmptyElement("w:top");
+	stream.writeAttribute("w:val", "single");
+	stream.writeAttribute("w:sz", "4");
+	stream.writeAttribute("wx:bdrwidth", "10");
+	stream.writeAttribute("w:space", "0");
+	stream.writeAttribute("w:color", "auto");
+
+	stream.writeEmptyElement("w:left");
+	stream.writeAttribute("w:val", "single");
+	stream.writeAttribute("w:sz", "4");
+	stream.writeAttribute("wx:bdrwidth", "10");
+	stream.writeAttribute("w:space", "0");
+	stream.writeAttribute("w:color", "auto");
+
+
+	stream.writeEmptyElement("w:bottom");
+	stream.writeAttribute("w:val", "single");
+	stream.writeAttribute("w:sz", "4");
+	stream.writeAttribute("wx:bdrwidth", "10");
+	stream.writeAttribute("w:space", "0");
+	stream.writeAttribute("w:color", "auto");
+
+	stream.writeEmptyElement("w:right");
+	stream.writeAttribute("w:val", "single");
+	stream.writeAttribute("w:sz", "4");
+	stream.writeAttribute("wx:bdrwidth", "10");
+	stream.writeAttribute("w:space", "0");
+	stream.writeAttribute("w:color", "auto");
+
+	stream.writeEmptyElement("w:insideH");
+	stream.writeAttribute("w:val", "single");
+	stream.writeAttribute("w:sz", "4");
+	stream.writeAttribute("wx:bdrwidth", "10");
+	stream.writeAttribute("w:space", "0");
+	stream.writeAttribute("w:color", "auto");
+
+	stream.writeEmptyElement("w:insideV");
+	stream.writeAttribute("w:val", "single");
+	stream.writeAttribute("w:sz", "4");
+	stream.writeAttribute("wx:bdrwidth", "10");
+	stream.writeAttribute("w:space", "0");
+	stream.writeAttribute("w:color", "auto");
+
+	stream.writeEndElement();
+	//
+
+	stream.writeEmptyElement("w:tblStyle");
+	stream.writeAttribute("w:val", "TableGrid");
+	stream.writeEmptyElement("w:tblW");
+	stream.writeAttribute("w:w", "0");
+	stream.writeAttribute("w:type", "auto");
+    stream.writeEmptyElement("w:tblLook");
+	stream.writeAttribute("w:val", "01E0");
+	stream.writeEndElement();
+
+	// get selection range
+	QPair<QModelIndex, QModelIndex> e;
+	if (!all){
+		e = selectionEdges(view->selectionModel()->selection());
+	} else {
+		e.first = view->model()->index(0, 0);
+		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
+	}
+	e.first = qSourceIndex(e.first);
+	e.second = qSourceIndex(e.second);
+
+	QMap<int,int> width;
+
+	stream.writeStartElement("w:tblGrid");
+	for (int c = e.first.column(); c <= e.second.column(); c++){
+		if (all || !view->horizontalHeader()->isSectionHidden(c)){
+			int w = 1440 / view->horizontalHeader()->logicalDpiX() * view->horizontalHeader()->sectionSize(c);
+			stream.writeEmptyElement("w:gridCol");
+			stream.writeAttribute("w:w", QString("%1").arg(w));
+			width[c] = w;
+		}
+	}
+	stream.writeEndElement();
+	// write column header
+	stream.writeStartElement("w:tr");
+	// write column header
+	for (int c = e.first.column(); c <= e.second.column(); c++){
+		if (all || !view->horizontalHeader()->isSectionHidden(c)){
+			stream.writeStartElement("w:trPr");
+			stream.writeEmptyElement("w:tblHeader");
+			stream.writeEndElement();
+			stream.writeStartElement("w:tc");
+
+			stream.writeStartElement("w:tcPr");
+			stream.writeEmptyElement("w:tcW");
+			stream.writeAttribute("w:w", QString("%1").arg(width.value(c)));
+			stream.writeAttribute("w:type", "dxa");
+			stream.writeEmptyElement("w:shd");
+			stream.writeAttribute("w:val", "clear");
+			stream.writeAttribute("w:color", "auto");
+			writeBackgroundColor(stream, qvariant_cast<QBrush>(view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::BackgroundRole)));
+			// end tag <w:tcPr>
+			stream.writeEndElement();
+
+			stream.writeStartElement("w:p");
+			stream.writeStartElement("w:r");
+			stream.writeStartElement("w:rPr");
+			writeFont(stream, qvariant_cast<QFont>(view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::FontRole)));
+			// end tag <w:rPr>
+			stream.writeEndElement();
+			stream.writeTextElement("w:t", view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::DisplayRole).toString());
+			// end tag <w:r>
+			stream.writeEndElement();
+			// end tag <w:p>
+			stream.writeEndElement();
+			// end tag <tc>
+			stream.writeEndElement();
+		}
+	}
+	// end tag <w:tr>
+	stream.writeEndElement();
+	// write table content
+	for (int r = e.first.row(); r <= e.second.row(); r++){
+		stream.writeStartElement("w:tr");
+		for (int c = e.first.column(); c <= e.second.column(); c++){
+			if (all || !view->horizontalHeader()->isSectionHidden(c)){
+				stream.writeStartElement("w:tc");
+
+				stream.writeStartElement("w:tcPr");
+				stream.writeEmptyElement("w:tcW");
+				stream.writeAttribute("w:w", QString("%1").arg(width.value(c)));
+				stream.writeAttribute("w:type", "dxa");
+				stream.writeEmptyElement("w:shd");
+				stream.writeAttribute("w:val", "clear");
+				stream.writeAttribute("w:color", "auto");
+				//stream.writeAttribute("w:fill", "auto");
+				writeBackgroundColor(stream, qvariant_cast<QBrush>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));
+				// end tag <w:tcPr>
+				stream.writeEndElement();
+
+				stream.writeStartElement("w:p");
+				stream.writeStartElement("w:r");
+				stream.writeStartElement("w:rPr");
+				writeFont(stream, qvariant_cast<QFont>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::FontRole)));
+				// end tag <w:rPr>
+				stream.writeEndElement();
+
+				writeDecoration(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DecorationRole));
+				// write cell content
+				stream.writeTextElement("w:t", view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
 				//writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::TextAlignmentRole).toInt()));
 				//writeBorderStyle(stream, view->gridStyle());
 				//writeBackgroundColor(stream, qvariant_cast<QBrush>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));

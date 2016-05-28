@@ -23,6 +23,7 @@
 
 #include "qaiv.h"
 #include "qadvancedtableview.h"
+#include "qabstractfilterproxymodel.h"
 #include "qmimedatautil.h"
 	
 QTableModelExcelMLWriter::QTableModelExcelMLWriter(QIODevice* device)
@@ -94,11 +95,9 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView* view, bool all)
 	if (!all){
 		e = selectionEdges(view->selectionModel()->selection());
 	} else {
-		e.first = view->model()->index(0, 0);
-		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
+		e.first = view->filterProxyModel()->index(0, 0);
+		e.second = view->filterProxyModel()->index(view->filterProxyModel()->rowCount() - 1, view->filterProxyModel()->columnCount() - 1);
 	}
-	e.first = qSourceIndex(e.first);
-	e.second = qSourceIndex(e.second);
 	if (m_includeHeader){
 		stream.writeStartElement("Row");
 		for (int c = e.first.column(); c <= e.second.column(); c++){
@@ -107,7 +106,7 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView* view, bool all)
 
 				stream.writeStartElement("Data");
 				stream.writeAttribute("ss:Type", "String");
-				stream.writeCharacters(view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, m_role).toString());
+				stream.writeCharacters(view->filterProxyModel()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, m_role).toString());
 				// end tag <Data>
 				stream.writeEndElement();
 				// end tag <Cell>
@@ -125,7 +124,7 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView* view, bool all)
 
 				stream.writeStartElement("Data");
 				stream.writeAttribute("ss:Type", "String");
-				stream.writeCharacters(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(m_role).toString());
+				stream.writeCharacters(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(m_role).toString());
 				// end tag <Data>
 				stream.writeEndElement();
 				// end tag <Cell>
@@ -196,6 +195,9 @@ bool QTableModelExcelMLWriter::write(QTableView* view, bool all)
 		e.first = view->model()->index(0, 0);
 		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
 	}
+	e.first = qSourceIndex(e.first);
+	e.second = qSourceIndex(e.second);
+
 	if (m_includeHeader){
 		stream.writeStartElement("Row");
 		for (int c = e.first.column(); c <= e.second.column(); c++){
