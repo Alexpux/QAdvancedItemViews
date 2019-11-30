@@ -27,7 +27,7 @@
 #include <QSortFilterProxyModel>
 #include <QTableView>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 class QFixedRowsFilterProxyModel;
 class QFixedRowsDecorationProxyModel;

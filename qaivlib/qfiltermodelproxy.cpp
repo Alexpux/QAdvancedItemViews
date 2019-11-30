@@ -73,7 +73,7 @@ QVariant QFilterModelProxy::data(const QModelIndex & index, int role) const
     return QAbstractFilterProxyModel::data(index, role);
 }
 
-bool QFilterModelProxy::filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const
+bool QFilterModelProxy::filterAcceptsRow(int source_row, const QModelIndex & source_parent) const
 {
     Q_UNUSED(source_parent)
     if (filterModel()->mode() == QAdvancedItemViews::HighlightMode) {

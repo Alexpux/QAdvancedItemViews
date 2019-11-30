@@ -25,7 +25,7 @@
 #include <QObject>
 #include <QPointer>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 //! The QHeaderViewConnector class provides a connector to align QHeaderViews.
 class QAIVLIBSHARED_EXPORT QHeaderViewConnector : public QObject

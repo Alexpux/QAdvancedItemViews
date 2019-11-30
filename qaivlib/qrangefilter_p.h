@@ -21,8 +21,8 @@
 #ifndef QRANGEFILTER_P_H
 #define QRANGEFILTER_P_H
 
-#include <qfiltereditorwidget.h>
-#include <qfiltereditorpopupwidget.h>
+#include "qfiltereditorwidget.h"
+#include "qfiltereditorpopupwidget.h"
 
 class QLineEdit;
 

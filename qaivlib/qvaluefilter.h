@@ -21,8 +21,8 @@
 #ifndef QVALUEFILTER_H
 #define QVALUEFILTER_H
 
-#include <qabstractfilter.h>
-#include <qaivlib_global.h>
+#include "qabstractfilter.h"
+#include "qaivlib_global.h"
 
 //! The QValueFilter class implements a value type aware filter.
 /**

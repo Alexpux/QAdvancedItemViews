@@ -214,14 +214,14 @@ public:
     /**
       * Sets the given @p sourceModel to be processed by the proxy model.
       */
-    virtual void setSourceModel( QAbstractItemModel* sourceModel );
+    virtual void setSourceModel(QAbstractItemModel* sourceModel);
     void setUngroupedItemTitle(const QString & title);
     void setUngroupedItemTitle(const QString & title, const QIcon & icon);
     virtual QSize span(const QModelIndex & index) const;
 private slots:
     void dataChangedHandler(const QModelIndex & topLeft, const QModelIndex & bottomRight);
     void sourceModelResetHandler();
-    void rowsAboutToBeInsertedHandler( const QModelIndex & parent, int start, int end );
+    void rowsAboutToBeInsertedHandler(const QModelIndex & parent, int start, int end);
     void rowsInsertedHandler(const QModelIndex & parent, int first, int last);
 private:
     void buildGroups();

@@ -22,15 +22,15 @@
 #define QSPECIALFILTER_P_H
 
 #include <QLineEdit>
-#include <qfiltereditorwidget.h>
 
-#include <qclickablelabel.h>
+#include "qfiltereditorwidget.h"
+#include "qclickablelabel.h"
 
 class QSpecialFilterEditor : public QFilterEditorWidget
 {
     Q_OBJECT
 public:
-    QSpecialFilterEditor(QWidget* parent = 0);
+    QSpecialFilterEditor(QWidget* parent = nullptr);
     ~QSpecialFilterEditor();
 
     Qt::CaseSensitivity caseSensitivity() const;

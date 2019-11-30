@@ -21,8 +21,8 @@
 #ifndef QAUTOFILTER_P_H
 #define QAUTOFILTER_P_H
 
-#include <qfiltereditorwidget.h>
-#include <qfiltereditorpopupwidget.h>
+#include "qfiltereditorwidget.h"
+#include "qfiltereditorpopupwidget.h"
 #include <QStandardItemModel>
 
 class QCheckBox;

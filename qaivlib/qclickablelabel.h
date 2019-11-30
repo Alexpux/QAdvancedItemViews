@@ -23,7 +23,7 @@
 
 #include <QLabel>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 //! The QClickableLabel widget provides a text or image display and responses to mouse button clicks.
 /** @ingroup widgets

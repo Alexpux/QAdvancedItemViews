@@ -22,7 +22,7 @@
 #define QSINGLECOLUMNPROXYMODEL_H
 
 #include <QSortFilterProxyModel>
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 class QSingleColumnProxyModelPrivate;
 

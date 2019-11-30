@@ -21,8 +21,8 @@
 #ifndef QRANGEFILTER_H
 #define QRANGEFILTER_H
 
-#include <qabstractfilter.h>
-#include <qaivlib_global.h>
+#include "qabstractfilter.h"
+#include "qaivlib_global.h"
 
 //! The QRangeFilter class implements a range filter.
 /**

@@ -21,8 +21,8 @@
 #ifndef QTEXTFILTER_H
 #define QTEXTFILTER_H
 
-#include <qaivlib_global.h>
-#include <qabstractfilter.h>
+#include "qaivlib_global.h"
+#include "qabstractfilter.h"
 
 //! The QTextFilter class implements a filter on the textual (string) representation of a value.
 /**
@@ -42,7 +42,7 @@ public:
     /**
       *
       */
-    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
     void addContextMenuActions(QMenu* menu, QWidget* receiver);
     /**

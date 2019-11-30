@@ -21,11 +21,11 @@
 #ifndef QSELECTIONLISTFILTER_P_H
 #define QSELECTIONLISTFILTER_P_H
 
-#include <qfiltereditorwidget.h>
-#include <qfiltereditorpopupwidget.h>
 #include <QStandardItemModel>
 
-#include <qcheckstateproxymodel.h>
+#include "qfiltereditorwidget.h"
+#include "qfiltereditorpopupwidget.h"
+#include "qcheckstateproxymodel.h"
 
 class QCheckBox;
 class QLineEdit;

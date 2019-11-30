@@ -23,7 +23,7 @@
 
 #include <QItemSelectionModel>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 class QSharedItemSelectionModelPrivate;
 

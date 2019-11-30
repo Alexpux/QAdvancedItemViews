@@ -54,7 +54,7 @@ public:
     /**
      * @reimp
      */
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     /**
       * @reimp
       */

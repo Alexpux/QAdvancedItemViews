@@ -23,7 +23,7 @@
 
 #include <QHeaderView>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 //! The QAdvancedHeaderView class provides a header view to manage to appearance of the related view.
 /**

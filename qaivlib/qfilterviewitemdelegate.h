@@ -24,7 +24,7 @@
 #include <QListWidgetItem>
 #include <QStyledItemDelegate>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 //! The QFilterViewItemDelegate class provides display and editing facilities for filter from a filter model.
 class QAIVLIBSHARED_EXPORT QFilterViewItemDelegate : public QStyledItemDelegate
@@ -43,24 +43,24 @@ public:
       * @reimp
       * @see QAbstractFilter:createEditor()
       */
-    QWidget* createEditor( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QWidget* createEditor(QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
-    void setEditorData( QWidget * editor, const QModelIndex & index ) const;
+    void setEditorData(QWidget * editor, const QModelIndex & index) const;
 
-    void setModelData( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const;
+    void setModelData(QWidget * editor, QAbstractItemModel * model, const QModelIndex & index) const;
 
-    QSize sizeHint( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
     /**
      * Updates the editor for the item specified by index according to the style option given.
      */
-    void updateEditorGeometry( QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 public slots:
     void commitAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
     void cancelAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
 private slots:
-    void comboxBoxItemActivated( int index );
+    void comboxBoxItemActivated(int index);
 
-    void listWidgetCurrentItemChanged( QListWidgetItem* current, QListWidgetItem* previous );
+    void listWidgetCurrentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
 
     void lineEditReturnPressed();
 private:

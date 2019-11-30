@@ -21,9 +21,9 @@
 #ifndef QFILTERMODELPROXY_H
 #define QFILTERMODELPROXY_H
 
-#include <qabstractfilterproxymodel.h>
+#include "qabstractfilterproxymodel.h"
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 class QAbstractFilterModel;
 
@@ -49,7 +49,7 @@ protected:
     /**
      * @reimp
      */
-    bool filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
 };
 
 #endif // QFILTERMODELPROXY_H

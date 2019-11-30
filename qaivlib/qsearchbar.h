@@ -22,7 +22,7 @@
 #define QSEARCHBAR_H
 
 #include <QWidget>
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 namespace Ui {
     class QSearchBar;

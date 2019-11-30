@@ -24,7 +24,7 @@
 #include <QLineEdit>
 #include <QWidget>
 
-#include <qclickablelabel.h>
+#include "qclickablelabel.h"
 
 class QTextFilterEditor : public QWidget
 {

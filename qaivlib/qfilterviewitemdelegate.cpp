@@ -25,7 +25,7 @@
 #include "qabstractfiltermodel.h"
 #include "qfilterview.h"
 
-QFilterViewItemDelegate::QFilterViewItemDelegate( QObject* parent )
+QFilterViewItemDelegate::QFilterViewItemDelegate(QObject* parent)
     : QStyledItemDelegate(parent)
 {
     m_enableFilter = false;
@@ -35,7 +35,7 @@ QFilterViewItemDelegate::~QFilterViewItemDelegate()
 {
 }
 
-void QFilterViewItemDelegate::comboxBoxItemActivated( int index )
+void QFilterViewItemDelegate::comboxBoxItemActivated(int index)
 {
     Q_UNUSED(index);
     emit commitData((QWidget*)sender());
@@ -56,7 +56,7 @@ void QFilterViewItemDelegate::commitAndClose(QAbstractItemDelegate::EndEditHint 
     emit closeEditor(w, hint);
 }
 
-QWidget* QFilterViewItemDelegate::createEditor( QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QWidget* QFilterViewItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
     const QAbstractFilterModel* model = qobject_cast<const QAbstractFilterModel*>(index.model());
     if (model) {
@@ -87,7 +87,7 @@ void QFilterViewItemDelegate::lineEditReturnPressed()
     emit closeEditor((QWidget*)sender());
 }
 
-void QFilterViewItemDelegate::listWidgetCurrentItemChanged( QListWidgetItem* current, QListWidgetItem* previous )
+void QFilterViewItemDelegate::listWidgetCurrentItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
 {
     Q_UNUSED(current)
     Q_UNUSED(previous)
@@ -95,7 +95,7 @@ void QFilterViewItemDelegate::listWidgetCurrentItemChanged( QListWidgetItem* cur
     emit closeEditor((QWidget*)sender());
 }
 
-void QFilterViewItemDelegate::setEditorData(QWidget* editor, const QModelIndex & index ) const
+void QFilterViewItemDelegate::setEditorData(QWidget* editor, const QModelIndex & index) const
 {
     const QAbstractFilterModel* model = qobject_cast<const QAbstractFilterModel*>(index.model());
     if (model) {
@@ -117,12 +117,12 @@ void QFilterViewItemDelegate::setModelData(QWidget* editor, QAbstractItemModel *
     }
 }
 
-QSize QFilterViewItemDelegate::sizeHint( const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QSize QFilterViewItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
     return QStyledItemDelegate::sizeHint(option, index);
 }
 
-void QFilterViewItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+void QFilterViewItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
     const QAbstractFilterModel* m = qobject_cast<const QAbstractFilterModel*>(index.model());
     if (m) {

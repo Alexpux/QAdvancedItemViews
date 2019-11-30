@@ -23,7 +23,7 @@
 
 #include <QHeaderView>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 class QAIVLIBSHARED_EXPORT QFixedRowsHeaderView : public QHeaderView
 {
@@ -34,6 +34,7 @@ public:
 signals:
 
 public slots:
+
 protected:
     virtual void mouseReleaseEvent(QMouseEvent* event);
 };

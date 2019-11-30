@@ -21,8 +21,8 @@
 #ifndef QREGEXPFILTER_H
 #define QREGEXPFILTER_H
 
-#include <qaivlib_global.h>
-#include <qabstractfilter.h>
+#include "qaivlib_global.h"
+#include "qabstractfilter.h"
 
 //! The QRegExpFilter class implements a regular expression filter.
 /**

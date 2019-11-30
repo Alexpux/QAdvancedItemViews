@@ -58,7 +58,7 @@ public:
     /**
       *  @reimp
       */
-    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
     void addContextMenuActions(QMenu* menu, QWidget* receiver);
     /**

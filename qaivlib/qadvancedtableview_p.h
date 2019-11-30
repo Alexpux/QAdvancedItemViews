@@ -38,8 +38,8 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-#include <qadvancedtableview.h>
-#include <qclickablelabel.h>
+#include "qadvancedtableview.h"
+#include "qclickablelabel.h"
 
 class QComboBox;
 class QAbstractItemDelegate;

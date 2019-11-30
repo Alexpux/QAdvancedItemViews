@@ -23,9 +23,9 @@
 
 #include <QString>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
-#include <qabstractfilter.h>
+#include "qabstractfilter.h"
 
 //! The QFilterGroup class groups filter definitions.
 class QAIVLIBSHARED_EXPORT QFilterGroup

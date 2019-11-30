@@ -21,8 +21,8 @@
 #ifndef QSELECTIONLISTFILTER_H
 #define QSELECTIONLISTFILTER_H
 
-#include <qabstractfilter.h>
-#include <qaivlib_global.h>
+#include "qabstractfilter.h"
+#include "qaivlib_global.h"
 
 //! The QSelectionListFilter class implements the filter with a fixed selection list.
 /**
@@ -41,7 +41,7 @@ public:
     };
     QSelectionListFilter(int row, int column);
 
-    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const;
     /**
       * Returns the data stored under the given @p role for this filter.
       * @see setData()
