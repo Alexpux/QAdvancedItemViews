@@ -18,7 +18,7 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include <stdafx.h>
+
 #include "qtablemodelwriter.h"
 
 #include "qtablemodelcsvwriter_p.h"
@@ -26,78 +26,84 @@
 #include "qtablemodelwordmlwriter_p.h"
 #include "qtablemodelexcelmlwriter_p.h"
 
+#include <QDebug>
+#include <QIODevice>
+#include <QFile>
+#include <QFileInfo>
+#include <QTableView>
+
 class QTableModelWriterPrivate
 {
 public:
-	QTableModelWriterPrivate(QTableModelWriter* pc);
+    QTableModelWriterPrivate(QTableModelWriter* pc);
 
-	QIODevice* device;
-	bool deleteDevice;
-	QByteArray format;
-	bool includeHeader;
-	int role;
-	QTableModelWriter* c;
+    QIODevice* device;
+    QTableModelWriter* c;
+    bool deleteDevice;
+    bool includeHeader;
+    int role;
+    QByteArray format;
 };
 
-QTableModelWriterPrivate::QTableModelWriterPrivate(QTableModelWriter* pc) : 
-	device(0), c(pc), deleteDevice(true), includeHeader(true), role(Qt::DisplayRole)
+QTableModelWriterPrivate::QTableModelWriterPrivate(QTableModelWriter* pc) :
+    device(0), c(pc), deleteDevice(true), includeHeader(true), role(Qt::DisplayRole)
 {
 }
 
 QTableModelWriter::QTableModelWriter() :
-	d(new QTableModelWriterPrivate(this))
+    d(new QTableModelWriterPrivate(this))
 {
 }
 
 QTableModelWriter::QTableModelWriter(QIODevice* device, const QByteArray & format) :
-	d(new QTableModelWriterPrivate(this))
+    d(new QTableModelWriterPrivate(this))
 {
-	d->deleteDevice = false;
-	d->device = device;
-	d->format = format;
+    d->deleteDevice = false;
+    d->device = device;
+    d->format = format;
 }
 
 QTableModelWriter::QTableModelWriter(const QString & fileName, const QByteArray & format) :
-	d(new QTableModelWriterPrivate(this))
+    d(new QTableModelWriterPrivate(this))
 {
-	d->device = new QFile(fileName);
-	d->deleteDevice = true;
-	d->format = format;
+    d->device = new QFile(fileName);
+    d->deleteDevice = true;
+    d->format = format;
 }
 /**
  * Destroys the QTableModelWriter object.
  */
 QTableModelWriter::~QTableModelWriter()
 {
-	if (d->deleteDevice){
-		delete d->device;
-	}
-	delete d;
+    if (d->deleteDevice){
+        delete d->device;
+    }
+    delete d;
 }
 /**
  * Returns the device currently assigned, or 0 if no device has been assigned.
  */
 QIODevice* QTableModelWriter::device() const
 {
-	return d->device;
+    return d->device;
 }
 /**
  * If the currently assigned device is a QFile, or if setFileName() has been called, this function returns the name of the file to be written to. In all other cases, it returns an empty string.
  */
 QString QTableModelWriter::fileName() const
 {
-	QFile* f = qobject_cast<QFile*>(d->device);
-	if (f){
-		return f->fileName();
-	}
-	return QString::null;
+    QFile* f = qobject_cast<QFile*>(d->device);
+    if (f){
+        return f->fileName();
+    }
+    return QString();
 }
 /**
  * Returns the format used for writing documents.
  */
 QByteArray QTableModelWriter::format() const
 {
-	return d->format;
+    return d->format;
 }
 /**
  * Sets the writer's device to the device specified. If a device has already been set, the old device is removed but otherwise left unchanged.
@@ -106,9 +112,9 @@ QByteArray QTableModelWriter::format() const
  */
 void QTableModelWriter::setDevice(QIODevice* device)
 {
-	if (d->device && d->deleteDevice){
+    if (d->device && d->deleteDevice){
         delete d->device;
-	}
+    }
 
     d->device = device;
     d->deleteDevice = false;
@@ -124,12 +130,12 @@ void QTableModelWriter::setDevice(QIODevice* device)
  */
 void QTableModelWriter::setFormat(const QByteArray &format)
 {
-	d->format = format;
+    d->format = format;
 }
 
 void QTableModelWriter::setRole(int role)
 {
-	d->role = role;
+    d->role = role;
 }
 /**
  * Returns the list of document formats supported by QTextDocumentWriter.
@@ -145,41 +151,41 @@ void QTableModelWriter::setRole(int role)
  */
 QList<QByteArray> QTableModelWriter::supportedFormats()
 {
-	QList<QByteArray> l;
+    QList<QByteArray> l;
 
-	l << "CSV";
-	l << "HTML";
-	l << "SpreadsheetML";
-	l << "WordML";
-	return l;
+    l << "CSV";
+    l << "HTML";
+    l << "SpreadsheetML";
+    l << "WordML";
+    return l;
 }
 /**
  * Writes all rows and colums of the specified @p view.
  */
 bool QTableModelWriter::writeAll(QAdvancedTableView* view)
 {
-	return write(view, true);
+    return write(view, true);
 }
 /**
  * Writes all rows and colums of the specified @p view.
  */
 bool QTableModelWriter::writeAll(QTableView* view)
 {
-	return write(view, true);
+    return write(view, true);
 }
 /**
  * Writes the selected cells of the specified @p view.
  */
 bool QTableModelWriter::writeSelection(QAdvancedTableView* view)
 {
-	return write(view, false);
+    return write(view, false);
 }
 /**
  * Writes the selected cells of the specified @p view.
  */
 bool QTableModelWriter::writeSelection(QTableView* view)
 {
-	return write(view, false);
+    return write(view, false);
 }
 /**
  * Writes the selected cells of the specified @p view.
@@ -189,49 +195,49 @@ bool QTableModelWriter::write(QAdvancedTableView* view, bool all)
     QByteArray suffix;
 
     if (d->device && d->format.isEmpty()) {
-		if (QFile *file = qobject_cast<QFile *>(d->device)){
+        if (QFile *file = qobject_cast<QFile *>(d->device)) {
             suffix = QFileInfo(file->fileName()).suffix().toLower().toLatin1();
-		}
+        }
     }
 
     QByteArray format = !d->format.isEmpty() ? d->format.toLower() : suffix;
-	if (format == "csv"){
+    if (format == "csv"){
         if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
             qWarning() << "QTableModelWriter::write: the device can not be opened for writing";
             return false;
         }
-		QTableModelCsvWriter w(d->device);
-		return w.writeAll(view, all);
-	}
-	if (format == "html"){
+        QTableModelCsvWriter w(d->device);
+        return w.writeAll(view, all);
+    }
+    if (format == "html"){
         if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
             qWarning() << "QTableModelHtmlWriter::write: the device can not be opened for writing";
             return false;
         }
-		QTableModelHtmlWriter w(d->device);
-		return w.write(view, all);
-	}
-	if (format == "wordml"){
+        QTableModelHtmlWriter w(d->device);
+        return w.write(view, all);
+    }
+    if (format == "wordml"){
         if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
             qWarning() << "QTableModelWriter::write: the device can not be opened for writing";
             return false;
         }
-		QTableModelWordMLWriter w(d->device);
-		return w.write(view, all);
-		
-	}
-	if (format == "spreadsheetml"){
-        if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
-            qWarning() << "QTableModelWriter::write: the device can not be opened for writing";
-            return false;
-        }
-		QTableModelExcelMLWriter w(d->device);
-		w.setIncludeHeader(d->includeHeader);
-		w.setRole(d->role);
-		return w.write(view, all);
-	}
+        QTableModelWordMLWriter w(d->device);
+        return w.write(view, all);
 
-	return false;
+    }
+    if (format == "spreadsheetml"){
+        if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
+            qWarning() << "QTableModelWriter::write: the device can not be opened for writing";
+            return false;
+        }
+        QTableModelExcelMLWriter w(d->device);
+        w.setIncludeHeader(d->includeHeader);
+        w.setRole(d->role);
+        return w.write(view, all);
+    }
+
+    return false;
 }
 
 bool QTableModelWriter::write(QTableView* view, bool all)
@@ -239,54 +245,54 @@ bool QTableModelWriter::write(QTableView* view, bool all)
     QByteArray suffix;
 
     if (d->device && d->format.isEmpty()) {
-		if (QFile *file = qobject_cast<QFile *>(d->device)){
+        if (QFile *file = qobject_cast<QFile *>(d->device)){
             suffix = QFileInfo(file->fileName()).suffix().toLower().toLatin1();
-		}
+        }
     }
 
     QByteArray format = !d->format.isEmpty() ? d->format.toLower() : suffix;
-	if (format == "csv"){
+    if (format == "csv"){
         if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
             qWarning() << "QTableModelWriter::write: the device can not be opened for writing";
             return false;
         }
-		QTableModelCsvWriter w(d->device);
-		return w.writeAll(view, all);
-	}
-	if (format == "html"){
+        QTableModelCsvWriter w(d->device);
+        return w.writeAll(view, all);
+    }
+    if (format == "html"){
         if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
             qWarning() << "QTableModelHtmlWriter::write: the device can not be opened for writing";
             return false;
         }
-		QTableModelHtmlWriter w(d->device);
-		return w.write(view, all);
-	}
-	if (format == "wordml"){
+        QTableModelHtmlWriter w(d->device);
+        return w.write(view, all);
+    }
+    if (format == "wordml"){
         if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
             qWarning() << "QTableModelWriter::write: the device can not be opened for writing";
             return false;
         }
-		QTableModelWordMLWriter w(d->device);
-		return w.write(view, all);
-		
-	}
-	if (format == "spreadsheetml"){
-        if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
-            qWarning() << "QTableModelWriter::write: the device can not be opened for writing";
-            return false;
-        }
-		QTableModelExcelMLWriter w(d->device);
-		w.setIncludeHeader(d->includeHeader);
-		w.setRole(d->role);
-		return w.write(view, all);
-	}
+        QTableModelWordMLWriter w(d->device);
+        return w.write(view, all);
 
-	return false;
+    }
+    if (format == "spreadsheetml"){
+        if (!d->device->isWritable() && ! d->device->open(QIODevice::WriteOnly)) {
+            qWarning() << "QTableModelWriter::write: the device can not be opened for writing";
+            return false;
+        }
+        QTableModelExcelMLWriter w(d->device);
+        w.setIncludeHeader(d->includeHeader);
+        w.setRole(d->role);
+        return w.write(view, all);
+    }
+
+    return false;
 }
 /**
  * If @p on is true, the table header is included in the output.
  */
 void QTableModelWriter::setIncludeHeader(bool on)
 {
-	d->includeHeader = on;
+    d->includeHeader = on;
 }

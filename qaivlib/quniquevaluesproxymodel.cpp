@@ -18,10 +18,11 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "quniquevaluesproxymodel.h"
 
 #include <QDebug>
+#include <QTime>
 
 #define MT QHash
 
@@ -31,7 +32,7 @@ public:
     QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel* pm);
     ~QUniqueValuesProxyModelPrivate();
 
-	bool emptyValues;
+    bool emptyValues;
     int modelColumn;
     MT<QString,QList<int> > valueMap;
     QUniqueValuesProxyModel* m;
@@ -39,7 +40,7 @@ public:
 
 QUniqueValuesProxyModelPrivate::QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel *pm)
 {
-	emptyValues = true;
+    emptyValues = true;
     modelColumn = 0;
     m = pm;
 }
@@ -66,7 +67,7 @@ QVariant QUniqueValuesProxyModel::data(const QModelIndex & index, int role) cons
 
 bool QUniqueValuesProxyModel::emptyItemsAllowed() const
 {
-	return d->emptyValues;
+    return d->emptyValues;
 }
 
 bool QUniqueValuesProxyModel::filterAcceptsRow(int source_row, const QModelIndex & source_parent) const
@@ -88,7 +89,7 @@ void QUniqueValuesProxyModel::setModelColumn(int colum)
 {
     beginResetModel();
     d->modelColumn = colum;
-	buildMap();
+    buildMap();
     endResetModel();
 }
 
@@ -104,17 +105,17 @@ void QUniqueValuesProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 
 bool QUniqueValuesProxyModel::isDuplicate(int row) const
 {
-	QVariant v = sourceModel()->index(row, d->modelColumn).data(filterRole());
-	if (!d->emptyValues){
-		if (v.toString().isEmpty()){
-			return false;
-		}
-	}
+    QVariant v = sourceModel()->index(row, d->modelColumn).data(filterRole());
+    if (!d->emptyValues) {
+        if (v.toString().isEmpty()) {
+            return false;
+        }
+    }
     MT<QString, QList<int> >::ConstIterator mIt = d->valueMap.constFind(v.toString());
-    if (mIt == d->valueMap.constEnd()){
+    if (mIt == d->valueMap.constEnd()) {
         return true;
     }
-    if (mIt.value().first() == row){
+    if (mIt.value().first() == row) {
         return true;
     }
     return false;
@@ -124,39 +125,39 @@ void QUniqueValuesProxyModel::buildMap()
 {
     beginResetModel();
     d->valueMap.clear();
-    if (sourceModel() == 0){
+    if (sourceModel() == 0) {
         return;
     }
-	QTime t;
-	t.start();
+    QTime t;
+    t.start();
     MT<QString, QList<int> >::Iterator it;
-	int c = sourceModel()->rowCount();
-	int max = 0;
-    for(int iRow = 0; iRow < c; iRow++){
-		QVariant v = sourceModel()->index(iRow, d->modelColumn).data(filterRole());
-		it = d->valueMap.find(v.toString());
-		if (it == d->valueMap.end()){
-			QList<int> l;
-			l << iRow;
-			if (max < v.toString().size()){
-				max = v.toString().size();
-			}
-			d->valueMap[v.toString()] = l;
-		} else {
-			it.value().append(iRow);
-		}
-		emit progressChanged(iRow * 100 / c);
-	}
-	emit progressChanged(100);
+    int c = sourceModel()->rowCount();
+    int max = 0;
+    for(int iRow = 0; iRow < c; iRow++) {
+        QVariant v = sourceModel()->index(iRow, d->modelColumn).data(filterRole());
+        it = d->valueMap.find(v.toString());
+        if (it == d->valueMap.end()) {
+            QList<int> l;
+            l << iRow;
+            if (max < v.toString().size()) {
+                max = v.toString().size();
+            }
+            d->valueMap[v.toString()] = l;
+        } else {
+            it.value().append(iRow);
+        }
+        emit progressChanged(iRow * 100 / c);
+    }
+    emit progressChanged(100);
     endResetModel();
-//    invalidate();
+    //    invalidate();
 }
 
 void QUniqueValuesProxyModel::setEmptyItemsAllowed(bool on)
 {
-	if (d->emptyValues != on){
-		buildMap();
-	}
+    if (d->emptyValues != on) {
+        buildMap();
+    }
 }
 
 void QUniqueValuesProxyModel::sourceModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)

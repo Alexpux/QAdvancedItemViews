@@ -47,7 +47,7 @@ p, li { white-space: pre-wrap; }
          <item>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="0">
-            <widget class="QAdvancedTableView" name="filterTableView"/>
+            <widget class="QAdvancedTableView" name="filterTableView" native="true"/>
            </item>
            <item row="0" column="1">
             <layout class="QVBoxLayout" name="verticalLayout">
@@ -70,7 +70,7 @@ p, li { white-space: pre-wrap; }
                 <string>...</string>
                </property>
                <property name="icon">
-                <iconset resource="../qaivlib/qaiv.qrc">
+                <iconset>
                  <normaloff>:/qaiv/pin/enabled</normaloff>:/qaiv/pin/enabled</iconset>
                </property>
                <property name="iconSize">
@@ -356,7 +356,7 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item row="1" column="0" colspan="2">
-          <widget class="QAdvancedTableView" name="largeTableView"/>
+          <widget class="QAdvancedTableView" name="largeTableView" native="true"/>
          </item>
         </layout>
        </widget>
@@ -378,7 +378,7 @@ p, li { white-space: pre-wrap; }
      </widget>
     </item>
     <item>
-     <widget class="QSearchBar" name="searchBar"/>
+     <widget class="QSearchBar" name="searchBar" native="true"/>
     </item>
    </layout>
   </widget>
@@ -500,7 +500,6 @@ p, li { white-space: pre-wrap; }
  </customwidgets>
  <resources>
   <include location="example.qrc"/>
-  <include location="../qaivlib/qaiv.qrc"/>
  </resources>
  <connections>
   <connection>

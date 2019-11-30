@@ -18,10 +18,12 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qsearchbar.h"
 #include "qsearchbar_p.h"
 #include "ui_qsearchbar.h"
+
+#include <QAbstractItemModel>
 
 QSearchBarPrivate::QSearchBarPrivate()
 {
@@ -32,33 +34,33 @@ QSearchBarPrivate::~QSearchBarPrivate()
 }
 
 QSearchBar::QSearchBar(QWidget *parent)
-	: QWidget(parent), d(new QSearchBarPrivate())
+    : QWidget(parent), d(new QSearchBarPrivate())
 {
-	ui = new Ui::QSearchBar();
-	ui->setupUi(this);
+    ui = new Ui::QSearchBar();
+    ui->setupUi(this);
 }
 
 QSearchBar::~QSearchBar()
 {
-	delete ui;
+    delete ui;
 }
 /**
  * Clears the current expression and result.
  */
 void QSearchBar::clear()
 {
-	ui->expressionLineEdit->clear();
+    ui->expressionLineEdit->clear();
 }
 
 void QSearchBar::expressionChangedHandler(const QString & text)
 {
-	emit expressionChanged(text);
+    emit expressionChanged(text);
 }
 
 void QSearchBar::match(QAbstractItemModel* model)
 {
-	if (model == 0){
-		return;
-	}
-	d->results = model->match(model->index(0, 0), Qt::DisplayRole, ui->expressionLineEdit->text());
+    if (model == 0) {
+        return;
+    }
+    d->results = model->match(model->index(0, 0), Qt::DisplayRole, ui->expressionLineEdit->text());
 }

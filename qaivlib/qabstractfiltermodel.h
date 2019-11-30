@@ -25,8 +25,8 @@
 #include <QAction>
 #include <QMenu>
 
-#include <qaiv.h>
-#include <qaivlib_global.h>
+#include "qaiv.h"
+#include "qaivlib_global.h"
 
 class QAbstractFilterProxyModel;
 class QAbstractFilter;
@@ -52,14 +52,14 @@ public:
      * The QAbstractFilterModel defined additional item data roles for data needed by the view.
      */
     enum ItemDataRole {
-        ValueFilterTypeRole = Qt::UserRole + 42        
+        ValueFilterTypeRole = Qt::UserRole + 42
         ,DefaultFilterTypeRole
         ,ColumnFilterTypesRole
     };
     /**
       * Constructs an abstract filter model with the given @p parent.
       */
-    QAbstractFilterModel(QObject* parent = 0);
+    QAbstractFilterModel(QObject* parent = nullptr);
     /**
       * Destroys the abstract filter model.
       */
@@ -79,12 +79,12 @@ public:
       * Returns an invalid QVariant if the given @p index is invalid or no folter exists for the the given @p index.
       * @see setData()
       */
-    QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     /**
       * Returns the filter group for the given @p index or 0 if no filter group exists for the specified @p index.
       */
     QFilterGroup* filterGroup(const QModelIndex & index) const;
-    /**	
+    /**
       * Return the filter group at @p row or 0 if there is no filter group at the specified @p row.
       */
     QFilterGroup* groupAt(int row) const;
@@ -92,15 +92,15 @@ public:
       * Returns the filter at the specified @p index.
       */
     QAbstractFilter* filter(const QModelIndex & index) const;
-	QIcon filterDisabledIcon() const;
-	QIcon filterEnabledIcon() const;
+    QIcon filterDisabledIcon() const;
+    QIcon filterEnabledIcon() const;
     QList<QAbstractFilter*> filtersAtRow(int row) const;
     /**
       * Returns the item flags for the given @p index.
       */
     Qt::ItemFlags flags(const QModelIndex & index) const;
 
-    QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
 
@@ -120,15 +120,15 @@ public:
 
     bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
 
-    int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+    int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
-    bool setData( const QModelIndex & index, const QVariant & value, int role = Qt::EditRole );
+    bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
     /**
       * Sets the default filter type for the specified @p column to @p type.
       */
     void setDefaultFilterType(int column, int type);
-	void setFilterDisabledIcon(const QIcon & icon);
-	void setFilterEnabledIcon(const QIcon & icon);
+    void setFilterDisabledIcon(const QIcon & icon);
+    void setFilterEnabledIcon(const QIcon & icon);
     bool setHeaderData (int section, Qt::Orientation orientation, const QVariant & value, int role = Qt::EditRole);
 
     void setMatchMode(QAdvancedItemViews::FilterMatchMode flag);
@@ -156,7 +156,7 @@ protected:
       */
     bool registerFilter(int type, const QIcon & icon, const QString & text, const QString & toolTip = QString());
 private slots:
-	void sourceModelLayoutChanged();
+    void sourceModelLayoutChanged();
 private:
     QAbstractFilterModelPrivate* d;
 };

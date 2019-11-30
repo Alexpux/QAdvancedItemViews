@@ -49,14 +49,14 @@ public:
 
     void setModelData( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const;
 
-	QSize sizeHint( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
-	/**
-	 * Updates the editor for the item specified by index according to the style option given.
-	 */
+    QSize sizeHint( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    /**
+     * Updates the editor for the item specified by index according to the style option given.
+     */
     void updateEditorGeometry( QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
 public slots:
-	void commitAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
-	void cancelAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
+    void commitAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
+    void cancelAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
 private slots:
     void comboxBoxItemActivated( int index );
 
@@ -64,7 +64,7 @@ private slots:
 
     void lineEditReturnPressed();
 private:
-	bool m_enableFilter;
+    bool m_enableFilter;
 };
 
 #endif // QFILTERVIEWITEMDELEGATE_H

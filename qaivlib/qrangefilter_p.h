@@ -28,18 +28,18 @@ class QLineEdit;
 
 class QRangeFilterEditorPopup : public QFilterEditorPopupWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	QRangeFilterEditorPopup(QWidget* parent);
-	~QRangeFilterEditorPopup();
+    QRangeFilterEditorPopup(QWidget* parent);
+    ~QRangeFilterEditorPopup();
 
-	QString rangeFrom() const;
+    QString rangeFrom() const;
 
     QString rangeTo() const;
 
-    void setRangeFrom( const QString & text );
+    void setRangeFrom(const QString & text);
 
-    void setRangeTo( const QString & text );
+    void setRangeTo(const QString & text);
 private:
     QLineEdit* m_rangeFrom;
     QLineEdit* m_rangeTo;
@@ -49,18 +49,18 @@ class QRangeFilterEditor : public QFilterEditorWidget
 {
     Q_OBJECT
 public:
-    QRangeFilterEditor( QWidget* parent = 0 );
+    QRangeFilterEditor(QWidget* parent = nullptr);
     ~QRangeFilterEditor();
 
     QString rangeFrom() const;
 
     QString rangeTo() const;
 
-    void setRangeFrom( const QString & text );
+    void setRangeFrom(const QString & text);
 
-    void setRangeTo( const QString & text );
+    void setRangeTo(const QString & text);
 protected:
-	bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif // QRANGEFILTER_P_H

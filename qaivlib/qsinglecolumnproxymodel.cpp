@@ -18,7 +18,7 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qsinglecolumnproxymodel.h"
 
 class QSingleColumnProxyModelPrivate

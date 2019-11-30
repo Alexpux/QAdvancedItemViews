@@ -23,8 +23,8 @@
 
 #include <QTableView>
 
-#include <qaivlib_global.h>
-#include <qfilterviewconnector.h>
+#include "qaivlib_global.h"
+#include "qfilterviewconnector.h"
 
 class QAbstractItemView;
 class QFilterViewConnector;
@@ -43,8 +43,9 @@ class QAIVLIBSHARED_EXPORT QFilterView : public QTableView
       * @see maxVisibileFilterSets() setMaxVisibileFilterSets()
       */
     Q_PROPERTY(int maxVisibileFilterSets READ maxVisibileFilterSets WRITE setMaxVisibileFilterSets)
+
 public:
-    QFilterView( QWidget* parent = 0 );
+    QFilterView(QWidget* parent = nullptr);
     ~QFilterView();
 
     void connectToView(QAbstractItemView* view);
@@ -55,7 +56,7 @@ public:
 
     bool filterVisible() const;
 
-	int maxVisibileFilterSets() const;
+    int maxVisibileFilterSets() const;
 
     void setAllowedFilterTypes(int types);
 
@@ -65,7 +66,8 @@ public:
 
     void setModel(QAbstractItemModel* model);
 
-	void toggleFilter( const QModelIndex & index );
+    void toggleFilter(const QModelIndex & index);
+
 signals:
     void calcGeometryRequested();
     void cornerButtonClicked();
@@ -75,6 +77,7 @@ signals:
       */
     void visibilityChanged(bool visible);
     void removeColumnFilter(int row, int column);
+
 public slots:
     void addFilter();
     /**
@@ -84,26 +87,29 @@ public slots:
     void changeProperties();
     void disableSelectedFilters();
     void enableSelectedFilters();
-	/**
-	 * Removes the current filter.
-	 */
+    /**
+     * Removes the current filter.
+     */
     void removeFilter();
     /**
       * If @p visible the filters in the filter model are shown. Otherwise the size of this is reduced to show the header view only.
       */
     void setFilterVisible(bool visible);
-	/**
-	 * Toggles the state (enabled/disabled) of the filter selection.
-	 * @see toggleFilter()
-	 */
+    /**
+     * Toggles the state (enabled/disabled) of the filter selection.
+     * @see toggleFilter()
+     */
     void toggleSelectedFilters();
+
 protected:
-    void contextMenuEvent( QContextMenuEvent* event );
+    void contextMenuEvent(QContextMenuEvent* event);
     void focusInEvent(QFocusEvent* event);
-    void mousePressEvent( QMouseEvent* event );
+    void mousePressEvent(QMouseEvent* event);
+
 private slots:
     void hideFilter();
     void showFilter();
+
 private:
     void updateGeometry();
 

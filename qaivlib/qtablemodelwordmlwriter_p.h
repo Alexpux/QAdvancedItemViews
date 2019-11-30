@@ -24,27 +24,30 @@
 class QAbstractItemModel;
 class QAbstractFilterProxyModel;
 class QAdvancedTableView;
+class QIODevice;
 class QHeaderView;
 class QItemSelectionModel;
 class QTableView;
 
+#include <QXmlStreamWriter>
+
 class QTableModelWordMLWriter
 {
 public:
-	QTableModelWordMLWriter(QIODevice* device);
-	~QTableModelWordMLWriter();
+    QTableModelWordMLWriter(QIODevice* device);
+    ~QTableModelWordMLWriter();
 
-	bool write(QAdvancedTableView* view, bool all);
+    bool write(QAdvancedTableView* view, bool all);
 
-	bool write(QTableView* view, bool all);
+    bool write(QTableView* view, bool all);
 private:
-	void writeBackgroundColor(QXmlStreamWriter & stream, const QBrush & b);
-	void writeDecoration(QXmlStreamWriter & stream, const QVariant & decoration);
-	void writeFont(QXmlStreamWriter & stream, const QFont & font);
+    void writeBackgroundColor(QXmlStreamWriter & stream, const QBrush & b);
+    void writeDecoration(QXmlStreamWriter & stream, const QVariant & decoration);
+    void writeFont(QXmlStreamWriter & stream, const QFont & font);
 
-	QIODevice* m_device;
-	int m_imageId;
-	bool m_includeHeader;
+    QIODevice* m_device;
+    int m_imageId;
+    bool m_includeHeader;
 };
 
 #endif // QTABLEMODELWORDMLWRITER_P_H

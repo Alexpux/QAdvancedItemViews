@@ -37,39 +37,39 @@ class QSingleColumnProxyModel;
 
 class QAutoFilterEditorPopup : public QFilterEditorPopupWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	QAutoFilterEditorPopup(QWidget* parent);
-	~QAutoFilterEditorPopup();
+    QAutoFilterEditorPopup(QWidget* parent);
+    ~QAutoFilterEditorPopup();
 
-	int mode() const;
+    int mode() const;
 
     QVariantList selectedValues(int role = Qt::DisplayRole) const;
 
     void setSelectedValues(const QVariantList & values);
 
-	void setSourceModel(QAbstractItemModel* model, int column);
+    void setSourceModel(QAbstractItemModel* model, int column);
 signals:
-	void accepted();
-	void modeChanged();
-	void rejected();
+    void accepted();
+    void modeChanged();
+    void rejected();
 private slots:
-	void uniqueValueModelProgressChanged(int progress);
-	void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
-	void emptyToolButtonClicked();
-	void notEmptyToolButtonClicked();
+    void uniqueValueModelProgressChanged(int progress);
+    void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    void emptyToolButtonClicked();
+    void notEmptyToolButtonClicked();
     void searchForTextEdited(const QString & text);
-	void selectCheckBoxStateChanged(int state);
+    void selectCheckBoxStateChanged(int state);
 private:
-	QToolButton* m_emptyToolButton;
+    QToolButton* m_emptyToolButton;
     QLineEdit* m_lineEdit;
     QListView* m_listView;
-	int m_mode;
-	QToolButton* m_notEmptyToolButton;
-	QProgressDialog* m_progress;
-	QCheckBox* m_selectCheckBox;
+    int m_mode;
+    QToolButton* m_notEmptyToolButton;
+    QProgressDialog* m_progress;
+    QCheckBox* m_selectCheckBox;
 
-	QCheckStateProxyModel* m_checkStateProxy;
+    QCheckStateProxyModel* m_checkStateProxy;
     QSingleColumnProxyModel* m_singleColumnProxy;
     QUniqueValuesProxyModel* m_singleValueProxy;
 };
@@ -78,13 +78,13 @@ class QAutoFilterEditor : public QFilterEditorWidget
 {
     Q_OBJECT
 public:
-    QAutoFilterEditor(QWidget* parent = 0);
+    QAutoFilterEditor(QWidget* parent = nullptr);
 
     QVariantList selectedValues(int role = Qt::DisplayRole) const;
 
     void setSourceModel(QAbstractItemModel* model, int column);
 public slots:
-	void modeSelected();
+    void modeSelected();
 };
 
 #endif // QAUTOFILTER_P_H

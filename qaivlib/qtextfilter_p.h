@@ -30,7 +30,7 @@ class QTextFilterEditor : public QWidget
 {
     Q_OBJECT
 public:
-    QTextFilterEditor(QWidget* parent = 0);
+    QTextFilterEditor(QWidget* parent = nullptr);
     ~QTextFilterEditor();
 
     Qt::CaseSensitivity caseSensitivity() const;

@@ -18,7 +18,7 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qfiltergroup.h"
 
 QFilterGroup::QFilterGroup()
@@ -47,7 +47,7 @@ int QFilterGroup::count() const
 
 QAbstractFilter* QFilterGroup::filter(int index) const
 {
-    if (index < cFilterList.size()){
+    if (index < cFilterList.size()) {
         return cFilterList.at(index);
     }
     return 0;
@@ -55,8 +55,8 @@ QAbstractFilter* QFilterGroup::filter(int index) const
 
 QAbstractFilter* QFilterGroup::filterAtColumn(int column) const
 {
-    Q_FOREACH(QAbstractFilter* mFilter, cFilterList){
-        if (mFilter->column() == column){
+    Q_FOREACH(QAbstractFilter* mFilter, cFilterList) {
+        if (mFilter->column() == column) {
             return mFilter;
         }
     }
@@ -70,8 +70,8 @@ QList<QAbstractFilter*> QFilterGroup::filters() const
 
 bool QFilterGroup::hasFilter(int index) const
 {
-    Q_FOREACH(QAbstractFilter* mFilter, cFilterList){
-        if (mFilter->column() == index){
+    Q_FOREACH(QAbstractFilter* mFilter, cFilterList) {
+        if (mFilter->column() == index) {
             return true;
         }
     }
@@ -85,8 +85,8 @@ QString QFilterGroup::name() const
 
 bool QFilterGroup::remove(int column)
 {
-    for (int iFilter = 0; iFilter < cFilterList.size(); iFilter++){
-        if (cFilterList.at(iFilter)->column() == column){
+    for (int iFilter = 0; iFilter < cFilterList.size(); iFilter++) {
+        if (cFilterList.at(iFilter)->column() == column) {
             cFilterList.removeAt(iFilter);
             return true;
         }

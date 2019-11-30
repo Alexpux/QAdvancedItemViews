@@ -18,14 +18,19 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qfiltereditorwidget.h"
 #include "qfiltereditorpopupwidget.h"
 
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QEvent>
+#include <QKeyEvent>
+
 QFilterEditorWidget::QFilterEditorWidget(QWidget *parent)
-	: QWidget(parent)
+    : QWidget(parent)
 {
-	m_popup = 0;
+    m_popup = nullptr;
 }
 
 QFilterEditorWidget::~QFilterEditorWidget()
@@ -34,65 +39,65 @@ QFilterEditorWidget::~QFilterEditorWidget()
 
 bool QFilterEditorWidget::eventFilter(QObject* object, QEvent* event)
 {
-	if (m_popup){
-		if (event->type() == QEvent::Hide){
-			emit commitAndClose();
-			return true;
-		} else if ( event->type() == QEvent::KeyPress){
-			QKeyEvent* keyEvent = static_cast<QKeyEvent *>(event);
-			if (popup()->cancelAndClose(object, keyEvent->key())){
-				emit cancelAndClose();
-				return true;
-			}
-			if (popup()->commitAndClose(object, keyEvent->key())){
-				emit commitAndClose();
-				return true;
-			}
-		}
-	}
-	return QObject::eventFilter(object, event);
+    if (m_popup) {
+        if (event->type() == QEvent::Hide) {
+            emit commitAndClose();
+            return true;
+        } else if ( event->type() == QEvent::KeyPress) {
+            QKeyEvent* keyEvent = static_cast<QKeyEvent *>(event);
+            if (popup()->cancelAndClose(object, keyEvent->key())) {
+                emit cancelAndClose();
+                return true;
+            }
+            if (popup()->commitAndClose(object, keyEvent->key())) {
+                emit commitAndClose();
+                return true;
+            }
+        }
+    }
+    return QObject::eventFilter(object, event);
 }
 
 void QFilterEditorWidget::moveEvent(QMoveEvent* e)
 {
-	QWidget::moveEvent(e);
-	if (m_popup){
-		movePopup();
-	}
+    QWidget::moveEvent(e);
+    if (m_popup) {
+        movePopup();
+    }
 }
 
 void QFilterEditorWidget::movePopup()
 {
-	if (m_popup){
-		QPoint p;
-		if (m_popup->geometry().height() + mapToGlobal(pos()).y() > QApplication::desktop()->availableGeometry(this).height()){
-			p = mapToGlobal(rect().topLeft());
-			p.setY(p.y() - m_popup->geometry().height());
-		} else {
-			p = mapToGlobal(rect().bottomLeft());
-		}
-		m_popup->move(p);
-	}
+    if (m_popup) {
+        QPoint p;
+        if (m_popup->geometry().height() + mapToGlobal(pos()).y() > QApplication::desktop()->availableGeometry(this).height()) {
+            p = mapToGlobal(rect().topLeft());
+            p.setY(p.y() - m_popup->geometry().height());
+        } else {
+            p = mapToGlobal(rect().bottomLeft());
+        }
+        m_popup->move(p);
+    }
 }
 
 QFilterEditorPopupWidget* QFilterEditorWidget::popup() const
 {
-	return m_popup;
+    return m_popup;
 }
 
 void QFilterEditorWidget::setPopup(QFilterEditorPopupWidget* widget)
 {
-	m_popup = widget;
+    m_popup = widget;
 }
 
 void QFilterEditorWidget::showPopup(bool visible)
 {
-	if (m_popup){
-		if (visible){
-			m_popup->show();
-			movePopup();
-		} else {
-			m_popup->hide();
-		}
-	}
+    if (m_popup) {
+        if (visible) {
+            m_popup->show();
+            movePopup();
+        } else {
+            m_popup->hide();
+        }
+    }
 }

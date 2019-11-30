@@ -21,11 +21,14 @@
 #ifndef QTABLEMODELWRITER_H
 #define QTABLEMODELWRITER_H
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 class QAdvancedTableView;
 class QTableModelWriterPrivate;
-class TableView;
+class QIODevice;
+class QTableView;
+
+#include <QByteArray>
 
 //! The QTableModelWriter class provides a format-independent interface for writing the content of table views to files or other devices.
 /**
@@ -43,48 +46,49 @@ class TableView;
 class QAIVLIBSHARED_EXPORT QTableModelWriter
 {
 public:
-	/**
-	 * Constructs an empty QTableModelWriter object. Before writing, you must call setFormat() to set a document format, then setDevice() or setFileName().
-	 */
-	QTableModelWriter();
-	/**
-	 * Constructs a QTableModelWriter object to write to the given @p device in the document format specified by @p format.
-	 */
-	QTableModelWriter(QIODevice* device, const QByteArray & format);
-	/**
-	 * Constructs an QTableModelWriter object that will write to a file with the name fileName, using the document format specified by format. If format is not provided, QTableModelWriter will detect the document format by inspecting the extension of @p fileName.
-	 */
-	QTableModelWriter(const QString & fileName, const QByteArray & format = QByteArray());
+    /**
+     * Constructs an empty QTableModelWriter object. Before writing, you must call setFormat() to set a document format, then setDevice() or setFileName().
+     */
+    QTableModelWriter();
+    /**
+     * Constructs a QTableModelWriter object to write to the given @p device in the document format specified by @p format.
+     */
+    QTableModelWriter(QIODevice* device, const QByteArray & format);
+    /**
+     * Constructs an QTableModelWriter object that will write to a file with the name fileName, using the document format specified by format. If format is not provided, QTableModelWriter will detect the document format by inspecting the extension of @p fileName.
+     */
+    QTableModelWriter(const QString & fileName, const QByteArray & format = QByteArray());
 
-	~QTableModelWriter();
+    ~QTableModelWriter();
 
-	QIODevice* device() const;
+    QIODevice* device() const;
 
-	QString fileName() const;
+    QString fileName() const;
 
-	QByteArray format() const;
+    QByteArray format() const;
 
-	void setDevice(QIODevice* device);
+    void setDevice(QIODevice* device);
 
-	void setFormat(const QByteArray & format);
+    void setFormat(const QByteArray & format);
 
-	void setIncludeHeader(bool on);
-	void setRole(int role);
-	static QList<QByteArray> supportedFormats();
+    void setIncludeHeader(bool on);
+    void setRole(int role);
+    static QList<QByteArray> supportedFormats();
 
-	bool writeAll(QAdvancedTableView* view);
+    bool writeAll(QAdvancedTableView* view);
 
-	bool writeAll(QTableView* view);
+    bool writeAll(QTableView* view);
 
-	bool writeSelection(QTableView* view);
+    bool writeSelection(QTableView* view);
 
-	bool writeSelection(QAdvancedTableView* view);
+    bool writeSelection(QAdvancedTableView* view);
+
 private:
-	Q_DISABLE_COPY(QTableModelWriter);
-	bool write(QAdvancedTableView* view, bool all);
-	bool write(QTableView* view, bool all);
+    Q_DISABLE_COPY(QTableModelWriter)
+    bool write(QAdvancedTableView* view, bool all);
+    bool write(QTableView* view, bool all);
 
-	QTableModelWriterPrivate* d;
+    QTableModelWriterPrivate* d;
 };
 
 #endif // QTABLEMODELWRITER_H

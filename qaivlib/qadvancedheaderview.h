@@ -42,16 +42,18 @@ public:
     /**
       * Creates a new generic header with the given @p orientation and @p parent.
       */
-    QAdvancedHeaderView(Qt::Orientation orientation, QWidget* parent = 0);
+    QAdvancedHeaderView(Qt::Orientation orientation, QWidget* parent = nullptr);
     /**
       * Destroys the header.
       */
     ~QAdvancedHeaderView();
+
 public slots:
     /**
       * Shows all columns.
       */
     void showAllColumns();
+
 private slots:
     void addFilterSetActionTriggered();
 
@@ -71,13 +73,14 @@ private slots:
 
     void renameFilterActionTriggered();
 
-    void sectionToggled( bool on );
+    void sectionToggled(bool on);
 
     void showFilterActionTriggered();
 
     void toggleSortOrderActionTriggered();
+
 protected:
-    void contextMenuEvent( QContextMenuEvent * event );
+    void contextMenuEvent(QContextMenuEvent * event);
 };
 
 #endif // QADVANCEDHEADERVIEW_H

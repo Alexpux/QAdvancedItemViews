@@ -18,14 +18,14 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qspecialfilter.h"
 #include "qspecialfilter_p.h"
 
 #include <QHBoxLayout>
 
 QSpecialFilterEditor::QSpecialFilterEditor(QWidget* parent) :
-	QFilterEditorWidget(parent)
+    QFilterEditorWidget(parent)
 {
     QHBoxLayout* mLayout = new QHBoxLayout(this);
     mLayout->setSpacing(0);
@@ -66,12 +66,12 @@ Qt::MatchFlag QSpecialFilterEditor::matchFlag() const
 
 void QSpecialFilterEditor::matchFlagsLabelClicked(Qt::MouseButtons buttons)
 {
-    if (buttons.testFlag(Qt::LeftButton)){
-        if (cMatchFlag == Qt::MatchStartsWith){
+    if (buttons.testFlag(Qt::LeftButton)) {
+        if (cMatchFlag == Qt::MatchStartsWith) {
             setMatchFlag(Qt::MatchEndsWith);
-        } else if (cMatchFlag == Qt::MatchEndsWith){
+        } else if (cMatchFlag == Qt::MatchEndsWith) {
             setMatchFlag(Qt::MatchContains);
-        } else if (cMatchFlag == Qt::MatchContains){
+        } else if (cMatchFlag == Qt::MatchContains) {
             setMatchFlag(Qt::MatchStartsWith);
         }
     }
@@ -89,7 +89,7 @@ void QSpecialFilterEditor::sensitivityLabelClicked(Qt::MouseButtons buttons)
 }
 void QSpecialFilterEditor::setCaseSensitivity(Qt::CaseSensitivity sensitivity)
 {
-    if (sensitivity == Qt::CaseSensitive){
+    if (sensitivity == Qt::CaseSensitive) {
         cSensitivityLabel->setPixmap(QPixmap(QString::fromUtf8(":/qaiv/filter/case_sensitive")));
         cSensitivityLabel->setToolTip(tr("The filter is case sensitive"));
     } else {
@@ -104,10 +104,10 @@ void QSpecialFilterEditor::setMatchFlag(Qt::MatchFlag flag)
     if (flag == Qt::MatchEndsWith){
         cMatchFlagsLabel->setPixmap(QPixmap(QString::fromUtf8(":/qaiv/filter/ends_with")));
         cMatchFlagsLabel->setToolTip(tr("The filter value matches the end of the item"));
-    } else if (flag == Qt::MatchContains){
+    } else if (flag == Qt::MatchContains) {
         cMatchFlagsLabel->setPixmap(QPixmap(QString::fromUtf8(":/qaiv/filter/contains")));
         cMatchFlagsLabel->setToolTip(tr("The filter value is contained in the item"));
-    } else if (flag == Qt::MatchStartsWith){
+    } else if (flag == Qt::MatchStartsWith) {
         cMatchFlagsLabel->setPixmap(QPixmap(QString::fromUtf8(":/qaiv/filter/starts_with")));
         cMatchFlagsLabel->setToolTip(tr("The filter value matches the start of the item"));
     }
@@ -131,7 +131,7 @@ QSpecialFilter::QSpecialFilter(int row, int column) :
     setProperty("matchFlag", Qt::MatchContains);
 }
 
-QWidget* QSpecialFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QWidget* QSpecialFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
     Q_UNUSED(option);
     Q_UNUSED(index);
@@ -145,7 +145,7 @@ void QSpecialFilter::addContextMenuActions(QMenu* menu, QWidget* receiver)
     mDefaultProperties["row"] = property("row").toInt();
     mDefaultProperties["column"] = property("column").toInt();
 
-    QAction* mAction = 0;
+    QAction* mAction = nullptr;
     mAction = menu->addAction(QIcon(":/qaiv/filter/case_insensitive"), QObject::tr("Case insensitive"), receiver, SLOT(changeProperties()));
     mAction->setCheckable(true);
     mAction->setChecked(property("caseSensitivity").toInt() == Qt::CaseInsensitive);
@@ -185,7 +185,7 @@ void QSpecialFilter::addContextMenuActions(QMenu* menu, QWidget* receiver)
 
 QVariant QSpecialFilter::data(int role) const
 {
-    if (role == Qt::DisplayRole){
+    if (role == Qt::DisplayRole) {
         return QString("%1").arg(property("value").toString());
     }
     return QVariant();
@@ -197,24 +197,24 @@ bool QSpecialFilter::matches(const QVariant & value, int type) const
 
     QSpecialFilter::MatchFlag matchFlag;
     matchFlag = static_cast<QSpecialFilter::MatchFlag>(property("matchFlag", Qt::MatchStartsWith).toInt());
-	if (matchFlag == QSpecialFilter::IsEmpty){
+    if (matchFlag == QSpecialFilter::IsEmpty) {
         return value.isNull();
-	} else if (matchFlag == QSpecialFilter::IsNotEmpty){
+    } else if (matchFlag == QSpecialFilter::IsNotEmpty) {
         return !value.isNull();
     }
-	return false;
+    return false;
     //return QString::compare(value.toString().left(property("value").toString().length()), property("value").toString(), mSensitivity) == 0;
 }
 
 QSpecialFilter::MatchFlag QSpecialFilter::matchFlag() const
 {
-	return static_cast<QSpecialFilter::MatchFlag>(property("matchFlag", Qt::MatchStartsWith).toInt());
+    return static_cast<QSpecialFilter::MatchFlag>(property("matchFlag", Qt::MatchStartsWith).toInt());
 }
 
 void QSpecialFilter::setEditorData(QWidget * editor, const QModelIndex & index)
 {
     QSpecialFilterEditor* mWidget = qobject_cast<QSpecialFilterEditor*>(editor);
-    if (mWidget){
+    if (mWidget) {
         QVariantMap mProperties = index.data(Qt::EditRole).toMap();
         mWidget->setText(mProperties.value("value").toString());
         mWidget->setMatchFlag(static_cast<Qt::MatchFlag>(mProperties.value("matchFlag").toInt()));
@@ -225,7 +225,7 @@ void QSpecialFilter::setEditorData(QWidget * editor, const QModelIndex & index)
 void QSpecialFilter::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index)
 {
     QSpecialFilterEditor* mWidget = qobject_cast<QSpecialFilterEditor*>(editor);
-    if (mWidget){
+    if (mWidget) {
         QVariantMap mProperties(index.data(Qt::EditRole).toMap());
         mProperties["value"] = mWidget->text();
         mProperties["caseSensitivity"] = mWidget->caseSensitivity();

@@ -18,12 +18,11 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
 #include "qabstractfiltermodel.h"
 
-#include <qabstractfilter.h>
+#include "qabstractfilter.h"
 #include "qabstractfilterproxymodel.h"
-#include <qfiltergroup.h>
+#include "qfiltergroup.h"
 
 class QAbstractFilterModelPrivate
 {
@@ -49,16 +48,16 @@ public:
 
     QAbstractFilterModel* m;
 
-	QIcon filterDisabledIcon;
-	QIcon filterEnabledIcon;
+    QIcon filterDisabledIcon;
+    QIcon filterEnabledIcon;
 };
 
 QAbstractFilterModelPrivate::QAbstractFilterModelPrivate(QAbstractFilterModel *fm)
 {
     m = fm;
-	filterDisabledIcon = QIcon(":/qaiv/filter/disabled");
-	filterEnabledIcon = QIcon(":/qaiv/filter/enabled");
-	sourceModel = 0;
+    filterDisabledIcon = QIcon(":/qaiv/filter/disabled");
+    filterEnabledIcon = QIcon(":/qaiv/filter/enabled");
+    sourceModel = nullptr;
 }
 
 QAbstractFilterModelPrivate::~QAbstractFilterModelPrivate()
@@ -72,7 +71,7 @@ QAbstractFilterModel::QAbstractFilterModel(QObject *parent)
     d->filterGroupList.append(new QFilterGroup(tr("<default>")));
     d->matchMode = QAdvancedItemViews::MatchNormal;
     d->mode = QAdvancedItemViews::FilterMode;
-    d->sourceModel = 0;
+    d->sourceModel = nullptr;
 }
 
 QAbstractFilterModel::~QAbstractFilterModel()
@@ -82,7 +81,7 @@ QAbstractFilterModel::~QAbstractFilterModel()
 
 int QAbstractFilterModel::columnCount(const QModelIndex & parent) const
 {
-    if (d->sourceModel){
+    if (d->sourceModel) {
         return d->sourceModel->columnCount(parent);
     }
     return 1;
@@ -90,37 +89,37 @@ int QAbstractFilterModel::columnCount(const QModelIndex & parent) const
 
 QVariant QAbstractFilterModel::data(const QModelIndex & index, int role) const
 {
-    if (!index.isValid()){
+    if (!index.isValid()) {
         return QVariant();
     }
     QAbstractFilter* filter = d->filterGroupList.at(index.row())->filterAtColumn(index.column());
-    if (role == Qt::DecorationRole){
+    if (role == Qt::DecorationRole) {
         if (filter){
-            if (filter->isEnabled()){
+            if (filter->isEnabled()) {
                 return d->filterEnabledIcon;
             } else {
                 return d->filterDisabledIcon;
             }
         }
         return QVariant();
-    } else if (role == QAbstractFilterModel::DefaultFilterTypeRole){
+    } else if (role == QAbstractFilterModel::DefaultFilterTypeRole) {
         return d->defaultFilterType.value(index.column(), QAbstractFilter::Type);
-    } else if (role == Qt::DisplayRole){
-        if (filter){
+    } else if (role == Qt::DisplayRole) {
+        if (filter) {
             return filter->data();
         } else {
             return tr("<all>");
-        }        
-    } else if (role == Qt::EditRole){
+        }
+    } else if (role == Qt::EditRole) {
         filter = d->filterGroupList.at(index.row())->filterAtColumn(index.column());
-        if (filter){
+        if (filter) {
             return filter->properties();
         } else {
             return QVariant();
         }
-    } else if (role == QAbstractFilterModel::ColumnFilterTypesRole){
+    } else if (role == QAbstractFilterModel::ColumnFilterTypesRole) {
         return d->columnFilterTypes.value(index.column());
-    } else if (role == QAbstractFilterModel::ValueFilterTypeRole){
+    } else if (role == QAbstractFilterModel::ValueFilterTypeRole) {
         return d->valueTypeMap.value(index.column(), -1);
     }
     return QVariant();
@@ -128,7 +127,7 @@ QVariant QAbstractFilterModel::data(const QModelIndex & index, int role) const
 
 QAbstractFilter* QAbstractFilterModel::filter(const QModelIndex & index) const
 {
-    if (index.isValid() && index.model() == this){
+    if (index.isValid() && index.model() == this) {
         return d->filterGroupList.at(index.row())->filterAtColumn(index.column());
     }
     return 0;
@@ -139,7 +138,7 @@ QAbstractFilter* QAbstractFilterModel::filter(const QModelIndex & index) const
  */
 QIcon QAbstractFilterModel::filterDisabledIcon() const
 {
-	return d->filterDisabledIcon;
+    return d->filterDisabledIcon;
 }
 /**
  * Returns the icon shown of a filter is disabled.
@@ -147,12 +146,12 @@ QIcon QAbstractFilterModel::filterDisabledIcon() const
  */
 QIcon QAbstractFilterModel::filterEnabledIcon() const
 {
-	return d->filterEnabledIcon;
+    return d->filterEnabledIcon;
 }
 
 QFilterGroup* QAbstractFilterModel::filterGroup(const QModelIndex & index) const
 {
-    if (index.row() < d->filterGroupList.size()){
+    if (index.row() < d->filterGroupList.size()) {
         return d->filterGroupList.at(index.row());
     }
     return 0;
@@ -160,7 +159,7 @@ QFilterGroup* QAbstractFilterModel::filterGroup(const QModelIndex & index) const
 
 QList<QAbstractFilter*> QAbstractFilterModel::filtersAtRow(int row) const
 {
-    if (row < d->filterGroupList.size()){
+    if (row < d->filterGroupList.size()) {
         return d->filterGroupList.at(row)->filters();
     }
     return QList<QAbstractFilter*>();
@@ -168,7 +167,7 @@ QList<QAbstractFilter*> QAbstractFilterModel::filtersAtRow(int row) const
 
 Qt::ItemFlags QAbstractFilterModel::flags(const QModelIndex & index) const
 {
-	Q_UNUSED(index);
+    Q_UNUSED(index);
     Qt::ItemFlags f;
     f |= Qt::ItemIsEditable;
     f |= Qt::ItemIsEnabled;
@@ -178,7 +177,7 @@ Qt::ItemFlags QAbstractFilterModel::flags(const QModelIndex & index) const
 
 QFilterGroup* QAbstractFilterModel::groupAt(int row) const
 {
-    if (row < d->filterGroupList.size()){
+    if (row < d->filterGroupList.size()) {
         return d->filterGroupList.at(row);
     }
     return 0;
@@ -186,13 +185,13 @@ QFilterGroup* QAbstractFilterModel::groupAt(int row) const
 
 QVariant QAbstractFilterModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-    if (orientation == Qt::Vertical){
-        if (role == Qt::DisplayRole){
+    if (orientation == Qt::Vertical) {
+        if (role == Qt::DisplayRole) {
             return d->filterGroupList.at(section)->name();
         }
-    } else if (orientation == Qt::Horizontal){
+    } else if (orientation == Qt::Horizontal) {
         if (d->sourceModel){
-			return d->sourceModel->headerData(section, Qt::Horizontal, role);
+            return d->sourceModel->headerData(section, Qt::Horizontal, role);
         }
     }
     return QAbstractItemModel::headerData(section, orientation, role);
@@ -200,28 +199,28 @@ QVariant QAbstractFilterModel::headerData( int section, Qt::Orientation orientat
 
 QModelIndex QAbstractFilterModel::index(int row, int column, const QModelIndex & parent) const
 {
-	Q_UNUSED(parent);
+    Q_UNUSED(parent);
     return createIndex(row, column);
 }
 
 bool QAbstractFilterModel::insertRows(int row, int count, const QModelIndex & parent)
 {
     Q_UNUSED(parent);
-    if(count == 0){
+    if(count == 0) {
         return false;
     }
     beginInsertRows(parent, row, row + count - 1);
-    if (row == rowCount()){
+    if (row == rowCount()) {
         for (int iCount = 0; iCount < count; iCount++){
             d->filterGroupList.append(new QFilterGroup(tr("<filter>")));
         }
     } else {
-        for (int iRow = row; iRow < d->filterGroupList.size(); iRow++){
-            for (int iFilter = 0; iFilter < d->filterGroupList.at(iRow)->count(); iFilter++){
+        for (int iRow = row; iRow < d->filterGroupList.size(); iRow++) {
+            for (int iFilter = 0; iFilter < d->filterGroupList.at(iRow)->count(); iFilter++) {
                 d->filterGroupList.at(iRow)->filter(iFilter)->setRow(d->filterGroupList.at(iRow)->filter(iFilter)->row() + count);
             }
         }
-        for (int iCount = 0; iCount < count; iCount++){
+        for (int iCount = 0; iCount < count; iCount++) {
             d->filterGroupList.insert(row, new QFilterGroup(tr("<filter>")));
         }
     }
@@ -253,11 +252,11 @@ QList<QAbstractFilterModel::FilterTypeEntry> QAbstractFilterModel::registeredFil
 bool QAbstractFilterModel::removeRows(int row, int count, const QModelIndex & parent)
 {
     Q_UNUSED(parent);
-    if (count == 0){
+    if (count == 0) {
         return false;
     }
     beginRemoveRows(QModelIndex(), row, row + count - 1);
-    for (int iCount = 0; iCount < count; iCount++){
+    for (int iCount = 0; iCount < count; iCount++) {
         d->filterGroupList.removeAt(row);
     }
     for (int iRow = row; iRow < d->filterGroupList.size(); iRow++){
@@ -271,19 +270,19 @@ bool QAbstractFilterModel::removeRows(int row, int count, const QModelIndex & pa
 
 int QAbstractFilterModel::rowCount(const QModelIndex & parent) const
 {
-	Q_UNUSED(parent);
+    Q_UNUSED(parent);
     return d->filterGroupList.size();
 }
 
 bool QAbstractFilterModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-    if (!index.isValid()){
+    if (!index.isValid()) {
         return false;
     }
-    if (role == QAbstractFilterModel::DefaultFilterTypeRole){
+    if (role == QAbstractFilterModel::DefaultFilterTypeRole) {
         d->defaultFilterType[index.column()] = value.toInt();
-    } else if (role == Qt::EditRole){
-        if (value.toMap().isEmpty()){
+    } else if (role == Qt::EditRole) {
+        if (value.toMap().isEmpty()) {
             d->filterGroupList.at(index.row())->remove(index.column());
         } else {
             QAbstractFilter* filter = d->filterGroupList.at(index.row())->filterAtColumn(index.column());
@@ -303,9 +302,9 @@ bool QAbstractFilterModel::setData(const QModelIndex & index, const QVariant & v
         }
         emit dataChanged(index, index);
         return true;
-    } else if (role == QAbstractFilterModel::ColumnFilterTypesRole){
+    } else if (role == QAbstractFilterModel::ColumnFilterTypesRole) {
         d->columnFilterTypes[index.column()] = value.toList();
-    } else if (role == QAbstractFilterModel::ValueFilterTypeRole){
+    } else if (role == QAbstractFilterModel::ValueFilterTypeRole) {
         d->valueTypeMap[index.column()] = value.toInt();
     }
     return false;
@@ -321,7 +320,7 @@ void QAbstractFilterModel::setDefaultFilterType(int column, int type)
  */
 void QAbstractFilterModel::setFilterDisabledIcon(const QIcon & icon)
 {
-	d->filterDisabledIcon = icon;
+    d->filterDisabledIcon = icon;
 }
 /**
  * Sets the icon shown if a filter is enabled to @p icon.
@@ -329,15 +328,15 @@ void QAbstractFilterModel::setFilterDisabledIcon(const QIcon & icon)
  */
 void QAbstractFilterModel::setFilterEnabledIcon(const QIcon & icon)
 {
-	d->filterEnabledIcon = icon;
+    d->filterEnabledIcon = icon;
 }
 
 bool QAbstractFilterModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role)
 {
-    if (role != Qt::EditRole){
+    if (role != Qt::EditRole) {
         return false;
     }
-    if (orientation == Qt::Vertical){
+    if (orientation == Qt::Vertical) {
         d->filterGroupList.at(section)->setName(value.toString());
         emit headerDataChanged(Qt::Horizontal, section, section);
         return true;
@@ -347,7 +346,7 @@ bool QAbstractFilterModel::setHeaderData(int section, Qt::Orientation orientatio
 
 void QAbstractFilterModel::setMatchMode(QAdvancedItemViews::FilterMatchMode flag)
 {
-    if (d->matchMode != flag){
+    if (d->matchMode != flag) {
         d->matchMode = flag;
         emit matchModeChanged(d->matchMode);
     }
@@ -355,7 +354,7 @@ void QAbstractFilterModel::setMatchMode(QAdvancedItemViews::FilterMatchMode flag
 
 void QAbstractFilterModel::setMode(QAdvancedItemViews::FilterProxyMode mode)
 {
-    if (d->mode != mode){
+    if (d->mode != mode) {
         d->mode = mode;
         emit modeChanged(d->mode);
     }
@@ -363,9 +362,9 @@ void QAbstractFilterModel::setMode(QAdvancedItemViews::FilterProxyMode mode)
 
 void QAbstractFilterModel::setSourceModel(QAbstractItemModel* model)
 {
-    if (model){
+    if (model) {
         d->sourceModel = model;
-		connect(d->sourceModel, SIGNAL(layoutChanged()), this, SLOT(sourceModelLayoutChanged()));
+        connect(d->sourceModel, SIGNAL(layoutChanged()), this, SLOT(sourceModelLayoutChanged()));
         emit headerDataChanged(Qt::Horizontal, 0, d->sourceModel->columnCount() - 1);
     }
 }
@@ -377,9 +376,9 @@ QAbstractItemModel* QAbstractFilterModel::sourceModel() const
 
 void QAbstractFilterModel::sourceModelLayoutChanged()
 {
-	if (d->sourceModel){
-		headerDataChanged(Qt::Horizontal, 0, d->sourceModel->columnCount() - 1);
-	}
+    if (d->sourceModel) {
+        headerDataChanged(Qt::Horizontal, 0, d->sourceModel->columnCount() - 1);
+    }
 }
 
 bool QAbstractFilterModel::registerFilter(int type, const QString & text, const QString & toolTip)
@@ -389,8 +388,8 @@ bool QAbstractFilterModel::registerFilter(int type, const QString & text, const 
 
 bool QAbstractFilterModel::registerFilter(int type, const QIcon &icon, const QString &text, const QString &toolTip)
 {
-    Q_FOREACH(FilterTypeEntry e, d->filterTypes){
-        if (e.type == type){
+    Q_FOREACH(FilterTypeEntry e, d->filterTypes) {
+        if (e.type == type) {
             return false;
         }
     }
@@ -403,4 +402,3 @@ bool QAbstractFilterModel::registerFilter(int type, const QIcon &icon, const QSt
     d->filterTypes << e;
     return true;
 }
-

@@ -18,11 +18,14 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
-#include "qfilterviewconnector.h"
 
+#include "qfilterviewconnector.h"
 #include "qfilterview.h"
 
+#include <QHeaderView>
+#include <QScrollBar>
+#include <QTableView>
+#include <QTreeView>
 
 QFilterViewConnector::QFilterViewConnector(QFilterView* filterView) :
     QObject(filterView)
@@ -66,7 +69,7 @@ QFilterViewConnector::QFilterViewConnector(QFilterView* filterView, QTreeView* t
 
 void QFilterViewConnector::setDataView(QTableView *view)
 {
-    if (cTableView){
+    if (cTableView) {
         disconnect(cFilterView->horizontalHeader(), 0, this, 0);
         disconnect(cTableView->horizontalScrollBar(), 0, this, 0);
         disconnect(cTableView->verticalHeader(), 0, this, 0);
@@ -84,7 +87,7 @@ void QFilterViewConnector::setDataView(QTableView *view)
 
 void QFilterViewConnector::setDataView(QTreeView *view)
 {
-    if (cTreeView){
+    if (cTreeView) {
         disconnect(cTreeView->header(), 0, this, 0);
     }
     cTreeView = view;
@@ -97,8 +100,8 @@ void QFilterViewConnector::setDataView(QTreeView *view)
 
 void QFilterViewConnector::adjustVerticalHeaderWidth()
 {
-    if (cTableView){
-        if (cTableView->verticalHeader()->width() < cFilterView->verticalHeader()->width()){
+    if (cTableView) {
+        if (cTableView->verticalHeader()->width() < cFilterView->verticalHeader()->width()) {
             cTableView->verticalHeader()->blockSignals(true);
             cTableView->verticalHeader()->setFixedWidth(cFilterView->verticalHeader()->width());
             cTableView->verticalHeader()->blockSignals(false);
@@ -108,7 +111,7 @@ void QFilterViewConnector::adjustVerticalHeaderWidth()
             cFilterView->verticalHeader()->blockSignals(false);
 
         }
-        if (cFilterView->model()->rowCount() > cFilterView->maxVisibileFilterSets()){
+        if (cFilterView->model()->rowCount() > cFilterView->maxVisibileFilterSets()) {
             cTableView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
         }
     }
@@ -147,13 +150,13 @@ void QFilterViewConnector::dataViewVerticalScrollBarRangeChanged(int min, int ma
 {
     Q_UNUSED(min);
     Q_UNUSED(max);
-    if (cTableView){
-        if (cTableView->verticalScrollBar()->maximum() == 0){
+    if (cTableView) {
+        if (cTableView->verticalScrollBar()->maximum() == 0) {
             cFilterView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         } else {
             cFilterView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
         }
-    } else if (cTreeView){
+    } else if (cTreeView) {
         if (cTreeView->verticalScrollBar()->maximum() == 0){
             cFilterView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         } else {
@@ -166,9 +169,9 @@ void QFilterViewConnector::dataViewVerticalScrollBarRangeChanged(int min, int ma
 void QFilterViewConnector::filterViewHorizontalSectionMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex)
 {
     Q_UNUSED(logicalIndex);
-    if (cTableView){
+    if (cTableView) {
         cTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
-    } else if (cTreeView){
+    } else if (cTreeView) {
         cTreeView->header()->moveSection(oldVisualIndex, newVisualIndex);
     }
 }
@@ -176,18 +179,18 @@ void QFilterViewConnector::filterViewHorizontalSectionMoved(int logicalIndex, in
 void QFilterViewConnector::filterViewHorizontalSectionResized(int logicalIndex, int oldSize, int newSize)
 {
     Q_UNUSED(oldSize);
-    if (cTableView){
+    if (cTableView) {
         cTableView->horizontalHeader()->resizeSection(logicalIndex, newSize);
-    } else if (cTreeView){
+    } else if (cTreeView) {
         cTreeView->header()->resizeSection(logicalIndex, newSize);
     }
 }
 
 void QFilterViewConnector::filterViewHorizontalSortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
 {
-    if (cTableView){
+    if (cTableView) {
         cTableView->sortByColumn(logicalIndex, order);
-    } else if (cTreeView){
+    } else if (cTreeView) {
         cTreeView->sortByColumn(logicalIndex, order);
     }
 }

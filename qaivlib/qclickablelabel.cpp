@@ -18,13 +18,13 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qclickablelabel.h"
 
 #include <QMouseEvent>
 
 QClickableLabel::QClickableLabel(QWidget* parent) :
-QLabel(parent)
+    QLabel(parent)
 {
 }
 

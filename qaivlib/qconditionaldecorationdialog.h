@@ -41,8 +41,8 @@ class ValueEdit;
  * @code
  * QConditionalDecorationDialog* d = new QConditionalDecorationDialog(index, this);
  * if (d->exec()){
- *		QAbstractItemModel* m = (QAbstractItemModel*)index.model();
- *		m->setData(index, d->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
+ *     QAbstractItemModel* m = (QAbstractItemModel*)index.model();
+ *     m->setData(index, d->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
  * }
  * delete d;
  * @endcode
@@ -55,12 +55,12 @@ class ValueEdit;
 class QAIVLIBSHARED_EXPORT QConditionalDecorationDialog : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     /**
       * Constructs a conditional decoration dialog for the given @p index and with the given @p parent.
       */
-    explicit QConditionalDecorationDialog(const QModelIndex & index, QWidget *parent = 0);
+    explicit QConditionalDecorationDialog(const QModelIndex & index, QWidget *parent = nullptr);
     /**
       * Destroys the QConditionalDecorationDialog.
       */
@@ -69,7 +69,7 @@ public:
       * Returns the properties.
       */
     QVariantMap properties() const;
-	
+
     void setProperties(const QModelIndex & index);
 private slots:
     void addPushButtonClicked();
@@ -78,16 +78,16 @@ private slots:
     void iconSetComboBoxActivated(const QString & text);
     void removePushButtonClicked();
 private:
-	int column(int row) const;
+    int column(int row) const;
 
-	QComboBox* columnComboBox();
+    QComboBox* columnComboBox();
     QComboBox* conditionsComboBox();
     QComboBox* iconSetComboBox(const QString & name);
     ValueEdit* valueEdit();
 
     QVariantMap value(int row) const;
 
-	int m_defaultColumn;
+    int m_defaultColumn;
     QModelIndex m_index;
     QVariantMap cIconSets;
     QVariantMap cProperties;

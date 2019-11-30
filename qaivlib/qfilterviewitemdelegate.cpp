@@ -18,7 +18,7 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qfilterviewitemdelegate.h"
 
 #include "qabstractfilter.h"
@@ -28,7 +28,7 @@
 QFilterViewItemDelegate::QFilterViewItemDelegate( QObject* parent )
     : QStyledItemDelegate(parent)
 {
-	m_enableFilter = false;
+    m_enableFilter = false;
 }
 
 QFilterViewItemDelegate::~QFilterViewItemDelegate()
@@ -45,35 +45,35 @@ void QFilterViewItemDelegate::comboxBoxItemActivated( int index )
 
 void QFilterViewItemDelegate::cancelAndClose(QAbstractItemDelegate::EndEditHint hint)
 {
-	QWidget* w = qobject_cast<QWidget*>(sender());
-	emit closeEditor(w, hint);
+    QWidget* w = qobject_cast<QWidget*>(sender());
+    emit closeEditor(w, hint);
 }
 
 void QFilterViewItemDelegate::commitAndClose(QAbstractItemDelegate::EndEditHint hint)
 {
-	QWidget* w = qobject_cast<QWidget*>(sender());
-	emit commitData(w);
-	emit closeEditor(w, hint);
+    QWidget* w = qobject_cast<QWidget*>(sender());
+    emit commitData(w);
+    emit closeEditor(w, hint);
 }
 
 QWidget* QFilterViewItemDelegate::createEditor( QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
-   const QAbstractFilterModel* model = qobject_cast<const QAbstractFilterModel*>(index.model());
-    if (model){
+    const QAbstractFilterModel* model = qobject_cast<const QAbstractFilterModel*>(index.model());
+    if (model) {
         QAbstractFilter* filter = model->filter(index);
-        if (filter){
-			return filter->createEditor(const_cast<QFilterViewItemDelegate*>(this), parent, option, index);
+        if (filter) {
+            return filter->createEditor(const_cast<QFilterViewItemDelegate*>(this), parent, option, index);
         } else {
             QFilterView* view = qobject_cast<QFilterView*>(parent->parentWidget());
-            if (view){
+            if (view) {
                 QVariantMap properties;
                 properties["column"] = index.column();
                 properties["row"] = index.row();
                 properties["type"] = index.data(QAbstractFilterModel::DefaultFilterTypeRole).toInt();
                 filter = model->createFilter(index, properties);
-                if (filter){
+                if (filter) {
                     filter->setEnabled(true);
-					return filter->createEditor(const_cast<QFilterViewItemDelegate*>(this), parent, option, index);
+                    return filter->createEditor(const_cast<QFilterViewItemDelegate*>(this), parent, option, index);
                 }
             }
         }
@@ -97,38 +97,38 @@ void QFilterViewItemDelegate::listWidgetCurrentItemChanged( QListWidgetItem* cur
 
 void QFilterViewItemDelegate::setEditorData(QWidget* editor, const QModelIndex & index ) const
 {
-	const QAbstractFilterModel* model = qobject_cast<const QAbstractFilterModel*>(index.model());
-	if (model){
-		QAbstractFilter* filter = model->filter(index);
-		if (filter){
-			return filter->setEditorData(editor, index);
-		}
-	}
+    const QAbstractFilterModel* model = qobject_cast<const QAbstractFilterModel*>(index.model());
+    if (model) {
+        QAbstractFilter* filter = model->filter(index);
+        if (filter) {
+            return filter->setEditorData(editor, index);
+        }
+    }
 }
 
 void QFilterViewItemDelegate::setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index) const
 {
-	const QAbstractFilterModel* m = qobject_cast<const QAbstractFilterModel*>(index.model());
-	if (m){
-		QAbstractFilter* f = m->filter(index);
-		if (f){
-			f->setModelData(editor, model, index);
-		}
-	}
+    const QAbstractFilterModel* m = qobject_cast<const QAbstractFilterModel*>(index.model());
+    if (m) {
+        QAbstractFilter* f = m->filter(index);
+        if (f) {
+            f->setModelData(editor, model, index);
+        }
+    }
 }
 
 QSize QFilterViewItemDelegate::sizeHint( const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
-	return QStyledItemDelegate::sizeHint(option, index);
+    return QStyledItemDelegate::sizeHint(option, index);
 }
 
 void QFilterViewItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
-	const QAbstractFilterModel* m = qobject_cast<const QAbstractFilterModel*>(index.model());
-	if (m){
-		QAbstractFilter* f = m->filter(index);
-		if (f){
-			f->updateEditorGeometry(editor, option, index);
-		}
-	}
+    const QAbstractFilterModel* m = qobject_cast<const QAbstractFilterModel*>(index.model());
+    if (m) {
+        QAbstractFilter* f = m->filter(index);
+        if (f) {
+            f->updateEditorGeometry(editor, option, index);
+        }
+    }
 }

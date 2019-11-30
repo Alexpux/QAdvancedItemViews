@@ -32,7 +32,7 @@ class QAIVDesignerCollection : public QObject, public QDesignerCustomWidgetColle
 #endif
 
 public:
-    explicit QAIVDesignerCollection(QObject *parent = 0);
+    explicit QAIVDesignerCollection(QObject *parent = nullptr);
     virtual QList<QDesignerCustomWidgetInterface*> customWidgets() const;
 private:
      QList<QDesignerCustomWidgetInterface*> m_widgets;

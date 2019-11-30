@@ -21,16 +21,16 @@
 #ifndef QSEARCHPANEWIDGETPLUGIN_H
 #define QSEARCHPANEWIDGETPLUGIN_H
 
-#include <QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class QSearchBarPlugin : public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetInterface)
-    
+
 public:
-    QSearchBarPlugin(QObject *parent = 0);
-    
+    QSearchBarPlugin(QObject *parent = nullptr);
+
     bool isContainer() const;
     bool isInitialized() const;
     QIcon icon() const;
@@ -42,7 +42,7 @@ public:
     QString whatsThis() const;
     QWidget *createWidget(QWidget *parent);
     void initialize(QDesignerFormEditorInterface *core);
-    
+
 private:
     bool m_initialized;
 };

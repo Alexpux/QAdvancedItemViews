@@ -21,7 +21,7 @@
 #ifndef QADVANCEDTABLEVIEWPLUGIN_H
 #define QADVANCEDTABLEVIEWPLUGIN_H
 
-#include <QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class QAdvancedTableViewPlugin : public QObject, public QDesignerCustomWidgetInterface
 {
@@ -32,10 +32,10 @@ class QAdvancedTableViewPlugin : public QObject, public QDesignerCustomWidgetInt
 
 #endif
     Q_INTERFACES(QDesignerCustomWidgetInterface)
-    
+
 public:
-    QAdvancedTableViewPlugin(QObject *parent = 0);
-    
+    QAdvancedTableViewPlugin(QObject *parent = nullptr);
+
     bool isContainer() const;
     bool isInitialized() const;
     QIcon icon() const;
@@ -47,7 +47,7 @@ public:
     QString whatsThis() const;
     QWidget *createWidget(QWidget *parent);
     void initialize(QDesignerFormEditorInterface *core);
-    
+
 private:
     bool m_initialized;
 };

@@ -35,13 +35,13 @@ public:
     /**
       * Constructs a QHeaderViewConnector for the given @p orientation.
       */
-    explicit QHeaderViewConnector(Qt::Orientation orientation, QObject *parent = 0);
+    explicit QHeaderViewConnector(Qt::Orientation orientation, QObject *parent = nullptr);
     /**
       * Adds the given header @p view to the lists of aligned header views.
       */
     void append(QHeaderView* view);
 signals:
-    
+
 public slots:
     void adjustSectionSize();
 private slots:

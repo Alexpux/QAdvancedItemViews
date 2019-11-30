@@ -23,8 +23,8 @@
 
 #include <QMenu>
 
-#include <qabstractfiltermodel.h>
-#include <qaivlib_global.h>
+#include "qabstractfiltermodel.h"
+#include "qaivlib_global.h"
 
 //! The QFilterModel class provides a default implementation of a filter model.
 /**

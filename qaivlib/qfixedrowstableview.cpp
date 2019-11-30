@@ -18,8 +18,10 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qfixedrowstableview.h"
+
+#include <QDebug>
 
 class QFixedRowsTableViewPrivate
 {
@@ -35,8 +37,8 @@ public:
 
 QFixedRowsTableViewPrivate::QFixedRowsTableViewPrivate(QFixedRowsTableView *tv)
 {
-    decorationProxy = 0;
-    filterProxy = 0;
+    decorationProxy = nullptr;
+    filterProxy = nullptr;
     v = tv;
 }
 
@@ -72,13 +74,14 @@ class QFixedRowsFilterProxyModelPrivate
 {
 public:
     QFixedRowsFilterProxyModelPrivate(QFixedRowsFilterProxyModel* pm)
-	{
-		enabled = false;
-		m = pm;
-	};
+    {
+        enabled = false;
+        m = pm;
+    }
+
     ~QFixedRowsFilterProxyModelPrivate()
-	{
-	};
+    {
+    }
 
     bool enabled;
     QList<QPersistentModelIndex> rows;
@@ -105,7 +108,7 @@ void QFixedRowsFilterProxyModel::clear()
 bool QFixedRowsFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     Q_UNUSED(source_parent);
-    if (sourceModel() == 0 || !d->enabled){
+    if (sourceModel() == 0 || !d->enabled) {
         return false;
     }
     return d->rows.contains(QPersistentModelIndex(sourceModel()->index(source_row, 0)));
@@ -113,7 +116,7 @@ bool QFixedRowsFilterProxyModel::filterAcceptsRow(int source_row, const QModelIn
 
 QVariant QFixedRowsFilterProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Vertical && role == Qt::DecorationRole){
+    if (orientation == Qt::Vertical && role == Qt::DecorationRole) {
         QIcon state;
         state = QIcon(":/qaiv/pin/fixed");
         return state;
@@ -128,7 +131,7 @@ bool QFixedRowsFilterProxyModel::isEnabled() const
 
 bool QFixedRowsFilterProxyModel::isRowPinned(int row) const
 {
-    if (sourceModel() == 0 || !d->enabled){
+    if (sourceModel() == 0 || !d->enabled) {
         return false;
     }
     return d->rows.contains(QPersistentModelIndex(sourceModel()->index(row, 0)));
@@ -136,7 +139,7 @@ bool QFixedRowsFilterProxyModel::isRowPinned(int row) const
 
 void QFixedRowsFilterProxyModel::setEnabled(bool on)
 {
-    if (d->enabled != on){
+    if (d->enabled != on) {
         d->enabled = on;
         invalidateFilter();
     }
@@ -144,9 +147,9 @@ void QFixedRowsFilterProxyModel::setEnabled(bool on)
 
 void QFixedRowsFilterProxyModel::sourceModelReset()
 {
-	/**
-	 * @todo slot sourceModelReset() should not be public
-	 */
+    /**
+     * @todo slot sourceModelReset() should not be public
+     */
     d->rows.clear();
     invalidateFilter();
 }
@@ -154,7 +157,7 @@ void QFixedRowsFilterProxyModel::sourceModelReset()
 void QFixedRowsFilterProxyModel::toggleRow(const QModelIndex &index)
 {
     QPersistentModelIndex i(index);
-    if (!d->rows.contains(i)){
+    if (!d->rows.contains(i)) {
         d->rows.append(i);
     } else {
         d->rows.removeAt(d->rows.indexOf(i));
@@ -164,6 +167,7 @@ void QFixedRowsFilterProxyModel::toggleRow(const QModelIndex &index)
 
 void QFixedRowsFilterProxyModel::setRowFixed(const QModelIndex &index, bool fixed)
 {
+    Q_UNUSED(index)
     if (fixed){
 
     } else {
@@ -185,16 +189,16 @@ QFixedRowsDecorationProxyModel::~QFixedRowsDecorationProxyModel()
 
 QVariant QFixedRowsDecorationProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (d->enabled && orientation == Qt::Vertical && role == Qt::DecorationRole){
-        if (d->filterProxy){
+    if (d->enabled && orientation == Qt::Vertical && role == Qt::DecorationRole) {
+        if (d->filterProxy) {
             QIcon icon = qvariant_cast<QIcon>(QIdentityProxyModel::headerData(section, orientation, role));
             QIcon state;
-            if (d->filterProxy->isRowPinned(section)){
+            if (d->filterProxy->isRowPinned(section)) {
                 state = QIcon(":/qaiv/pin/fixed");
             } else {
                 state = QIcon(":/qaiv/pin/free");
             }
-            if (icon.isNull()){
+            if (icon.isNull()) {
                 return state;
             }
         }
@@ -204,7 +208,7 @@ QVariant QFixedRowsDecorationProxyModel::headerData(int section, Qt::Orientation
 
 QSize QFixedRowsDecorationProxyModel::iconSize() const
 {
-	return QSize(24, 24);
+    return QSize(24, 24);
 }
 
 bool QFixedRowsDecorationProxyModel::isEnabled() const
@@ -214,7 +218,7 @@ bool QFixedRowsDecorationProxyModel::isEnabled() const
 
 void QFixedRowsDecorationProxyModel::setEnabled(bool on)
 {
-    if (d->enabled != on){
+    if (d->enabled != on) {
         emit layoutAboutToBeChanged();
         d->enabled = on;
         emit modelToggled(d->enabled);
@@ -224,9 +228,9 @@ void QFixedRowsDecorationProxyModel::setEnabled(bool on)
 
 void QFixedRowsDecorationProxyModel::toggleRow(const QModelIndex & index)
 {
-	QModelIndex i(index);
-	QAbstractProxyModel* p;
-	while(i.model() != sourceModel() && (p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
+    QModelIndex i(index);
+    QAbstractProxyModel* p;
+    while(i.model() != sourceModel() && (p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))) {
         i = p->mapToSource(i);
     }
     d->filterProxy->toggleRow(i);
@@ -240,11 +244,7 @@ QFixedRowsTableView::QFixedRowsTableView(QWidget *parent) :
 
     connect(verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
 
-#if QT_VERSION >= 0x050000
     verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-#else
-    verticalHeader()->setResizeMode(QHeaderView::Fixed);
-#endif
     QTableView::setModel(d->filterProxy);
 
     connect(d->filterProxy, SIGNAL(layoutChanged()), this, SLOT(updateHeight()));
@@ -283,7 +283,7 @@ void QFixedRowsTableView::setModel(QAbstractItemModel *model)
 
 void QFixedRowsTableView::closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint)
 {
-    if (editor->parent()->parent() == this){
+    if (editor->parent()->parent() == this) {
         QTableView::closeEditor(editor, hint);
     } else {
         qDebug() << "closeEditor(...) ignored by" << this;
@@ -292,7 +292,7 @@ void QFixedRowsTableView::closeEditor(QWidget *editor, QAbstractItemDelegate::En
 
 bool QFixedRowsTableView::fixedRowsMode() const
 {
-	return d->filterProxy->isEnabled();
+    return d->filterProxy->isEnabled();
 }
 
 void QFixedRowsTableView::focusInEvent(QFocusEvent *event)
@@ -303,18 +303,18 @@ void QFixedRowsTableView::focusInEvent(QFocusEvent *event)
 
 void QFixedRowsTableView::setFixedRowsMode(bool on)
 {
-	d->filterProxy->setEnabled(on);
+    d->filterProxy->setEnabled(on);
 }
 
 void QFixedRowsTableView::updateHeight()
 {
     int h = 0;
-    if (model() == 0 || model()->rowCount() == 0){
+    if (model() == 0 || model()->rowCount() == 0) {
         hide();
     } else {
         resizeRowsToContents();
         show();
-        for (int i = 0; i < model()->rowCount(); i++){
+        for (int i = 0; i < model()->rowCount(); i++) {
             h += rowHeight(i);
         }
         h += 2;
@@ -326,7 +326,7 @@ void QFixedRowsTableView::verticalHeaderSectionClicked(int section)
 {
     QModelIndex i = model()->index(section, 0);
     QAbstractProxyModel* proxy;
-    while((proxy = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
+    while((proxy = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))) {
         i = proxy->mapToSource(i);
     }
     d->filterProxy->toggleRow(i);

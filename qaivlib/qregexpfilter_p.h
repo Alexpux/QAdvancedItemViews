@@ -36,7 +36,7 @@ class QRegExpFilterEditor : public QWidget
 {
     Q_OBJECT
 public:
-    QRegExpFilterEditor(QWidget* parent = 0);
+    QRegExpFilterEditor(QWidget* parent = nullptr);
     ~QRegExpFilterEditor();
 
     Qt::CaseSensitivity caseSenstivity() const;

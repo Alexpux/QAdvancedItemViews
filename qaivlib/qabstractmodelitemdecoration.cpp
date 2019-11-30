@@ -18,7 +18,7 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qabstractmodelitemdecoration.h"
 
 class QAbstractItemModelDecorationPrivate
@@ -68,19 +68,19 @@ QMap<QString, QVariant> QAbstractItemModelDecoration::properties() const
 
 bool QAbstractItemModelDecoration::restoreState(const QByteArray & state)
 {
-	QDataStream s(state);
-	QVariantMap m;
-	s >> m;
-	setProperties(m);
-	return true;
+    QDataStream s(state);
+    QVariantMap m;
+    s >> m;
+    setProperties(m);
+    return true;
 }
 
 QByteArray QAbstractItemModelDecoration::saveState() const
 {
-	QByteArray ba;
-	QDataStream s(ba);
-	s << d->properties;
-	return ba;
+    QByteArray ba;
+    QDataStream s(ba);
+    s << d->properties;
+    return ba;
 }
 
 void QAbstractItemModelDecoration::setProperty(const QString & name, const QVariant & value)

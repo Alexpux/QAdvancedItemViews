@@ -18,11 +18,13 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qconditionaldecorationproxymodel.h"
 
 #include "qabstractmodelitemdecoration.h"
 #include "qconditionaldecoration.h"
+
+#include <QDebug>
 
 #define MAGICNUMBER 0x544156
 
@@ -35,15 +37,15 @@ public:
     QMap<int,QAbstractItemModelDecoration*> columnDecorationMap;
 
     QMap<QString,QVariant> iconSets;
-	QSize iconSize;
-	int iconSpacing;
+    QSize iconSize;
+    int iconSpacing;
     QConditionalDecorationProxyModel* m;
 };
 
 QConditionalDecorationProxyModelPrivate::QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel *pm)
 {
-	iconSize = QSize(16, 16);
-	iconSpacing = 3;
+    iconSize = QSize(16, 16);
+    iconSpacing = 3;
     m = pm;
 }
 
@@ -98,7 +100,7 @@ QConditionalDecorationProxyModel::~QConditionalDecorationProxyModel()
 
 void QConditionalDecorationProxyModel::addDecoration(int column, QAbstractItemModelDecoration* decoration)
 {
-	decoration->setProperty("column", column);
+    decoration->setProperty("column", column);
     d->columnDecorationMap[column] = decoration;
     invalidate();
 }
@@ -117,21 +119,21 @@ void QConditionalDecorationProxyModel::addIconSet(const QString &name, const QVa
 
 QVariant QConditionalDecorationProxyModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid()){
+    if (!index.isValid()) {
         return QVariant();
     }
-    if (role == Qt::DecorationRole){
+    if (role == Qt::DecorationRole) {
         QAbstractItemModelDecoration* decoration = d->columnDecorationMap.value(index.column(), 0);
-        if (decoration){
+        if (decoration) {
             return decoration->decorate(index);
         }
-    } else if (role == QConditionalDecorationProxyModel::ConditionalDecorationRole){
+    } else if (role == QConditionalDecorationProxyModel::ConditionalDecorationRole) {
         QAbstractItemModelDecoration* decoration = d->columnDecorationMap.value(index.column(), 0);
-        if (decoration){
+        if (decoration) {
             return decoration->properties();
         }
         return QVariant();
-    } else if (role == QConditionalDecorationProxyModel::IconSetsRole){
+    } else if (role == QConditionalDecorationProxyModel::IconSetsRole) {
         return d->iconSets;
     }
     return QSortFilterProxyModel::data(index, role);
@@ -140,9 +142,9 @@ QVariant QConditionalDecorationProxyModel::data(const QModelIndex &index, int ro
 QIcon QConditionalDecorationProxyModel::icon(const QString &set, const QString &name) const
 {
     QVariantMap m = d->iconSets.value(set).toMap();
-    if (!m.isEmpty()){
+    if (!m.isEmpty()) {
         QVariant i = m.value(name);
-        if (i.type() == QVariant::Icon){
+        if (i.type() == QVariant::Icon) {
             return qvariant_cast<QIcon>(i);
         }
         return QIcon(i.toString());
@@ -158,60 +160,60 @@ QMap<QString, QVariant> QConditionalDecorationProxyModel::iconSets() const
 
 QSize QConditionalDecorationProxyModel::iconSize() const
 {
-	return d->iconSize;
+    return d->iconSize;
 }
 
 int QConditionalDecorationProxyModel::iconSpacing() const
 {
-	return d->iconSpacing;
+    return d->iconSpacing;
 }
 
 bool QConditionalDecorationProxyModel::restoreState(const QByteArray & state)
 {
-	QDataStream s(state);
-	int count;
-	quint32 mn;
-	quint32 v;
-	s >> mn;
-	if (mn != MAGICNUMBER){
-		qWarning() << Q_FUNC_INFO << "magic number invalid";
-		return false;
-	}
-	s >> v;
-    if (v != 1){
-		qWarning() << Q_FUNC_INFO << "version" << v << "not supported";
-		return false;
-	}
-	s >> d->iconSize >> d->iconSpacing >> count;
-	for (int i = 0; i < count; i++){
-		QVariantMap p;
-		s >> p;
-		QConditionalDecoration* deco = new QConditionalDecoration();
-		deco->setProperties(p);
-	}
-	return true;
+    QDataStream s(state);
+    int count;
+    quint32 mn;
+    quint32 v;
+    s >> mn;
+    if (mn != MAGICNUMBER) {
+        qWarning() << Q_FUNC_INFO << "magic number invalid";
+        return false;
+    }
+    s >> v;
+    if (v != 1) {
+        qWarning() << Q_FUNC_INFO << "version" << v << "not supported";
+        return false;
+    }
+    s >> d->iconSize >> d->iconSpacing >> count;
+    for (int i = 0; i < count; i++) {
+        QVariantMap p;
+        s >> p;
+        QConditionalDecoration* deco = new QConditionalDecoration();
+        deco->setProperties(p);
+    }
+    return true;
 }
 
 QByteArray QConditionalDecorationProxyModel::stateState() const
 {
-	QByteArray ba;
-	QDataStream s(ba);
+    QByteArray ba;
+    QDataStream s(ba);
 
-	s << (quint32)MAGICNUMBER << (quint32)1 << d->iconSize << d->iconSpacing << d->columnDecorationMap.size();
+    s << (quint32)MAGICNUMBER << (quint32)1 << d->iconSize << d->iconSpacing << d->columnDecorationMap.size();
 
-	QMapIterator<int,QAbstractItemModelDecoration*> it(d->columnDecorationMap);
-	while(it.hasNext()){
-		s << it.value()->properties();
-		it.next();
-	}
-	return ba;
+    QMapIterator<int,QAbstractItemModelDecoration*> it(d->columnDecorationMap);
+    while(it.hasNext()) {
+        s << it.value()->properties();
+        it.next();
+    }
+    return ba;
 }
 
 bool QConditionalDecorationProxyModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-    if (role == QConditionalDecorationProxyModel::ConditionalDecorationRole){
+    if (role == QConditionalDecorationProxyModel::ConditionalDecorationRole) {
         QAbstractItemModelDecoration* decoration = d->columnDecorationMap.value(index.column(), 0);
-        if (decoration){
+        if (decoration) {
             decoration->setProperties(value.toMap());
         } else {
             decoration = new QConditionalDecoration(index.column());
@@ -225,16 +227,16 @@ bool QConditionalDecorationProxyModel::setData(const QModelIndex & index, const 
 
 void QConditionalDecorationProxyModel::setIconSize(const QSize & size)
 {
-	if (size != d->iconSize){
-		d->iconSize = size;
-		invalidateFilter();
-	}
+    if (size != d->iconSize) {
+        d->iconSize = size;
+        invalidateFilter();
+    }
 }
 
 void QConditionalDecorationProxyModel::setIconSpacing(int spacing)
 {
-	if (spacing != d->iconSpacing){
-		d->iconSpacing = spacing;
-		invalidateFilter();
-	}
+    if (spacing != d->iconSpacing) {
+        d->iconSpacing = spacing;
+        invalidateFilter();
+    }
 }

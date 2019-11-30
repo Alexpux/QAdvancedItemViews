@@ -18,7 +18,7 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qabstractfilterproxymodel.h"
 
 #include "qfiltermodel.h"
@@ -38,7 +38,7 @@ public:
 QAbstractFilterProxyModelPrivate::QAbstractFilterProxyModelPrivate(QAbstractFilterProxyModel *pm)
 {
     m = pm;
-    filterModel = 0;
+    filterModel = nullptr;
     lastResultCount = -1;
 }
 
@@ -64,19 +64,19 @@ QAbstractFilterModel* QAbstractFilterProxyModel::filterModel() const
 
 QVariant QAbstractFilterProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-	if (orientation == Qt::Vertical){
-		if (role == Qt::SizeHintRole){
-			QSize s = QSortFilterProxyModel::headerData(section, orientation, role).toSize();
-			s.setHeight(50);
-			return s;
-		}
-	}
-	return QSortFilterProxyModel::headerData(section, orientation, role);
+    if (orientation == Qt::Vertical) {
+        if (role == Qt::SizeHintRole) {
+            QSize s = QSortFilterProxyModel::headerData(section, orientation, role).toSize();
+            s.setHeight(50);
+            return s;
+        }
+    }
+    return QSortFilterProxyModel::headerData(section, orientation, role);
 }
 
 void QAbstractFilterProxyModel::setFilterModel(QAbstractFilterModel* filterModel)
 {
-    if (d->filterModel){
+    if (d->filterModel) {
         disconnect(d->filterModel);
     }
     d->filterModel = filterModel;
@@ -89,33 +89,33 @@ void QAbstractFilterProxyModel::setFilterModel(QAbstractFilterModel* filterModel
 
 void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 {
-	if (d->filterModel->sourceModel()){
-		disconnect(d->filterModel->sourceModel(), 0, this, 0);
-	}
+    if (d->filterModel->sourceModel()) {
+        disconnect(d->filterModel->sourceModel(), 0, this, 0);
+    }
     QSortFilterProxyModel::setSourceModel(sourceModel);
     d->filterModel->setSourceModel(sourceModel);
-	connect(d->filterModel->sourceModel(), SIGNAL(modelReset()), this, SLOT(updateResult()));
-	connect(d->filterModel->sourceModel(), SIGNAL(rowsInserted(QModelIndex, int , int)), this, SLOT(updateResult()));
-	connect(d->filterModel->sourceModel(), SIGNAL(rowsRemoved(QModelIndex, int , int)), this, SLOT(updateResult()));
+    connect(d->filterModel->sourceModel(), SIGNAL(modelReset()), this, SLOT(updateResult()));
+    connect(d->filterModel->sourceModel(), SIGNAL(rowsInserted(QModelIndex, int , int)), this, SLOT(updateResult()));
+    connect(d->filterModel->sourceModel(), SIGNAL(rowsRemoved(QModelIndex, int , int)), this, SLOT(updateResult()));
     emitResultCountChanged();
 }
 
 void QAbstractFilterProxyModel::updateResult()
 {
-	// reset last result count
-	d->lastResultCount = -1;
-	emit resultAboutToChange();
-	// invalidate filter
+    // reset last result count
+    d->lastResultCount = -1;
+    emit resultAboutToChange();
+    // invalidate filter
     invalidateFilter();
-	//
-	emit resultChanged();
-	// emit result count changed
+    //
+    emit resultChanged();
+    // emit result count changed
     emitResultCountChanged();
 }
 
 void QAbstractFilterProxyModel::emitResultCountChanged()
 {
-    if (rowCount() != d->lastResultCount){
+    if (rowCount() != d->lastResultCount) {
         d->lastResultCount = rowCount();
         emit resultCountChanged(d->lastResultCount, d->filterModel->sourceModel()->rowCount());
     }

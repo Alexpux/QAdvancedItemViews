@@ -29,10 +29,10 @@ class QAIVLIBSHARED_EXPORT QFixedRowsHeaderView : public QHeaderView
 {
     Q_OBJECT
 public:
-    QFixedRowsHeaderView(Qt::Orientation orientation, QWidget *parent = 0);
-    
+    QFixedRowsHeaderView(Qt::Orientation orientation, QWidget *parent = nullptr);
+
 signals:
-    
+
 public slots:
 protected:
     virtual void mouseReleaseEvent(QMouseEvent* event);

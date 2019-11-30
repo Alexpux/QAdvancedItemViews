@@ -1,11 +1,15 @@
 #ifndef QMIMEDATAUTIL_H
 #define QMIMEDATAUTIL_H
 
-#include <qaivlib_global.h>
+#include <Qt>
+#include <QItemSelection>
+
+#include "qaivlib_global.h"
 
 class QItemSelectionModel;
 class QMimeData;
 class QAdvancedTableView;
+class QTableView;
 
 QAIVLIBSHARED_EXPORT void qMimeDataAddCsv(QMimeData* mimeData, QAdvancedTableView* view, int role = Qt::DisplayRole);
 

@@ -18,11 +18,12 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qvaluefilter.h"
 
 #include <QDate>
 #include <QDateTime>
+#include <QDebug>
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QTime>
@@ -31,7 +32,7 @@
 #include <qvaluefilter_p.h>
 
 QValueFilterEditor::QValueFilterEditor(QWidget* parent) :
-QWidget(parent)
+    QWidget(parent)
 {
     QHBoxLayout* mLayout = new QHBoxLayout(this);
     mLayout->setSpacing(0);
@@ -72,12 +73,12 @@ Qt::MatchFlag QValueFilterEditor::matchFlag() const
 
 void QValueFilterEditor::matchFlagsLabelClicked(Qt::MouseButtons buttons)
 {
-    if (buttons.testFlag(Qt::LeftButton)){
-        if (m_matchFlag == Qt::MatchStartsWith){
+    if (buttons.testFlag(Qt::LeftButton)) {
+        if (m_matchFlag == Qt::MatchStartsWith) {
             setMatchFlag(Qt::MatchEndsWith);
-        } else if (m_matchFlag == Qt::MatchEndsWith){
+        } else if (m_matchFlag == Qt::MatchEndsWith) {
             setMatchFlag(Qt::MatchContains);
-        } else if (m_matchFlag == Qt::MatchContains){
+        } else if (m_matchFlag == Qt::MatchContains) {
             setMatchFlag(Qt::MatchStartsWith);
         }
     }
@@ -85,8 +86,8 @@ void QValueFilterEditor::matchFlagsLabelClicked(Qt::MouseButtons buttons)
 
 void QValueFilterEditor::sensitivityLabelClicked(Qt::MouseButtons buttons)
 {
-    if (buttons.testFlag(Qt::LeftButton)){
-        if (m_sensitivity == Qt::CaseInsensitive){
+    if (buttons.testFlag(Qt::LeftButton)) {
+        if (m_sensitivity == Qt::CaseInsensitive) {
             setCaseSensitivity(Qt::CaseSensitive);
         } else {
             setCaseSensitivity(Qt::CaseInsensitive);
@@ -95,7 +96,7 @@ void QValueFilterEditor::sensitivityLabelClicked(Qt::MouseButtons buttons)
 }
 void QValueFilterEditor::setCaseSensitivity(Qt::CaseSensitivity sensitivity)
 {
-    if (sensitivity == Qt::CaseSensitive){
+    if (sensitivity == Qt::CaseSensitive) {
         m_sensitivityLabel->setPixmap(QPixmap(QString::fromUtf8(":/qaiv/filter/case_sensitive")));
         m_sensitivityLabel->setToolTip(tr("The filter is case sensitive"));
     } else {
@@ -107,13 +108,13 @@ void QValueFilterEditor::setCaseSensitivity(Qt::CaseSensitivity sensitivity)
 
 void QValueFilterEditor::setMatchFlag(Qt::MatchFlag flag)
 {
-    if (flag == Qt::MatchEndsWith){
+    if (flag == Qt::MatchEndsWith) {
         m_matchFlagsLabel->setPixmap(QPixmap(QString::fromUtf8(":/qaiv/filter/ends_with")));
         m_matchFlagsLabel->setToolTip(tr("The filter value matches the end of the item"));
-    } else if (flag == Qt::MatchContains){
+    } else if (flag == Qt::MatchContains) {
         m_matchFlagsLabel->setPixmap(QPixmap(QString::fromUtf8(":/qaiv/filter/contains")));
         m_matchFlagsLabel->setToolTip(tr("The filter value is contained in the item"));
-    } else if (flag == Qt::MatchStartsWith){
+    } else if (flag == Qt::MatchStartsWith) {
         m_matchFlagsLabel->setPixmap(QPixmap(QString::fromUtf8(":/qaiv/filter/starts_with")));
         m_matchFlagsLabel->setToolTip(tr("The filter value matches the start of the item"));
     }
@@ -145,14 +146,14 @@ QWidget* QValueFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* 
 {
     Q_UNUSED(option);
     Q_UNUSED(index);
-	Q_UNUSED(delegate);
-	Q_UNUSED(index);
+    Q_UNUSED(delegate);
+    Q_UNUSED(index);
     return new QValueFilterEditor(parent);
 }
 
 QVariant QValueFilter::data(int role) const
 {
-    if (role == Qt::DisplayRole){
+    if (role == Qt::DisplayRole) {
         return QString("%1").arg(property("value").toString());
     }
     return QVariant();
@@ -163,7 +164,7 @@ bool QValueFilter::matches(const QVariant & value, int type) const
     Qt::CaseSensitivity s;
     Qt::MatchFlag mf;
     int t = type;
-    if (t == -1){
+    if (t == -1) {
         t = value.type();
     }
     switch(t)
@@ -180,15 +181,16 @@ bool QValueFilter::matches(const QVariant & value, int type) const
         return value.toInt() == property("value").toInt();
     case QVariant::LongLong:
         return value.toLongLong() == property("value").toLongLong();
-    case QVariant::String:
+    case QVariant::String: {
         s = static_cast<Qt::CaseSensitivity>(property("caseSensitivity", Qt::CaseInsensitive).toInt());
         mf = static_cast<Qt::MatchFlag>(property("matchFlag", Qt::MatchStartsWith).toInt());
-        if (mf == Qt::MatchContains){
+        if (mf == Qt::MatchContains) {
             return value.toString().contains(property("value").toString(), s);
-        } else if (mf == Qt::MatchEndsWith){
+        } else if (mf == Qt::MatchEndsWith) {
             return QString::compare(value.toString().right(property("value").toString().length()), property("value").toString(), s) == 0;
         }
         return QString::compare(value.toString().left(property("value").toString().length()), property("value").toString(), s) == 0;
+    }
     case QVariant::Time:
         return value.toTime() == property("value").toTime();
     case QVariant::UInt:
@@ -204,7 +206,7 @@ bool QValueFilter::matches(const QVariant & value, int type) const
 void QValueFilter::setEditorData(QWidget * editor, const QModelIndex & index)
 {
     QValueFilterEditor* w = qobject_cast<QValueFilterEditor*>(editor);
-    if (w){
+    if (w) {
         QVariantMap p = index.data(Qt::EditRole).toMap();
         w->setText(p.value("value").toString());
         w->setMatchFlag(static_cast<Qt::MatchFlag>(p.value("matchFlag").toInt()));
@@ -215,21 +217,21 @@ void QValueFilter::setEditorData(QWidget * editor, const QModelIndex & index)
 void QValueFilter::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index)
 {
     QValueFilterEditor* w = qobject_cast<QValueFilterEditor*>(editor);
-    if (w){
+    if (w) {
         QVariantMap p(index.data(Qt::EditRole).toMap());
         p["value"] = w->text();
         p["caseSensitivity"] = w->caseSensitivity();
         p["matchFlag"] = w->matchFlag();
-		if (property("enableOnCommit").toBool()){
-			p["enabled"] = true;
-		}
+        if (property("enableOnCommit").toBool()) {
+            p["enabled"] = true;
+        }
         model->setData(index, p);
     }
 }
 
 void QValueFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
 {
-	editor->setGeometry(option.rect);
+    editor->setGeometry(option.rect);
 }
 
 QDebug operator<<(QDebug d, const QValueFilter & f)
@@ -239,7 +241,7 @@ QDebug operator<<(QDebug d, const QValueFilter & f)
       << "column:" << f.column()
       << "enabled:" << f.isEnabled()
       << "value:" << f.property("value")
-	  << "matchFlag" << static_cast<Qt::MatchFlag>(f.property("matchFlag").toInt())
+      << "matchFlag" << static_cast<Qt::MatchFlag>(f.property("matchFlag").toInt())
       << ")";
     return d.space();
 }

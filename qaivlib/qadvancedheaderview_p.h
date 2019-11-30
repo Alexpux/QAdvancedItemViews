@@ -29,17 +29,17 @@ class QTableView;
 
 class ShowMoreColumnsDialog : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	ShowMoreColumnsDialog(QHeaderView* headerView);
-	~ShowMoreColumnsDialog();
+    ShowMoreColumnsDialog(QHeaderView* headerView);
+    ~ShowMoreColumnsDialog();
 
-	bool isHidden(int index) const;
+    bool isHidden(int index) const;
 private slots:
-	void textEdited(const QString & text);
+    void textEdited(const QString & text);
 private:
-	QSortFilterProxyModel* m_proxy;
-	QTableView* m_view;
+    QSortFilterProxyModel* m_proxy;
+    QTableView* m_view;
 };
 
 #endif // QADVANCEDHEADERVIEW_P_H

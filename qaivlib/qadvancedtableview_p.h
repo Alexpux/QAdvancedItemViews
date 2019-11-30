@@ -50,7 +50,7 @@ class QAdvancedTableViewProxy : public QTableView
 {
     Q_OBJECT
 public:
-    QAdvancedTableViewProxy(QWidget* parent = 0);
+    QAdvancedTableViewProxy(QWidget* parent = nullptr);
     ~QAdvancedTableViewProxy();
 signals:
     void focusReceived();

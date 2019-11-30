@@ -42,57 +42,57 @@ class QFixedRowsTableViewPrivate;
 class QAIVLIBSHARED_EXPORT QFixedRowsTableView : public QTableView
 {
     Q_OBJECT
-	//! @property(fixedRowsMode)
-	/**
-	 * This property holds whether fixed rows mode is enabled
-	 * @see bool fixedRowsMode() const
-	 * @see void setFixedRowsMode(bool)
-	 */
-	Q_PROPERTY(bool fixedRowsMode READ fixedRowsMode WRITE setFixedRowsMode)
+    //! @property(fixedRowsMode)
+    /**
+     * This property holds whether fixed rows mode is enabled
+     * @see bool fixedRowsMode() const
+     * @see void setFixedRowsMode(bool)
+     */
+    Q_PROPERTY(bool fixedRowsMode READ fixedRowsMode WRITE setFixedRowsMode)
 public:
-	/**
-	 * Constructs a fixed rows table view with the given @p parent.
-	 */
-    QFixedRowsTableView(QWidget* parent = 0);
-	/**
-	 * Destorys the fixed rows table view.
-	 */
+    /**
+     * Constructs a fixed rows table view with the given @p parent.
+     */
+    QFixedRowsTableView(QWidget* parent = nullptr);
+    /**
+     * Destorys the fixed rows table view.
+     */
     ~QFixedRowsTableView();
-	/**
-	 * Returns the proxy model used to decorate the table view's vertical header.
-	 */
+    /**
+     * Returns the proxy model used to decorate the table view's vertical header.
+     */
     QFixedRowsDecorationProxyModel* decorationProxy() const;
-	/**
-	 * Returns true if the fixed rows mode is enabled. Otherwise false.
-	 * @sa setFixedRowsMode(), QFixedRowsFilterProxyModel::setEnabled()
-	 */
-	bool fixedRowsMode() const;
-	/**
-	 * Returns the view filter proxy.
-	 */
+    /**
+     * Returns true if the fixed rows mode is enabled. Otherwise false.
+     * @sa setFixedRowsMode(), QFixedRowsFilterProxyModel::setEnabled()
+     */
+    bool fixedRowsMode() const;
+    /**
+     * Returns the view filter proxy.
+     */
     QFixedRowsFilterProxyModel* filterProxy() const;
-	/**
-	 * @reimp QTableView::setModel()
-	 */
+    /**
+     * @reimp QTableView::setModel()
+     */
     void setModel(QAbstractItemModel* model);
 public slots:
-	/**
-	 * If @p on is true the fixed rows mode is enabled.
-	 */
-	void setFixedRowsMode(bool on);
+    /**
+     * If @p on is true the fixed rows mode is enabled.
+     */
+    void setFixedRowsMode(bool on);
 signals:
-	/**
-	 * This signal is emitted when the table view has received the focus.
-	 */
+    /**
+     * This signal is emitted when the table view has received the focus.
+     */
     void focusReceived();
 protected:
-	/**
-	 * @reimp QAbstractItemView::closeEditor()
-	 */
+    /**
+     * @reimp QAbstractItemView::closeEditor()
+     */
     void closeEditor(QWidget* editor, QAbstractItemDelegate::EndEditHint hint);
-	/**
-	 * @reimp QAbstractItemView::focusInEvent()
-	 */
+    /**
+     * @reimp QAbstractItemView::focusInEvent()
+     */
     void focusInEvent(QFocusEvent* event);
 private slots:
     void updateHeight();
@@ -110,50 +110,50 @@ class QAIVLIBSHARED_EXPORT QFixedRowsFilterProxyModel : public QSortFilterProxyM
 {
     Q_OBJECT
 public:
-	/**
-	 * Constructs a fixed rows filter proxy model with the given @p parent.
-	 */
-    QFixedRowsFilterProxyModel(QObject *parent = 0);
-	/**
-	 * Destroys the fixed rows proxy model.
-	 */
+    /**
+     * Constructs a fixed rows filter proxy model with the given @p parent.
+     */
+    QFixedRowsFilterProxyModel(QObject *parent = nullptr);
+    /**
+     * Destroys the fixed rows proxy model.
+     */
     ~QFixedRowsFilterProxyModel();
-	/**
-	 * Clears the current selection of fixed rows.
-	 */
+    /**
+     * Clears the current selection of fixed rows.
+     */
     void clear();
-	/**
-	 * @reimp QSortFilterProxyModel::filterAcceptsRow()
-	 */
+    /**
+     * @reimp QSortFilterProxyModel::filterAcceptsRow()
+     */
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
-	/**
-	 * @reimp QSortFilterProxyModel::headerData()
-	 */
+    /**
+     * @reimp QSortFilterProxyModel::headerData()
+     */
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-	/**
-	 * Returns true if the fixed rows mode is enabled. Otherwise false.
-	 */
+    /**
+     * Returns true if the fixed rows mode is enabled. Otherwise false.
+     */
     bool isEnabled() const;
-	/**
-	 * Returns true if the specified (source) model @p row is pinned (fixed).
-	 */
+    /**
+     * Returns true if the specified (source) model @p row is pinned (fixed).
+     */
     bool isRowPinned(int row) const;
 public slots:
-	/**
-	 * If @p on is true fixed rows mode is enabled.
-	 */
+    /**
+     * If @p on is true fixed rows mode is enabled.
+     */
     void setEnabled(bool on);
-	/**
-	 * @todo should not be public
-	 */
+    /**
+     * @todo should not be public
+     */
     void sourceModelReset();
-	/**
-	 * Toggles the state of the row specified by the given @p index.
-	 */
+    /**
+     * Toggles the state of the row specified by the given @p index.
+     */
     void toggleRow(const QModelIndex & index);
-	/**
-	 * If @p fixed is true the row specified by the given @p index is added to the list of fixed rows.
-	 */
+    /**
+     * If @p fixed is true the row specified by the given @p index is added to the list of fixed rows.
+     */
     void setRowFixed(const QModelIndex & index, bool fixed);
 private:
     QFixedRowsFilterProxyModelPrivate* d;
@@ -164,34 +164,34 @@ class QAIVLIBSHARED_EXPORT QFixedRowsDecorationProxyModel : public QIdentityProx
 {
     Q_OBJECT
 public:
-	/**
-	 * Constructs a fixed rows decoration proxy model attached to the given @p filterProxy and with the given @p parent.
-	 */
-    QFixedRowsDecorationProxyModel(QFixedRowsFilterProxyModel* filterProxy, QObject* parent = 0);
-	/**
-	 * Destroys the fixed rows decoration proxy model.
-	 */
+    /**
+     * Constructs a fixed rows decoration proxy model attached to the given @p filterProxy and with the given @p parent.
+     */
+    QFixedRowsDecorationProxyModel(QFixedRowsFilterProxyModel* filterProxy, QObject* parent = nullptr);
+    /**
+     * Destroys the fixed rows decoration proxy model.
+     */
     ~QFixedRowsDecorationProxyModel();
-	/**
-	 * @reimp QIdentityProxyModel::headerData()
-	 */
+    /**
+     * @reimp QIdentityProxyModel::headerData()
+     */
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
-	QSize iconSize() const;
-	/**
-	 * Returns true if the fixed rows mode is enabled. Otherwise false.
-	 */
+    QSize iconSize() const;
+    /**
+     * Returns true if the fixed rows mode is enabled. Otherwise false.
+     */
     bool isEnabled() const;
 signals:
-	/**
-	 * This signal is emitted when fixed rows mode has toggled.
-	 * If the mode is enabled, @p on is true.
-	 */
+    /**
+     * This signal is emitted when fixed rows mode has toggled.
+     * If the mode is enabled, @p on is true.
+     */
     void modelToggled(bool on);
 public slots:
-	/**
-	 * If @p on is true fixed rows mode is enabled.
-	 */
+    /**
+     * If @p on is true fixed rows mode is enabled.
+     */
     void setEnabled(bool on);
     void toggleRow(const QModelIndex & index);
 private:

@@ -26,7 +26,7 @@
 #include <QSortFilterProxyModel>
 #include <QSize>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 class QAbstractItemModelDecoration;
 
@@ -97,18 +97,18 @@ class QConditionalDecorationProxyModelPrivate;
 class QAIVLIBSHARED_EXPORT QConditionalDecorationProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-	//! @property(iconSize: QSize)
-	/**
-	 * This property holds the size of item's icons.
-	 * @remark The default is QSize(16, 16)
-	 */
-	Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
-	//! @property(iconSize: int)
-	/**
-	 * This property holds the spacing between the icons of an item.
-	 * @remark The default is 3.
-	 */
-	Q_PROPERTY(int iconSpacing READ iconSpacing WRITE setIconSpacing)
+    //! @property(iconSize: QSize)
+    /**
+     * This property holds the size of item's icons.
+     * @remark The default is QSize(16, 16)
+     */
+    Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
+    //! @property(iconSize: int)
+    /**
+     * This property holds the spacing between the icons of an item.
+     * @remark The default is 3.
+     */
+    Q_PROPERTY(int iconSpacing READ iconSpacing WRITE setIconSpacing)
 public:
     enum ItemDataRole {
         ConditionalDecorationRole = Qt::UserRole + 421,
@@ -117,14 +117,14 @@ public:
     /**
       * Constructs a QConditionalDecorationProxyModel with the given @p parent.
       */
-    explicit QConditionalDecorationProxyModel(QObject *parent = 0);
+    explicit QConditionalDecorationProxyModel(QObject *parent = nullptr);
     /**
       * Destroys the QConditionalDecorationProxyModel object.
       */
     ~QConditionalDecorationProxyModel();
-	/**
-	 * Adds a @p decoration for the specified @p column.
-	 */
+    /**
+     * Adds a @p decoration for the specified @p column.
+     */
     void addDecoration(int column, QAbstractItemModelDecoration* decoration);
     /**
       *
@@ -144,49 +144,49 @@ public:
       * @see addIcon()
       */
     void addIconSet(const QString & name, const QVariantMap icons);
-	/**
-	 * @reimp QSortFilterProxyModel::data()
-	 */
+    /**
+     * @reimp QSortFilterProxyModel::data()
+     */
     virtual QVariant data(const QModelIndex & index, int role) const;
-	/**
-	 * Returns the icon specified by the given @p set and @p name.
-	 * An invalid QIcon is returned if the iconset @p set or the icon @p name cannot be retrieved.
-	 */
+    /**
+     * Returns the icon specified by the given @p set and @p name.
+     * An invalid QIcon is returned if the iconset @p set or the icon @p name cannot be retrieved.
+     */
     QIcon icon(const QString & set, const QString & name) const;
-	/**
-	 * Returns the size of the icons.
-	 * @see setIconSize()
-	 */
-	QSize iconSize() const;
-	/**
-	 * Returns the spacing between the icons of an item.
-	 */
-	int iconSpacing() const;
+    /**
+     * Returns the size of the icons.
+     * @see setIconSize()
+     */
+    QSize iconSize() const;
+    /**
+     * Returns the spacing between the icons of an item.
+     */
+    int iconSpacing() const;
     /**
       * Returns a map of icon sets defined for this proxy.
       */
     QMap<QString, QVariant> iconSets() const;
-	/**
-	 * Restores the proxy model's state and decoratrions.
-	 */
-	bool restoreState(const QByteArray & state);
-	/**
-	 * Saves the proxy model's state and decorations.
-	 */
-	QByteArray stateState() const;
-	/**
-	 * @reimp QSortFilterProxyModel::setData()
-	 */
+    /**
+     * Restores the proxy model's state and decoratrions.
+     */
+    bool restoreState(const QByteArray & state);
+    /**
+     * Saves the proxy model's state and decorations.
+     */
+    QByteArray stateState() const;
+    /**
+     * @reimp QSortFilterProxyModel::setData()
+     */
     virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
-	/**
-	 * Sets the icon size to @p size.
-	 * @see iconSize()
-	 */
-	void setIconSize(const QSize & size);
-	/**
-	 * Sets the spacing between the icons of an item to @p spacing.
-	 */
-	void setIconSpacing(int spacing);
+    /**
+     * Sets the icon size to @p size.
+     * @see iconSize()
+     */
+    void setIconSize(const QSize & size);
+    /**
+     * Sets the spacing between the icons of an item to @p spacing.
+     */
+    void setIconSpacing(int spacing);
 private:
     QConditionalDecorationProxyModelPrivate* d;
 };

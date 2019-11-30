@@ -18,10 +18,10 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qabstractfilter.h"
 
-#include <qadvancedtableview.h>
+#include "qadvancedtableview.h"
 //#include <qfiltergroup.h>
 
 class QAbstractFilterPrivate
@@ -98,16 +98,16 @@ QColor QAbstractFilter::highlightColor() const
 
 bool QAbstractFilter::isEnabled() const
 {
-	if (!isValid()){
-		return  false;
-	}
+    if (!isValid()) {
+        return  false;
+    }
     return d->properties.value("enabled", false).toBool();
 }
 
 bool QAbstractFilter::isValid() const
 {
     return d->properties.value("type").toInt() != QAbstractFilter::Type &&
-            d->properties.value("column").toInt() > -1;
+           d->properties.value("column").toInt() > -1;
 }
 
 QMap<QString,QVariant> QAbstractFilter::properties() const
@@ -137,7 +137,7 @@ void QAbstractFilter::setHighlightColor(const QColor & color)
 
 void QAbstractFilter::setProperty(const QString & name, const QVariant & value)
 {
-	d->properties[name] = value;
+    d->properties[name] = value;
 }
 
 void QAbstractFilter::setRow(int row)

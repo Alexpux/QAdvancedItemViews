@@ -23,7 +23,7 @@
 
 #include <QSortFilterProxyModel>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 class QUniqueValuesProxyModelPrivate;
 
@@ -34,56 +34,56 @@ class QUniqueValuesProxyModelPrivate;
 class QAIVLIBSHARED_EXPORT QUniqueValuesProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-	Q_PROPERTY(bool emptyItemsAllowed READ emptyItemsAllowed WRITE setEmptyItemsAllowed)
-	//! @property(modelColumn)
-	/**
-	 * This property holds the column in the model that is use for filtering.
-	 * @sa int modelColumn() const
-	 * @sa void setModelColumn(int)
-	 */
-	Q_PROPERTY(int modelColumn READ modelColumn WRITE setModelColumn)
-public:
-	/**
-	 * Contructs a unqiue values model with the given @p parent.
-	 */
-    QUniqueValuesProxyModel(QObject *parent = 0);
+    Q_PROPERTY(bool emptyItemsAllowed READ emptyItemsAllowed WRITE setEmptyItemsAllowed)
+    //! @property(modelColumn)
     /**
-	 * Destroys the unique values model.
-	 */
+     * This property holds the column in the model that is use for filtering.
+     * @sa int modelColumn() const
+     * @sa void setModelColumn(int)
+     */
+    Q_PROPERTY(int modelColumn READ modelColumn WRITE setModelColumn)
+public:
+    /**
+     * Contructs a unqiue values model with the given @p parent.
+     */
+    QUniqueValuesProxyModel(QObject *parent = nullptr);
+    /**
+     * Destroys the unique values model.
+     */
     ~QUniqueValuesProxyModel();
-	/**
-	 * @reimp QSortFilterProxyModel::data()
-	 */
+    /**
+     * @reimp QSortFilterProxyModel::data()
+     */
     QVariant data(const QModelIndex &index, int role) const;
 
-	bool emptyItemsAllowed() const;
-	/**
-	 * Returns true if the item in the row indicated by the given source_row and source_parent contains a unique value in the model; otherwise returns false.
-	 * @note By default, the Qt::DisplayRole is used to determine if the row should be accepted or not.
-	 */
+    bool emptyItemsAllowed() const;
+    /**
+     * Returns true if the item in the row indicated by the given source_row and source_parent contains a unique value in the model; otherwise returns false.
+     * @note By default, the Qt::DisplayRole is used to determine if the row should be accepted or not.
+     */
     bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
 
     virtual bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
-	/**
-	 * Returns model column used to determine unique value.
-	 * @see setModelColumn()
-	 */
+    /**
+     * Returns model column used to determine unique value.
+     * @see setModelColumn()
+     */
     int modelColumn() const;
-	/**
-	 *
-	 */
-	void setEmptyItemsAllowed(bool on);
-	/**
-	 * Sets model column used to determine unique value to @p column.
-	 * @see modelColumn()
-	 */
+    /**
+     *
+     */
+    void setEmptyItemsAllowed(bool on);
+    /**
+     * Sets model column used to determine unique value to @p column.
+     * @see modelColumn()
+     */
     void setModelColumn(int colum);
-	/**
-	 * @reimp QSortFilterProxyModel::setSourceModel()
-	 */
+    /**
+     * @reimp QSortFilterProxyModel::setSourceModel()
+     */
     void setSourceModel(QAbstractItemModel* sourceModel);
 signals:
-	void progressChanged(int progress);
+    void progressChanged(int progress);
 private slots:
     bool isDuplicate(int row) const;
     void buildMap();

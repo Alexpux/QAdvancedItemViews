@@ -18,7 +18,7 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "stdafx.h"
+
 #include "qtablemodelcsvwriter_p.h"
 
 #include "qaiv.h"
@@ -26,8 +26,13 @@
 #include "qadvancedtableview.h"
 #include "qmimedatautil.h"
 
+#include <QDebug>
+#include <QIODevice>
+#include <QTableView>
+#include <QTextStream>
+
 QTableModelCsvWriter::QTableModelCsvWriter(QIODevice* device) :
-	m_device(device)
+    m_device(device)
 {
 }
 
@@ -41,25 +46,25 @@ bool QTableModelCsvWriter::writeAll(QAdvancedTableView* view, bool all)
         qWarning() << "QTableModelCsvWriter::writeAll: the device can not be opened for writing";
         return false;
     }
-	QTextStream stream(m_device);
+    QTextStream stream(m_device);
 
-	QPair<QModelIndex, QModelIndex> e;
-	if (!all){
-		e = selectionEdges(view->selectionModel()->selection());
-	} else {
-		e.first = view->filterProxyModel()->index(0, 0);
-		e.second = view->filterProxyModel()->index(view->filterProxyModel()->rowCount() - 1, view->filterProxyModel()->columnCount() - 1);
-	}
-	for (int r = e.first.row(); r <= e.second.row(); r++){
-		QStringList l;
-		for (int c = e.first.column(); c <= e.second.column(); c++){
-			if (!view->horizontalHeader()->isSectionHidden(c)){
-				l << "\"" + view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
-			}
-		}
-		stream << l.join(";") << endl;
-	}
-	return true;
+    QPair<QModelIndex, QModelIndex> e;
+    if (!all) {
+        e = selectionEdges(view->selectionModel()->selection());
+    } else {
+        e.first = view->filterProxyModel()->index(0, 0);
+        e.second = view->filterProxyModel()->index(view->filterProxyModel()->rowCount() - 1, view->filterProxyModel()->columnCount() - 1);
+    }
+    for (int r = e.first.row(); r <= e.second.row(); r++) {
+        QStringList l;
+        for (int c = e.first.column(); c <= e.second.column(); c++) {
+            if (!view->horizontalHeader()->isSectionHidden(c)) {
+                l << "\"" + view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
+            }
+        }
+        stream << l.join(";") << endl;
+    }
+    return true;
 }
 
 bool QTableModelCsvWriter::writeAll(QTableView* view, bool all)
@@ -68,23 +73,23 @@ bool QTableModelCsvWriter::writeAll(QTableView* view, bool all)
         qWarning() << "QTableModelCsvWriter::writeAll: the device can not be opened for writing";
         return false;
     }
-	QTextStream stream(m_device);
+    QTextStream stream(m_device);
 
-	QPair<QModelIndex, QModelIndex> e;
-	if (!all){
-		e = selectionEdges(view->selectionModel()->selection());
-	} else {
-		e.first = view->model()->index(0, 0);
-		e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
-	}
-	for (int r = e.first.row(); r <= e.second.row(); r++){
-		QStringList l;
-		for (int c = e.first.column(); c <= e.second.column(); c++){
-			if (!view->horizontalHeader()->isSectionHidden(c)){
-				l << "\"" + view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
-			}
-		}
-		stream << l.join(";") << endl;
-	}
-	return true;
+    QPair<QModelIndex, QModelIndex> e;
+    if (!all) {
+        e = selectionEdges(view->selectionModel()->selection());
+    } else {
+        e.first = view->model()->index(0, 0);
+        e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
+    }
+    for (int r = e.first.row(); r <= e.second.row(); r++) {
+        QStringList l;
+        for (int c = e.first.column(); c <= e.second.column(); c++) {
+            if (!view->horizontalHeader()->isSectionHidden(c)) {
+                l << "\"" + view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
+            }
+        }
+        stream << l.join(";") << endl;
+    }
+    return true;
 }

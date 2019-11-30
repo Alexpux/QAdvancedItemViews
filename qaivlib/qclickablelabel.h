@@ -47,7 +47,7 @@ public:
       *
       * The @p parent is passed to the QLabel constructor.
       */
-    QClickableLabel(QWidget* parent = 0);
+    QClickableLabel(QWidget* parent = nullptr);
     /**
       * Destroys the clickable label.
       */

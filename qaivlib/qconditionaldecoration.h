@@ -21,7 +21,7 @@
 #ifndef QCONDITONALDECORATION_H
 #define QCONDITONALDECORATION_H
 
-#include <qabstractmodelitemdecoration.h>
+#include "qabstractmodelitemdecoration.h"
 
 #include "qaivlib_global.h"
 
@@ -30,11 +30,11 @@ class QConditionalDecorationProxyModel;
 class QAIVLIBSHARED_EXPORT QConditionalDecoration : public QAbstractItemModelDecoration
 {
 public:
-	/**
-	 * This enum describes the type of matches that can be used when decorating an item.
-	 */
+    /**
+     * This enum describes the type of matches that can be used when decorating an item.
+     */
     enum MatchFlag {
-        MatchFlagInvalid = -1, 
+        MatchFlagInvalid = -1,
         Contains = 1, /**< The data provided by the item contains the value. */
         ContainsNot, /**< The data provided by the item does not contain the value. */
         EndsWith, /**< The data provided by the item ends with the value. */
@@ -60,9 +60,9 @@ public:
       * Constructs a QConditionalDecoration with the specified @p column.
       */
     QConditionalDecoration(int column);
-	/**
-	 * Adds a condition with the given @p matchFlag and @p value.
-	 */
+    /**
+     * Adds a condition with the given @p matchFlag and @p value.
+     */
     void addCondition( QConditionalDecoration::MatchFlag matchFlag, const QVariant & value, const QString & set, const QString & name);
     /**
       * Returns the match flag for the given @p index or QModelItemDecoration::MatchFlagInvalid if @p index does not exists.
@@ -72,9 +72,9 @@ public:
       * Returns the number of conditions.
       */
     int count() const;
-	/**
-	 * Returns the decoration for the given @p index.
-	 */
+    /**
+     * Returns the decoration for the given @p index.
+     */
     QVariant decorate(const QModelIndex & index, int role = Qt::DecorationRole) const;
     /**
       * Returns the icon name of the condition at the given @p index or QString::null if @p index does not exists.

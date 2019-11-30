@@ -28,7 +28,7 @@ QAIVDesignerCollection::QAIVDesignerCollection(QObject *parent) :
     QObject(parent)
 {
     m_widgets.append(new QAdvancedTableViewPlugin());
-//    m_widgets.append(new QTableModelExportPushButtonPlugin(0));
+    //    m_widgets.append(new QTableModelExportPushButtonPlugin(0));
 }
 
 QList<QDesignerCustomWidgetInterface *> QAIVDesignerCollection::customWidgets() const
@@ -37,6 +37,5 @@ QList<QDesignerCustomWidgetInterface *> QAIVDesignerCollection::customWidgets() 
 }
 
 #if QT_VERSION < 0x050000
-    Q_EXPORT_PLUGIN2(qaivdesignerplugin, QAIVDesignerCollection)
+Q_EXPORT_PLUGIN2(qaivdesignerplugin, QAIVDesignerCollection)
 #endif
-

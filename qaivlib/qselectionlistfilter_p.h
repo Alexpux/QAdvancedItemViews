@@ -34,16 +34,16 @@ class QToolButton;
 
 class QSelectionListFilterEditorPopup : public QFilterEditorPopupWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	QSelectionListFilterEditorPopup(QWidget* parent);
-	~QSelectionListFilterEditorPopup();
+    QSelectionListFilterEditorPopup(QWidget* parent);
+    ~QSelectionListFilterEditorPopup();
 
-	bool cancelAndClose(QObject* obj, int key) const;
+    bool cancelAndClose(QObject* obj, int key) const;
 
-	bool commitAndClose(QObject* obj, int key) const;
+    bool commitAndClose(QObject* obj, int key) const;
 
-	int mode() const;
+    int mode() const;
 
     QVariantList selectedValues() const;
 
@@ -55,23 +55,23 @@ public:
 
     QVariantList values(int role = Qt::DisplayRole) const;
 signals:
-	void accepted();
-	void modeChanged();
-	void rejected();
+    void accepted();
+    void modeChanged();
+    void rejected();
 private slots:
-	void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
-	void emptyToolButtonClicked();
-	void notEmptyToolButtonClicked();
+    void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    void emptyToolButtonClicked();
+    void notEmptyToolButtonClicked();
     void searchForTextEdited(const QString & text);
-	void selectCheckBoxStateChanged(int state);
+    void selectCheckBoxStateChanged(int state);
 private:
     QCheckStateProxyModel* m_checkStateProxy;
-	QToolButton* m_emptyToolButton;
+    QToolButton* m_emptyToolButton;
     QLineEdit* m_lineEdit;
     QListView* m_listView;
-	int m_mode;
-	QToolButton* m_notEmptyToolButton;
-	QCheckBox* m_selectCheckBox;
+    int m_mode;
+    QToolButton* m_notEmptyToolButton;
+    QCheckBox* m_selectCheckBox;
     QStandardItemModel* m_model;
 };
 
@@ -79,10 +79,10 @@ class QSelectionListFilterEditor : public QFilterEditorWidget
 {
     Q_OBJECT
 public:
-    QSelectionListFilterEditor(QWidget* parent = 0);
-	~QSelectionListFilterEditor();
+    QSelectionListFilterEditor(QWidget* parent = nullptr);
+    ~QSelectionListFilterEditor();
 public slots:
-	void modeSelected();
+    void modeSelected();
 };
 
 #endif // QSELECTIONLISTFILTER_P_H

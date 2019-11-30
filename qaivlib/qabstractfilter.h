@@ -26,7 +26,7 @@
 #include <QStyleOptionViewItem>
 #include <QVariant>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 class QFilterGroup;
 class QFilterViewItemDelegate;
@@ -41,20 +41,20 @@ class QAbstractFilterPrivate;
 class QAIVLIBSHARED_EXPORT QAbstractFilter
 {
 public:
-	/**
-	 * The lowest permitted type value for custom items (subclasses of QAbstractFilter or any of the standard filter). This value is used in conjunction with a reimplementation of QGraphicsItem::type() and declaring a Type enum value. Example:
-	 * @code
-	 * class CustomFilter : public QAbstractFilter
-	 * {
-	 *		....
-	 *		enum { Type = UserType + 1};
-	 *		...
-	 * };
-	 * @endcode
-	 */
-	static const int UserType = 65536;
+    /**
+     * The lowest permitted type value for custom items (subclasses of QAbstractFilter or any of the standard filter). This value is used in conjunction with a reimplementation of QGraphicsItem::type() and declaring a Type enum value. Example:
+     * @code
+     * class CustomFilter : public QAbstractFilter
+     * {
+     *     ....
+     *     enum { Type = UserType + 1};
+     *     ...
+     * };
+     * @endcode
+     */
+    static const int UserType = 65536;
     enum {
-        Type = -1        
+        Type = -1
     };
     /**
       * Constructs an abstract (invalid) filter.
@@ -141,7 +141,7 @@ public:
      */
     int type() const;
 
-	virtual void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) = 0;
+    virtual void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) = 0;
 protected:
     /**
       * Constructs a filter definition with the given @p type and @p column index.
@@ -162,7 +162,7 @@ private:
 template <class T> inline T qfilter_cast(QAbstractFilter* filter)
 {
     return int(static_cast<T>(0)->Type) == int(QAbstractFilter::Type)
-        || (filter && int(static_cast<T>(0)->Type) == filter->type()) ? static_cast<T>(filter) : 0;
+            || (filter && int(static_cast<T>(0)->Type) == filter->type()) ? static_cast<T>(filter) : 0;
 }
 
 /**
@@ -173,7 +173,7 @@ template <class T> inline T qfilter_cast(QAbstractFilter* filter)
 template <class T> inline T qfilter_cast(const QAbstractFilter* filter)
 {
     return int(static_cast<T>(0)->Type) == int(QAbstractFilter::Type)
-        || (filter && int(static_cast<T>(0)->Type) == filter->type()) ? static_cast<T>(filter) : 0;
+            || (filter && int(static_cast<T>(0)->Type) == filter->type()) ? static_cast<T>(filter) : 0;
 }
 
 #endif // QABSTRACTFILTER_H

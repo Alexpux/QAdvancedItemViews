@@ -23,7 +23,7 @@
 
 #include <QIdentityProxyModel>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 class QCheckStateProxyModelPrivate;
 
@@ -35,70 +35,70 @@ class QAIVLIBSHARED_EXPORT QCheckStateProxyModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-	/**
-	 * Constructs a QCheckStateProxyModel with the given @p parent.
-	 */
-    explicit QCheckStateProxyModel(QObject* parent = 0);
+    /**
+     * Constructs a QCheckStateProxyModel with the given @p parent.
+     */
+    explicit QCheckStateProxyModel(QObject* parent = nullptr);
     /**
       * Destroys the QCheckStateProxyModel object.
       */
     ~QCheckStateProxyModel();
-	/**
-	 * Returns the number of columns checkable.
-	 */
-	int checkableColumnsCount() const;
+    /**
+     * Returns the number of columns checkable.
+     */
+    int checkableColumnsCount() const;
     /**
       * Returns a list with the checked indexes.
       */
     QModelIndexList checkedIndexes() const;
-	/**
-	 * @reimp
-	 */
+    /**
+     * @reimp
+     */
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
     /**
       * @reimp
       */
     virtual Qt::ItemFlags flags( const QModelIndex & index ) const;
-	/**
-	 * Returns true if the given model item @p index is checked.
-	 */
-	bool isChecked(const QModelIndex & index) const;
+    /**
+     * Returns true if the given model item @p index is checked.
+     */
+    bool isChecked(const QModelIndex & index) const;
     /**
       * Returns true if the column @p column is checkable. Otherwise false.
       * @see setColumnCheckable()
       */
     bool isColumnCheckable(int column) const;
-	/**
-	 * If @p checkable is true the items in the specified @p column are checkable.
-	 */
+    /**
+     * If @p checkable is true the items in the specified @p column are checkable.
+     */
     void setColumnCheckable(int column, bool checkable = true);
-	/**
-	 * Checks the item specified by the list of @p indexes.
-	 */
+    /**
+     * Checks the item specified by the list of @p indexes.
+     */
     void setCheckedIndexes(const QModelIndexList & indexes);
-	/**
-	 * Checks all items in the specifed @p column matching the list of @p values.
-	 */
+    /**
+     * Checks all items in the specifed @p column matching the list of @p values.
+     */
     void setCheckedValues(int column, const QVariantList & values);
     /**
       * @reimp
       */
-    virtual bool setData( const QModelIndex & index, const QVariant & value, int role );
+    virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
     /**
       * @reimp
       */
     virtual void setSourceModel(QAbstractItemModel *sourceModel);
 public slots:
-	/**
-	 * If @p checked is true, all checkable items are checked.
-	 */
-	void setAllChecked(bool checked = true);
-	/**
-	 * If @p checked is true, the item specified by the given @p index is checked.
-	 */
-	void setChecked(const QModelIndex & index, bool checked);
+    /**
+     * If @p checked is true, all checkable items are checked.
+     */
+    void setAllChecked(bool checked = true);
+    /**
+     * If @p checked is true, the item specified by the given @p index is checked.
+     */
+    void setChecked(const QModelIndex & index, bool checked);
 private slots:
-	void sourceModelRowsAboutToBeRemoved(const QModelIndex & parent, int start, int end);
+    void sourceModelRowsAboutToBeRemoved(const QModelIndex & parent, int start, int end);
     void sourceModelAboutToBeReset();
 private:
     QCheckStateProxyModelPrivate* d;

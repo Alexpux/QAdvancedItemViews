@@ -23,7 +23,7 @@
 
 #include <QSortFilterProxyModel>
 
-#include <qaivlib_global.h>
+#include "qaivlib_global.h"
 
 class QAbstractFilterModel;
 class QAbstractFilterProxyModelPrivate;
@@ -37,10 +37,10 @@ public:
     /**
       * Constructs a QAbstractFilterProxyModel with the given @p parent.
       */
-    QAbstractFilterProxyModel(QObject* parent = 0);
-	/**
-	 * Destroys the filter proxy model.
-	 */
+    QAbstractFilterProxyModel(QObject* parent = nullptr);
+    /**
+     * Destroys the filter proxy model.
+     */
     ~QAbstractFilterProxyModel();
     /**
       * Returns the filter model accosiated with proxy model.
@@ -48,27 +48,27 @@ public:
       */
     QAbstractFilterModel* filterModel() const;
 
-	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     /**
       * Sets the filter @p model providing the filter definitions.
       * @see filterModel()
       */
     void setFilterModel(QAbstractFilterModel* model);
-	/**
-	 * @reimp QSortFilterProxyModel
-	 */
+    /**
+     * @reimp QSortFilterProxyModel
+     */
     virtual void setSourceModel(QAbstractItemModel* sourceModel);
 signals:
     /**
       * This signal is emitted before the filter current filtering is invalidated.
-	  * @see resultChanged()
+      * @see resultChanged()
       */
-	void resultAboutToChange();
+    void resultAboutToChange();
     /**
       * This signal is emitted after the filtering has been completed.
-	  * @see resultChanged(), resultCountChanged()
+      * @see resultChanged(), resultCountChanged()
       */
-	void resultChanged();
+    void resultChanged();
     /**
       * This signal is emitted whenever the number of rows in the filtered result set has changed.
       */

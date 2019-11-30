@@ -24,29 +24,32 @@
 #include <QWidget>
 #include <qaivlib_global.h>
 
-namespace Ui {class QSearchBar;};
+namespace Ui {
+    class QSearchBar;
+}
 
+class QAbstractItemModel;
 class QSearchBarPrivate;
 
 class QAIVLIBSHARED_EXPORT QSearchBar : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	QSearchBar(QWidget* parent = 0);
-	~QSearchBar();
+    QSearchBar(QWidget* parent = nullptr);
+    ~QSearchBar();
 signals:
-	void expressionChanged(const QString & text);
-	void searchNext();
-	void searchPrevious();
+    void expressionChanged(const QString & text);
+    void searchNext();
+    void searchPrevious();
 public slots:
-	void clear();
-	void match(QAbstractItemModel* model);
-	//bool match(const QModelIndex & start, int role, const QVariant & value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap)) const;
+    void clear();
+    void match(QAbstractItemModel* model);
+    //bool match(const QModelIndex & start, int role, const QVariant & value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap)) const;
 private slots:
-	void expressionChangedHandler(const QString & text);
+    void expressionChangedHandler(const QString & text);
 private:
-	QSearchBarPrivate* d;
-	Ui::QSearchBar *ui;
+    QSearchBarPrivate* d;
+    Ui::QSearchBar *ui;
 };
 
 #endif // QSEARCHBAR_H
