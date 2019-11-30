@@ -19,54 +19,118 @@
 #** If not, see <http://www.gnu.org/licenses/>.
 #******************************************************************************/
 
-TEMPLATE = lib
-TARGET = qaivlib
+include(../qaiv.pri)
 
-equals(QT_MAJOR_VERSION, 4){
-    QT += core gui
-}
-equals(QT_MAJOR_VERSION, 5){
-    QT += core widgets
-}
+TEMPLATE = lib
+
+TARGET = $${QAIVLIB}
+
+QT += core widgets
 
 CONFIG += debug_and_release
 
-unix {
-    DEFINES += QAIVLIB_LIBRARY
-}
-else {
-    DEFINES += QT_LARGEFILE_SUPPORT QT_DLL QAIVLIB_LIBRARY
-}
+DEFINES += QAIVLIB_LIBRARY
 
-CONFIG(debug, debug|release) {
-    win32 {
-        DESTDIR = ./../bin/Win32/Debug
-    }
-    else {
-        DESTDIR = ./../Debug
-    }
-    INCLUDEPATH += ./GeneratedFiles \
-        . \
-        ./GeneratedFiles/Debug
-    MOC_DIR += ./GeneratedFiles/debug
-    OBJECTS_DIR += debug
-} else {
-    win32 {
-        DESTDIR = ./../bin/Win32/Release
-    }
-    else {
-        DESTDIR = ./../Release
-    }
-    INCLUDEPATH += ./GeneratedFiles \
-        . \
-        ./GeneratedFiles/Release
-    MOC_DIR += ./GeneratedFiles/Release
-    OBJECTS_DIR += Release
-}
+HEADERS += qabstractfilter.h \
+           qabstractfiltermodel.h \
+           qabstractfilterproxymodel.h \
+           qabstractmodelitemdecoration.h \
+           qadvancedheaderview.h \
+           qadvancedheaderview_p.h \
+           qadvancedtableview.h \
+           qadvancedtableview_p.h \
+           qaiv.h \
+           qaivlib_global.h \
+           qautofilter.h \
+           qautofilter_p.h \
+           qcheckstateproxymodel.h \
+           qclickablelabel.h \
+           qconditionaldecoration.h \
+           qconditionaldecorationdialog.h \
+           qconditionaldecorationdialog_p.h \
+           qconditionaldecorationproxymodel.h \
+           qfiltereditorpopupwidget.h \
+           qfiltereditorwidget.h \
+           qfiltergroup.h \
+           qfiltermodel.h \
+           qfiltermodelproxy.h \
+           qfilterview.h \
+           qfilterviewconnector.h \
+           qfilterviewitemdelegate.h \
+           qfixedrowsheaderview.h \
+           qfixedrowstableview.h \
+           qgroupingproxymodel.h \
+           qgroupingproxymodel_p.h \
+           qheaderviewconnector.h \
+           qmimedatautil.h \
+           qrangefilter.h \
+           qrangefilter_p.h \
+           qregexpfilter.h \
+           qregexpfilter_p.h \
+           qsearchbar.h \
+           qsearchbar_p.h \
+           qselectionlistfilter.h \
+           qselectionlistfilter_p.h \
+           qshareditemselectionmodel.h \
+           qsinglecolumnproxymodel.h \
+           qtablemodelcsvwriter_p.h \
+           qtablemodelexcelmlwriter_p.h \
+           qtablemodelexportpushbutton.h \
+           qtablemodelhtmlwriter_p.h \
+           qtablemodelwordmlwriter_p.h \
+           qtablemodelwriter.h \
+           qtextfilter.h \
+           qtextfilter_p.h \
+           quniquevaluesproxymodel.h \
+           qvaluefilter.h \
+           qvaluefilter_p.h
 
+SOURCES += qabstractfilter.cpp \
+           qabstractfiltermodel.cpp \
+           qabstractfilterproxymodel.cpp \
+           qabstractmodelitemdecoration.cpp \
+           qadvancedheaderview.cpp \
+           qadvancedtableview.cpp \
+           qaiv.cpp \
+           qautofilter.cpp \
+           qcheckstateproxymodel.cpp \
+           qclickablelabel.cpp \
+           qconditionaldecoration.cpp \
+           qconditionaldecorationdialog.cpp \
+           qconditionaldecorationproxymodel.cpp \
+           qfiltereditorpopupwidget.cpp \
+           qfiltereditorwidget.cpp \
+           qfiltergroup.cpp \
+           qfiltermodel.cpp \
+           qfiltermodelproxy.cpp \
+           qfilterview.cpp \
+           qfilterviewconnector.cpp \
+           qfilterviewitemdelegate.cpp \
+           qfixedrowsheaderview.cpp \
+           qfixedrowstableview.cpp \
+           qgroupingproxymodel.cpp \
+           qheaderviewconnector.cpp \
+           qmimedatautil.cpp \
+           qrangefilter.cpp \
+           qregexpfilter.cpp \
+           qsearchbar.cpp \
+           qselectionlistfilter.cpp \
+           qshareditemselectionmodel.cpp \
+           qsinglecolumnproxymodel.cpp \
+           qtablemodelcsvwriter.cpp \
+           qtablemodelexcelmlwriter.cpp \
+           qtablemodelexportpushbutton.cpp \
+           qtablemodeltmlwriter.cpp \
+           qtablemodelwordmlwriter.cpp \
+           qtablemodelwriter.cpp \
+           qtextfilter.cpp \
+           quniquevaluesproxymodel.cpp \
+           qvaluefilter.cpp
 
-PRECOMPILED_HEADER = stdafx.h
-DEPENDPATH += .
-UI_DIR += ./GeneratedFiles
-RCC_DIR += ./GeneratedFiles
-include(qaivlib.pri)
+FORMS += qadvancedtableview.ui \
+         qconditionaldecorationdialog.ui \
+         qsearchbar.ui
+
+TRANSLATIONS += qaivlib_de.ts aivlib_ru.ts
+
+RESOURCES += qaiv.qrc

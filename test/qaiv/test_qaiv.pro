@@ -21,51 +21,17 @@
 
 TEMPLATE = app
 TARGET = test_qaiv
-equals(QT_MAJOR_VERSION, 4){
-    QT += core gui
-    CONFIG += qtestlib console debug_and_release
-}
-equals(QT_MAJOR_VERSION, 5){
-    QT += core widgets testlib
-    CONFIG += debug console
-}
+
+include(../../qaiv.pri)
+
+QT += core widgets testlib
+
+CONFIG += console
 
 CONFIG -= app_bundle
 
-win32 {
-    DEFINES += QT_LARGEFILE_SUPPORT QT_DLL
-}
+SOURCES += main.cpp
 
-CONFIG(debug, debug|release) {
-    win32 {
-        DESTDIR = ./../../bin/Win32/Debug
-        MOC_DIR += ./GeneratedFiles/Debug
-        OBJECTS_DIR += debug
-        LIBS += -L"../../bin/Win32/Debug" -lqaivlib
-    }
-    else {
-        DESTDIR = ../../Debug
-        LIBS += -L./../../Debug -lqaivlib
-    }
-    INCLUDEPATH += . \
-        ./GeneratedFiles/Debug \
-        ./../../qaivlib
-} else {
-    win32 {
-        DESTDIR = ./../../bin/Win32/Release
-        MOC_DIR += ./GeneratedFiles/release
-        OBJECTS_DIR += release
-    }
-    else {
-        DESTDIR = ../../Release
-        LIBS += -L./../../Release -lqaivlib
-    }
-    INCLUDEPATH += . \
-        ./GeneratedFiles/Release \
-        ./../../qaivlib
-}
+INCLUDEPATH += ../../qaivlib
 
-DEPENDPATH += .
-UI_DIR += ./GeneratedFiles
-RCC_DIR += ./GeneratedFiles
-include(test_qaiv.pri)
+LIBS += -L$${DESTDIR} -l$${QAIVLIB}

@@ -21,55 +21,23 @@
 
 TEMPLATE = app
 TARGET = example
+include(../qaiv.pri)
 
-equals(QT_MAJOR_VERSION, 4){
-    QT += core gui
-}
-equals(QT_MAJOR_VERSION, 5){
-    QT += core widgets
-}
+QT += core widgets
+
 CONFIG += debug_and_release
 
-CONFIG(debug, debug|release) {
+INCLUDEPATH += ../qaivlib
 
-    win32 {
-        DESTDIR = ../bin/Win32/Debug
-        LIBS += -L"../bin/Win32/Debug" \
-            -lqaivlib
-    }
-    else {
-        DESTDIR = ../Debug
-        LIBS += -L./../Debug -lqaivlib
-    }
-    INCLUDEPATH += ./debug \
-        $(QTDIR)/mkspecs/default \
-        ./GeneratedFiles \
-        ./../qaivlib
-    MOC_DIR += ./GeneratedFiles/debug
-    OBJECTS_DIR += debug
-} else {
-    win32 {
-        DESTDIR = ../bin/Win32/Release
-        LIBS += -L"../../qaivlib/release" \
-            -l$(DESTDIR)/qaivlib
-    }
-    else {
-        DESTDIR = ../Release
-        LIBS += -L./../Release -lqaivlib
-    }
-    INCLUDEPATH += ./release \
-        $(QTDIR)/mkspecs/release \
-        ./GeneratedFiles \
-        ./../qaivlib
-    MOC_DIR += ./GeneratedFiles/release
-    OBJECTS_DIR += release
-}
+LIBS += -L$${DESTDIR} -l$${QAIVLIB}
 
-win32 {
-    DEFINES += _WINDOWS QT_LARGEFILE_SUPPORT QT_DLL QT_HAVE_MMX QT_HAVE_3DNOW QT_HAVE_SSE QT_HAVE_MMXEXT QT_HAVE_SSE2
-}
+HEADERS += mainwindow.h \
+           spinboxitemdelegate.h
 
-DEPENDPATH += .
-UI_DIR += ./GeneratedFiles
-RCC_DIR += ./GeneratedFiles
-include(example.pri)
+SOURCES += main.cpp \
+           mainwindow.cpp \
+           spinboxitemdelegate.cpp
+
+FORMS += mainwindow.ui
+
+RESOURCES += example.qrc

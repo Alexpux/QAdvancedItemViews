@@ -21,57 +21,24 @@
 
 TEMPLATE = lib
 TARGET = qaivdesigner
+include(../qaiv.pri)
 
-equals(QT_MAJOR_VERSION, 4){
-    CONFIG += designer plugin
-    QT += core gui
-}
-equals(QT_MAJOR_VERSION, 5){
-    CONFIG += plugin
-    QT += core designer widgets
-}
+CONFIG += plugin
+QT += core designer widgets
 
-CONFIG(debug, debug|release) {
-    win32 {
-        DESTDIR = ../bin/Win32/Debug/plugins/designer
-        INCLUDEPATH += ./../qaivlib \
-            ./debug \
-            $(QTDIR)/mkspecs/win32-msvc2008
-        LIBS += -L"../bin/Win32/Debug" -lqaivlib
-    }
-    else {
-        DESTDIR = ../Debug
-        INCLUDEPATH += ../qaivlib
-        LIBS += -L./../Debug -lqaivlib
-    }
-    MOC_DIR += debug
-    OBJECTS_DIR += debug
-} else {
-    win32 {
-        DESTDIR = ../bin/Win32/Release/plugins/designer
-        INCLUDEPATH += ./../qaivlib \
-            ./release \
-            $(QTDIR)/mkspecs/win32-msvc2008
-        LIBS += -L"../../qaivlib/release" \
-            -l../bin/Win32/Release/qaivlib
-    }
-    else {
-        DESTDIR = ../Release
-        INCLUDEPATH += ../qaivlib
-        LIBS += -L./../Release -lqaivlib
-    }
-    MOC_DIR += release
-    OBJECTS_DIR += release
-}
+INCLUDEPATH += ../qaivlib
 
-win32 {
-    DEFINES += _WINDOWS QT_LARGEFILE_SUPPORT QT_DLL QT_SCRIPT_LIB QT_XML_LIB QT_HAVE_MMX QT_HAVE_3DNOW QT_HAVE_SSE QT_HAVE_MMXEXT QT_HAVE_SSE2
-}
+LIBS += -L$${DESTDIR} -l$${QAIVLIB}
 
-DEPENDPATH += .
-UI_DIR += ./GeneratedFiles
-RCC_DIR += ./GeneratedFiles
-include(qaivdesigner.pri)
+!isEmpty(DESIGNER_PLUGINS_DESTDIR): DESTDIR = $${DESIGNER_PLUGINS_DESTDIR}
+
+HEADERS += qadvancedtableviewplugin.h \
+           qaivdesignercollection.h
+
+SOURCES += qadvancedtableviewplugin.cpp \
+           qaivdesignercollection.cpp
+
+RESOURCES += qaivdesigner.qrc
 
 #Install the plugin in the designer plugins directory.
 target.path = $$[QT_INSTALL_PLUGINS]/designer
