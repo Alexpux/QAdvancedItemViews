@@ -16,13 +16,32 @@
  */
 
 #include <QApplication>
+#include <QTranslator>
+#include <QLibraryInfo>
+#include <QDir>
 #include "mainwindow.h"
+
+void loadTranslators()
+{
+    QTranslator* toolkitTranslator = new QTranslator(qApp);
+    QTranslator* applicationTranslator = new QTranslator(qApp);
+
+    if(toolkitTranslator->load(QLocale::system(), "qt", "_", QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
+        qApp->installTranslator(toolkitTranslator);
+    }
+
+    if(applicationTranslator->load(QLocale::system(), "aivlib", "_", QDir(QApplication::applicationDirPath()).filePath("translations"))) {
+        qApp->installTranslator(applicationTranslator);
+    }
+}
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    loadTranslators();
     MainWindow w;
     w.show();
-    
+
     return a.exec();
 }
