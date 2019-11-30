@@ -47,10 +47,10 @@ QFilterModel::~QFilterModel()
 
 QAbstractFilter* QFilterModel::createFilter(const QModelIndex & index, const QVariantMap & properties) const
 {
-    QAbstractFilter* filter = 0;
+    QAbstractFilter* filter = nullptr;
     QFilterGroup* group = filterGroup(index);
-    if (group == 0) {
-        return 0;
+    if (!group) {
+        return nullptr;
     }
     if (index.row() < rowCount()) {
         if (properties.value("type").toInt() == QRangeFilter::Type) {

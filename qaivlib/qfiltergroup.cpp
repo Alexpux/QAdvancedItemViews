@@ -50,7 +50,7 @@ QAbstractFilter* QFilterGroup::filter(int index) const
     if (index < cFilterList.size()) {
         return cFilterList.at(index);
     }
-    return 0;
+    return nullptr;
 }
 
 QAbstractFilter* QFilterGroup::filterAtColumn(int column) const
@@ -60,7 +60,7 @@ QAbstractFilter* QFilterGroup::filterAtColumn(int column) const
             return mFilter;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 QList<QAbstractFilter*> QFilterGroup::filters() const

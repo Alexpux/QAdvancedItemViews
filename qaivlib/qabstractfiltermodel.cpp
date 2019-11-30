@@ -89,10 +89,14 @@ int QAbstractFilterModel::columnCount(const QModelIndex & parent) const
 
 QVariant QAbstractFilterModel::data(const QModelIndex & index, int role) const
 {
-    if (!index.isValid()) {
+    if (!index.isValid() || index.row() >= d->filterGroupList.size()) {
         return QVariant();
     }
-    QAbstractFilter* filter = d->filterGroupList.at(index.row())->filterAtColumn(index.column());
+    QFilterGroup* fGroup = d->filterGroupList.at(index.row());
+    QAbstractFilter* filter = nullptr;
+    if (fGroup) {
+        filter = fGroup->filterAtColumn(index.column());
+    }
     if (role == Qt::DecorationRole) {
         if (filter){
             if (filter->isEnabled()) {
@@ -183,11 +187,13 @@ QFilterGroup* QAbstractFilterModel::groupAt(int row) const
     return 0;
 }
 
-QVariant QAbstractFilterModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant QAbstractFilterModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Vertical) {
         if (role == Qt::DisplayRole) {
-            return d->filterGroupList.at(section)->name();
+            if (section < d->filterGroupList.size()) {
+                return d->filterGroupList.at(section)->name();
+            }
         }
     } else if (orientation == Qt::Horizontal) {
         if (d->sourceModel){
@@ -206,7 +212,7 @@ QModelIndex QAbstractFilterModel::index(int row, int column, const QModelIndex &
 bool QAbstractFilterModel::insertRows(int row, int count, const QModelIndex & parent)
 {
     Q_UNUSED(parent);
-    if(count == 0) {
+    if(count == 0 || row >= d->filterGroupList.size()) {
         return false;
     }
     beginInsertRows(parent, row, row + count - 1);
@@ -252,11 +258,15 @@ QList<QAbstractFilterModel::FilterTypeEntry> QAbstractFilterModel::registeredFil
 bool QAbstractFilterModel::removeRows(int row, int count, const QModelIndex & parent)
 {
     Q_UNUSED(parent);
-    if (count == 0) {
+    if (count == 0 || row >= d->filterGroupList.size() || (row + count -1 >= d->filterGroupList.size())) {
         return false;
     }
     beginRemoveRows(QModelIndex(), row, row + count - 1);
     for (int iCount = 0; iCount < count; iCount++) {
+        QFilterGroup *fGroup = d->filterGroupList.at(row);
+        if (fGroup) {
+            delete fGroup;
+        }
         d->filterGroupList.removeAt(row);
     }
     for (int iRow = row; iRow < d->filterGroupList.size(); iRow++){

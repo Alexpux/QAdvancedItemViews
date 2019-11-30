@@ -52,9 +52,9 @@ public:
      * The QAbstractFilterModel defined additional item data roles for data needed by the view.
      */
     enum ItemDataRole {
-        ValueFilterTypeRole = Qt::UserRole + 42
-        ,DefaultFilterTypeRole
-        ,ColumnFilterTypesRole
+        ValueFilterTypeRole = Qt::UserRole + 42,
+        DefaultFilterTypeRole,
+        ColumnFilterTypesRole
     };
     /**
       * Constructs an abstract filter model with the given @p parent.
@@ -143,9 +143,11 @@ public:
       * Returns the model that contains the data this filter model is used for filtering.
       */
     QAbstractItemModel* sourceModel() const;
+
 signals:
     void matchModeChanged(QAdvancedItemViews::FilterMatchMode mode);
     void modeChanged(QAdvancedItemViews::FilterProxyMode mode);
+
 protected:
     /**
       * Registers the given filter @p type with its @p text and @p toolTip.
@@ -155,8 +157,10 @@ protected:
       * @overload registerFilter(int type, const QIcon & icon, const QString & text, const QString & toolTip = QString())
       */
     bool registerFilter(int type, const QIcon & icon, const QString & text, const QString & toolTip = QString());
+
 private slots:
     void sourceModelLayoutChanged();
+
 private:
     QAbstractFilterModelPrivate* d;
 };

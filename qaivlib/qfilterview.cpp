@@ -63,6 +63,7 @@ QFilterViewPrivate::~QFilterViewPrivate()
 {
 
 }
+
 /**
 * Constructs a QFilterView with the given @p parent.
 */
@@ -84,6 +85,7 @@ QFilterView::QFilterView(QWidget* parent)
     updateGeometry();
 
 }
+
 /**
 * Destroys the filter view.
 */
@@ -139,6 +141,7 @@ void QFilterView::changeProperties()
         }
     }
 }
+
 /**
  * Disables the selected filter definitions.
  * @see enableSelectedFilters()
@@ -154,6 +157,7 @@ void QFilterView::disableSelectedFilters()
         }
     }
 }
+
 /**
  * Enables the selected filter definitions.
  * @see disableSelectedFilters()
@@ -196,7 +200,7 @@ void QFilterView::contextMenuEvent(QContextMenuEvent* event)
             properties["column"] = selectedIndexes().first().column();
             properties["enabled"] = true;
             QVariantList mTypes = selectedIndexes().first().data(QAbstractFilterModel::ColumnFilterTypesRole).toList();
-            Q_FOREACH(QAbstractFilterModel::FilterTypeEntry entry , m->registeredFilterTypes()){
+            Q_FOREACH(QAbstractFilterModel::FilterTypeEntry entry , m->registeredFilterTypes()) {
                 if (entry.type == QAbstractFilter::Type) {
                     menu->addSeparator();
                 } else {
@@ -246,6 +250,7 @@ void QFilterView::focusInEvent(QFocusEvent *event)
     QTableView::focusInEvent(event);
     emit focusReceived();
 }
+
 /**
  * Returns the default filter type or -1 is no default type is set.
  * @see setDefaultFilterType()
@@ -264,6 +269,7 @@ bool QFilterView::filterVisible() const
 {
     return d->filterVisible;
 }
+
 /**
 * Returns the maximum number of visible filter sets.
 * @see setMaxVisibileFilterSets()
@@ -273,13 +279,13 @@ int QFilterView::maxVisibileFilterSets() const
     return d->maxFilterVisible;
 }
 
-void QFilterView::mousePressEvent( QMouseEvent* event )
+void QFilterView::mousePressEvent(QMouseEvent* event)
 {
     QModelIndex index = indexAt(event->pos());
     if (event->button() == Qt::LeftButton && index.isValid()) {
         QRect r = visualRect(index);
         r.setWidth(16);
-        if (r.contains(event->pos())){
+        if (r.contains(event->pos())) {
             toggleFilter(index);
         }
         QTableView::mousePressEvent(event);
@@ -287,6 +293,7 @@ void QFilterView::mousePressEvent( QMouseEvent* event )
         QTableView::mousePressEvent(event);
     }
 }
+
 /**
  * Hides the filter definitions.
  * @see showFilter()
@@ -300,6 +307,7 @@ void QFilterView::setDefaultFilterType(int type)
 {
     d->defaultFilterType = type;
 }
+
 /**
  * Sets the maximum number of filter definition visible in this view to @p rows.
 * @see maxVisibileFilterSets()
@@ -319,6 +327,7 @@ void QFilterView::setModel(QAbstractItemModel* model)
     //    calcGeometry();
     updateGeometry();
 }
+
 /**
  * Shows the filter definitions.
  * @see hideFilter()
@@ -374,6 +383,7 @@ void QFilterView::setFilterVisible(bool visible)
         emit visibilityChanged(d->filterVisible);
     }
 }
+
 /**
 * Toggles the state (enabled/disabled) of the filter specified by the given @p index.
 */
