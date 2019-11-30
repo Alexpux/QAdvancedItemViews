@@ -3,8 +3,12 @@ QAdvancedItemViews (QAIV)
 
 Introducion
 -----------
+[conditional]: /doc/images/conditional01.png
+[example1]: /doc/images/example01.png
+[example5]: /doc/images/example05.png
+[grouping1]: /doc/images/grouping01.png
 
-/doc/images/conditional01.png
+![conditional] ![example1] ![example5] ![grouping1]
 
 QAdvancedItemViews (QAIV) extends the capabilities of the Qt classes QTableView and QSortFilterProxyModel. 
 E.g. QAdvancedTableView supports multicolumn filtering and includes a header view alowing users to create, modify and delete filter. 
