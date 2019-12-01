@@ -842,6 +842,7 @@ void QAdvancedTableView::setModel(QAbstractItemModel* model)
             horizontalHeader()->setSectionResizeMode(horizontalHeader()->count() - 1, QHeaderView::Stretch);
         }
     }
+	updateHeaderViewGeometries();
 }
 
 void QAdvancedTableView::setRowHeight(int row, int height)
