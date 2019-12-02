@@ -38,6 +38,7 @@
 #include <QHeaderView>
 #include <QScrollBar>
 #include <QTableView>
+#include <QTimer>
 
 #define V_CALL(_m_) ui->dataTableView->_m_; \
     ui->fixedRowsTableView->_m_; \
@@ -50,10 +51,15 @@ public:
     QAdvancedTableViewPrivate(QAdvancedTableView* tv)
     {
         autoResizeRowsToContents = false;
-        dataViewProxy = new QFilterModelProxy(tv);
+        autoResizeColumnsToFitView = true;
         defaultFilterType = QTextFilter::Type;
-        filterModel = 0;
+        dataViewProxy = new QFilterModelProxy(tv);
+        filterModel = nullptr;
+        model = nullptr;
+        horizontalHeader = nullptr;
         horizontalScrollBarPolicy = Qt::ScrollBarAsNeeded;
+        verticalHeader = nullptr;
+        splittedViewSelectionModel = nullptr;
         v = tv;
     }
 
@@ -62,7 +68,9 @@ public:
     }
 
     bool autoResizeRowsToContents;
+    bool autoResizeColumnsToFitView;
     int defaultFilterType;
+    QMap<int, int> columnSpareWidthParts;
     QAbstractFilterProxyModel* dataViewProxy;
     QAbstractFilterModel* filterModel;
     QAbstractItemModel* model;
@@ -82,7 +90,7 @@ public:
 QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     QWidget(parent), ui(new Ui::QAdvancedTableView)
 {
-    d =  new QAdvancedTableViewPrivate(this);
+    d = new QAdvancedTableViewPrivate(this);
     ui->setupUi(this);
     //
     ui->splittedDataTableView->hide();
@@ -645,6 +653,12 @@ void QAdvancedTableView::resizeColumnsToContents()
     ui->headerTableView->resizeColumnsToContents();
 }
 
+void QAdvancedTableView::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+    viewLayoutChanged();
+}
+
 void QAdvancedTableView::resizeRowToContents(int row)
 {
     ui->dataTableView->resizeRowToContents(row);
@@ -831,6 +845,7 @@ void QAdvancedTableView::setIconSize(const QSize &size)
 void QAdvancedTableView::setModel(QAbstractItemModel* model)
 {
     d->model = model;
+    connect(d->model, SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)), this, SLOT(viewLayoutChanged()));
     ui->fixedRowsTableView->setModel(d->model);
     d->filterModel->setSourceModel(d->model);
     for(int iCol = 0; iCol < d->horizontalHeader->count(); iCol++) {
@@ -842,7 +857,7 @@ void QAdvancedTableView::setModel(QAbstractItemModel* model)
             horizontalHeader()->setSectionResizeMode(horizontalHeader()->count() - 1, QHeaderView::Stretch);
         }
     }
-	updateHeaderViewGeometries();
+    updateHeaderViewGeometries();
 }
 
 void QAdvancedTableView::setRowHeight(int row, int height)
@@ -865,12 +880,93 @@ void QAdvancedTableView::showEvent(QShowEvent* event)
     ui->fixedRowsTableView->verticalHeader()->setVisible(ui->dataTableView->verticalHeader()->isVisible());
     ui->splittedDataTableView->verticalHeader()->setVisible(ui->dataTableView->verticalHeader()->isVisible());
     d->verticalHeader->setVisible(ui->dataTableView->verticalHeader()->isVisible());
+    viewLayoutChanged();
     QWidget::showEvent(event);
 }
 
 void QAdvancedTableView::showRow(int row)
 {
     V_CALL(showRow(row))
+}
+
+void QAdvancedTableView::setColumnsAutoFitParams(QMap<int, int> colSpareWidthParts, bool forceFitSize)
+{
+    d->columnSpareWidthParts.clear();
+    d->columnSpareWidthParts = colSpareWidthParts;
+    d->autoResizeColumnsToFitView = forceFitSize;
+    resizeColumnsToContent();
+}
+
+void QAdvancedTableView::resizeColumnsToContent()
+{
+    if (model()) {
+        int headerFullWidth = viewport()->width();
+
+        int columnsCnt = d->horizontalHeader->count();
+        QMap<int, int> colFinalWidthList;
+
+        QMap<int, int>::const_iterator it = d->columnSpareWidthParts.constBegin();
+        auto end = d->columnSpareWidthParts.constEnd();
+        int partCount = 0;
+        while (it != end) {
+            partCount += it.value();
+            if (it.key() >= columnsCnt) {
+                return;
+            }
+            ++it;
+        }
+
+        int resizedWidth = 0;
+        if (d->autoResizeColumnsToFitView) {
+            for (int i = 0; i < columnsCnt; i++) {
+                if (!d->columnSpareWidthParts.contains(i)) {
+                    ui->dataTableView->resizeColumnToContents(i);
+                    int currColWidth = ui->dataTableView->columnWidth(i);
+                    colFinalWidthList[i] = currColWidth;
+                    resizedWidth += currColWidth;
+                }
+            }
+
+            int resColumnWidth = headerFullWidth - resizedWidth;
+            if (resColumnWidth < 0) {
+                for(int iCol = 0; iCol < columnsCnt; iCol++) {
+                    ui->dataTableView->horizontalHeader()->resizeSection(iCol, d->horizontalHeader->sectionSize(iCol));
+                }
+                return;
+            }
+
+            it = d->columnSpareWidthParts.constBegin();
+            while (it != end) {
+                int partWidth = (resColumnWidth / partCount) * it.value();
+                colFinalWidthList[it.key()] = partWidth;
+                ui->dataTableView->setColumnWidth(it.key(), partWidth);
+                ++it;
+            }
+        } else {
+            for (int i = 0; i < columnsCnt; i++) {
+                ui->dataTableView->resizeColumnToContents(i);
+                int currColWidth = ui->dataTableView->columnWidth(i);
+                colFinalWidthList[i] = currColWidth;
+                resizedWidth += currColWidth;
+            }
+
+            int deltaWidth = headerFullWidth - resizedWidth;
+            if (deltaWidth < 0)
+                return;
+
+            it = d->columnSpareWidthParts.constBegin();
+            while (it != end) {
+                int partWidth = (deltaWidth / partCount) * it.value() + ui->dataTableView->columnWidth(it.key());
+                colFinalWidthList[it.key()] = partWidth;
+                ui->dataTableView->setColumnWidth(it.key(), partWidth);
+                ++it;
+            }
+        }
+
+        for (int j = 0; j < columnsCnt; j++) {
+            ui->headerTableView->horizontalHeader()->resizeSection(j, colFinalWidthList.value(j, 1));
+        }
+    }
 }
 
 void QAdvancedTableView::setSelectionBehavior(QAbstractItemView::SelectionBehavior behavior)
@@ -1142,6 +1238,15 @@ void QAdvancedTableView::viewDoubleClicked(const QModelIndex & index)
 void QAdvancedTableView::viewEntered(const QModelIndex & index)
 {
     emit entered(mapToSource(index));
+}
+
+void QAdvancedTableView::viewLayoutChanged()
+{
+    QTimer::singleShot(0, this, SLOT(viewLayoutChangedImpl()));
+}
+
+void QAdvancedTableView::viewLayoutChangedImpl() {
+    resizeColumnsToContent();
 }
 
 void QAdvancedTableView::viewPressed(const QModelIndex & index)

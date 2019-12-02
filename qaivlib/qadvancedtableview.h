@@ -636,6 +636,13 @@ public slots:
       */
     void selectRow(int row);
     /**
+     * @brief setColumnsAutoFitParams
+     * Try to resize columns to viewport size basing on cells content
+     * @param colSpareWidthParts Map of columns and its parts count of width from spare width
+     * @param forceFitSize Fit all columns width to viewport size
+     */
+    void setColumnsAutoFitParams(QMap<int, int> colSpareWidthParts, bool forceFitSize);
+    /**
       * Sets the current item to be the item at @p index.
       */
     void setCurrentIndex(const QModelIndex & index);
@@ -683,15 +690,16 @@ protected:
     /**
      * @reimp QWidget::contextMenuEvent().
      */
-    virtual void contextMenuEvent(QContextMenuEvent* event);
+    virtual void contextMenuEvent(QContextMenuEvent* event) override;
     /**
      * @reimp QWidget::contextMenuEvent().
      */
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) override;
     /**
      * @reimp QWidget::contextMenuEvent().
      */
-    void showEvent(QShowEvent* event);
+    void resizeEvent(QResizeEvent *event) override;
+    void showEvent(QShowEvent* event) override;
 
 private slots:
     void dataModelLayoutChanged();
@@ -720,8 +728,12 @@ private slots:
     void viewEntered(const QModelIndex & index);
     void viewPressed(const QModelIndex & index);
 
+    void viewLayoutChanged();
+    void viewLayoutChangedImpl();
+
 private:
     QModelIndex mapToSource(const QModelIndex & index) const;
+    void resizeColumnsToContent();
 
     QAdvancedTableViewPrivate* d;
 
