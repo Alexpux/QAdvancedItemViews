@@ -901,6 +901,10 @@ void QAdvancedTableView::resizeColumnsToContent()
 {
     if (model()) {
         int headerFullWidth = viewport()->width();
+        if (ui->headerTableView->verticalScrollBar()->isVisible()) {
+            int scrollBarWidth = qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
+            headerFullWidth -= scrollBarWidth;
+        }
 
         int columnsCnt = d->horizontalHeader->count();
         QMap<int, int> colFinalWidthList;
