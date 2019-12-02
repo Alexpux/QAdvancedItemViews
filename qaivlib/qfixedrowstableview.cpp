@@ -108,7 +108,7 @@ void QFixedRowsFilterProxyModel::clear()
 bool QFixedRowsFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     Q_UNUSED(source_parent);
-    if (sourceModel() == 0 || !d->enabled) {
+    if (!sourceModel() || !d->enabled) {
         return false;
     }
     return d->rows.contains(QPersistentModelIndex(sourceModel()->index(source_row, 0)));
@@ -309,7 +309,7 @@ void QFixedRowsTableView::setFixedRowsMode(bool on)
 void QFixedRowsTableView::updateHeight()
 {
     int h = 0;
-    if (model() == 0 || model()->rowCount() == 0) {
+    if (!model() || model()->rowCount() == 0) {
         hide();
     } else {
         resizeRowsToContents();

@@ -48,7 +48,7 @@ public:
       */
     QAbstractFilterModel* filterModel() const;
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     /**
       * Sets the filter @p model providing the filter definitions.
       * @see filterModel()
@@ -57,7 +57,9 @@ public:
     /**
      * @reimp QSortFilterProxyModel
      */
-    virtual void setSourceModel(QAbstractItemModel* sourceModel);
+    virtual void setSourceModel(QAbstractItemModel* sourceModel) override;
+    bool setData(const QModelIndex &index, const QVariant &data, int role) override;
+
 signals:
     /**
       * This signal is emitted before the filter current filtering is invalidated.
@@ -73,11 +75,14 @@ signals:
       * This signal is emitted whenever the number of rows in the filtered result set has changed.
       */
     void resultCountChanged(int filteredRows, int unfilteredRows);
+
 protected:
     void emitResultCountChanged();
-    virtual bool filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const = 0;
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const = 0;
+
 private slots:
     void updateResult();
+
 private:
     QAbstractFilterProxyModelPrivate* d;
 };

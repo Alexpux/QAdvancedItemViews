@@ -29,9 +29,9 @@ public:
     QAbstractFilterProxyModelPrivate(QAbstractFilterProxyModel* pm);
     ~QAbstractFilterProxyModelPrivate();
 
+    QAbstractFilterProxyModel* m;
     QAbstractFilterModel* filterModel;
     int lastResultCount;
-    QAbstractFilterProxyModel* m;
 };
 
 
@@ -98,6 +98,13 @@ void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
     connect(d->filterModel->sourceModel(), SIGNAL(rowsInserted(QModelIndex, int , int)), this, SLOT(updateResult()));
     connect(d->filterModel->sourceModel(), SIGNAL(rowsRemoved(QModelIndex, int , int)), this, SLOT(updateResult()));
     emitResultCountChanged();
+}
+
+bool QAbstractFilterProxyModel::setData(const QModelIndex &index, const QVariant &data, int role)
+{
+    QModelIndex sourceIdx = mapToSource(index);
+    bool success = sourceModel()->setData(sourceIdx, data, role);
+    return success;
 }
 
 void QAbstractFilterProxyModel::updateResult()
