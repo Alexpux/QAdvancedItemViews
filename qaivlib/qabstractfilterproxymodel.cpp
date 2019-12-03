@@ -100,13 +100,6 @@ void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
     emitResultCountChanged();
 }
 
-bool QAbstractFilterProxyModel::setData(const QModelIndex &index, const QVariant &data, int role)
-{
-    QModelIndex sourceIdx = mapToSource(index);
-    bool success = sourceModel()->setData(sourceIdx, data, role);
-    return success;
-}
-
 void QAbstractFilterProxyModel::updateResult()
 {
     // reset last result count

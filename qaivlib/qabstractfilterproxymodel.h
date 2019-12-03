@@ -58,7 +58,6 @@ public:
      * @reimp QSortFilterProxyModel
      */
     virtual void setSourceModel(QAbstractItemModel* sourceModel) override;
-    bool setData(const QModelIndex &index, const QVariant &data, int role) override;
 
 signals:
     /**
