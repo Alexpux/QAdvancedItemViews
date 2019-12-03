@@ -811,7 +811,7 @@ void QAdvancedTableView::setFilterEnabledIcon(const QIcon & icon)
     d->filterModel->setFilterEnabledIcon(icon);
 }
 
-void QAdvancedTableView::setFilterEnabled(int row, int column, bool enable )
+void QAdvancedTableView::setFilterEnabled(int row, int column, bool enable)
 {
     // d->filterModel->setFilterEnabled(row, column, enable);
 }

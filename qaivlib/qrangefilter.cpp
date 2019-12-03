@@ -257,6 +257,7 @@ void QRangeFilter::setModelData(QWidget* editor, QAbstractItemModel * model, con
 
 void QRangeFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
 {
+    Q_UNUSED(index)
     QRangeFilterEditor* e = qobject_cast<QRangeFilterEditor*>(editor);
     e->setGeometry(option.rect);
     e->showPopup();

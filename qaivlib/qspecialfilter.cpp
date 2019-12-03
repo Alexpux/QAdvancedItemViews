@@ -133,8 +133,9 @@ QSpecialFilter::QSpecialFilter(int row, int column) :
 
 QWidget* QSpecialFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-    Q_UNUSED(option);
-    Q_UNUSED(index);
+    Q_UNUSED(delegate)
+    Q_UNUSED(option)
+    Q_UNUSED(index)
     return new QSpecialFilterEditor(parent);
 }
 
@@ -236,4 +237,7 @@ void QSpecialFilter::setModelData(QWidget* editor, QAbstractItemModel* model, co
 
 void QSpecialFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
 {
+    Q_UNUSED(editor)
+    Q_UNUSED(option)
+    Q_UNUSED(index)
 }

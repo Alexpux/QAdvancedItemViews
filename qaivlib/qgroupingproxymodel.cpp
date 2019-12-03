@@ -385,6 +385,7 @@ int QGroupingProxyModel::findText(const QString & text) const
 
 QModelIndex QGroupingProxyModel::mapFromSource(const QModelIndex & sourceIndex) const
 {
+    Q_UNUSED(sourceIndex)
     return QModelIndex();
 }
 
@@ -523,6 +524,7 @@ void QGroupingProxyModel::setUngroupedItemTitle(const QString & title, const QIc
 
 void QGroupingProxyModel::dataChangedHandler(const QModelIndex & topLeft, const QModelIndex & bottomRight)
 {
+    Q_UNUSED(bottomRight)
     if (topLeft.column() != d->modelColumn) {
         QGroupingProxyModelGroup* mCurrentGroup = d->root->group(topLeft.row());
         QModelIndex mTopLeft = index(mCurrentGroup->parent()->indexOf(mCurrentGroup), 0);

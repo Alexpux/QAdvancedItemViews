@@ -231,6 +231,7 @@ void QValueFilter::setModelData(QWidget* editor, QAbstractItemModel* model, cons
 
 void QValueFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
 {
+    Q_UNUSED(index)
     editor->setGeometry(option.rect);
 }
 

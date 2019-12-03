@@ -123,8 +123,9 @@ QRegExpFilter::QRegExpFilter(int row, int column) :
 
 QWidget* QRegExpFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
-    Q_UNUSED(option);
-    Q_UNUSED(index);
+    Q_UNUSED(delegate)
+    Q_UNUSED(option)
+    Q_UNUSED(index)
     return new QRegExpFilterEditor(parent);
 }
 
@@ -148,6 +149,7 @@ bool QRegExpFilter::matches(const QVariant & value, int type) const
 
 void QRegExpFilter::setEditorData(QWidget * editor, const QModelIndex & index)
 {
+    Q_UNUSED(index)
     QRegExpFilterEditor* w = qobject_cast<QRegExpFilterEditor*>(editor);
     if (w) {
         w->setCaseSensitivity(static_cast<Qt::CaseSensitivity>(property("caseSensitivity").toInt()));
@@ -173,6 +175,7 @@ void QRegExpFilter::setModelData(QWidget* editor, QAbstractItemModel * model, co
 
 void QRegExpFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
 {
+    Q_UNUSED(index)
     editor->setGeometry(option.rect);
 }
 

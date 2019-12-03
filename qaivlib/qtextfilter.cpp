@@ -239,6 +239,7 @@ void QTextFilter::setModelData(QWidget* editor, QAbstractItemModel* model, const
 
 void QTextFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
 {
+    Q_UNUSED(index)
     editor->setGeometry(option.rect);
 }
 

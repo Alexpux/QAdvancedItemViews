@@ -52,6 +52,7 @@ QConditionalDecorationProxyModelPrivate::QConditionalDecorationProxyModelPrivate
 QConditionalDecorationProxyModelPrivate::~QConditionalDecorationProxyModelPrivate()
 {
     qDeleteAll(columnDecorationMap);
+    columnDecorationMap.clear();
 }
 
 QConditionalDecorationProxyModel::QConditionalDecorationProxyModel(QObject *parent) :

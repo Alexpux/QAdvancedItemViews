@@ -72,6 +72,7 @@ bool QUniqueValuesProxyModel::emptyItemsAllowed() const
 
 bool QUniqueValuesProxyModel::filterAcceptsRow(int source_row, const QModelIndex & source_parent) const
 {
+    Q_UNUSED(source_parent)
     return isDuplicate(source_row);
 }
 
@@ -162,5 +163,7 @@ void QUniqueValuesProxyModel::setEmptyItemsAllowed(bool on)
 
 void QUniqueValuesProxyModel::sourceModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
+    Q_UNUSED(topLeft)
+    Q_UNUSED(bottomRight)
     buildMap();
 }

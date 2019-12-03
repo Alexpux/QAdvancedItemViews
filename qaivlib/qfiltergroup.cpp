@@ -32,7 +32,8 @@ QFilterGroup::QFilterGroup(const QString & name)
 
 QFilterGroup::~QFilterGroup()
 {
-    qDeleteAll(cFilterList);
+    qDeleteAll(cFilterList.begin(), cFilterList.end());
+    cFilterList.clear();
 }
 
 void QFilterGroup::add(QAbstractFilter* filter)
