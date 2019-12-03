@@ -40,7 +40,7 @@ public:
     /**
       * Destroys the QAbstractItemModelDecoration.
       */
-    ~QAbstractItemModelDecoration();
+    virtual ~QAbstractItemModelDecoration();
 
     virtual QVariant decorate(const QModelIndex & index, int role = Qt::DecorationRole) const = 0;
     /**

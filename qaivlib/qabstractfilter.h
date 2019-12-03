@@ -67,7 +67,7 @@ public:
     /**
      * Destroys the abstract filter.
      */
-    ~QAbstractFilter();
+    virtual ~QAbstractFilter();
     /**
       * Returns the column for which the filter is defined.
       */
