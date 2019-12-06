@@ -301,6 +301,8 @@ public:
      * @see isColumnHidden()
      */
     bool isRowHidden(int row) const;
+
+    void setRowHidden(int row, bool hide);
     /**
      * Returns true if the sort indicator is shown. Otherwise false.
      */
@@ -431,6 +433,9 @@ public:
     void setGridStyle(Qt::PenStyle style);
 
     void setIconSize(const QSize & size);
+
+    QWidget* indexWidget(const QModelIndex &index) const;
+    void setIndexWidget(const QModelIndex &index, QWidget *widget);
     /**
      * Sets the item delegate for this view and its model to @p delegate. This is useful if you want complete control over the editing and display of items.
      * @see itemDelegate()
@@ -475,6 +480,8 @@ public:
      * @see isSortingEnabled()
      */
     void setSortingEnabled(bool enable);
+
+    void setSpan(int row, int column, int rowSpanCount, int columnSpanCount);
     /**
      * Set the text elide mode to @p mode.
      * @see textElideMode()
@@ -559,6 +566,7 @@ signals:
     void viewportEntered();
 
 public slots:
+    void autoResizeColumnsToContent();
     /**
       * Adds the an empty filter group.
       */
@@ -696,7 +704,7 @@ protected:
      */
     bool eventFilter(QObject *obj, QEvent *event) override;
     /**
-     * @reimp QWidget::contextMenuEvent().
+     * @reimp QWidget::eventFilter().
      */
     void resizeEvent(QResizeEvent *event) override;
     void showEvent(QShowEvent* event) override;
@@ -733,7 +741,6 @@ private slots:
 
 private:
     QModelIndex mapToSource(const QModelIndex & index) const;
-    void resizeColumnsToContent();
 
     QAdvancedTableViewPrivate* d;
 

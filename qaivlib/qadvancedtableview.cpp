@@ -496,6 +496,16 @@ bool QAdvancedTableView::isRowHidden(int row) const
     return ui->dataTableView->isRowHidden(row);
 }
 
+void QAdvancedTableView::setRowHidden(int row, bool hide) {
+    if (focusProxy() == ui->splittedDataTableView) {
+        ui->splittedDataTableView->setRowHidden(row, hide);
+    } else if (focusProxy() == ui->fixedRowsTableView) {
+        ui->fixedRowsTableView->setRowHidden(row, hide);
+    } else if (focusProxy() == ui->dataTableView) {
+        ui->dataTableView->setRowHidden(row, hide);
+    }
+}
+
 bool QAdvancedTableView::isSortIndicatorShown() const
 {
     return ui->headerTableView->horizontalHeader()->isSortIndicatorShown();
@@ -842,6 +852,27 @@ void QAdvancedTableView::setIconSize(const QSize &size)
     V_CALL(setIconSize(size))
 }
 
+QWidget* QAdvancedTableView::indexWidget(const QModelIndex &index) const {
+    if (focusProxy() == ui->splittedDataTableView) {
+        return ui->splittedDataTableView->indexWidget(index);
+    } else if (focusProxy() == ui->fixedRowsTableView) {
+        return ui->fixedRowsTableView->indexWidget(index);
+    } else if (focusProxy() == ui->dataTableView) {
+        return ui->dataTableView->indexWidget(index);
+    }
+    return nullptr;
+}
+
+void QAdvancedTableView::setIndexWidget(const QModelIndex &index, QWidget *widget) {
+    if (focusProxy() == ui->splittedDataTableView) {
+        ui->splittedDataTableView->setIndexWidget(index, widget);
+    } else if (focusProxy() == ui->fixedRowsTableView) {
+        ui->fixedRowsTableView->setIndexWidget(index, widget);
+    } else if (focusProxy() == ui->dataTableView) {
+        ui->dataTableView->setIndexWidget(index, widget);
+    }
+}
+
 void QAdvancedTableView::setModel(QAbstractItemModel* model)
 {
     d->model = model;
@@ -894,10 +925,10 @@ void QAdvancedTableView::setColumnsAutoFitParams(QMap<int, int> colSpareWidthPar
     d->columnSpareWidthParts.clear();
     d->columnSpareWidthParts = colSpareWidthParts;
     d->autoResizeColumnsToFitView = forceFitSize;
-    resizeColumnsToContent();
+    autoResizeColumnsToContent();
 }
 
-void QAdvancedTableView::resizeColumnsToContent()
+void QAdvancedTableView::autoResizeColumnsToContent()
 {
     if (model()) {
         int headerFullWidth = viewport()->width();
@@ -970,6 +1001,7 @@ void QAdvancedTableView::resizeColumnsToContent()
         for (int j = 0; j < columnsCnt; j++) {
             ui->headerTableView->horizontalHeader()->resizeSection(j, colFinalWidthList.value(j, 1));
         }
+        ui->dataTableView->resizeRowsToContents();
     }
 }
 
@@ -1041,6 +1073,16 @@ void QAdvancedTableView::setSortIndicatorShown( bool show )
 void QAdvancedTableView::setSortingEnabled( bool enable )
 {
     V_CALL(setSortingEnabled(enable))
+}
+
+void QAdvancedTableView::setSpan(int row, int column, int rowSpanCount, int columnSpanCount) {
+    if (focusProxy() == ui->splittedDataTableView) {
+        ui->splittedDataTableView->setSpan(row, column, rowSpanCount, columnSpanCount);
+    } else if (focusProxy() == ui->fixedRowsTableView) {
+        ui->fixedRowsTableView->setSpan(row, column, rowSpanCount, columnSpanCount);
+    } else if (focusProxy() == ui->dataTableView) {
+        ui->dataTableView->setSpan(row, column, rowSpanCount, columnSpanCount);
+    }
 }
 
 void QAdvancedTableView::setTextElideMode(Qt::TextElideMode mode)
@@ -1250,7 +1292,7 @@ void QAdvancedTableView::viewLayoutChanged()
 }
 
 void QAdvancedTableView::viewLayoutChangedImpl() {
-    resizeColumnsToContent();
+    autoResizeColumnsToContent();
 }
 
 void QAdvancedTableView::viewPressed(const QModelIndex & index)
