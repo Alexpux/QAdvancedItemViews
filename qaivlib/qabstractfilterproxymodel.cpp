@@ -65,11 +65,11 @@ QAbstractFilterModel* QAbstractFilterProxyModel::filterModel() const
 QVariant QAbstractFilterProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Vertical) {
-        if (role == Qt::SizeHintRole) {
+        /*if (role == Qt::SizeHintRole) {
             QSize s = QSortFilterProxyModel::headerData(section, orientation, role).toSize();
-            s.setHeight(50);
+            s.setHeight(30);
             return s;
-        }
+        }*/
     }
     return QSortFilterProxyModel::headerData(section, orientation, role);
 }
@@ -85,6 +85,28 @@ void QAbstractFilterProxyModel::setFilterModel(QAbstractFilterModel* filterModel
     connect(d->filterModel, SIGNAL(modeChanged(QAdvancedItemViews::FilterProxyMode)), this, SLOT(updateResult()));
     connect(d->filterModel, SIGNAL(matchModeChanged(QAdvancedItemViews::FilterMatchMode)), this, SLOT(updateResult()));
     d->filterModel->setSourceModel(sourceModel());
+}
+
+QModelIndex QAbstractFilterProxyModel::getIndexForModel(const QAbstractItemModel* model, const QModelIndex &sourceIndex) const {
+    if (model) {
+        QAbstractProxyModel* p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)model);
+
+        if (p) {
+            QAbstractItemModel * sModel = p->sourceModel();
+            if (sModel == sourceIndex.model()) {
+                return p->mapFromSource(sourceIndex);
+            } else {
+                return p->mapFromSource(getIndexForModel(sModel, sourceIndex));
+            }
+        }
+    }
+    return QModelIndex();
+}
+
+QModelIndex QAbstractFilterProxyModel::mapDeepFromSource(const QModelIndex &sourceIndex) const {
+    if (sourceIndex.isValid()) {
+        return getIndexForModel(this, sourceIndex);
+    }
 }
 
 void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel* sourceModel)

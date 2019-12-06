@@ -59,6 +59,8 @@ public:
      */
     virtual void setSourceModel(QAbstractItemModel* sourceModel) override;
 
+    virtual QModelIndex mapDeepFromSource(const QModelIndex &sourceIndex) const;
+
 signals:
     /**
       * This signal is emitted before the filter current filtering is invalidated.
@@ -84,6 +86,8 @@ private slots:
 
 private:
     QAbstractFilterProxyModelPrivate* d;
+
+    QModelIndex getIndexForModel(const QAbstractItemModel* model, const QModelIndex &sourceIndex) const;
 };
 
 #endif // QABSTRACTFILTERPROXYMODEL_H
