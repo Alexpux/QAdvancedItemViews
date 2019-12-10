@@ -49,6 +49,7 @@ class QAIVLIBSHARED_EXPORT QFixedRowsTableView : public QTableView
      * @see void setFixedRowsMode(bool)
      */
     Q_PROPERTY(bool fixedRowsMode READ fixedRowsMode WRITE setFixedRowsMode)
+
 public:
     /**
      * Constructs a fixed rows table view with the given @p parent.
@@ -74,7 +75,8 @@ public:
     /**
      * @reimp QTableView::setModel()
      */
-    void setModel(QAbstractItemModel* model);
+    void setModel(QAbstractItemModel* model) override;
+
 public slots:
     /**
      * If @p on is true the fixed rows mode is enabled.
@@ -85,19 +87,21 @@ signals:
      * This signal is emitted when the table view has received the focus.
      */
     void focusReceived();
+
 protected:
     /**
      * @reimp QAbstractItemView::closeEditor()
      */
-    void closeEditor(QWidget* editor, QAbstractItemDelegate::EndEditHint hint);
+    void closeEditor(QWidget* editor, QAbstractItemDelegate::EndEditHint hint) override;
     /**
      * @reimp QAbstractItemView::focusInEvent()
      */
-    void focusInEvent(QFocusEvent* event);
+    void focusInEvent(QFocusEvent* event) override;
+
 private slots:
     void updateHeight();
-
     void verticalHeaderSectionClicked(int section);
+
 private:
     QFixedRowsTableViewPrivate* d;
 };
@@ -138,6 +142,7 @@ public:
      * Returns true if the specified (source) model @p row is pinned (fixed).
      */
     bool isRowPinned(int row) const;
+
 public slots:
     /**
      * If @p on is true fixed rows mode is enabled.
@@ -155,6 +160,7 @@ public slots:
      * If @p fixed is true the row specified by the given @p index is added to the list of fixed rows.
      */
     void setRowFixed(const QModelIndex & index, bool fixed);
+
 private:
     QFixedRowsFilterProxyModelPrivate* d;
 };
@@ -182,18 +188,21 @@ public:
      * Returns true if the fixed rows mode is enabled. Otherwise false.
      */
     bool isEnabled() const;
+
 signals:
     /**
      * This signal is emitted when fixed rows mode has toggled.
      * If the mode is enabled, @p on is true.
      */
     void modelToggled(bool on);
+
 public slots:
     /**
      * If @p on is true fixed rows mode is enabled.
      */
     void setEnabled(bool on);
     void toggleRow(const QModelIndex & index);
+
 private:
     QFixedRowsDecorationProxyModelPrivate* d;
 };

@@ -116,6 +116,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     // set selection models
     ui->splittedDataTableView->setSelectionModel(new QSharedItemSelectionModel(ui->splittedDataTableView->model(), ui->dataTableView->selectionModel(), this));
     ui->fixedRowsTableView->setSelectionModel(new QSharedItemSelectionModel(ui->fixedRowsTableView->model(), ui->dataTableView->selectionModel(), this));
+
     // data table view
     connect(ui->dataTableView->verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
     connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(sliderMoved(int)), this, SLOT(dataViewHorizontalScrollBarSilderMoved(int)));
@@ -124,18 +125,23 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->dataTableView->verticalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(updateHeaderViewVerticalScrollBar(int,int)));
     connect(ui->dataTableView->verticalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(verticalHeaderSectionResized(int,int,int)));
     connect(ui->dataTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
+
     // fixed rows view
     connect(ui->fixedRowsTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
+
     // splitted data table view view
     connect(ui->splittedDataTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
     connect(ui->splittedDataTableView->verticalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(verticalHeaderSectionResized(int,int,int)));
     connect(ui->splittedDataTableView->verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
+
     // filter model
     connect(d->filterModel, SIGNAL(modelReset()), this, SLOT(updateHeaderViewGeometries()));
     connect(d->filterModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(updateHeaderViewGeometries()));
+
     // data view proxy
     connect(d->dataViewProxy, SIGNAL(modelReset()), this, SLOT(modelReset()));
     connect(d->dataViewProxy, SIGNAL(layoutChanged()), this, SLOT(dataModelLayoutChanged()));
+
     // header table view
     connect(ui->headerTableView, SIGNAL(cornerButtonClicked()), this, SLOT(selectAll()));
     connect(ui->headerTableView, SIGNAL(calcGeometryRequested()), this, SLOT(updateHeaderViewGeometries()));
@@ -159,6 +165,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->dataTableView, SIGNAL(entered(QModelIndex)), this, SLOT(viewEntered(QModelIndex)));
     connect(ui->dataTableView, SIGNAL(pressed(QModelIndex)), this, SLOT(viewPressed(QModelIndex)));
     connect(ui->dataTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
+
     // Forward fixed rows view signals
     connect(ui->fixedRowsTableView, SIGNAL(activated(QModelIndex)), this, SLOT(viewActivated(QModelIndex)));
     connect(ui->fixedRowsTableView, SIGNAL(clicked(QModelIndex)), this, SLOT(viewClicked(QModelIndex)));
@@ -167,6 +174,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->fixedRowsTableView, SIGNAL(entered(QModelIndex)), this, SLOT(viewEntered(QModelIndex)));
     connect(ui->fixedRowsTableView, SIGNAL(pressed(QModelIndex)), this, SLOT(viewPressed(QModelIndex)));
     connect(ui->fixedRowsTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
+
     // Forward splitted data table view signals
     connect(ui->splittedDataTableView, SIGNAL(activated(QModelIndex)), this, SLOT(viewActivated(QModelIndex)));
     connect(ui->splittedDataTableView, SIGNAL(clicked(QModelIndex)), this, SLOT(viewClicked(QModelIndex)));
@@ -175,6 +183,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     connect(ui->splittedDataTableView, SIGNAL(entered(QModelIndex)), this, SLOT(viewEntered(QModelIndex)));
     connect(ui->splittedDataTableView, SIGNAL(pressed(QModelIndex)), this, SLOT(viewPressed(QModelIndex)));
     connect(ui->splittedDataTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
+
     // Install event filter
     ui->dataTableView->verticalHeader()->installEventFilter(this);
     updateHeaderViewGeometries();
@@ -501,7 +510,7 @@ void QAdvancedTableView::setRowHidden(int row, bool hide) {
         ui->splittedDataTableView->setRowHidden(row, hide);
     } else if (focusProxy() == ui->fixedRowsTableView) {
         ui->fixedRowsTableView->setRowHidden(row, hide);
-    } else if (focusProxy() == ui->dataTableView) {
+    } else {
         ui->dataTableView->setRowHidden(row, hide);
     }
 }
@@ -857,10 +866,8 @@ QWidget* QAdvancedTableView::indexWidget(const QModelIndex &index) const {
         return ui->splittedDataTableView->indexWidget(index);
     } else if (focusProxy() == ui->fixedRowsTableView) {
         return ui->fixedRowsTableView->indexWidget(index);
-    } else if (focusProxy() == ui->dataTableView) {
-        return ui->dataTableView->indexWidget(index);
     }
-    return nullptr;
+    return ui->dataTableView->indexWidget(index);
 }
 
 void QAdvancedTableView::setIndexWidget(const QModelIndex &index, QWidget *widget) {
@@ -868,7 +875,7 @@ void QAdvancedTableView::setIndexWidget(const QModelIndex &index, QWidget *widge
         ui->splittedDataTableView->setIndexWidget(index, widget);
     } else if (focusProxy() == ui->fixedRowsTableView) {
         ui->fixedRowsTableView->setIndexWidget(index, widget);
-    } else if (focusProxy() == ui->dataTableView) {
+    } else {
         ui->dataTableView->setIndexWidget(index, widget);
     }
 }
@@ -1080,7 +1087,7 @@ void QAdvancedTableView::setSpan(int row, int column, int rowSpanCount, int colu
         ui->splittedDataTableView->setSpan(row, column, rowSpanCount, columnSpanCount);
     } else if (focusProxy() == ui->fixedRowsTableView) {
         ui->fixedRowsTableView->setSpan(row, column, rowSpanCount, columnSpanCount);
-    } else if (focusProxy() == ui->dataTableView) {
+    } else {
         ui->dataTableView->setSpan(row, column, rowSpanCount, columnSpanCount);
     }
 }

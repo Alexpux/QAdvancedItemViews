@@ -102,9 +102,9 @@ public slots:
     void toggleSelectedFilters();
 
 protected:
-    void contextMenuEvent(QContextMenuEvent* event);
-    void focusInEvent(QFocusEvent* event);
-    void mousePressEvent(QMouseEvent* event);
+    void contextMenuEvent(QContextMenuEvent* event) override;
+    void focusInEvent(QFocusEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
 
 private slots:
     void hideFilter();
