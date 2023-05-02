@@ -30,7 +30,7 @@ void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelect
                 l << "\"" + index.data(role).toString() + "\"";
             }
         }
-        stream << l.join(";") << endl;
+        stream << l.join(";") << Qt::endl;
     }
     mimeData->setData("text/csv", d);
 }
@@ -69,42 +69,42 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelec
                 if (fragment.left(6) != "<html>") {
                     fragment = QString("<html>%1</html>").arg(fragment);
                 }
-                QXmlStreamReader r(fragment);
+                QXmlStreamReader fr(fragment);
                 bool inhibit = false;
-                while(!r.atEnd()) {
-                    r.readNext();
-                    if (r.tokenType() == QXmlStreamReader::Characters) {
+                while (!fr.atEnd()) {
+                    fr.readNext();
+                    if (fr.tokenType() == QXmlStreamReader::Characters) {
                         if (!inhibit) {
-                            if (r.isCDATA()) {
-                                stream.writeCDATA(r.text().toString());
-                            } else if (r.isComment()) {
-                                stream.writeComment(r.text().toString());
+                            if (fr.isCDATA()) {
+                                stream.writeCDATA(fr.text().toString());
+                            } else if (fr.isComment()) {
+                                stream.writeComment(fr.text().toString());
                             } else {
-                                stream.writeCharacters(r.text().toString());
+                                stream.writeCharacters(fr.text().toString());
                             }
                         }
-                    } else if (r.tokenType() == QXmlStreamReader::Comment) {
-                        stream.writeComment(r.text().toString());
-                    } else if (r.tokenType() == QXmlStreamReader::EndElement) {
-                        if (r.name() == "html") {
-                        } else if (r.name() == "body") {
+                    } else if (fr.tokenType() == QXmlStreamReader::Comment) {
+                        stream.writeComment(fr.text().toString());
+                    } else if (fr.tokenType() == QXmlStreamReader::EndElement) {
+                        if (fr.name() == QLatin1String("html")) {
+                        } else if (fr.name() == QLatin1String("body")) {
                         } else {
-                            if (r.name() == "head") {
+                            if (fr.name() == QLatin1String("head")) {
                                 inhibit = false;
                             } else {
                                 stream.writeEndElement();
                             }
                         }
-                    } else if (r.tokenType() == QXmlStreamReader::StartElement) {
-                        if (r.name() == "html") {
-                        } else if (r.name() == "body") {
+                    } else if (fr.tokenType() == QXmlStreamReader::StartElement) {
+                        if (fr.name() == QLatin1String("html")) {
+                        } else if (fr.name() == QLatin1String("body")) {
                         } else {
-                            if (r.name() == "head") {
+                            if (fr.name() == QLatin1String("head")) {
                                 inhibit = true;
                             }
                             if (!inhibit) {
-                                stream.writeStartElement(r.name().toString());
-                                stream.writeAttributes(r.attributes());
+                                stream.writeStartElement(fr.name().toString());
+                                stream.writeAttributes(fr.attributes());
                             }
                         }
                     }
@@ -147,7 +147,7 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItem
                 l << index.data(role).toString();
             }
         }
-        stream << l.join("\t") << endl;
+        stream << l.join("\t") << Qt::endl;
     }
     mimeData->setData("text/plain", d);
 }
@@ -212,7 +212,7 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QTableView* view, int role)
 QPair<QModelIndex, QModelIndex> selectionEdges(QItemSelection selection)
 {
     QPair<QModelIndex, QModelIndex> p;
-    Q_FOREACH(QItemSelectionRange range, selection) {
+    for (QItemSelectionRange range : selection) {
         if (!p.first.isValid()) {
             p.first = range.topLeft();
         } else {

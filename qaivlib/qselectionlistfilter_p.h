@@ -36,12 +36,12 @@ class QSelectionListFilterEditorPopup : public QFilterEditorPopupWidget
 {
     Q_OBJECT
 public:
-    QSelectionListFilterEditorPopup(QWidget* parent);
+    explicit QSelectionListFilterEditorPopup(QWidget* parent);
     ~QSelectionListFilterEditorPopup();
 
-    bool cancelAndClose(QObject* obj, int key) const;
+    bool cancelAndClose(QObject* obj, int key) const override;
 
-    bool commitAndClose(QObject* obj, int key) const;
+    bool commitAndClose(QObject* obj, int key) const override;
 
     int mode() const;
 
@@ -79,7 +79,7 @@ class QSelectionListFilterEditor : public QFilterEditorWidget
 {
     Q_OBJECT
 public:
-    QSelectionListFilterEditor(QWidget* parent = nullptr);
+    explicit QSelectionListFilterEditor(QWidget* parent = nullptr);
     ~QSelectionListFilterEditor();
 public slots:
     void modeSelected();

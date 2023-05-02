@@ -38,7 +38,7 @@ public:
     /**
      * Constructs a QFilterGroup with the given @p name.
      */
-    QFilterGroup(const QString & name);
+    explicit QFilterGroup(const QString & name);
     /**
      * Destroys the QFilterGroup.
      */

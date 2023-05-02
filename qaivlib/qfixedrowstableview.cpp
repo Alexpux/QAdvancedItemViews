@@ -26,7 +26,7 @@
 class QFixedRowsTableViewPrivate
 {
 public:
-    QFixedRowsTableViewPrivate(QFixedRowsTableView* tv);
+    explicit QFixedRowsTableViewPrivate(QFixedRowsTableView* tv);
     ~QFixedRowsTableViewPrivate();
 
     QFixedRowsFilterProxyModel* filterProxy;
@@ -49,7 +49,7 @@ QFixedRowsTableViewPrivate::~QFixedRowsTableViewPrivate()
 class QFixedRowsDecorationProxyModelPrivate
 {
 public:
-    QFixedRowsDecorationProxyModelPrivate(QFixedRowsDecorationProxyModel* pm);
+    explicit QFixedRowsDecorationProxyModelPrivate(QFixedRowsDecorationProxyModel* pm);
     ~QFixedRowsDecorationProxyModelPrivate();
 
     bool enabled;
@@ -73,7 +73,7 @@ QFixedRowsDecorationProxyModelPrivate::~QFixedRowsDecorationProxyModelPrivate()
 class QFixedRowsFilterProxyModelPrivate
 {
 public:
-    QFixedRowsFilterProxyModelPrivate(QFixedRowsFilterProxyModel* pm)
+    explicit QFixedRowsFilterProxyModelPrivate(QFixedRowsFilterProxyModel* pm)
     {
         enabled = false;
         m = pm;
@@ -168,7 +168,7 @@ void QFixedRowsFilterProxyModel::toggleRow(const QModelIndex &index)
 void QFixedRowsFilterProxyModel::setRowFixed(const QModelIndex &index, bool fixed)
 {
     Q_UNUSED(index)
-    if (fixed){
+    if (fixed) {
 
     } else {
 
@@ -229,8 +229,8 @@ void QFixedRowsDecorationProxyModel::setEnabled(bool on)
 void QFixedRowsDecorationProxyModel::toggleRow(const QModelIndex & index)
 {
     QModelIndex i(index);
-    QAbstractProxyModel* p;
-    while(i.model() != sourceModel() && (p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))) {
+    const QAbstractProxyModel* p;
+    while (i.model() != sourceModel() && (p = qobject_cast<const QAbstractProxyModel*>(i.model()))) {
         i = p->mapToSource(i);
     }
     d->filterProxy->toggleRow(i);
@@ -242,17 +242,17 @@ QFixedRowsTableView::QFixedRowsTableView(QWidget *parent) :
     d->filterProxy = new QFixedRowsFilterProxyModel(this);
     d->decorationProxy = new QFixedRowsDecorationProxyModel(d->filterProxy, this);
 
-    connect(verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
+    connect(verticalHeader(), &QHeaderView::sectionClicked, this, &QFixedRowsTableView::verticalHeaderSectionClicked);
 
     verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     QTableView::setModel(d->filterProxy);
 
-    connect(d->filterProxy, SIGNAL(layoutChanged()), this, SLOT(updateHeight()));
-    connect(d->filterProxy, SIGNAL(modelReset()), this, SLOT(updateHeight()));
-    connect(d->filterProxy, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(updateHeight()));
-    connect(d->filterProxy, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(updateHeight()));
+    connect(d->filterProxy, &QFixedRowsFilterProxyModel::layoutChanged, this, &QFixedRowsTableView::updateHeight);
+    connect(d->filterProxy, &QFixedRowsFilterProxyModel::modelReset, this, &QFixedRowsTableView::updateHeight);
+    connect(d->filterProxy, &QFixedRowsFilterProxyModel::rowsInserted, this, &QFixedRowsTableView::updateHeight);
+    connect(d->filterProxy, &QFixedRowsFilterProxyModel::rowsRemoved, this, &QFixedRowsTableView::updateHeight);
 
-    connect(d->decorationProxy, SIGNAL(modelToggled(bool)), d->filterProxy, SLOT(setEnabled(bool)));
+    connect(d->decorationProxy, &QFixedRowsDecorationProxyModel::modelToggled, d->filterProxy, &QFixedRowsFilterProxyModel::setEnabled);
 
     updateHeight();
 }
@@ -277,7 +277,7 @@ void QFixedRowsTableView::setModel(QAbstractItemModel *model)
     d->decorationProxy->setSourceModel(model);
     d->filterProxy->setSourceModel(model);
 
-    connect(model, SIGNAL(modelReset()), d->filterProxy, SLOT(sourceModelReset()));
+    connect(model, &QAbstractItemModel::modelReset, d->filterProxy, &QFixedRowsFilterProxyModel::sourceModelReset);
     updateHeight();
 }
 
@@ -325,8 +325,8 @@ void QFixedRowsTableView::updateHeight()
 void QFixedRowsTableView::verticalHeaderSectionClicked(int section)
 {
     QModelIndex i = model()->index(section, 0);
-    QAbstractProxyModel* proxy;
-    while((proxy = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))) {
+    const QAbstractProxyModel* proxy;
+    while ((proxy = qobject_cast<const QAbstractProxyModel*>(i.model()))) {
         i = proxy->mapToSource(i);
     }
     d->filterProxy->toggleRow(i);

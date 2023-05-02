@@ -46,7 +46,7 @@ public:
     /**
      * Contructs a unqiue values model with the given @p parent.
      */
-    QUniqueValuesProxyModel(QObject *parent = nullptr);
+    explicit QUniqueValuesProxyModel(QObject *parent = nullptr);
     /**
      * Destroys the unique values model.
      */
@@ -85,11 +85,12 @@ public:
 signals:
     void progressChanged(int progress);
 private slots:
-    bool isDuplicate(int row) const;
     void buildMap();
     void sourceModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
 private:
     QUniqueValuesProxyModelPrivate* d;
+
+    bool isDuplicate(int row) const;
 };
 
 #endif // QUNQIUEVALUESPROXYMODEL_H

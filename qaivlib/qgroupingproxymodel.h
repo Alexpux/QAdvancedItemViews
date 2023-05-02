@@ -227,6 +227,8 @@ private:
     void buildGroups();
 
     int groupAt(int sourceModelRow);
+
+    using QAbstractItemModel::moveRows;
     void moveRows(int row, int count);
     void removeSourceModelRow(int sourceModelRow);
 

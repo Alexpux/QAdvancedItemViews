@@ -113,14 +113,14 @@ inline T qsourcemodel_cast(const QModelIndex & index)
 {
     QModelIndex i(index);
     T s = qobject_cast<T>(i.model());
-    if (s){
+    if (s) {
         return s;
     }
     QAbstractProxyModel* p;
-    while((p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))){
-        T s = qobject_cast<T>(p);
-        if (s){
-            return s;
+    while ((p = qobject_cast<QAbstractProxyModel*>(i.model()))) {
+        T s2 = qobject_cast<T>(p);
+        if (s2) {
+            return s2;
         }
         i = p->mapToSource(i);
     }
@@ -135,14 +135,14 @@ template <class T> inline T qsourcemodel_cast(QAbstractItemModel* model)
 {
     QAbstractItemModel* m = model;
     T s = qobject_cast<T>(m);
-    if (s){
+    if (s) {
         return s;
     }
     QAbstractProxyModel* p;
-    while((p = qobject_cast<QAbstractProxyModel*>(m))){
-        T s = qobject_cast<T>(p->sourceModel());
-        if (s){
-            return s;
+    while ((p = qobject_cast<QAbstractProxyModel*>(m))) {
+        T s2 = qobject_cast<T>(p->sourceModel());
+        if (s2) {
+            return s2;
         }
         m = p->sourceModel();
     }
@@ -158,14 +158,14 @@ inline T qsourcemodel_cast(const QAbstractItemModel* model)
 {
     const QAbstractItemModel* m = model;
     T s = qobject_cast<T>(m);
-    if (s){
+    if (s) {
         return s;
     }
     QAbstractProxyModel* p;
-    while((p = qobject_cast<QAbstractProxyModel*>(m))){
-        T s = qobject_cast<T>(p->sourceModel());
-        if (s){
-            return s;
+    while ((p = qobject_cast<QAbstractProxyModel*>(m))) {
+        T s2 = qobject_cast<T>(p->sourceModel());
+        if (s2) {
+            return s2;
         }
         m = p->sourceModel();
     }

@@ -42,7 +42,7 @@ public:
     /**
       * Creates a new generic header with the given @p orientation and @p parent.
       */
-    QAdvancedHeaderView(Qt::Orientation orientation, QWidget* parent = nullptr);
+    explicit QAdvancedHeaderView(Qt::Orientation orientation, QWidget* parent = nullptr);
     /**
       * Destroys the header.
       */
@@ -81,6 +81,9 @@ private slots:
 
 protected:
     void contextMenuEvent(QContextMenuEvent * event);
+
+signals:
+    void visibleSectionsCountChanged();
 };
 
 #endif // QADVANCEDHEADERVIEW_H

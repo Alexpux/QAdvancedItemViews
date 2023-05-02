@@ -40,7 +40,7 @@ class ValueEdit;
  * @ingroup widgets
  * @code
  * QConditionalDecorationDialog* d = new QConditionalDecorationDialog(index, this);
- * if (d->exec()){
+ * if (d->exec()) {
  *     QAbstractItemModel* m = (QAbstractItemModel*)index.model();
  *     m->setData(index, d->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
  * }

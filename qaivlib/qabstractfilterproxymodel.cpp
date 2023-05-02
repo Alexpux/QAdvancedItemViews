@@ -26,7 +26,7 @@
 class QAbstractFilterProxyModelPrivate
 {
 public:
-    QAbstractFilterProxyModelPrivate(QAbstractFilterProxyModel* pm);
+    explicit QAbstractFilterProxyModelPrivate(QAbstractFilterProxyModel* pm);
     ~QAbstractFilterProxyModelPrivate();
 
     QAbstractFilterProxyModel* m;
@@ -80,16 +80,16 @@ void QAbstractFilterProxyModel::setFilterModel(QAbstractFilterModel* filterModel
         disconnect(d->filterModel);
     }
     d->filterModel = filterModel;
-    connect(d->filterModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(updateResult()));
-    connect(d->filterModel, SIGNAL(modelReset()), this, SLOT(updateResult()));
-    connect(d->filterModel, SIGNAL(modeChanged(QAdvancedItemViews::FilterProxyMode)), this, SLOT(updateResult()));
-    connect(d->filterModel, SIGNAL(matchModeChanged(QAdvancedItemViews::FilterMatchMode)), this, SLOT(updateResult()));
+    connect(d->filterModel, &QAbstractFilterModel::dataChanged, this, &QAbstractFilterProxyModel::updateResult);
+    connect(d->filterModel, &QAbstractFilterModel::modelReset, this, &QAbstractFilterProxyModel::updateResult);
+    connect(d->filterModel, &QAbstractFilterModel::modeChanged, this, &QAbstractFilterProxyModel::updateResult);
+    connect(d->filterModel, &QAbstractFilterModel::matchModeChanged, this, &QAbstractFilterProxyModel::updateResult);
     d->filterModel->setSourceModel(sourceModel());
 }
 
 QModelIndex QAbstractFilterProxyModel::getIndexForModel(const QAbstractItemModel* model, const QModelIndex &sourceIndex) const {
     if (model) {
-        QAbstractProxyModel* p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)model);
+        const QAbstractProxyModel* p = qobject_cast<const QAbstractProxyModel*>(model);
 
         if (p) {
             QAbstractItemModel * sModel = p->sourceModel();
@@ -103,10 +103,21 @@ QModelIndex QAbstractFilterProxyModel::getIndexForModel(const QAbstractItemModel
     return QModelIndex();
 }
 
+/*QModelIndex QAbstractFilterProxyModel::mapFromSource(const QModelIndex &sourceIndex) const {
+    QAbstractItemModel * sModel = sourceModel();
+
+    QAbstractProxyModel* p = qobject_cast<QAbstractProxyModel*>(sModel);
+    if (p) {
+        return QSortFilterProxyModel::mapFromSource(p->mapFromSource(sourceIndex));
+    }
+    return QSortFilterProxyModel::mapFromSource(sourceIndex);
+}*/
+
 QModelIndex QAbstractFilterProxyModel::mapDeepFromSource(const QModelIndex &sourceIndex) const {
     if (sourceIndex.isValid()) {
         return getIndexForModel(this, sourceIndex);
     }
+    return QModelIndex();
 }
 
 void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
@@ -116,9 +127,9 @@ void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
     }
     QSortFilterProxyModel::setSourceModel(sourceModel);
     d->filterModel->setSourceModel(sourceModel);
-    connect(d->filterModel->sourceModel(), SIGNAL(modelReset()), this, SLOT(updateResult()));
-    connect(d->filterModel->sourceModel(), SIGNAL(rowsInserted(QModelIndex, int , int)), this, SLOT(updateResult()));
-    connect(d->filterModel->sourceModel(), SIGNAL(rowsRemoved(QModelIndex, int , int)), this, SLOT(updateResult()));
+    connect(d->filterModel->sourceModel(), &QAbstractItemModel::modelReset, this, &QAbstractFilterProxyModel::updateResult);
+    connect(d->filterModel->sourceModel(), &QAbstractItemModel::rowsInserted, this, &QAbstractFilterProxyModel::updateResult);
+    connect(d->filterModel->sourceModel(), &QAbstractItemModel::rowsRemoved, this, &QAbstractFilterProxyModel::updateResult);
     emitResultCountChanged();
 }
 

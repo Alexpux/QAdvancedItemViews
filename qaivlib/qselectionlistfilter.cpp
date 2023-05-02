@@ -34,7 +34,7 @@ QSelectionListFilterEditorPopup::QSelectionListFilterEditorPopup(QWidget* parent
     m_mode = 0; // 0 = Selected values 1 = empty 2 = not empty
     m_model = new QStandardItemModel(this);
     m_checkStateProxy = new QCheckStateProxyModel(this);
-    connect(m_checkStateProxy, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(checkStateProxyDataChanged(QModelIndex, QModelIndex)));
+    connect(m_checkStateProxy, &QCheckStateProxyModel::dataChanged, this, &QSelectionListFilterEditorPopup::checkStateProxyDataChanged);
     m_checkStateProxy->setSourceModel(m_model);
     m_checkStateProxy->setColumnCheckable(0);
 
@@ -48,7 +48,7 @@ QSelectionListFilterEditorPopup::QSelectionListFilterEditorPopup(QWidget* parent
     m_emptyToolButton->setAutoRaise(true);
     m_emptyToolButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     lb->addWidget(m_emptyToolButton);
-    connect(m_emptyToolButton, SIGNAL(clicked()), this, SLOT(emptyToolButtonClicked()));
+    connect(m_emptyToolButton, &QToolButton::clicked, this, &QSelectionListFilterEditorPopup::emptyToolButtonClicked);
 
     m_notEmptyToolButton = new QToolButton(this);
     m_notEmptyToolButton->setText(tr("Not Empty"));
@@ -56,13 +56,13 @@ QSelectionListFilterEditorPopup::QSelectionListFilterEditorPopup(QWidget* parent
     m_notEmptyToolButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     lb->addWidget(m_notEmptyToolButton);
     l->addLayout(lb);
-    connect(m_notEmptyToolButton, SIGNAL(clicked()), this, SLOT(notEmptyToolButtonClicked()));
+    connect(m_notEmptyToolButton, &QToolButton::clicked, this, &QSelectionListFilterEditorPopup::notEmptyToolButtonClicked);
 
     m_lineEdit = new QLineEdit(this);
     m_lineEdit->setMinimumWidth(200);
     m_lineEdit->setPlaceholderText(tr("Search pattern"));
     m_lineEdit->installEventFilter(parent);
-    connect(m_lineEdit, SIGNAL(textEdited(QString)), this, SLOT(searchForTextEdited(QString)));
+    connect(m_lineEdit, &QLineEdit::textEdited, this, &QSelectionListFilterEditorPopup::searchForTextEdited);
 
     l->addWidget(m_lineEdit);
     m_listView = new QListView(this);
@@ -72,7 +72,7 @@ QSelectionListFilterEditorPopup::QSelectionListFilterEditorPopup(QWidget* parent
     m_selectCheckBox->setText(tr("Select/Deselect all"));
     m_selectCheckBox->setTristate(true);
     m_selectCheckBox->installEventFilter(parent);
-    connect(m_selectCheckBox, SIGNAL(stateChanged(int)), this, SLOT(selectCheckBoxStateChanged(int)));
+    connect(m_selectCheckBox, &QCheckBox::stateChanged, this, &QSelectionListFilterEditorPopup::selectCheckBoxStateChanged);
 
     l->addWidget(m_selectCheckBox);
 
@@ -87,8 +87,8 @@ QSelectionListFilterEditorPopup::QSelectionListFilterEditorPopup(QWidget* parent
     QDialogButtonBox* b = new QDialogButtonBox(this);
     b->addButton(QDialogButtonBox::Ok);
     b->addButton(QDialogButtonBox::Cancel);
-    connect(b, SIGNAL(accepted()), this, SIGNAL(accepted()));
-    connect(b, SIGNAL(rejected()), this, SIGNAL(rejected()));
+    connect(b, &QDialogButtonBox::accepted, this, &QSelectionListFilterEditorPopup::accepted);
+    connect(b, &QDialogButtonBox::rejected, this, &QSelectionListFilterEditorPopup::rejected);
     l->addWidget(b);
 }
 
@@ -103,7 +103,7 @@ void QSelectionListFilterEditorPopup::checkStateProxyDataChanged(const QModelInd
     m_selectCheckBox->blockSignals(true);
     if (m_checkStateProxy->checkedIndexes().size() == 0) {
         m_selectCheckBox->setCheckState(Qt::Unchecked);
-    } else if(m_checkStateProxy->checkedIndexes().size() == (m_checkStateProxy->checkableColumnsCount() * m_checkStateProxy->rowCount())) {
+    } else if (m_checkStateProxy->checkedIndexes().size() == (m_checkStateProxy->checkableColumnsCount() * m_checkStateProxy->rowCount())) {
         m_selectCheckBox->setCheckState(Qt::Checked);
     } else {
         m_selectCheckBox->setCheckState(Qt::PartiallyChecked);
@@ -169,7 +169,7 @@ void QSelectionListFilterEditorPopup::selectCheckBoxStateChanged(int state)
 QVariantList QSelectionListFilterEditorPopup::selectedValues() const
 {
     QVariantList v;
-    Q_FOREACH(QModelIndex i, m_checkStateProxy->checkedIndexes()) {
+    for (QModelIndex i : m_checkStateProxy->checkedIndexes()) {
         v.append(i.data());
     }
     return v;
@@ -193,11 +193,12 @@ void QSelectionListFilterEditorPopup::setSelectedValues(const QVariantList & sel
 QSelectionListFilterEditor::QSelectionListFilterEditor(QWidget* parent) :
     QFilterEditorWidget(parent)
 {
-    setPopup(new QSelectionListFilterEditorPopup(this));
-    setFocusProxy(popup());
-    connect(popup(), SIGNAL(modeChanged()), this, SLOT(modeSelected()));
-    connect(popup(), SIGNAL(accepted()), this, SIGNAL(commitAndClose()));
-    connect(popup(), SIGNAL(rejected()), this, SIGNAL(cancelAndClose()));
+    QSelectionListFilterEditorPopup *popUp = new QSelectionListFilterEditorPopup(this);
+    setPopup(popUp);
+    setFocusProxy(popUp);
+    connect(popUp, &QSelectionListFilterEditorPopup::modeChanged, this, &QSelectionListFilterEditor::modeSelected);
+    connect(popUp, &QSelectionListFilterEditorPopup::accepted, [this](){ commitAndClose(); });
+    connect(popUp, &QSelectionListFilterEditorPopup::rejected, [this](){ cancelAndClose(); });
 }
 
 QSelectionListFilterEditor::~QSelectionListFilterEditor()
@@ -220,8 +221,8 @@ QWidget* QSelectionListFilter::createEditor(QFilterViewItemDelegate* delegate, Q
     Q_UNUSED(option);
     Q_UNUSED(index);
     QSelectionListFilterEditor* e = new QSelectionListFilterEditor(parent);
-    QObject::connect(e, SIGNAL(cancelAndClose(QAbstractItemDelegate::EndEditHint)), delegate, SLOT(cancelAndClose(QAbstractItemDelegate::EndEditHint)));
-    QObject::connect(e, SIGNAL(commitAndClose(QAbstractItemDelegate::EndEditHint)), delegate, SLOT(commitAndClose(QAbstractItemDelegate::EndEditHint)));
+    QObject::connect(e, &QSelectionListFilterEditor::cancelAndClose, delegate, &QFilterViewItemDelegate::cancelAndClose);
+    QObject::connect(e, &QSelectionListFilterEditor::commitAndClose, delegate, &QFilterViewItemDelegate::commitAndClose);
     return e;
 }
 
@@ -278,7 +279,7 @@ void QSelectionListFilter::setEditorData(QWidget* editor, const QModelIndex & in
             p->setValues(property("values").toList());
         } else if (dataSource() == QSelectionListFilter::Model) {
             const QFilterModel* m = qobject_cast<const QFilterModel*>(index.model());
-            if (m){
+            if (m) {
                 p->setValues(m->sourceModel()->index(0, index.column()).data(QAdvancedItemViews::SelectionListFilterDataRole).toList());
             }
         }

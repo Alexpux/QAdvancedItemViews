@@ -31,7 +31,7 @@ class ShowMoreColumnsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    ShowMoreColumnsDialog(QHeaderView* headerView);
+    explicit ShowMoreColumnsDialog(QHeaderView* headerView);
     ~ShowMoreColumnsDialog();
 
     bool isHidden(int index) const;

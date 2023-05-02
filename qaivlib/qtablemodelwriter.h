@@ -57,7 +57,7 @@ public:
     /**
      * Constructs an QTableModelWriter object that will write to a file with the name fileName, using the document format specified by format. If format is not provided, QTableModelWriter will detect the document format by inspecting the extension of @p fileName.
      */
-    QTableModelWriter(const QString & fileName, const QByteArray & format = QByteArray());
+    explicit QTableModelWriter(const QString & fileName, const QByteArray & format = QByteArray());
 
     ~QTableModelWriter();
 

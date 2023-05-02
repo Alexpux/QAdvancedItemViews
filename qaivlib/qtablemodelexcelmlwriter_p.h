@@ -28,7 +28,7 @@ class QTableView;
 class QTableModelExcelMLWriter
 {
 public:
-    QTableModelExcelMLWriter(QIODevice* device);
+    explicit QTableModelExcelMLWriter(QIODevice* device);
     ~QTableModelExcelMLWriter();
 
     void setIncludeHeader(bool on);

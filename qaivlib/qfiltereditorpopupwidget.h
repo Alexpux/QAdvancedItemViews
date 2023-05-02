@@ -28,7 +28,7 @@ class QFilterEditorPopupWidget : public QFrame
 {
     Q_OBJECT
 public:
-    QFilterEditorPopupWidget(QWidget *parent);
+    explicit QFilterEditorPopupWidget(QWidget *parent);
     ~QFilterEditorPopupWidget();
 
     virtual bool cancelAndClose(QObject* obj, int key) const;

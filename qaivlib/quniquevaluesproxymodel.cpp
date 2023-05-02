@@ -22,14 +22,13 @@
 #include "quniquevaluesproxymodel.h"
 
 #include <QDebug>
-#include <QTime>
 
 #define MT QHash
 
 class QUniqueValuesProxyModelPrivate
 {
 public:
-    QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel* pm);
+    explicit QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel* pm);
     ~QUniqueValuesProxyModelPrivate();
 
     bool emptyValues;
@@ -96,9 +95,9 @@ void QUniqueValuesProxyModel::setModelColumn(int colum)
 
 void QUniqueValuesProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 {
-    connect(sourceModel, SIGNAL(layoutChanged()), this, SLOT(buildMap()));
-    connect(sourceModel, SIGNAL(modelReset()), this, SLOT(buildMap()));
-    connect(sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(sourceModelDataChanged(QModelIndex,QModelIndex)));
+    connect(sourceModel, &QAbstractItemModel::layoutChanged, this, &QUniqueValuesProxyModel::buildMap);
+    connect(sourceModel, &QAbstractItemModel::modelReset, this, &QUniqueValuesProxyModel::buildMap);
+    connect(sourceModel, &QAbstractItemModel::dataChanged, this, &QUniqueValuesProxyModel::sourceModelDataChanged);
     QSortFilterProxyModel::setSourceModel(sourceModel);
     buildMap();
     invalidate();
@@ -129,8 +128,6 @@ void QUniqueValuesProxyModel::buildMap()
     if (sourceModel() == 0) {
         return;
     }
-    QTime t;
-    t.start();
     MT<QString, QList<int> >::Iterator it;
     int c = sourceModel()->rowCount();
     int max = 0;

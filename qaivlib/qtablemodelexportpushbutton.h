@@ -13,7 +13,7 @@ public:
     /**
      * Constructs a push button with the given @p parent.
      */
-    QTableModelExportPushButton(QWidget *parent);
+    explicit QTableModelExportPushButton(QWidget *parent);
     /**
      * Destroys the push button.
      */
@@ -22,8 +22,8 @@ signals:
     void exportAllTriggered(const QByteArray & format);
     void exportSelectionTriggered(const QByteArray & format);
 private slots:
-    void exportAllTriggered();
-    void exportSelectionTriggered();
+    void exportAllTriggeredImpl();
+    void exportSelectionTriggeredImpl();
 };
 
 #endif // QTABLEMODELEXPORTPUSHBUTTON_H

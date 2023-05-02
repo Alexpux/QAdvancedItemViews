@@ -60,14 +60,24 @@ public:
       * Constructs an abstract (invalid) filter.
       */
     QAbstractFilter();
+
+    /**
+      * Copy Constructor for abstract (invalid) filter.
+      */
+    QAbstractFilter(const QAbstractFilter &filter);
     /**
      * Constructs a QAbstractFilter with the given @p properties.
      */
-    QAbstractFilter(const QMap<QString,QVariant> & properties);
+    QAbstractFilter(const QMap<QString, QVariant> & properties);
     /**
      * Destroys the abstract filter.
      */
     virtual ~QAbstractFilter();
+
+    /**
+     * Operator = for filter
+     */
+    QAbstractFilter & operator=(const QAbstractFilter &filter);
     /**
       * Returns the column for which the filter is defined.
       */

@@ -25,7 +25,7 @@
 #include "qautofilter.h"
 #include "qfiltergroup.h"
 #include "qrangefilter.h"
-#include "qregexpfilter.h"
+#include "qregularexpressionfilter.h"
 #include "qselectionlistfilter.h"
 #include "qtextfilter.h"
 #include "qvaluefilter.h"
@@ -36,7 +36,7 @@ QFilterModel::QFilterModel(QObject* parent)
     registerFilter(QTextFilter::Type, QIcon(":/qaiv/filter/text"), tr("Text Filter"), tr("Filter on the textual representation of values"));
     registerFilter(QRangeFilter::Type, QIcon(":/qaiv/filter/range"), tr("Range Filter"));
     registerFilter(QValueFilter::Type, QIcon(":/qaiv/filter/value"), tr("Value Filter"));
-    registerFilter(QRegExpFilter::Type, QIcon(":/qaiv/filter/regexp"), tr("RegExp Filter"));
+    registerFilter(QRegularExpressionFilter::Type, QIcon(":/qaiv/filter/regexp"), tr("RegExp Filter"));
     registerFilter(QAutoFilter::Type, QIcon(":/qaiv/filter/auto"), tr("Auto Filter"));
     registerFilter(QSelectionListFilter::Type, QIcon(":/qaiv/filter/selection"), tr("Selection List Filter"));
 }
@@ -61,8 +61,8 @@ QAbstractFilter* QFilterModel::createFilter(const QModelIndex & index, const QVa
             filter = new QTextFilter(index.row(), index.column());
         } else if (properties.value("type").toInt() == QAutoFilter::Type) {
             filter = new QAutoFilter(index.row(), index.column());
-        } else if (properties.value("type").toInt() == QRegExpFilter::Type) {
-            filter = new QRegExpFilter(index.row(), index.column());
+        } else if (properties.value("type").toInt() == QRegularExpressionFilter::Type) {
+            filter = new QRegularExpressionFilter(index.row(), index.column());
         } else if (properties.value("type").toInt() == QSelectionListFilter::Type) {
             filter = new QSelectionListFilter(index.row(), index.column());
         }

@@ -59,7 +59,7 @@ public:
     /**
       * Constructs a QConditionalDecoration with the specified @p column.
       */
-    QConditionalDecoration(int column);
+    explicit QConditionalDecoration(int column);
     /**
      * Adds a condition with the given @p matchFlag and @p value.
      */
@@ -75,7 +75,7 @@ public:
     /**
      * Returns the decoration for the given @p index.
      */
-    QVariant decorate(const QModelIndex & index, int role = Qt::DecorationRole) const;
+    QVariant decorate(const QModelIndex & index, int role = Qt::DecorationRole) const override;
     /**
       * Returns the icon name of the condition at the given @p index or QString::null if @p index does not exists.
       */

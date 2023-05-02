@@ -34,7 +34,7 @@ public:
     /**
      * Constructs a QFilterEditorBase which is a child of parent.
      */
-    QFilterEditorWidget(QWidget *parent);
+    explicit QFilterEditorWidget(QWidget *parent);
     /**
      * Destroys the QFilterEditorBase.
      */

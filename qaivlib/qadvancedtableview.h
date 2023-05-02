@@ -35,6 +35,28 @@ class QAbstractFilterProxyModel;
 
 class QAdvancedTableViewPrivate;
 
+typedef QVariant (*advSummaryFunc)(QAbstractItemModel*, int);
+
+enum AdvancedSummaryType {
+    ADV_SUMMARY_AVG,
+    ADV_SUMMARY_SUM
+};
+
+inline QVariant advColumnSum(QAbstractItemModel* model, int field) {
+    QVariant result;
+    if (model) {
+        QLocale locale = QLocale::system();
+        double tmp = 0.0;
+        for (int i = 0; i < model->rowCount(); i++) {
+            QString value = model->data(model->index(i, field)).toString();
+            double dVal = locale.toDouble(value);
+            tmp += dVal;
+        }
+        result.setValue(locale.toString(tmp, 'f', 2));
+    }
+    return result;
+}
+
 namespace Ui {
     class QAdvancedTableView;
 }
@@ -250,7 +272,7 @@ public:
     /**
       * Returns the filter at the specified @p row and @p column, or 0 if no filter exists at @p row and @p column.
       */
-    QAbstractFilter* filterAt(int row, int column) const;
+    QAbstractFilter* filterAt(int row, int col) const;
 
     QIcon filterDisabledIcon() const;
     QIcon filterEnabledIcon() const;
@@ -330,7 +352,7 @@ public:
     /**
      * @reimp QWidget::minimumSizeHint()
      */
-    QSize minimumSizeHint() const;
+    QSize minimumSizeHint() const override;
     /**
       * Returns the model used by this view.
       */
@@ -492,27 +514,26 @@ public:
      */
     void setWordWrap(bool wrap);
     /**
-      * Returns true if the filter are shown. Otherwise false.
+      * Returns true if the filter is shown. Otherwise false.
       * @see setShowFilter()
       */
     bool showFilter() const;
     /**
-     * Returns true if the show is shwon. Otherwise false.
-     * @see setShowFilter()
+     * Returns true if the grid is shown. Otherwise false.
+     * @see setShowGrid()
      */
     bool showGrid() const;
     /**
-      * Returns true if the filter are shown. Otherwise false.
-      * @see setShowFilter()
+      * @reimp QWidget::sizeHint()
       */
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
     /**
       * Sorts the model by the values in the given @p column in the given @p order.
       * @see sortingEnabled
       */
     void sortByColumn(int column, Qt::SortOrder order);
     /**
-     * Return the vies's text elide mode.
+     * Return the view's text elide mode.
      * @see setTextElideMode()
      */
     Qt::TextElideMode textElideMode() const;
@@ -564,6 +585,8 @@ signals:
       * This function is used to handle tool tips, and What's This? mode, if the given event is a QEvent::ToolTip,or a QEvent::WhatsThis. It passes all other events on to its base class viewportEvent() handler.
       */
     void viewportEntered();
+
+    void sectionSizeChanged();
 
 public slots:
     void autoResizeColumnsToContent();

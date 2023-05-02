@@ -24,7 +24,7 @@
 class QAbstractItemModelDecorationPrivate
 {
 public:
-    QAbstractItemModelDecorationPrivate(QAbstractItemModelDecoration* md);
+    explicit QAbstractItemModelDecorationPrivate(QAbstractItemModelDecoration* md);
     ~QAbstractItemModelDecorationPrivate();
 
     QMap<QString,QVariant> properties;
@@ -44,6 +44,23 @@ QAbstractItemModelDecorationPrivate::~QAbstractItemModelDecorationPrivate()
 QAbstractItemModelDecoration::QAbstractItemModelDecoration() :
     d(new QAbstractItemModelDecorationPrivate(this))
 {
+}
+
+QAbstractItemModelDecoration::QAbstractItemModelDecoration(const QAbstractItemModelDecoration &c) :
+    d(new QAbstractItemModelDecorationPrivate(this))
+{
+    d->properties = c.d->properties;
+    d->properties.detach();
+    d->m = c.d->m;
+}
+
+QAbstractItemModelDecoration &QAbstractItemModelDecoration::operator=(const QAbstractItemModelDecoration &c)
+{
+    d->properties.clear();
+    d->properties = c.d->properties;
+    d->properties.detach();
+    d->m = c.d->m;
+    return *this;
 }
 
 QAbstractItemModelDecoration::~QAbstractItemModelDecoration()

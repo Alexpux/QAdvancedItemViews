@@ -31,7 +31,7 @@
 class QConditionalDecorationProxyModelPrivate
 {
 public:
-    QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel* pm);
+    explicit QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel* pm);
     ~QConditionalDecorationProxyModelPrivate();
 
     QMap<int,QAbstractItemModelDecoration*> columnDecorationMap;
@@ -42,11 +42,11 @@ public:
     QConditionalDecorationProxyModel* m;
 };
 
-QConditionalDecorationProxyModelPrivate::QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel *pm)
+QConditionalDecorationProxyModelPrivate::QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel *pm) :
+    iconSize(QSize(16, 16)),
+    iconSpacing(3),
+    m(pm)
 {
-    iconSize = QSize(16, 16);
-    iconSpacing = 3;
-    m = pm;
 }
 
 QConditionalDecorationProxyModelPrivate::~QConditionalDecorationProxyModelPrivate()
@@ -203,7 +203,7 @@ QByteArray QConditionalDecorationProxyModel::stateState() const
     s << (quint32)MAGICNUMBER << (quint32)1 << d->iconSize << d->iconSpacing << d->columnDecorationMap.size();
 
     QMapIterator<int,QAbstractItemModelDecoration*> it(d->columnDecorationMap);
-    while(it.hasNext()) {
+    while (it.hasNext()) {
         s << it.value()->properties();
         it.next();
     }

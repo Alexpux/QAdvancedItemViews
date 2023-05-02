@@ -38,8 +38,8 @@ QFilterViewItemDelegate::~QFilterViewItemDelegate()
 void QFilterViewItemDelegate::comboxBoxItemActivated(int index)
 {
     Q_UNUSED(index);
-    emit commitData((QWidget*)sender());
-    emit closeEditor((QWidget*)sender());
+    emit commitData(qobject_cast<QWidget*>(sender()));
+    emit closeEditor(qobject_cast<QWidget*>(sender()));
 
 }
 
@@ -78,21 +78,21 @@ QWidget* QFilterViewItemDelegate::createEditor(QWidget* parent, const QStyleOpti
             }
         }
     }
-    return 0;
+    return nullptr;
 }
 
 void QFilterViewItemDelegate::lineEditReturnPressed()
 {
-    emit commitData((QWidget*)sender());
-    emit closeEditor((QWidget*)sender());
+    emit commitData(qobject_cast<QWidget*>(sender()));
+    emit closeEditor(qobject_cast<QWidget*>(sender()));
 }
 
 void QFilterViewItemDelegate::listWidgetCurrentItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
 {
     Q_UNUSED(current)
     Q_UNUSED(previous)
-    emit commitData((QWidget*)sender());
-    emit closeEditor((QWidget*)sender());
+    emit commitData(qobject_cast<QWidget*>(sender()));
+    emit closeEditor(qobject_cast<QWidget*>(sender()));
 }
 
 void QFilterViewItemDelegate::setEditorData(QWidget* editor, const QModelIndex & index) const

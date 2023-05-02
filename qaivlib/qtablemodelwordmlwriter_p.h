@@ -34,7 +34,7 @@ class QTableView;
 class QTableModelWordMLWriter
 {
 public:
-    QTableModelWordMLWriter(QIODevice* device);
+    explicit QTableModelWordMLWriter(QIODevice* device);
     ~QTableModelWordMLWriter();
 
     bool write(QAdvancedTableView* view, bool all);
@@ -47,7 +47,6 @@ private:
 
     QIODevice* m_device;
     int m_imageId;
-    bool m_includeHeader;
 };
 
 #endif // QTABLEMODELWORDMLWRITER_P_H

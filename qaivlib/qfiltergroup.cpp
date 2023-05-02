@@ -21,13 +21,15 @@
 
 #include "qfiltergroup.h"
 
-QFilterGroup::QFilterGroup()
+QFilterGroup::QFilterGroup() :
+    cEnabled(false)
 {
 }
 
-QFilterGroup::QFilterGroup(const QString & name)
+QFilterGroup::QFilterGroup(const QString & name) :
+    cEnabled(false),
+    cName(name)
 {
-    cName = name;
 }
 
 QFilterGroup::~QFilterGroup()
@@ -56,7 +58,7 @@ QAbstractFilter* QFilterGroup::filter(int index) const
 
 QAbstractFilter* QFilterGroup::filterAtColumn(int column) const
 {
-    Q_FOREACH(QAbstractFilter* mFilter, cFilterList) {
+    for (QAbstractFilter* mFilter : cFilterList) {
         if (mFilter->column() == column) {
             return mFilter;
         }
@@ -71,7 +73,7 @@ QList<QAbstractFilter*> QFilterGroup::filters() const
 
 bool QFilterGroup::hasFilter(int index) const
 {
-    Q_FOREACH(QAbstractFilter* mFilter, cFilterList) {
+    for (QAbstractFilter* mFilter : cFilterList) {
         if (mFilter->column() == index) {
             return true;
         }

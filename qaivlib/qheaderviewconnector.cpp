@@ -25,10 +25,10 @@
 #include <QTableView>
 
 QHeaderViewConnector::QHeaderViewConnector(Qt::Orientation orientation, QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    cAdjustSectionSizePending(true),
+    cOrientation(orientation)
 {
-    cAdjustSectionSizePending = true;
-    cOrientation = orientation;
 }
 
 void QHeaderViewConnector::append(QHeaderView* view)
@@ -37,17 +37,17 @@ void QHeaderViewConnector::append(QHeaderView* view)
         return;
     }
     cHeaderViewList.append(view);
-    connect(view, SIGNAL(destroyed(QObject*)), this, SLOT(viewDestroyed(QObject*)));
-    connect(view, SIGNAL(sectionMoved(int,int,int)), this, SLOT(sectionMoved(int,int,int)));
-    connect(view, SIGNAL(sectionResized(int,int,int)), this, SLOT(sectionResized(int,int,int)));
-    connect(view, SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), this, SLOT(sortIndicatorChanged(int,Qt::SortOrder)));
+    connect(view, &QHeaderView::destroyed, this, &QHeaderViewConnector::viewDestroyed);
+    connect(view, &QHeaderView::sectionMoved, this, &QHeaderViewConnector::sectionMoved);
+    connect(view, &QHeaderView::sectionResized, this, &QHeaderViewConnector::sectionResized);
+    connect(view, &QHeaderView::sortIndicatorChanged, this, &QHeaderViewConnector::sortIndicatorChanged);
 
     if (cOrientation == Qt::Horizontal) {
         QTableView* mView = qobject_cast<QTableView*>(view->parentWidget());
         if (mView) {
-            connect(mView->horizontalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(scrollBarRangeChanged(int,int)));
-            connect(mView->horizontalScrollBar(), SIGNAL(sliderMoved(int)), this, SLOT(scrollBarSilderMoved(int)));
-            connect(mView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scrollBarSilderMoved(int)));
+            connect(mView->horizontalScrollBar(), &QScrollBar::rangeChanged, this, &QHeaderViewConnector::scrollBarRangeChanged);
+            connect(mView->horizontalScrollBar(), &QScrollBar::sliderMoved, this, &QHeaderViewConnector::scrollBarSilderMoved);
+            connect(mView->horizontalScrollBar(), &QScrollBar::valueChanged, this, &QHeaderViewConnector::scrollBarSilderMoved);
         }
     }
 }
@@ -56,7 +56,7 @@ void QHeaderViewConnector::adjustSectionSize()
 {
     cAdjustSectionSizePending = false;
     int mWidth = 0;
-    Q_FOREACH(QHeaderView* mHeaderView, cHeaderViewList) {
+    for (QHeaderView* mHeaderView : cHeaderViewList) {
         if (mHeaderView) {
             if (mWidth < mHeaderView->width()) {
                 mWidth = mHeaderView->width();
@@ -64,7 +64,7 @@ void QHeaderViewConnector::adjustSectionSize()
         }
     }
     if (mWidth > 0) {
-        Q_FOREACH(QHeaderView* mHeaderView, cHeaderViewList) {
+        for (QHeaderView* mHeaderView : cHeaderViewList) {
             if (mHeaderView) {
                 mHeaderView->blockSignals(true);
                 mHeaderView->setFixedWidth(mWidth);
@@ -76,9 +76,11 @@ void QHeaderViewConnector::adjustSectionSize()
 
 void QHeaderViewConnector::scrollBarRangeChanged(int min, int max)
 {
+    Q_UNUSED(min);
+    Q_UNUSED(max);
     if (cOrientation == Qt::Vertical) {
-        Q_FOREACH(QHeaderView* mHeaderView, cHeaderViewList) {
-            if (mHeaderView && mHeaderView){
+        for (QHeaderView* mHeaderView : cHeaderViewList) {
+            if (mHeaderView) {
                 QTableView* mTableView = qobject_cast<QTableView*>(mHeaderView->parentWidget());
                 if (mTableView) {
                     if (mTableView->verticalScrollBar()->isVisible()) {
@@ -89,11 +91,11 @@ void QHeaderViewConnector::scrollBarRangeChanged(int min, int max)
         }
     }
     //    QHeaderView* mSender = qobject_cast<QHeaderView*>(sender());
-    //    Q_FOREACH(QHeaderView* mHeaderView, cHeaderViewList){
+    //    for (QHeaderView* mHeaderView : cHeaderViewList)  {
     //        if (mHeaderView && mHeaderView != mSender){
     //            QTableView* mTableView = qobject_cast<QTableView*>(mHeaderView->parentWidget());
-    //            if (mTableView){
-    //                if (cOrientation == Qt::Horizontal){
+    //            if (mTableView ){
+    //                if (cOrientation == Qt::Horizontal) {
     //                    mTableView->horizontalScrollBar()->setRange(min, max);
     //                }
     //            }
@@ -104,7 +106,7 @@ void QHeaderViewConnector::scrollBarRangeChanged(int min, int max)
 void QHeaderViewConnector::scrollBarSilderMoved(int value)
 {
     QHeaderView* mSender = qobject_cast<QHeaderView*>(sender());
-    Q_FOREACH(QHeaderView* mHeaderView, cHeaderViewList) {
+    for (QHeaderView* mHeaderView : cHeaderViewList) {
         if (mHeaderView && mHeaderView != mSender) {
             QTableView* mTableView = qobject_cast<QTableView*>(mHeaderView->parentWidget());
             if (mTableView) {
@@ -120,7 +122,7 @@ void QHeaderViewConnector::sectionMoved(int logicalIndex, int oldVisualIndex, in
 {
     Q_UNUSED(logicalIndex);
     QHeaderView* mSender = qobject_cast<QHeaderView*>(sender());
-    Q_FOREACH(QHeaderView* mHeaderView, cHeaderViewList) {
+    for (QHeaderView* mHeaderView : cHeaderViewList) {
         if (mHeaderView && mHeaderView != mSender) {
             mHeaderView->blockSignals(true);
             mHeaderView->moveSection(oldVisualIndex, newVisualIndex);
@@ -133,7 +135,7 @@ void QHeaderViewConnector::sectionResized(int logicalIndex, int oldSize, int new
 {
     Q_UNUSED(oldSize);
     QHeaderView* mSender = qobject_cast<QHeaderView*>(sender());
-    Q_FOREACH(QHeaderView* mHeaderView, cHeaderViewList) {
+    for (QHeaderView* mHeaderView : cHeaderViewList) {
         if (mHeaderView && mHeaderView != mSender) {
             mHeaderView->resizeSection(logicalIndex, newSize);
         }
@@ -146,7 +148,7 @@ void QHeaderViewConnector::sectionResized(int logicalIndex, int oldSize, int new
 void QHeaderViewConnector::sortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
 {
     QHeaderView* mSender = qobject_cast<QHeaderView*>(sender());
-    Q_FOREACH(QHeaderView* mHeaderView, cHeaderViewList) {
+    for (QHeaderView* mHeaderView : cHeaderViewList) {
         if (mHeaderView && mHeaderView != mSender) {
             mHeaderView->blockSignals(true);
             mHeaderView->setSortIndicator(logicalIndex, order);

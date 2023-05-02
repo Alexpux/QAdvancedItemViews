@@ -50,7 +50,7 @@ class QAdvancedTableViewProxy : public QTableView
 {
     Q_OBJECT
 public:
-    QAdvancedTableViewProxy(QWidget* parent = nullptr);
+    explicit QAdvancedTableViewProxy(QWidget* parent = nullptr);
     ~QAdvancedTableViewProxy();
 
 signals:
@@ -59,6 +59,7 @@ signals:
 protected:
     void closeEditor(QWidget * editor, QAbstractItemDelegate::EndEditHint hint) override;
     void focusInEvent(QFocusEvent *event) override;
+    //void mousePressEvent(QMouseEvent *event) override;
 };
 
 #endif // QFILTERTABLEVIEW_P_H

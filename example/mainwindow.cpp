@@ -143,22 +143,26 @@ void MainWindow::copy()
 
 void MainWindow::decoratedTableViewCustomContextMenuRequested(const QPoint & point)
 {
+    Q_UNUSED(point)
     QModelIndex mIndex = ui->decorationProxyModelTableView->currentIndex();
     QConditionalDecorationDialog* mDlg = new QConditionalDecorationDialog(mIndex, this);
     if (mDlg->exec()){
-        QAbstractItemModel* mModel = (QAbstractItemModel*)mIndex.model();
-        mModel->setData(mIndex, mDlg->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
+        QAbstractItemModel* mModel = (QAbstractItemModel*)(mIndex.model());
+        if (mModel)
+            mModel->setData(mIndex, mDlg->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
     }
     delete mDlg;
 }
 
 void MainWindow::decoratedGroupingTreeViewCustomContextMenuRequested(const QPoint &point)
 {
+    Q_UNUSED(point)
     QModelIndex mIndex = ui->decoratedGroupingTreeView->selectionModel()->currentIndex();
     QConditionalDecorationDialog* mDlg = new QConditionalDecorationDialog(mIndex, this);
     if (mDlg->exec()){
-        QAbstractItemModel* mModel = (QAbstractItemModel*)mIndex.model();
-        mModel->setData(mIndex, mDlg->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
+        QAbstractItemModel* mModel = (QAbstractItemModel*)(mIndex.model());
+        if (mModel)
+            mModel->setData(mIndex, mDlg->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
     }
     delete mDlg;
 }
@@ -277,6 +281,7 @@ void MainWindow::populatePushButtonClicked()
 
 void MainWindow::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
 {
+    Q_UNUSED(deselected)
     ui->copyAction->setEnabled(!selected.isEmpty());
 }
 
@@ -496,8 +501,8 @@ void MainWindow::initModel()
 
 void MainWindow::initTabAdvancedTableView()
 {
-    connect(ui->filterTableView->filterProxyModel(), SIGNAL(resultCountChanged(int,int)), this, SLOT(advancedTableViewResultChanged(int,int)));
-    connect(ui->filterTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
+    connect(ui->filterTableView->filterProxyModel(), &QAbstractFilterProxyModel::resultCountChanged, this, &MainWindow::advancedTableViewResultChanged);
+    connect(ui->filterTableView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::selectionChanged);
 
     SelectionListDataProviderProxy* p = new SelectionListDataProviderProxy(this);
     p->setSourceModel(m_model);
@@ -565,7 +570,7 @@ void MainWindow::initTabConditionalDecorationProxyModel()
 
     proxy->setSourceModel(m_model);
     ui->decorationProxyModelTableView->setModel(proxy);
-    connect(ui->decorationProxyModelTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
+    connect(ui->decorationProxyModelTableView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::selectionChanged);
 }
 
 void MainWindow::initTabGroupingProxyModel()
@@ -621,7 +626,7 @@ void MainWindow::initTabLargeTableView()
     //    QStandardItemModel* model = new QStandardItemModel(this);
     //    ui->largeTableView->setModel(model);
     ui->largeTableView->setShowFixedRows(true);
-    connect(ui->largeTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
+    connect(ui->largeTableView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::selectionChanged);
 }
 
 void MainWindow::initTabUniqueValuesProxyModel()
@@ -631,7 +636,7 @@ void MainWindow::initTabUniqueValuesProxyModel()
     uniqueValuesProxyModel->setModelColumn(8);
     uniqueValuesProxyModel->setSourceModel(m_model);
     ui->uniqueValuesTableView->resizeRowsToContents();
-    connect(ui->uniqueValuesTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
+    connect(ui->uniqueValuesTableView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::selectionChanged);
 }
 
 void MainWindow::restoreStateToolButtonClicked()
@@ -651,6 +656,7 @@ void MainWindow::search()
 
 void MainWindow::search(const QString & expression)
 {
+    Q_UNUSED(expression)
     QSearchBar* searchBar = qobject_cast<QSearchBar*>(sender());
     if (searchBar == 0){
         return;

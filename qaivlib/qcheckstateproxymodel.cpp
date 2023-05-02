@@ -24,7 +24,7 @@
 class QCheckStateProxyModelPrivate
 {
 public:
-    QCheckStateProxyModelPrivate(QCheckStateProxyModel* pm);
+    explicit QCheckStateProxyModelPrivate(QCheckStateProxyModel* pm);
     ~QCheckStateProxyModelPrivate();
 
     QList<QModelIndex> checkedIndexes;
@@ -112,8 +112,8 @@ void QCheckStateProxyModel::setAllChecked(bool checked)
 
 void QCheckStateProxyModel::setColumnCheckable(int column, bool checkable)
 {
-    //if (column < columnCount()){
-    if (checkable){
+    //if (column < columnCount()) {
+    if (checkable) {
         if (!d->columns.contains(column)) {
             d->columns << column;
         }
@@ -126,11 +126,11 @@ void QCheckStateProxyModel::setColumnCheckable(int column, bool checkable)
 void QCheckStateProxyModel::setChecked(const QModelIndex & index, bool checked)
 {
     if (d->columns.contains(index.column()) && index.row() < rowCount()) {
-        if (checked){
+        if (checked) {
             d->checkedIndexes.append(index);
             emit dataChanged(index, index);
         } else {
-            if (d->checkedIndexes.contains(index)){
+            if (d->checkedIndexes.contains(index)) {
                 d->checkedIndexes.removeAt(d->checkedIndexes.indexOf(index));
                 emit dataChanged(index, index);
             }
@@ -153,7 +153,7 @@ void QCheckStateProxyModel::setCheckedValues(int column, const QVariantList & va
     if (column < columnCount()) {
         d->checkedIndexes.clear();
         QModelIndex mIndex;
-        for(int iRow = 0; iRow < sourceModel()->rowCount(); iRow++){
+        for(int iRow = 0; iRow < sourceModel()->rowCount(); iRow++) {
             mIndex = mapFromSource(sourceModel()->index(iRow, column));
             if (values.contains(mIndex.data())) {
                 d->checkedIndexes.append(mIndex);
@@ -171,7 +171,7 @@ bool QCheckStateProxyModel::setData(const QModelIndex & index, const QVariant & 
         return false;
     }
     if (role == Qt::CheckStateRole) {
-        if (value.toInt() == Qt::Checked){
+        if (value.toInt() == Qt::Checked) {
             d->checkedIndexes.append(index);
         } else {
             d->checkedIndexes.removeAt(d->checkedIndexes.indexOf(index));
@@ -189,7 +189,7 @@ void QCheckStateProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
         if (QCheckStateProxyModel::sourceModel()) {
             disconnect(QCheckStateProxyModel::sourceModel(), 0, this, 0);
         }
-        connect(sourceModel, SIGNAL(modelAboutToBeReset()), this, SLOT(sourceModelAboutToBeReset()));
+        connect(sourceModel, &QAbstractItemModel::modelAboutToBeReset, this, &QCheckStateProxyModel::sourceModelAboutToBeReset);
     }
     QIdentityProxyModel::setSourceModel(sourceModel);
 
@@ -209,7 +209,7 @@ void QCheckStateProxyModel::sourceModelRowsAboutToBeRemoved(const QModelIndex & 
     Q_UNUSED(parent)
     for (int i = start; i <= end; i++) {
         QListIterator<QModelIndex> it(d->checkedIndexes);
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             QModelIndex index = it.next();
             if (index.row() == i) {
                 d->checkedIndexes.removeAt(d->checkedIndexes.indexOf(index));

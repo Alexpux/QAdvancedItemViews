@@ -37,6 +37,8 @@ public:
       * Constructs an empty QAbstractItemModelDecoration.
       */
     QAbstractItemModelDecoration();
+    QAbstractItemModelDecoration(const QAbstractItemModelDecoration &c);
+    QAbstractItemModelDecoration & operator=(const QAbstractItemModelDecoration &c);
     /**
       * Destroys the QAbstractItemModelDecoration.
       */

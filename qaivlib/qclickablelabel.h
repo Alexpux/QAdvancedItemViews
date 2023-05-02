@@ -35,7 +35,7 @@
   * @code
   * QClickableLabel* clickableLabel = new QClickableLabel(this);
   * clickableLabel->setText(tr("Clickable Label"));
-  * connect(clickableLabel, SIGNAL(clicked(Qt::MouseButtons)), this, SLOT(clickedOnLabel(Qt::MouseButtons)));
+  * connect(clickableLabel, &QClickableLabel::clicked, this, &Class::clickedOnLabel);
   * @endcode
   */
 class QAIVLIBSHARED_EXPORT QClickableLabel : public QLabel
@@ -47,7 +47,7 @@ public:
       *
       * The @p parent is passed to the QLabel constructor.
       */
-    QClickableLabel(QWidget* parent = nullptr);
+    explicit QClickableLabel(QWidget* parent = nullptr);
     /**
       * Destroys the clickable label.
       */

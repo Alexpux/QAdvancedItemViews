@@ -24,9 +24,9 @@
 class QGroupingProxyModelGroup
 {
 public:
-    QGroupingProxyModelGroup(QGroupingProxyModelGroup* parent = nullptr);
-    QGroupingProxyModelGroup(int sourceModelRow, QGroupingProxyModelGroup* parent = nullptr);
-    QGroupingProxyModelGroup(const QString & name, QGroupingProxyModelGroup* parent = nullptr);
+    explicit QGroupingProxyModelGroup(QGroupingProxyModelGroup* parent = nullptr);
+    explicit QGroupingProxyModelGroup(int sourceModelRow, QGroupingProxyModelGroup* parent = nullptr);
+    explicit QGroupingProxyModelGroup(const QString & name, QGroupingProxyModelGroup* parent = nullptr);
     ~QGroupingProxyModelGroup();
 
     void addSourceModelRow(int row);

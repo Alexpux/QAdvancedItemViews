@@ -65,8 +65,8 @@ HEADERS += qabstractfilter.h \
            qmimedatautil.h \
            qrangefilter.h \
            qrangefilter_p.h \
-           qregexpfilter.h \
-           qregexpfilter_p.h \
+           qregularexpressionfilter.h \
+           qregularexpressionfilter_p.h \
            qsearchbar.h \
            qsearchbar_p.h \
            qselectionlistfilter.h \
@@ -112,7 +112,7 @@ SOURCES += qabstractfilter.cpp \
            qheaderviewconnector.cpp \
            qmimedatautil.cpp \
            qrangefilter.cpp \
-           qregexpfilter.cpp \
+           qregularexpressionfilter.cpp \
            qsearchbar.cpp \
            qselectionlistfilter.cpp \
            qshareditemselectionmodel.cpp \

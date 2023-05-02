@@ -30,7 +30,7 @@ private:
 void QAdvancedTableViewTest::clicked()
 {
     QSignalSpy spy(m_view, SIGNAL(clicked(QModelIndex)));
-    QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, QPoint(20, 20));
+    QTest::mouseClick(m_view->viewport(), Qt::LeftButton, Qt::KeyboardModifiers(), QPoint(20, 20));
     QCOMPARE(spy.count(), 1);
 }
 
@@ -45,7 +45,7 @@ void QAdvancedTableViewTest::currentIndex()
 void QAdvancedTableViewTest::doubleClicked()
 {
     QSignalSpy spy(m_view, SIGNAL(doubleClicked(QModelIndex)));
-    QTest::mouseDClick(m_view->viewport(), Qt::LeftButton, 0, QPoint(20, 20));
+    QTest::mouseDClick(m_view->viewport(), Qt::LeftButton, Qt::KeyboardModifiers(), QPoint(20, 20));
     QCOMPARE(spy.count(), 1);
 }
 
@@ -63,7 +63,7 @@ void QAdvancedTableViewTest::model()
 void QAdvancedTableViewTest::pressed()
 {
     QSignalSpy spy(m_view, SIGNAL(pressed(QModelIndex)));
-    QTest::mousePress(m_view->viewport(), Qt::LeftButton, 0, QPoint(20, 20));
+    QTest::mousePress(m_view->viewport(), Qt::LeftButton, Qt::KeyboardModifiers(), QPoint(20, 20));
     QCOMPARE(spy.count(), 1);
 }
 

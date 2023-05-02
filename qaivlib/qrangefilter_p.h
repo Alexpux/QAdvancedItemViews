@@ -30,7 +30,7 @@ class QRangeFilterEditorPopup : public QFilterEditorPopupWidget
 {
     Q_OBJECT
 public:
-    QRangeFilterEditorPopup(QWidget* parent);
+    explicit QRangeFilterEditorPopup(QWidget* parent);
     ~QRangeFilterEditorPopup();
 
     QString rangeFrom() const;
@@ -49,7 +49,7 @@ class QRangeFilterEditor : public QFilterEditorWidget
 {
     Q_OBJECT
 public:
-    QRangeFilterEditor(QWidget* parent = nullptr);
+    explicit QRangeFilterEditor(QWidget* parent = nullptr);
     ~QRangeFilterEditor();
 
     QString rangeFrom() const;
@@ -60,7 +60,7 @@ public:
 
     void setRangeTo(const QString & text);
 protected:
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) override;
 };
 
 #endif // QRANGEFILTER_P_H

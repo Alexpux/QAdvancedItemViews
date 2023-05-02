@@ -62,7 +62,7 @@ bool QTableModelCsvWriter::writeAll(QAdvancedTableView* view, bool all)
                 l << "\"" + view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
             }
         }
-        stream << l.join(";") << endl;
+        stream << l.join(";") << Qt::endl;
     }
     return true;
 }
@@ -89,7 +89,7 @@ bool QTableModelCsvWriter::writeAll(QTableView* view, bool all)
                 l << "\"" + view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
             }
         }
-        stream << l.join(";") << endl;
+        stream << l.join(";") << Qt::endl;
     }
     return true;
 }

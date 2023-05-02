@@ -16,6 +16,7 @@ class QTestCase : public QObject
 {
     Q_OBJECT
 public:
+    explicit QTestCase(QObject *parent = nullptr);
     QStandardItemModel* model() const
     {
         return m_model;
@@ -25,6 +26,12 @@ protected:
 private:
     QStandardItemModel* m_model;
 };
+
+QTestCase::QTestCase(QObject *parent) : QObject(parent),
+    m_model(nullptr)
+{
+
+}
 
 void QTestCase::initModel()
 {
@@ -71,10 +78,12 @@ class QCheckStateProxyModelTestCase : public QTestCase
 {
     Q_OBJECT
 public:
+    explicit QCheckStateProxyModelTestCase(QObject *parent = nullptr);
+
     QCheckStateProxyModel* proxy() const
     {
         return m_proxy;
-    };
+    }
 private slots:
     void cleanup();
     void data();
@@ -92,10 +101,18 @@ private:
     QCheckStateProxyModel* m_proxy;
 };
 
+QCheckStateProxyModelTestCase::QCheckStateProxyModelTestCase(QObject *parent) :
+    QTestCase(parent),
+    m_view(nullptr),
+    m_proxy(nullptr)
+{
+
+}
+
 void QCheckStateProxyModelTestCase::cleanup()
 {
     delete m_proxy;
-    m_proxy = 0;
+    m_proxy = nullptr;
 }
 
 void QCheckStateProxyModelTestCase::data()

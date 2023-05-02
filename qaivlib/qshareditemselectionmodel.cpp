@@ -24,7 +24,7 @@
 class QSharedItemSelectionModelPrivate
 {
 public:
-    QSharedItemSelectionModelPrivate(QSharedItemSelectionModel* sm);
+    explicit QSharedItemSelectionModelPrivate(QSharedItemSelectionModel* sm);
     ~QSharedItemSelectionModelPrivate();
 
     QItemSelectionModel* shared;
@@ -46,7 +46,7 @@ QSharedItemSelectionModel::QSharedItemSelectionModel(QAbstractItemModel *model, 
     QItemSelectionModel(model, parent), d(new QSharedItemSelectionModelPrivate(this))
 {
     d->shared = shared;
-    connect(d->shared, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(sharedSelectionChanged(QItemSelection,QItemSelection)));
+    connect(d->shared, &QItemSelectionModel::selectionChanged, this, &QSharedItemSelectionModel::sharedSelectionChanged);
 }
 
 QSharedItemSelectionModel::~QSharedItemSelectionModel()

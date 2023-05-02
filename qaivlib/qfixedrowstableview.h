@@ -54,7 +54,7 @@ public:
     /**
      * Constructs a fixed rows table view with the given @p parent.
      */
-    QFixedRowsTableView(QWidget* parent = nullptr);
+    explicit QFixedRowsTableView(QWidget* parent = nullptr);
     /**
      * Destorys the fixed rows table view.
      */
@@ -117,7 +117,7 @@ public:
     /**
      * Constructs a fixed rows filter proxy model with the given @p parent.
      */
-    QFixedRowsFilterProxyModel(QObject *parent = nullptr);
+    explicit QFixedRowsFilterProxyModel(QObject *parent = nullptr);
     /**
      * Destroys the fixed rows proxy model.
      */
@@ -173,7 +173,7 @@ public:
     /**
      * Constructs a fixed rows decoration proxy model attached to the given @p filterProxy and with the given @p parent.
      */
-    QFixedRowsDecorationProxyModel(QFixedRowsFilterProxyModel* filterProxy, QObject* parent = nullptr);
+    explicit QFixedRowsDecorationProxyModel(QFixedRowsFilterProxyModel* filterProxy, QObject* parent = nullptr);
     /**
      * Destroys the fixed rows decoration proxy model.
      */

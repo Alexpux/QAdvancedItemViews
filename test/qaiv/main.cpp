@@ -9,6 +9,9 @@
 class QAIVTest: public QObject
 {
     Q_OBJECT
+public:
+    explicit QAIVTest(QObject *parent = nullptr);
+
 private slots:
     void qsourcemodel_cast();
 
@@ -22,6 +25,14 @@ private:
     QStandardItemModel* m_model;
     QUniqueValuesProxyModel* m_proxy;
 };
+
+QAIVTest::QAIVTest(QObject *parent) : QObject(parent),
+    m_view(nullptr),
+    m_model(nullptr),
+    m_proxy(nullptr)
+{
+
+}
 
 void QAIVTest::qsourcemodel_cast()
 {

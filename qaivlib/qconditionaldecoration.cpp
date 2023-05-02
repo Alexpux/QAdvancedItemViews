@@ -88,7 +88,7 @@ QVariant QConditionalDecoration::decorate(const QModelIndex & index, int role) c
         QPixmap p(model->iconSize().width() * pl.size() + (pl.size() * model->iconSpacing()), model->iconSize().height());
         p.fill(Qt::transparent);
         QPainter painter(&p);
-        for (int i = 0; i < pl.size(); i++){
+        for (int i = 0; i < pl.size(); i++) {
             painter.drawPixmap(model->iconSize().width() * i + (i * model->iconSpacing()), 0, pl.at(i));
         }
         return p;
@@ -112,68 +112,68 @@ bool QConditionalDecoration::matches(const QModelIndex & index, const QVariantMa
 {
     QVariant data;
     data = index.model()->index(index.row(), properties.value("column", index.column()).toInt()).data(property("dataRole").toInt());
-    QConditionalDecoration::MatchFlag matchFlag = static_cast<QConditionalDecoration::MatchFlag>(properties.value("matchFlag").toInt());
-    if (matchFlag == QConditionalDecoration::Contains) {
+    QConditionalDecoration::MatchFlag matchFlg = static_cast<QConditionalDecoration::MatchFlag>(properties.value("matchFlag").toInt());
+    if (matchFlg == QConditionalDecoration::Contains) {
         if (data.toString().contains(properties.value("value").toString())) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::ContainsNot) {
+    } else if (matchFlg == QConditionalDecoration::ContainsNot) {
         if (!data.toString().contains(properties.value("value").toString())) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::EndsNotWith) {
+    } else if (matchFlg == QConditionalDecoration::EndsNotWith) {
         if (!data.toString().endsWith(properties.value("value").toString())) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::EndsWith){
-        if (data.toString().endsWith(properties.value("value").toString())){
+    } else if (matchFlg == QConditionalDecoration::EndsWith) {
+        if (data.toString().endsWith(properties.value("value").toString())) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::IsBetween) {
+    } else if (matchFlg == QConditionalDecoration::IsBetween) {
         if (greaterOrEqualThan(data, properties.value("from")) && lessOrEqualThan(data, properties.value("to"))) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::IsEmpty) {
+    } else if (matchFlg == QConditionalDecoration::IsEmpty) {
         if (data.toString().isEmpty()) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::IsEqual) {
+    } else if (matchFlg == QConditionalDecoration::IsEqual) {
         if (data == properties.value("value")) {
             return true;
         }
-    } else if(matchFlag == QConditionalDecoration::IsGreater) {
+    } else if (matchFlg == QConditionalDecoration::IsGreater) {
         if (greaterThan(data, properties.value("value"))) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::IsGreaterOrEqual) {
+    } else if (matchFlg == QConditionalDecoration::IsGreaterOrEqual) {
         if (greaterOrEqualThan(data, properties.value("value"))) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::IsLess) {
+    } else if (matchFlg == QConditionalDecoration::IsLess) {
         if (lessThan(data, properties.value("value"))) {
             return true;
         }
-    } else if(matchFlag == QConditionalDecoration::IsLessOrEqual) {
+    } else if (matchFlg == QConditionalDecoration::IsLessOrEqual) {
         if (lessOrEqualThan(data, properties.value("value"))) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::IsNotBetween) {
+    } else if (matchFlg == QConditionalDecoration::IsNotBetween) {
         if (lessThan(data, properties.value("from")) || greaterThan(data, properties.value("to"))) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::IsNotEmpty) {
+    } else if (matchFlg == QConditionalDecoration::IsNotEmpty) {
         if (!data.toString().isEmpty()) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::IsNotEqual) {
+    } else if (matchFlg == QConditionalDecoration::IsNotEqual) {
         if (data != properties.value("value")) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::StartsNotWith) {
+    } else if (matchFlg == QConditionalDecoration::StartsNotWith) {
         if (!data.toString().startsWith(properties.value("value").toString())) {
             return true;
         }
-    } else if (matchFlag == QConditionalDecoration::StartsWith) {
+    } else if (matchFlg == QConditionalDecoration::StartsWith) {
         if (data.toString().startsWith(properties.value("value").toString())) {
             return true;
         }
@@ -324,7 +324,7 @@ bool QConditionalDecoration::lessOrEqualThan(const QVariant & left, const QVaria
 
 bool QConditionalDecoration::lessThan(const QVariant & left, const QVariant & right) const
 {
-    if (left.type() == QVariant::Char){
+    if (left.type() == QVariant::Char) {
         if (left.toChar() < right.toString().at(0)) {
             return true;
         }
@@ -341,7 +341,7 @@ bool QConditionalDecoration::lessThan(const QVariant & left, const QVariant & ri
             return true;
         }
     } else if (left.type() == QVariant::Int) {
-        if (left.toInt() < right.toInt()){
+        if (left.toInt() < right.toInt()) {
             return true;
         }
     } else if (left.type() == QVariant::LongLong) {

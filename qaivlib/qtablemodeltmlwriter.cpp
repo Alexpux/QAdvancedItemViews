@@ -62,7 +62,7 @@ bool QTableModelHtmlWriter::write(QAdvancedTableView* view, bool all)
     stream.writeStartElement("body");
     stream.writeStartElement("table");
     stream.writeAttribute("border", view->showGrid()?"1":"0");
-    if (view->showGrid()){
+    if (view->showGrid()) {
         stream.writeAttribute("style", "border-style:none");
     }
     //
@@ -241,7 +241,7 @@ void QTableModelHtmlWriter::writeBorderStyle(QXmlStreamWriter & stream, Qt::PenS
 
 void QTableModelHtmlWriter::writeCharacters(QXmlStreamWriter & stream, const QString & text)
 {
-    if (text.isEmpty()){
+    if (text.isEmpty()) {
         stream.writeCharacters(QChar(QChar::Nbsp));
     } else {
         stream.writeCharacters(text);
@@ -252,9 +252,9 @@ void QTableModelHtmlWriter::writeDecoration(QXmlStreamWriter & stream, const QVa
 {
     QIcon icon = qvariant_cast<QIcon>(decoration);
     QPixmap pixmap;
-    if (icon.isNull()){
+    if (icon.isNull()) {
         pixmap = qvariant_cast<QPixmap>(decoration);
-        if (pixmap.isNull()){
+        if (pixmap.isNull()) {
             return;
         }
     } else {

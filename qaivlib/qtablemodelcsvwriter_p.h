@@ -28,7 +28,7 @@ class QTableView;
 class QTableModelCsvWriter
 {
 public:
-    QTableModelCsvWriter(QIODevice* device);
+    explicit QTableModelCsvWriter(QIODevice* device);
     ~QTableModelCsvWriter();
 
     bool writeAll(QAdvancedTableView* view, bool all);

@@ -31,7 +31,7 @@
   * The following filters are provided by QDefaultFilterModel:
   * @li QAutoFilter
   * @li QRangeFilter
-  * @li QRegExpFilter
+  * @li QRegularExpressionFilter
   * @li QSelectionListFilter
   * @li QTextFilter
   * @li QValueFilter
@@ -43,7 +43,7 @@ public:
     /**
       * Constructs a default filter model with the given @p parent.
       */
-    QFilterModel(QObject* parent);
+    explicit QFilterModel(QObject* parent);
     /**
       * Destroys the default filter model.
       */
@@ -52,7 +52,7 @@ protected:
     /**
       * @reimp QAbstractFilterModel::createFilter()
       */
-    QAbstractFilter* createFilter(const QModelIndex & index, const QVariantMap & properties) const;
+    QAbstractFilter* createFilter(const QModelIndex & index, const QVariantMap & properties) const override;
 };
 
 #endif // QFILTERMODEL_H

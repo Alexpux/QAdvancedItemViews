@@ -34,7 +34,7 @@ public:
     /**
       * Constructs an item delegate with the given @p parent.
       */
-    QFilterViewItemDelegate(QObject* parent);
+    explicit QFilterViewItemDelegate(QObject* parent);
     /**
       * Destroys the item delegate.
       */

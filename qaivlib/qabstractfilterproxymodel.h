@@ -53,13 +53,15 @@ public:
       * Sets the filter @p model providing the filter definitions.
       * @see filterModel()
       */
-    void setFilterModel(QAbstractFilterModel* model);
+    void setFilterModel(QAbstractFilterModel* filterModel);
     /**
      * @reimp QSortFilterProxyModel
      */
     virtual void setSourceModel(QAbstractItemModel* sourceModel) override;
 
     virtual QModelIndex mapDeepFromSource(const QModelIndex &sourceIndex) const;
+
+    //QModelIndex mapFromSource(const QModelIndex &sourceIndex) const override;
 
 signals:
     /**
@@ -79,7 +81,7 @@ signals:
 
 protected:
     void emitResultCountChanged();
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const = 0;
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const override = 0;
 
 private slots:
     void updateResult();

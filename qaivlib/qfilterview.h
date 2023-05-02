@@ -45,7 +45,7 @@ class QAIVLIBSHARED_EXPORT QFilterView : public QTableView
     Q_PROPERTY(int maxVisibileFilterSets READ maxVisibileFilterSets WRITE setMaxVisibileFilterSets)
 
 public:
-    QFilterView(QWidget* parent = nullptr);
+    explicit QFilterView(QWidget* parent = nullptr);
     ~QFilterView();
 
     void connectToView(QAbstractItemView* view);
@@ -64,7 +64,7 @@ public:
 
     void setMaxVisibileFilterSets(int rows);
 
-    void setModel(QAbstractItemModel* model);
+    void setModel(QAbstractItemModel* model) override;
 
     void toggleFilter(const QModelIndex & index);
 

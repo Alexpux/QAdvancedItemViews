@@ -38,18 +38,18 @@ public:
     /**
      * Constructs a filter model with the given @p parent.
      */
-    QFilterModelProxy(QObject* parent = nullptr);
+    explicit QFilterModelProxy(QObject* parent = nullptr);
     /**
      * Destroys the filter model.
      */
     ~QFilterModelProxy();
 
-    QVariant data(const QModelIndex & index, int role) const;
+    QVariant data(const QModelIndex & index, int role) const override;
 protected:
     /**
      * @reimp
      */
-    bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const override;
 };
 
 #endif // QFILTERMODELPROXY_H

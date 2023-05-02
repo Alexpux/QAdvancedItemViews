@@ -34,7 +34,7 @@ class QAdvancedTableViewPlugin : public QObject, public QDesignerCustomWidgetInt
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    QAdvancedTableViewPlugin(QObject *parent = nullptr);
+    explicit QAdvancedTableViewPlugin(QObject *parent = nullptr);
 
     bool isContainer() const;
     bool isInitialized() const;

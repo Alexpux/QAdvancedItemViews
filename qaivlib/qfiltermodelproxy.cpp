@@ -37,14 +37,13 @@ QVariant QFilterModelProxy::data(const QModelIndex & index, int role) const
 {
     if (role == Qt::BackgroundRole && filterModel()->mode() == QAdvancedItemViews::HighlightMode) {
         QBrush b = qvariant_cast<QBrush>(QAbstractFilterProxyModel::data(index, role));
-        int t = -1;
         QModelIndex mSourceIndex = mapToSource(index);
         QList<QColor> cl;
         for(int iRow = 0; iRow < filterModel()->rowCount(); iRow++) {
-            Q_FOREACH(QAbstractFilter* f, filterModel()->filtersAtRow(iRow)){
-                t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
+            for (QAbstractFilter* f : filterModel()->filtersAtRow(iRow)) {
+                int t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
                 if (f->isEnabled()) {
-                    if (filterModel()->matchMode() == QAdvancedItemViews::MatchNormal){
+                    if (filterModel()->matchMode() == QAdvancedItemViews::MatchNormal) {
                         if (f->matches(sourceModel()->index(mSourceIndex.row(), f->column()).data(), t)) {
                             cl << f->highlightColor();
                         }
@@ -79,13 +78,12 @@ bool QFilterModelProxy::filterAcceptsRow(int source_row, const QModelIndex & sou
     if (filterModel()->mode() == QAdvancedItemViews::HighlightMode) {
         return true;
     }
-    int t = -1;
     int r = -1;
     for(int iRow = 0; iRow < filterModel()->rowCount(); iRow++) {
         int rr = -1;
         int fc = 0;
-        Q_FOREACH(QAbstractFilter* f, filterModel()->filtersAtRow(iRow)) {
-            t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
+        for (QAbstractFilter* f : filterModel()->filtersAtRow(iRow)) {
+            int t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
             if (f->isEnabled()) {
                 fc++;
                 if (filterModel()->matchMode() == QAdvancedItemViews::MatchNormal) {

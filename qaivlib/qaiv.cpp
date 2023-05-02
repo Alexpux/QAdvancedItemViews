@@ -28,8 +28,8 @@ QAdvancedItemViews::QAdvancedItemViews()
 QModelIndex qSourceIndex(const QModelIndex & index)
 {
     QModelIndex i(index);
-    QAbstractProxyModel* proxy;
-    while((proxy = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))) {
+    const QAbstractProxyModel* proxy;
+    while ((proxy = qobject_cast<const QAbstractProxyModel*>(i.model()))) {
         i = proxy->mapToSource(i);
     }
     return i;
@@ -38,8 +38,8 @@ QModelIndex qSourceIndex(const QModelIndex & index)
 const QAbstractItemModel* qSourceModel(const QModelIndex & index)
 {
     QModelIndex i(index);
-    QAbstractProxyModel* p;
-    while((p = qobject_cast<QAbstractProxyModel*>((QAbstractProxyModel*)i.model()))) {
+    const QAbstractProxyModel* p;
+    while ((p = qobject_cast<const QAbstractProxyModel*>(i.model()))) {
         i = p->mapToSource(i);
     }
     return i.model();
@@ -49,7 +49,7 @@ QAbstractItemModel* qSourceModel(QAbstractItemModel* model)
 {
     QAbstractItemModel*m = model;
     QAbstractProxyModel* p;
-    while((p = qobject_cast<QAbstractProxyModel*>(m))) {
+    while ((p = qobject_cast<QAbstractProxyModel*>(m))) {
         m = p->sourceModel();
     }
     return m;

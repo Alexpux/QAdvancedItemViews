@@ -9,49 +9,49 @@ QTableModelExportPushButton::QTableModelExportPushButton(QWidget *parent)
 {
     setIcon(QIcon(":/qaiv/table.export"));
 
-    QAction *a = 0;
-    QMenu* m = new QMenu(this);
-    a = m->addAction(tr("Excel XML (Selection)"));
+    QAction *action = nullptr;
+    QMenu* menu = new QMenu(this);
+    action = menu->addAction(tr("Excel XML (Selection)"));
     //a->setIcon(QIcon(":/qaiv/export.excel"));
-    a->setData(QByteArray("SpreadsheetML"));
-    a->setToolTip(tr("Exports the selected items into an Excel XML spreadsheet"));
-    connect(a, SIGNAL(triggered()), this, SLOT(exportSelectionTriggered()));
+    action->setData(QByteArray("SpreadsheetML"));
+    action->setToolTip(tr("Exports the selected items into an Excel XML spreadsheet"));
+    connect(action, &QAction::triggered, [this](){ exportSelectionTriggeredImpl(); });
 
-    a = m->addAction(tr("Word XML (Selection)"));
+    action = menu->addAction(tr("Word XML (Selection)"));
     //a->setIcon(QIcon(":/qaiv/export.word"));
-    a->setData(QByteArray("WordML"));
-    a->setToolTip(tr("Exports the selected items into an Word XML document"));
-    connect(a, SIGNAL(triggered()), this, SLOT(exportSelectionTriggered()));
+    action->setData(QByteArray("WordML"));
+    action->setToolTip(tr("Exports the selected items into an Word XML document"));
+    connect(action, &QAction::triggered, [this](){ exportSelectionTriggeredImpl(); });
 
-    a = m->addAction(tr("CSV (Selection)"));
-    a->setData(QByteArray("CSV"));
-    connect(a, SIGNAL(triggered()), this, SLOT(exportSelectionTriggered()));
+    action = menu->addAction(tr("CSV (Selection)"));
+    action->setData(QByteArray("CSV"));
+    connect(action, &QAction::triggered, [this](){ exportSelectionTriggeredImpl(); });
 
-    a = m->addAction(tr("HTML (Selection)"));
-    a->setData(QByteArray("HTML"));
-    connect(a, SIGNAL(triggered()), this, SLOT(exportSelectionTriggered()));
+    action = menu->addAction(tr("HTML (Selection)"));
+    action->setData(QByteArray("HTML"));
+    connect(action, &QAction::triggered, [this](){ exportSelectionTriggeredImpl(); });
 
-    m->addSeparator();
+    menu->addSeparator();
 
-    a = m->addAction(tr("Excel XML (All)"));
-    a->setData(QByteArray("SpreadsheetML"));
+    action = menu->addAction(tr("Excel XML (All)"));
+    action->setData(QByteArray("SpreadsheetML"));
     //a->setIcon(QIcon(":/qaiv/export.excel"));
-    connect(a, SIGNAL(triggered()), this, SLOT(exportAllTriggered()));
+    connect(action, &QAction::triggered, [this](){ exportSelectionTriggeredImpl(); });
 
-    a = m->addAction(tr("Word XML (All)"));
+    action = menu->addAction(tr("Word XML (All)"));
     //a->setIcon(QIcon(":/qaiv/export.word"));
-    a->setData(QByteArray("WordML"));
-    connect(a, SIGNAL(triggered()), this, SLOT(exportAllTriggered()));
+    action->setData(QByteArray("WordML"));
+    connect(action, &QAction::triggered, [this](){ exportSelectionTriggeredImpl(); });
 
-    a = m->addAction(tr("CSV (All)"));
-    a->setData(QByteArray("CSV"));
-    connect(a, SIGNAL(triggered()), this, SLOT(exportAllTriggered()));
+    action = menu->addAction(tr("CSV (All)"));
+    action->setData(QByteArray("CSV"));
+    connect(action, &QAction::triggered, [this](){ exportSelectionTriggeredImpl(); });
 
-    a = m->addAction(tr("HTML (All)"));
-    a->setData(QByteArray("HTML"));
-    connect(a, SIGNAL(triggered()), this, SLOT(exportAllTriggered()));
+    action = menu->addAction(tr("HTML (All)"));
+    action->setData(QByteArray("HTML"));
+    connect(action, &QAction::triggered, [this](){ exportSelectionTriggeredImpl(); });
 
-    setMenu(m);
+    setMenu(menu);
 }
 
 QTableModelExportPushButton::~QTableModelExportPushButton()
@@ -59,18 +59,18 @@ QTableModelExportPushButton::~QTableModelExportPushButton()
 
 }
 
-void QTableModelExportPushButton::exportAllTriggered()
+void QTableModelExportPushButton::exportAllTriggeredImpl()
 {
-    QAction* a = qobject_cast<QAction*>(sender());
-    if (a) {
-        emit exportAllTriggered(a->data().toByteArray());
+    QAction* action = qobject_cast<QAction*>(sender());
+    if (action) {
+        emit exportAllTriggered(action->data().toByteArray());
     }
 }
 
-void QTableModelExportPushButton::exportSelectionTriggered()
+void QTableModelExportPushButton::exportSelectionTriggeredImpl()
 {
-    QAction* a = qobject_cast<QAction*>(sender());
-    if (a) {
-        emit exportSelectionTriggered(a->data().toByteArray());
+    QAction* action = qobject_cast<QAction*>(sender());
+    if (action) {
+        emit exportSelectionTriggered(action->data().toByteArray());
     }
 }

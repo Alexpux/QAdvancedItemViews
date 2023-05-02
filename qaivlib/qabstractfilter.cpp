@@ -27,11 +27,11 @@
 class QAbstractFilterPrivate
 {
 public:
-    QAbstractFilterPrivate(QAbstractFilter* af);
+    explicit QAbstractFilterPrivate(QAbstractFilter* af);
     ~QAbstractFilterPrivate();
 
     QIcon icon;
-    QMap<QString,QVariant> properties;
+    QMap<QString, QVariant> properties;
 
     QAbstractFilter* f;
 };
@@ -55,6 +55,14 @@ QAbstractFilter::QAbstractFilter() :
     d->properties["highlightColor"] = QColor("red");
 }
 
+QAbstractFilter::QAbstractFilter(const QAbstractFilter &filter) :
+    d(new QAbstractFilterPrivate(this))
+{
+    d->properties = filter.d->properties;
+    d->properties.detach();
+    d->icon = filter.d->icon;
+}
+
 QAbstractFilter::QAbstractFilter(int type, int row, int column) :
     d(new QAbstractFilterPrivate(this))
 {
@@ -65,11 +73,11 @@ QAbstractFilter::QAbstractFilter(int type, int row, int column) :
     d->properties["highlightColor"] = QColor("red");
 }
 
-QAbstractFilter::QAbstractFilter(const QMap<QString,QVariant> & properties) :
+QAbstractFilter::QAbstractFilter(const QMap<QString, QVariant> & properties) :
     d(new QAbstractFilterPrivate(this))
 {
     QMapIterator<QString,QVariant> mIt(properties);
-    while(mIt.hasNext()){
+    while (mIt.hasNext()) {
         mIt.next();
         d->properties[mIt.key()] = mIt.value();
     }
@@ -78,6 +86,15 @@ QAbstractFilter::QAbstractFilter(const QMap<QString,QVariant> & properties) :
 QAbstractFilter::~QAbstractFilter()
 {
     delete d;
+}
+
+QAbstractFilter &QAbstractFilter::operator=(const QAbstractFilter &filter)
+{
+    d->properties.clear();
+    d->properties = filter.d->properties;
+    d->properties.detach();
+    d->icon = filter.d->icon;
+    return *this;
 }
 
 int QAbstractFilter::column() const

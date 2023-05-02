@@ -41,19 +41,19 @@ public:
     };
     QSelectionListFilter(int row, int column);
 
-    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const override;
     /**
       * Returns the data stored under the given @p role for this filter.
       * @see setData()
       * @remarks Returns an invalid QVariant if the no data exists for the given @p role.
       */
-    QVariant data(int role = Qt::DisplayRole) const;
+    QVariant data(int role = Qt::DisplayRole) const override;
     /**
      * Returns the data source used to populate the selection list.
      */
     QSelectionListFilter::DataSource dataSource() const;
 
-    bool matches(const QVariant & value, int type) const;
+    bool matches(const QVariant & value, int type) const override;
     /**
      * Sets the database @p source for the selection list.
      */
@@ -61,17 +61,17 @@ public:
     /**
      * Sets the contents of the given @p editor to the data for the filter at the given @p index. Note that the @p index contains information about the filter model being used.
      */
-    void setEditorData(QWidget * editor, const QModelIndex & index);
+    void setEditorData(QWidget * editor, const QModelIndex & index) override;
     /**
      * Sets the data for the filter at the given @p index in the filter @p model to the contents of the given @p editor.
      */
-    void setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index);
+    void setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index) override;
 
     void setValues(const QVariantList & values);
     /**
      * Updates the filter's @p editor geometry specified by index according to the style option given.
      */
-    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index);
+    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) override;
 };
 
 #endif // QSELECTIONLISTFILTER_H

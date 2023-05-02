@@ -117,13 +117,13 @@ QWidget* QRangeFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* 
     Q_UNUSED(option);
     Q_UNUSED(index);
     QRangeFilterEditor* e = new QRangeFilterEditor(parent);
-    QObject::connect(e, SIGNAL(commitAndClose(QAbstractItemDelegate::EndEditHint)), delegate, SLOT(commitAndClose(QAbstractItemDelegate::EndEditHint)));
+    QObject::connect(e, &QRangeFilterEditor::commitAndClose, delegate, &QFilterViewItemDelegate::commitAndClose);
     return e;
 }
 
 QVariant QRangeFilter::data(int role) const
 {
-    if (role == Qt::DisplayRole){
+    if (role == Qt::DisplayRole) {
         if (property("rangeFrom").toString().isNull() && property("rangeTo").toString().isNull()) {
             return QObject::tr("<any> - <any>");
         } else if (property("rangeFrom").toString().isNull() && !property("rangeTo").toString().isNull()) {
@@ -204,7 +204,7 @@ bool QRangeFilter::matches(const QVariant & value, int type) const
             return value.toTime() <= property("rangeTo").toTime();
         }
     } else if (value.type() == QVariant::UInt) {
-        if (property("rangeFrom").isValid() && property("rangeTo").isValid()){
+        if (property("rangeFrom").isValid() && property("rangeTo").isValid()) {
             return value.toUInt() >= property("rangeFrom").toUInt() && value.toUInt() <= property("rangeTo").toUInt();
         } else if (property("rangeFrom").isValid()) {
             return value.toUInt() >= property("rangeFrom").toUInt();
@@ -263,14 +263,14 @@ void QRangeFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewI
     e->showPopup();
 }
 
-QDebug operator<<(QDebug d, const QRangeFilter & f)
+QDebug operator<<(QDebug dbg, const QRangeFilter & f)
 {
-    d << "(QRegExpFilter:"
+    dbg << "(QRangeFilter:"
       << "row:" << f.row()
       << "column:" << f.column()
       << "enabled:" << f.isEnabled()
       << "from:" << f.property("rangeFrom")
       << "to:" << f.property("rangeTo")
       << ")";
-    return d.space();
+    return dbg.space();
 }

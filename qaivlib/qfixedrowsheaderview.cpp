@@ -28,7 +28,7 @@ QFixedRowsHeaderView::QFixedRowsHeaderView(Qt::Orientation orientation, QWidget 
 
 void QFixedRowsHeaderView::mouseReleaseEvent(QMouseEvent *event)
 {
-    //    if (event->button() == Qt::LeftButton && orientation() == Qt::Vertical && event->pos().x() < 32){
+    //    if (event->button() == Qt::LeftButton && orientation() == Qt::Vertical && event->pos().x() < 32) {
     //        qDebug() << "toggle";
     //    } else {
     QHeaderView::mouseReleaseEvent(event);

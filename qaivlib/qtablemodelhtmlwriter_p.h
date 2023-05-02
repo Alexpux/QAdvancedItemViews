@@ -30,7 +30,7 @@ class QTableView;
 class QTableModelHtmlWriter
 {
 public:
-    QTableModelHtmlWriter(QIODevice* device);
+    explicit QTableModelHtmlWriter(QIODevice* device);
     ~QTableModelHtmlWriter();
 
     void setIncludeHeader(bool on);

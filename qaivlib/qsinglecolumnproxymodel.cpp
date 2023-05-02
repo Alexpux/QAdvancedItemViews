@@ -24,7 +24,7 @@
 class QSingleColumnProxyModelPrivate
 {
 public:
-    QSingleColumnProxyModelPrivate(QSingleColumnProxyModel* pm);
+    explicit QSingleColumnProxyModelPrivate(QSingleColumnProxyModel* pm);
     ~QSingleColumnProxyModelPrivate();
 
     int modelColumn;

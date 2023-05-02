@@ -58,25 +58,25 @@ public:
     /**
       *  @reimp
       */
-    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const override;
 
-    void addContextMenuActions(QMenu* menu, QWidget* receiver);
+    void addContextMenuActions(QMenu* menu, QWidget* receiver) override;
     /**
       * Returns the data stored under the given @p role for this filter.
       * @see setData()
       * @remarks Returns an invalid QVariant if the no data exists for the given @p role.
       */
-    QVariant data(int role = Qt::DisplayRole) const;
+    QVariant data(int role = Qt::DisplayRole) const override;
 
-    bool matches(const QVariant & value, int type) const;
+    bool matches(const QVariant & value, int type) const override;
 
 	QSpecialFilter::MatchFlag matchFlag() const;
 
-    void setEditorData(QWidget * editor, const QModelIndex & index);
+    void setEditorData(QWidget * editor, const QModelIndex & index) override;
 
-    void setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index);
+    void setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index) override;
 
-	void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index);
+    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) override;
 };
 
 #endif // QSPECIALFILTER_H

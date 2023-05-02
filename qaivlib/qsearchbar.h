@@ -35,7 +35,7 @@ class QAIVLIBSHARED_EXPORT QSearchBar : public QWidget
 {
     Q_OBJECT
 public:
-    QSearchBar(QWidget* parent = nullptr);
+    explicit QSearchBar(QWidget* parent = nullptr);
     ~QSearchBar();
 signals:
     void expressionChanged(const QString & text);

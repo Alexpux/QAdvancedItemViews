@@ -36,7 +36,7 @@ class FilterProxyModel : public QFilterModelProxy
 {
 	Q_OBJECT
 public:
-	FilterProxyModel(QObject* parent = 0);
+    explicit FilterProxyModel(QObject* parent = nullptr);
 	~FilterProxyModel();
 };
 
@@ -44,7 +44,7 @@ class SelectionListDataProviderProxy : public QIdentityProxyModel
 {
 	Q_OBJECT
 public:
-	SelectionListDataProviderProxy(QObject* parent);
+    explicit SelectionListDataProviderProxy(QObject* parent);
 	~SelectionListDataProviderProxy();
 	QVariant data(const QModelIndex & proxyIndex, int role = Qt::DisplayRole) const;
 };
@@ -54,7 +54,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 public slots:
     void aboutQtActionTriggered();

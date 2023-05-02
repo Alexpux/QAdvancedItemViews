@@ -39,7 +39,7 @@ class QAutoFilterEditorPopup : public QFilterEditorPopupWidget
 {
     Q_OBJECT
 public:
-    QAutoFilterEditorPopup(QWidget* parent);
+    explicit QAutoFilterEditorPopup(QWidget* parent);
     ~QAutoFilterEditorPopup();
 
     int mode() const;
@@ -78,7 +78,7 @@ class QAutoFilterEditor : public QFilterEditorWidget
 {
     Q_OBJECT
 public:
-    QAutoFilterEditor(QWidget* parent = nullptr);
+    explicit QAutoFilterEditor(QWidget* parent = nullptr);
 
     QVariantList selectedValues(int role = Qt::DisplayRole) const;
 
