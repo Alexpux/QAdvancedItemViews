@@ -111,9 +111,9 @@ private slots:
     void showFilter();
 
 private:
-    void updateGeometry();
-
     QFilterViewPrivate* d;
+
+    void updateGeometry();
 };
 
 #endif // QFILTERVIEW_H

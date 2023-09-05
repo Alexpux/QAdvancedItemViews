@@ -33,8 +33,9 @@ QSearchBarPrivate::~QSearchBarPrivate()
 {
 }
 
-QSearchBar::QSearchBar(QWidget *parent)
-    : QWidget(parent), d(new QSearchBarPrivate())
+QSearchBar::QSearchBar(QWidget *parent) :
+    QWidget(parent),
+    d(new QSearchBarPrivate())
 {
     ui = new Ui::QSearchBar();
     ui->setupUi(this);
@@ -59,8 +60,7 @@ void QSearchBar::expressionChangedHandler(const QString & text)
 
 void QSearchBar::match(QAbstractItemModel* model)
 {
-    if (model == 0) {
-        return;
+    if (model) {
+        d->results = model->match(model->index(0, 0), Qt::DisplayRole, ui->expressionLineEdit->text());
     }
-    d->results = model->match(model->index(0, 0), Qt::DisplayRole, ui->expressionLineEdit->text());
 }

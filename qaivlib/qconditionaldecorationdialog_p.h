@@ -26,11 +26,10 @@
 #include <QVariant>
 
 class QAbstractItemModel;
+class QComboBox;
 class QLineEdit;
 class QModelIndex;
 class QTableView;
-class QComboBox;
-
 class ValueEdit;
 
 class RangeEdit : public QWidget
@@ -46,11 +45,12 @@ public:
     QVariant rangeFrom() const;
 
     QVariant rangeTo() const;
+
 private:
-    int m_column;
-    ValueEdit* m_fromEdit;
-    ValueEdit* m_toEdit;
-    QAbstractItemModel* m_model;
+    int m_column{0};
+    ValueEdit* m_fromEdit{nullptr};
+    ValueEdit* m_toEdit{nullptr};
+    QAbstractItemModel* m_model{nullptr};
 };
 
 
@@ -67,12 +67,14 @@ public:
     QVariantList selectedValues() const;
 
     void setSelectionMode(QAbstractItemView::SelectionMode mode);
+
 private slots:
     //void columnsComboBoxActivate(int index);
     void doubleClicked(const QModelIndex & index);
+
 private:
-    QComboBox* m_columnsComboBox;
-    QTableView* m_view;
+    QComboBox* m_columnsComboBox{nullptr};
+    QTableView* m_view{nullptr};
 };
 
 class ValueEdit : public QWidget
@@ -88,12 +90,14 @@ public:
     void setValue(const QVariant & value);
 
     QVariant value() const;
+
 private slots:
     void buttonClicked();
+
 private:
-    int m_column;
-    QLineEdit* m_edit;
-    QAbstractItemModel* m_model;
+    int m_column{0};
+    QLineEdit* m_edit{nullptr};
+    QAbstractItemModel* m_model{nullptr};
 };
 
 

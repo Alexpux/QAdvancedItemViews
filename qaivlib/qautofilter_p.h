@@ -28,12 +28,12 @@
 class QCheckBox;
 class QLineEdit;
 class QListView;
+class QProgressDialog;
 class QToolButton;
 
 class QCheckStateProxyModel;
-class QProgressDialog;
-class QUniqueValuesProxyModel;
 class QSingleColumnProxyModel;
+class QUniqueValuesProxyModel;
 
 class QAutoFilterEditorPopup : public QFilterEditorPopupWidget
 {
@@ -49,10 +49,12 @@ public:
     void setSelectedValues(const QVariantList & values);
 
     void setSourceModel(QAbstractItemModel* model, int column);
+
 signals:
     void accepted();
     void modeChanged();
     void rejected();
+
 private slots:
     void uniqueValueModelProgressChanged(int progress);
     void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
@@ -60,18 +62,19 @@ private slots:
     void notEmptyToolButtonClicked();
     void searchForTextEdited(const QString & text);
     void selectCheckBoxStateChanged(int state);
-private:
-    QToolButton* m_emptyToolButton;
-    QLineEdit* m_lineEdit;
-    QListView* m_listView;
-    int m_mode;
-    QToolButton* m_notEmptyToolButton;
-    QProgressDialog* m_progress;
-    QCheckBox* m_selectCheckBox;
 
-    QCheckStateProxyModel* m_checkStateProxy;
-    QSingleColumnProxyModel* m_singleColumnProxy;
-    QUniqueValuesProxyModel* m_singleValueProxy;
+private:
+    int m_mode{0};
+    QToolButton* m_emptyToolButton{nullptr};
+    QLineEdit* m_lineEdit{nullptr};
+    QListView* m_listView{nullptr};
+    QToolButton* m_notEmptyToolButton{nullptr};
+    QProgressDialog* m_progress{nullptr};
+    QCheckBox* m_selectCheckBox{nullptr};
+
+    QCheckStateProxyModel* m_checkStateProxy{nullptr};
+    QSingleColumnProxyModel* m_singleColumnProxy{nullptr};
+    QUniqueValuesProxyModel* m_singleValueProxy{nullptr};
 };
 
 class QAutoFilterEditor : public QFilterEditorWidget
@@ -83,6 +86,7 @@ public:
     QVariantList selectedValues(int role = Qt::DisplayRole) const;
 
     void setSourceModel(QAbstractItemModel* model, int column);
+
 public slots:
     void modeSelected();
 };

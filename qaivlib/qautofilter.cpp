@@ -28,8 +28,13 @@
 #include "quniquevaluesproxymodel.h"
 #include "qsinglecolumnproxymodel.h"
 
-#include <QtWidgets>
+#include <QCheckBox>
+#include <QDialogButtonBox>
+#include <QFrame>
+#include <QLineEdit>
 #include <QProgressDialog>
+#include <QToolButton>
+#include <QVBoxLayout>
 
 QAutoFilterEditorPopup::QAutoFilterEditorPopup(QWidget* parent) :
     QFilterEditorPopupWidget(parent)
@@ -160,7 +165,7 @@ void QAutoFilterEditorPopup::selectCheckBoxStateChanged(int state)
 QVariantList QAutoFilterEditorPopup::selectedValues(int role) const
 {
     QVariantList v;
-    for (QModelIndex mIndex : m_checkStateProxy->checkedIndexes()) {
+    for (const QModelIndex &mIndex : m_checkStateProxy->checkedIndexes()) {
         v.append(mIndex.data(role));
     }
     return v;
@@ -192,8 +197,8 @@ QAutoFilterEditor::QAutoFilterEditor(QWidget *parent) :
     setPopup(popUp);
     setFocusProxy(popUp);
     connect(popUp, &QAutoFilterEditorPopup::modeChanged, this, &QAutoFilterEditor::modeSelected);
-    connect(popUp, &QAutoFilterEditorPopup::accepted, [this](){ commitAndClose(); });
-    connect(popUp, &QAutoFilterEditorPopup::rejected, [this](){ cancelAndClose(); });
+    connect(popUp, &QAutoFilterEditorPopup::accepted, this, [=](){ emit commitAndClose(); });
+    connect(popUp, &QAutoFilterEditorPopup::rejected, this, [=](){ emit cancelAndClose(); });
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -271,9 +276,9 @@ void QAutoFilter::setEditorData(QWidget* editor, const QModelIndex & index)
 
 void QAutoFilter::setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index)
 {
-    QAutoFilterEditor* w = qobject_cast<QAutoFilterEditor*>(editor);
+    const QAutoFilterEditor* w = qobject_cast<QAutoFilterEditor*>(editor);
     if (w) {
-        QAutoFilterEditorPopup* p = qobject_cast<QAutoFilterEditorPopup*>(w->popup());
+        const QAutoFilterEditorPopup* p = qobject_cast<QAutoFilterEditorPopup*>(w->popup());
         QVariantMap properties(index.data(Qt::EditRole).toMap());
         properties["selectedValues"] = p->selectedValues();
         properties["mode"] = p->mode();

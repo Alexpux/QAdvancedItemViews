@@ -25,8 +25,8 @@
  * Constructs a QFilterEditorPopupWidget with the given @p parent.
  * Sets the window flags Qt::Popup and Qt::Window.
  */
-QFilterEditorPopupWidget::QFilterEditorPopupWidget(QWidget *parent)
-    : QFrame(parent, Qt::Popup | Qt::Window)
+QFilterEditorPopupWidget::QFilterEditorPopupWidget(QWidget *parent) :
+    QFrame(parent, Qt::Popup | Qt::Window)
 {
 }
 /**

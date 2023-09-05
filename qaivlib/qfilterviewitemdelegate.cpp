@@ -25,10 +25,9 @@
 #include "qabstractfiltermodel.h"
 #include "qfilterview.h"
 
-QFilterViewItemDelegate::QFilterViewItemDelegate(QObject* parent)
-    : QStyledItemDelegate(parent)
+QFilterViewItemDelegate::QFilterViewItemDelegate(QObject* parent) :
+    QStyledItemDelegate(parent)
 {
-    m_enableFilter = false;
 }
 
 QFilterViewItemDelegate::~QFilterViewItemDelegate()
@@ -64,7 +63,7 @@ QWidget* QFilterViewItemDelegate::createEditor(QWidget* parent, const QStyleOpti
         if (filter) {
             return filter->createEditor(const_cast<QFilterViewItemDelegate*>(this), parent, option, index);
         } else {
-            QFilterView* view = qobject_cast<QFilterView*>(parent->parentWidget());
+            const QFilterView* view = qobject_cast<QFilterView*>(parent->parentWidget());
             if (view) {
                 QVariantMap properties;
                 properties["column"] = index.column();

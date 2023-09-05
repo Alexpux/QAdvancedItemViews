@@ -29,24 +29,24 @@ class QGroupingProxyModel;
 #include <qfiltermodelproxy.h>
 
 namespace Ui {
-    class MainWindow;
+class MainWindow;
 }
 
 class FilterProxyModel : public QFilterModelProxy
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
     explicit FilterProxyModel(QObject* parent = nullptr);
-	~FilterProxyModel();
+    ~FilterProxyModel();
 };
 
 class SelectionListDataProviderProxy : public QIdentityProxyModel
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
     explicit SelectionListDataProviderProxy(QObject* parent);
-	~SelectionListDataProviderProxy();
-	QVariant data(const QModelIndex & proxyIndex, int role = Qt::DisplayRole) const;
+    ~SelectionListDataProviderProxy();
+    QVariant data(const QModelIndex & proxyIndex, int role = Qt::DisplayRole) const;
 };
 
 class MainWindow : public QMainWindow
@@ -56,17 +56,18 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
 public slots:
     void aboutQtActionTriggered();
     void advancedTableViewResultChanged(int filterRows, int unfilteredRows);
 
-	void copy();
+    void copy();
 
     void decoratedTableViewCustomContextMenuRequested(const QPoint & point);
     void decoratedGroupingTreeViewCustomContextMenuRequested(const QPoint & point);
 
-	void exportAll(const QByteArray & format);
-	void exportSelection(const QByteArray & format);
+    void exportAll(const QByteArray & format);
+    void exportSelection(const QByteArray & format);
 
     void exitActionTriggered();
 
@@ -76,13 +77,14 @@ public slots:
     void pinRowsToolButtonClicked();
     void populatePushButtonClicked();
 
-	void restoreStateToolButtonClicked();
+    void restoreStateToolButtonClicked();
 
-	void saveStateToolButtonClicked();
-	void search();
-	void search(const QString & expression);
-	void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
+    void saveStateToolButtonClicked();
+    void search();
+    void search(const QString & expression);
+    void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
     void splitActionTriggered();
+
 private:
     void initModel();
     void initTabAdvancedTableView();
@@ -95,7 +97,7 @@ private:
 
     void initTabUniqueValuesProxyModel();
 
-	QByteArray m_state;
+    QByteArray m_state;
     QGroupingProxyModel* m_groupingProxy;
     QStandardItemModel* m_model;
     Ui::MainWindow *ui;

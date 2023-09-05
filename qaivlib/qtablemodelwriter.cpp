@@ -37,16 +37,16 @@ class QTableModelWriterPrivate
 public:
     explicit QTableModelWriterPrivate(QTableModelWriter* pc);
 
-    QIODevice* device;
-    QTableModelWriter* c;
-    bool deleteDevice;
-    bool includeHeader;
-    int role;
+    bool deleteDevice{true};
+    bool includeHeader{true};
+    int role{Qt::DisplayRole};
+    QIODevice* device{nullptr};
+    QTableModelWriter* c{nullptr};
     QByteArray format;
 };
 
 QTableModelWriterPrivate::QTableModelWriterPrivate(QTableModelWriter* pc) :
-    device(0), c(pc), deleteDevice(true), includeHeader(true), role(Qt::DisplayRole)
+    c(pc)
 {
 }
 
@@ -194,8 +194,9 @@ bool QTableModelWriter::write(QAdvancedTableView* view, bool all)
 {
     QByteArray suffix;
 
-    if (!d->device)
+    if (!d->device) {
         return false;
+    }
 
     if (d->format.isEmpty()) {
         if (QFile *file = qobject_cast<QFile *>(d->device)) {

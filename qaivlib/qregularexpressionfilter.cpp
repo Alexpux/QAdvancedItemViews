@@ -31,8 +31,8 @@
 
 #include "qclickablelabel.h"
 
-QRegularExpressionFilterEditor::QRegularExpressionFilterEditor(QWidget* parent)
-    : QWidget(parent)
+QRegularExpressionFilterEditor::QRegularExpressionFilterEditor(QWidget* parent) :
+    QWidget(parent)
 {
     QHBoxLayout* l = new QHBoxLayout(this);
     l->setSpacing(0);
@@ -154,7 +154,7 @@ void QRegularExpressionFilter::setEditorData(QWidget * editor, const QModelIndex
 
 void QRegularExpressionFilter::setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index)
 {
-    QRegularExpressionFilterEditor* w = qobject_cast<QRegularExpressionFilterEditor*>(editor);
+    const QRegularExpressionFilterEditor* w = qobject_cast<QRegularExpressionFilterEditor*>(editor);
     if (w) {
         QVariantMap p(index.data(Qt::EditRole).toMap());
         p["pattern"] = w->pattern();
@@ -175,11 +175,11 @@ void QRegularExpressionFilter::updateEditorGeometry(QWidget* editor, const QStyl
 QDebug operator<<(QDebug dbg, const QRegularExpressionFilter & f)
 {
     dbg << "(QRegExpFilter:"
-      << "row:" << f.row()
-      << "column:" << f.column()
-      << "enabled:" << f.isEnabled()
-      << "caseSensitivity:" << static_cast<Qt::CaseSensitivity>(f.property("caseSensitivity").toInt())
-      << "pattern:" << f.property("pattern").toString()
-      << ")";
+        << "row:" << f.row()
+        << "column:" << f.column()
+        << "enabled:" << f.isEnabled()
+        << "caseSensitivity:" << static_cast<Qt::CaseSensitivity>(f.property("caseSensitivity").toInt())
+        << "pattern:" << f.property("pattern").toString()
+        << ")";
     return dbg.space();
 }

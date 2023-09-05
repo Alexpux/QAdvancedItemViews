@@ -121,7 +121,7 @@ public:
     /**
       * Returns the filter's properties.
       */
-    QMap<QString,QVariant> properties() const;
+    QMap<QString, QVariant> properties() const;
     /**
       * Returns the number of the row (group) that contains this filter.
       */
@@ -157,11 +157,12 @@ protected:
       * Constructs a filter definition with the given @p type and @p column index.
       */
     QAbstractFilter(int type, int row, int column);
+
 private:
     friend class QAbstractFilterModel;
-    void setRow(int row);
-
     QAbstractFilterPrivate* d;
+
+    void setRow(int row);
 };
 
 /**

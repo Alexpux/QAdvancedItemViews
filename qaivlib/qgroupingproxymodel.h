@@ -218,11 +218,13 @@ public:
     void setUngroupedItemTitle(const QString & title);
     void setUngroupedItemTitle(const QString & title, const QIcon & icon);
     virtual QSize span(const QModelIndex & index) const;
+
 private slots:
     void dataChangedHandler(const QModelIndex & topLeft, const QModelIndex & bottomRight);
     void sourceModelResetHandler();
     void rowsAboutToBeInsertedHandler(const QModelIndex & parent, int start, int end);
     void rowsInsertedHandler(const QModelIndex & parent, int first, int last);
+
 private:
     void buildGroups();
 
@@ -232,9 +234,9 @@ private:
     void moveRows(int row, int count);
     void removeSourceModelRow(int sourceModelRow);
 
-    QString m_groupSectionHeader;
-    QGroupingProxyModelGroup* m_groupUngroupedItem;
     QGroupingProxyModelPrivate* d;
+    QGroupingProxyModelGroup* m_groupUngroupedItem{nullptr};
+    QString m_groupSectionHeader;
 };
 
 #endif // QGROUPINGPROXYMODEL_H

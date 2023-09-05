@@ -82,11 +82,14 @@ public:
      * @reimp QSortFilterProxyModel::setSourceModel()
      */
     void setSourceModel(QAbstractItemModel* sourceModel);
+
 signals:
     void progressChanged(int progress);
+
 private slots:
     void buildMap();
     void sourceModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+
 private:
     QUniqueValuesProxyModelPrivate* d;
 

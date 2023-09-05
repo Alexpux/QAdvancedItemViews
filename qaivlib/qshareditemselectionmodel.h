@@ -40,6 +40,7 @@ public:
      * Destroys the QSharedItemSelectionModel.
      */
     ~QSharedItemSelectionModel();
+
 public slots:
     /**
      * @reimp QItemSelectionModel::select()
@@ -49,8 +50,10 @@ public slots:
      * @reimp QItemSelectionModel::select()
      */
     void select(const QItemSelection & selection, QItemSelectionModel::SelectionFlags command);
+
 private slots:
     void sharedSelectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
+
 private:
     QSharedItemSelectionModelPrivate* d;
 };

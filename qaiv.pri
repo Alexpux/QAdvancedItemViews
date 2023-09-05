@@ -1,4 +1,6 @@
-QAIVLIB=qaivlib
+QAIVLIB = qaivlib
+
+CONFIG += c++17
 
 win32 {
   contains(QMAKE_HOST.arch, x86_64) {

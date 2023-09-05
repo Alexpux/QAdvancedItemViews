@@ -19,7 +19,18 @@
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-#include <QtWidgets>
+#include <QAction>
+#include <QCheckBox>
+#include <QContextMenuEvent>
+#include <QDialogButtonBox>
+#include <QInputDialog>
+#include <QLineEdit>
+#include <QMenu>
+#include <QMessageBox>
+#include <QSortFilterProxyModel>
+#include <QStandardItemModel>
+#include <QTableView>
+#include <QVBoxLayout>
 
 #include "qadvancedheaderview.h"
 #include "qadvancedheaderview_p.h"
@@ -27,8 +38,8 @@
 #include "qabstractfiltermodel.h"
 #include "qfilterview.h"
 
-ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView* headerView)
-    : QDialog(headerView)
+ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView* headerView) :
+    QDialog(headerView)
 {
     setWindowTitle(tr("More columns..."));
     QVBoxLayout* l = new QVBoxLayout(this);
@@ -37,7 +48,7 @@ ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView* headerView)
     e->setPlaceholderText(tr("Search for..."));
     connect(e, &QLineEdit::textEdited, this, &ShowMoreColumnsDialog::textEdited);
     l->addWidget(e);
-    //
+
     m_view = new QTableView(this);
     m_view->setSelectionMode(QAbstractItemView::SingleSelection);
     m_view->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -120,7 +131,6 @@ void QAdvancedHeaderView::contextMenuEvent(QContextMenuEvent* event)
 {
     QAction* a;
     QMenu menu;
-    QAbstractFilterModel* filterModel = qobject_cast<QAbstractFilterModel*>(model());
     if (orientation() == Qt::Horizontal) {
         int column = logicalIndexAt(event->pos());
         if (column > -1) {
@@ -148,6 +158,8 @@ void QAdvancedHeaderView::contextMenuEvent(QContextMenuEvent* event)
             columnsMenu->addSeparator();
             columnsMenu->addAction(tr("More Columns..."), this, &QAdvancedHeaderView::moreColumnsActionTriggered);
         }
+
+        const QAbstractFilterModel* filterModel = qobject_cast<QAbstractFilterModel*>(model());
         if (filterModel) {
             menu.addSeparator();
             QMenu* modeMenu = menu.addMenu(tr("Mode"));
@@ -164,8 +176,9 @@ void QAdvancedHeaderView::contextMenuEvent(QContextMenuEvent* event)
             a->setCheckable(true);
             a->setChecked(filterModel->matchMode() == QAdvancedItemViews::MatchInverted);
         }
-        QFilterView* mvew = qobject_cast<QFilterView*>(parentWidget());
-        if (mvew != 0) {
+
+        const QFilterView* mvew = qobject_cast<QFilterView*>(parentWidget());
+        if (mvew) {
             menu.addSeparator();
             if (mvew->filterVisible()) {
                 menu.addAction(tr("Hide Filter"), this, &QAdvancedHeaderView::hideFilterActionTriggered);
@@ -295,7 +308,7 @@ void QAdvancedHeaderView::showFilterActionTriggered()
 
 void QAdvancedHeaderView::toggleSortOrderActionTriggered()
 {
-    QAction* a = qobject_cast<QAction*>(sender());
+    const QAction* a = qobject_cast<QAction*>(sender());
     if (a) {
         Qt::SortOrder sortOrder = sortIndicatorOrder();
         if (sortOrder == Qt::AscendingOrder) {

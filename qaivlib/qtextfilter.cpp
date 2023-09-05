@@ -146,8 +146,9 @@ QWidget* QTextFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* p
 void QTextFilter::addContextMenuActions(QMenu* menu, QWidget* receiver)
 {
     QFilterView *receiver_filter = qobject_cast<QFilterView *>(receiver);
-    if (!receiver_filter)
+    if (!receiver_filter) {
         return;
+    }
 
     QVariantMap mDefaultProperties;
     QVariantMap mPropertiesToChange;
@@ -229,7 +230,7 @@ void QTextFilter::setEditorData(QWidget * editor, const QModelIndex & index)
 
 void QTextFilter::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index)
 {
-    QTextFilterEditor* e = qobject_cast<QTextFilterEditor*>(editor);
+    const QTextFilterEditor* e = qobject_cast<QTextFilterEditor*>(editor);
     if (e) {
         QVariantMap p(index.data(Qt::EditRole).toMap());
         p["value"] = e->text();
@@ -251,11 +252,11 @@ void QTextFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewIt
 QDebug operator<<(QDebug dbg, const QTextFilter & f)
 {
     dbg << "(QValueFilter:"
-      << "row:" << f.row()
-      << "column:" << f.column()
-      << "enabled:" << f.isEnabled()
-      << "text:" << f.property("value").toString()
-      << "matchFlag" << static_cast<Qt::MatchFlag>(f.property("matchFlag").toInt())
-      << ")";
+        << "row:" << f.row()
+        << "column:" << f.column()
+        << "enabled:" << f.isEnabled()
+        << "text:" << f.property("value").toString()
+        << "matchFlag" << static_cast<Qt::MatchFlag>(f.property("matchFlag").toInt())
+        << ")";
     return dbg.space();
 }

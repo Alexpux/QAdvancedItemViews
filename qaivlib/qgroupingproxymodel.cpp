@@ -31,23 +31,18 @@ public:
     explicit QGroupingProxyModelPrivate(QGroupingProxyModel* pm);
     ~QGroupingProxyModelPrivate();
 
-    bool groupsSpanned;
-    int modelColumn;
-    int groupItemDataRole;
-    QGroupingProxyModelGroup* root;
-    QAbstractItemModel* sourceModel;
+    bool groupsSpanned{false};
+    int modelColumn{0};
+    int groupItemDataRole{Qt::DisplayRole};
+    QGroupingProxyModelGroup* root{nullptr};
+    QAbstractItemModel* sourceModel{nullptr};
 
-    QGroupingProxyModel* m;
+    QGroupingProxyModel* m{nullptr};
 };
 
-QGroupingProxyModelPrivate::QGroupingProxyModelPrivate(QGroupingProxyModel *pm)
+QGroupingProxyModelPrivate::QGroupingProxyModelPrivate(QGroupingProxyModel *pm) :
+    m{pm}
 {
-    groupItemDataRole = Qt::DisplayRole;
-    groupsSpanned = false;
-    modelColumn = 0;
-    root = nullptr;
-    sourceModel = nullptr;
-    m = pm;
 }
 
 QGroupingProxyModelPrivate::~QGroupingProxyModelPrivate()
@@ -61,7 +56,6 @@ QGroupingProxyModelGroup::QGroupingProxyModelGroup(QGroupingProxyModelGroup* par
     if (cParent) {
         cParent->cChildren.append(this);
     }
-    cSourceModelRow = -1;
 }
 
 QGroupingProxyModelGroup::QGroupingProxyModelGroup(int sourceModelRow, QGroupingProxyModelGroup *parent)
@@ -117,7 +111,7 @@ QGroupingProxyModelGroup *QGroupingProxyModelGroup::findSourceModelRow(int sourc
         return const_cast<QGroupingProxyModelGroup*>(this);
     }
 
-    for (QGroupingProxyModelGroup* item : cChildren) {
+    for (const QGroupingProxyModelGroup* item : cChildren) {
         QGroupingProxyModelGroup* grp = item->findSourceModelRow(sourceModelRow);
         if (grp) {
             return grp;
@@ -132,8 +126,8 @@ QGroupingProxyModelGroup* QGroupingProxyModelGroup::group(int sourceModelRow) co
         return parent();
     }
 
-    for (QGroupingProxyModelGroup* item : cChildren) {
-        QGroupingProxyModelGroup* grp = item->findSourceModelRow(sourceModelRow);
+    for (const QGroupingProxyModelGroup* item : cChildren) {
+        const QGroupingProxyModelGroup* grp = item->findSourceModelRow(sourceModelRow);
         if (grp) {
             return grp->parent();
         }
@@ -164,7 +158,7 @@ QGroupingProxyModelGroup* QGroupingProxyModelGroup::matches(const QVariant & val
     if (cParent && data(Qt::EditRole) == value) {
         return const_cast<QGroupingProxyModelGroup*>(this);
     }
-    for (QGroupingProxyModelGroup* item : cChildren) {
+    for (const QGroupingProxyModelGroup* item : cChildren) {
         QGroupingProxyModelGroup* grp = item->matches(value);
         if (grp) {
             return grp;
@@ -195,6 +189,7 @@ void QGroupingProxyModelGroup::removeChildAtSourceModelRow(int sourceModelRow)
     for (int iChild = 0; iChild < cChildren.size(); iChild++) {
         if (cChildren.at(iChild)->sourceModelRow() == sourceModelRow) {
             delete cChildren.takeAt(iChild);
+            break;
         }
     }
 }
@@ -304,7 +299,7 @@ QVariant QGroupingProxyModel::data(const QModelIndex & proxyIndex, int role) con
 
     //        }
     //    }
-    QGroupingProxyModelGroup* item = static_cast<QGroupingProxyModelGroup*>(proxyIndex.internalPointer());
+    const QGroupingProxyModelGroup* item = static_cast<QGroupingProxyModelGroup*>(proxyIndex.internalPointer());
     if (item->parent() == d->root) {
         if (proxyIndex.column() == 0) {
             if (role == Qt::DisplayRole) {
@@ -325,7 +320,7 @@ QVariant QGroupingProxyModel::data(const QModelIndex & proxyIndex, int role) con
 
 Qt::ItemFlags QGroupingProxyModel::flags(const QModelIndex & index) const
 {
-    QGroupingProxyModelGroup* item = static_cast<QGroupingProxyModelGroup*>(index.internalPointer());
+    const QGroupingProxyModelGroup* item = static_cast<QGroupingProxyModelGroup*>(index.internalPointer());
     if (item && item->parent() == d->root) {
         return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     } else {
@@ -392,7 +387,7 @@ QModelIndex QGroupingProxyModel::mapFromSource(const QModelIndex & sourceIndex) 
 
 QModelIndex QGroupingProxyModel::mapToSource(const QModelIndex & proxyIndex) const
 {
-    QGroupingProxyModelGroup* item = static_cast<QGroupingProxyModelGroup*>(proxyIndex.internalPointer());
+    const QGroupingProxyModelGroup* item = static_cast<QGroupingProxyModelGroup*>(proxyIndex.internalPointer());
     if (item == d->root) {
         return QModelIndex();
     }

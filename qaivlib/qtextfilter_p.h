@@ -44,16 +44,18 @@ public:
     void setText(const QString & text);
 
     QString text() const;
+
 private slots:
     void sensitivityLabelClicked(Qt::MouseButtons buttons);
     void matchFlagsLabelClicked(Qt::MouseButtons buttons);
+
 private:
     Qt::CaseSensitivity cSensitivity;
     Qt::MatchFlag cMatchFlag;
 
-    QLineEdit* cValueLineEdit;
-    QClickableLabel* cSensitivityLabel;
-    QClickableLabel* cMatchFlagsLabel;
+    QLineEdit* cValueLineEdit{nullptr};
+    QClickableLabel* cSensitivityLabel{nullptr};
+    QClickableLabel* cMatchFlagsLabel{nullptr};
 };
 
 #endif // QTEXTFILTER_P_H

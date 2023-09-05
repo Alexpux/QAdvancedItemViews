@@ -31,22 +31,19 @@ public:
     explicit QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel* pm);
     ~QUniqueValuesProxyModelPrivate();
 
-    bool emptyValues;
-    int modelColumn;
-    MT<QString,QList<int> > valueMap;
-    QUniqueValuesProxyModel* m;
+    bool emptyValues{true};
+    int modelColumn{0};
+    QUniqueValuesProxyModel* m{nullptr};
+    MT<QString, QList<int>> valueMap;
 };
 
-QUniqueValuesProxyModelPrivate::QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel *pm)
+QUniqueValuesProxyModelPrivate::QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel *pm) :
+    m{pm}
 {
-    emptyValues = true;
-    modelColumn = 0;
-    m = pm;
 }
 
 QUniqueValuesProxyModelPrivate::~QUniqueValuesProxyModelPrivate()
 {
-
 }
 
 QUniqueValuesProxyModel::QUniqueValuesProxyModel(QObject *parent) :
@@ -111,7 +108,7 @@ bool QUniqueValuesProxyModel::isDuplicate(int row) const
             return false;
         }
     }
-    MT<QString, QList<int> >::ConstIterator mIt = d->valueMap.constFind(v.toString());
+    MT<QString, QList<int>>::ConstIterator mIt = d->valueMap.constFind(v.toString());
     if (mIt == d->valueMap.constEnd()) {
         return true;
     }
@@ -128,10 +125,10 @@ void QUniqueValuesProxyModel::buildMap()
     if (sourceModel() == 0) {
         return;
     }
-    MT<QString, QList<int> >::Iterator it;
+    MT<QString, QList<int>>::Iterator it;
     int c = sourceModel()->rowCount();
     int max = 0;
-    for(int iRow = 0; iRow < c; iRow++) {
+    for (int iRow = 0; iRow < c; iRow++) {
         QVariant v = sourceModel()->index(iRow, d->modelColumn).data(filterRole());
         it = d->valueMap.find(v.toString());
         if (it == d->valueMap.end()) {
@@ -148,7 +145,7 @@ void QUniqueValuesProxyModel::buildMap()
     }
     emit progressChanged(100);
     endResetModel();
-    //    invalidate();
+    // invalidate();
 }
 
 void QUniqueValuesProxyModel::setEmptyItemsAllowed(bool on)

@@ -45,6 +45,7 @@ public:
     ~QFilterModelProxy();
 
     QVariant data(const QModelIndex & index, int role) const override;
+
 protected:
     /**
      * @reimp

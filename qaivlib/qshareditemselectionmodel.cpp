@@ -27,15 +27,13 @@ public:
     explicit QSharedItemSelectionModelPrivate(QSharedItemSelectionModel* sm);
     ~QSharedItemSelectionModelPrivate();
 
-    QItemSelectionModel* shared;
-
-    QSharedItemSelectionModel* m;
+    QItemSelectionModel* shared{nullptr};
+    QSharedItemSelectionModel* m{nullptr};
 };
 
-QSharedItemSelectionModelPrivate::QSharedItemSelectionModelPrivate(QSharedItemSelectionModel *sm)
+QSharedItemSelectionModelPrivate::QSharedItemSelectionModelPrivate(QSharedItemSelectionModel *sm) :
+    m{sm}
 {
-    m = sm;
-    shared = nullptr;
 }
 
 QSharedItemSelectionModelPrivate::~QSharedItemSelectionModelPrivate()

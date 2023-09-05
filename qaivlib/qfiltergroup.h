@@ -84,10 +84,11 @@ public:
      * @see name()
      */
     void setName(const QString & name);
+
 private:
-    QList<QAbstractFilter*> cFilterList;
-    bool cEnabled;
+    bool cEnabled{false};
     QString cName;
+    QList<QAbstractFilter*> cFilterList;
 };
 
 #endif // QFILTERGROUP_H

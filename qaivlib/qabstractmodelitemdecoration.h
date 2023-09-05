@@ -56,7 +56,7 @@ public:
     /**
       * Returns the filter's properties.
       */
-    QMap<QString,QVariant> properties() const;
+    QMap<QString, QVariant> properties() const;
     /**
      * Restore the decoration's state and properties to the @p state specified.
      * @sa saveState()
@@ -73,6 +73,7 @@ public:
     void setProperty(const QString & name, const QVariant & value);
 
     void setProperties(const QVariantMap & properties);
+
 private:
     QAbstractItemModelDecorationPrivate* d;
 };

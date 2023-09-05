@@ -23,10 +23,9 @@
 
 #include <QtCore/QtPlugin>
 
-QAdvancedTableViewPlugin::QAdvancedTableViewPlugin(QObject *parent)
-    : QObject(parent)
+QAdvancedTableViewPlugin::QAdvancedTableViewPlugin(QObject *parent) :
+    QObject(parent)
 {
-    m_initialized = false;
 }
 
 void QAdvancedTableViewPlugin::initialize(QDesignerFormEditorInterface * /* core */)
@@ -89,4 +88,3 @@ QString QAdvancedTableViewPlugin::includeFile() const
     return QLatin1String("qadvancedtableview.h");
 }
 
-//Q_EXPORT_PLUGIN2(qadvancedtableviewplugin, QAdvancedTableViewPlugin)

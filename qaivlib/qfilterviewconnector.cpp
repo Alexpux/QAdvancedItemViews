@@ -31,8 +31,6 @@ QFilterViewConnector::QFilterViewConnector(QFilterView* filterView) :
     QObject(filterView)
 {
     cFilterView = filterView;
-    cTableView = nullptr;
-    cTreeView = nullptr;
 
     if (cFilterView) {
         connect(cFilterView->horizontalHeader(), &QHeaderView::sectionMoved, this, &QFilterViewConnector::filterViewHorizontalSectionMoved);
@@ -46,7 +44,6 @@ QFilterViewConnector::QFilterViewConnector(QFilterView* filterView, QTableView* 
 {
     cFilterView = filterView;
     cTableView = tableView;
-    cTreeView = nullptr;
 
     if (cTableView) {
         connect(cFilterView->horizontalHeader(), &QHeaderView::sectionMoved, this, &QFilterViewConnector::filterViewHorizontalSectionMoved);
@@ -60,7 +57,6 @@ QFilterViewConnector::QFilterViewConnector(QFilterView* filterView, QTreeView* t
     QObject(parent)
 {
     cFilterView = filterView;
-    cTableView = nullptr;
     cTreeView = treeView;
 
     if (cFilterView) {
@@ -128,14 +124,16 @@ void QFilterViewConnector::adjustVerticalHeaderWidth()
 
 void QFilterViewConnector::dataViewHorizontalScrollBarRangeChanged(int min, int max)
 {
-    if (cFilterView)
+    if (cFilterView) {
         cFilterView->horizontalScrollBar()->setRange(min, max);
+    }
 }
 
 void QFilterViewConnector::dataViewHorizontalScrollBarSilderMoved(int value)
 {
-    if (cFilterView)
+    if (cFilterView) {
         cFilterView->horizontalScrollBar()->setValue(value);
+    }
 }
 
 void QFilterViewConnector::dataViewHorizontalSortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
@@ -150,15 +148,17 @@ void QFilterViewConnector::dataViewHorizontalSortIndicatorChanged(int logicalInd
 void QFilterViewConnector::dataViewHorizontalSectionMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex)
 {
     Q_UNUSED(logicalIndex);
-    if (cFilterView)
+    if (cFilterView) {
         cFilterView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
+    }
 }
 
 void QFilterViewConnector::dataViewHorizontalSectionResized(int logicalIndex, int oldSize, int newSize)
 {
     Q_UNUSED(oldSize);
-    if (cFilterView)
+    if (cFilterView) {
         cFilterView->horizontalHeader()->resizeSection(logicalIndex, newSize);
+    }
 }
 
 void QFilterViewConnector::dataViewVerticalScrollBarRangeChanged(int min, int max)

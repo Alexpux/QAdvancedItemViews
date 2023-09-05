@@ -26,11 +26,6 @@
 class QAdvancedTableViewPlugin : public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
-#if QT_VERSION >= 0x050000
-
-#else
-
-#endif
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
@@ -49,7 +44,7 @@ public:
     void initialize(QDesignerFormEditorInterface *core);
 
 private:
-    bool m_initialized;
+    bool m_initialized{false};
 };
 
 #endif

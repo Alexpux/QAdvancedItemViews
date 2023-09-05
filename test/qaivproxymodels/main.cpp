@@ -1,4 +1,4 @@
-#include <QtTest/QtTest>
+#include <QTest>
 
 #include <QMetaType>
 #include <QModelIndex>
@@ -21,16 +21,16 @@ public:
     {
         return m_model;
     }
+
 protected:
     void initModel();
+
 private:
-    QStandardItemModel* m_model;
+    QStandardItemModel* m_model{nullptr};
 };
 
-QTestCase::QTestCase(QObject *parent) : QObject(parent),
-    m_model(nullptr)
+QTestCase::QTestCase(QObject *parent) : QObject(parent)
 {
-
 }
 
 void QTestCase::initModel()
@@ -84,6 +84,7 @@ public:
     {
         return m_proxy;
     }
+
 private slots:
     void cleanup();
     void data();
@@ -96,17 +97,15 @@ private slots:
     void setCheckedIndexes();
     void setColumnCheckable();
     void setSourceModel();
+
 private:
-    QAdvancedTableView* m_view;
-    QCheckStateProxyModel* m_proxy;
+    QAdvancedTableView* m_view{nullptr};
+    QCheckStateProxyModel* m_proxy{nullptr};
 };
 
 QCheckStateProxyModelTestCase::QCheckStateProxyModelTestCase(QObject *parent) :
-    QTestCase(parent),
-    m_view(nullptr),
-    m_proxy(nullptr)
+    QTestCase(parent)
 {
-
 }
 
 void QCheckStateProxyModelTestCase::cleanup()

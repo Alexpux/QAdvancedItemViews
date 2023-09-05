@@ -96,6 +96,7 @@ public:
       * Returns the value at the given @p index.
       */
     QVariant value(int index) const;
+
 private:
     bool equal(const QVariant & left, const QVariant & right) const;
     bool greaterOrEqualThan(const QVariant & left, const QVariant & right) const;

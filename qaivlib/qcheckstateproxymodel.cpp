@@ -27,16 +27,14 @@ public:
     explicit QCheckStateProxyModelPrivate(QCheckStateProxyModel* pm);
     ~QCheckStateProxyModelPrivate();
 
+    QCheckStateProxyModel* m{nullptr};
     QList<QModelIndex> checkedIndexes;
-    QList<int> columns;
-
-    QCheckStateProxyModel* m;
+    QList<int> columns{0};
 };
 
-QCheckStateProxyModelPrivate::QCheckStateProxyModelPrivate(QCheckStateProxyModel *pm)
+QCheckStateProxyModelPrivate::QCheckStateProxyModelPrivate(QCheckStateProxyModel *pm) :
+    m{pm}
 {
-    columns << 0;
-    m = pm;
 }
 
 QCheckStateProxyModelPrivate::~QCheckStateProxyModelPrivate()
@@ -44,7 +42,8 @@ QCheckStateProxyModelPrivate::~QCheckStateProxyModelPrivate()
 }
 
 QCheckStateProxyModel::QCheckStateProxyModel(QObject *parent) :
-    QIdentityProxyModel(parent), d(new QCheckStateProxyModelPrivate(this))
+    QIdentityProxyModel(parent),
+    d(new QCheckStateProxyModelPrivate(this))
 {
 }
 
@@ -58,7 +57,7 @@ int QCheckStateProxyModel::checkableColumnsCount() const
     return d->columns.size();
 }
 
-QModelIndexList QCheckStateProxyModel::checkedIndexes() const
+const QModelIndexList &QCheckStateProxyModel::checkedIndexes() const
 {
     return d->checkedIndexes;
 }
@@ -153,7 +152,7 @@ void QCheckStateProxyModel::setCheckedValues(int column, const QVariantList & va
     if (column < columnCount()) {
         d->checkedIndexes.clear();
         QModelIndex mIndex;
-        for(int iRow = 0; iRow < sourceModel()->rowCount(); iRow++) {
+        for (int iRow = 0; iRow < sourceModel()->rowCount(); iRow++) {
             mIndex = mapFromSource(sourceModel()->index(iRow, column));
             if (values.contains(mIndex.data())) {
                 d->checkedIndexes.append(mIndex);

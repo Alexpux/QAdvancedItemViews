@@ -48,19 +48,10 @@
 class QAdvancedTableViewPrivate
 {
 public:
-    explicit QAdvancedTableViewPrivate(QAdvancedTableView* tv)
+    explicit QAdvancedTableViewPrivate(QAdvancedTableView* tv) :
+        v{tv}
     {
-        autoResizeRowsToContents = false;
-        autoResizeColumnsToFitView = true;
-        defaultFilterType = QTextFilter::Type;
         dataViewProxy = new QFilterModelProxy(tv);
-        filterModel = nullptr;
-        model = nullptr;
-        horizontalHeader = nullptr;
-        horizontalScrollBarPolicy = Qt::ScrollBarAsNeeded;
-        verticalHeader = nullptr;
-        splittedViewSelectionModel = nullptr;
-        v = tv;
     }
 
     QAdvancedTableViewPrivate(const QAdvancedTableViewPrivate &other) {
@@ -104,19 +95,19 @@ public:
     {
     }
 
-    bool autoResizeRowsToContents;
-    bool autoResizeColumnsToFitView;
-    int defaultFilterType;
-    QMap<int, int> columnSpareWidthParts;
-    QAbstractFilterProxyModel* dataViewProxy;
-    QAbstractFilterModel* filterModel;
-    QAbstractItemModel* model;
-    QAdvancedHeaderView* horizontalHeader;
-    Qt::ScrollBarPolicy horizontalScrollBarPolicy;
-    QAdvancedHeaderView* verticalHeader;
-    QSharedItemSelectionModel* splittedViewSelectionModel;
+    bool autoResizeRowsToContents{false};
+    bool autoResizeColumnsToFitView{true};
+    int defaultFilterType{QTextFilter::Type};
 
-    QAdvancedTableView* v;
+    QAdvancedTableView* v{nullptr};
+    QAbstractFilterProxyModel* dataViewProxy{nullptr};
+    QAbstractFilterModel* filterModel{nullptr};
+    QAbstractItemModel* model{nullptr};
+    QAdvancedHeaderView* horizontalHeader{nullptr};
+    Qt::ScrollBarPolicy horizontalScrollBarPolicy{Qt::ScrollBarAsNeeded};
+    QAdvancedHeaderView* verticalHeader{nullptr};
+    QSharedItemSelectionModel* splittedViewSelectionModel{nullptr};
+    QMap<int, int> columnSpareWidthParts;
 };
 
 
@@ -125,7 +116,8 @@ public:
 //-----------------------------------------------
 
 QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
-    QWidget(parent), ui(new Ui::QAdvancedTableView)
+    QWidget(parent),
+    ui(new Ui::QAdvancedTableView)
 {
     d = new QAdvancedTableViewPrivate(this);
     ui->setupUi(this);
@@ -747,7 +739,6 @@ QByteArray QAdvancedTableView::saveFilter() const
             if (!mProperties.isEmpty()) {
                 mStream << qint32(iRow) << qint32(iCol) << mProperties;
             }
-
         }
     }
     return mData;
@@ -931,7 +922,7 @@ void QAdvancedTableView::setModel(QAbstractItemModel* model)
 
     horizontalHeader()->setModel(d->model);
 
-    for(int iCol = 0; iCol < d->horizontalHeader->count(); iCol++) {
+    for (int iCol = 0; iCol < d->horizontalHeader->count(); iCol++) {
         ui->dataTableView->horizontalHeader()->resizeSection(iCol, d->horizontalHeader->sectionSize(iCol));
         ui->dataTableView->horizontalHeader()->moveSection(ui->dataTableView->horizontalHeader()->visualIndex(iCol), d->horizontalHeader->visualIndex(iCol));
     }

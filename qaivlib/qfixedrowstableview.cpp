@@ -29,17 +29,14 @@ public:
     explicit QFixedRowsTableViewPrivate(QFixedRowsTableView* tv);
     ~QFixedRowsTableViewPrivate();
 
-    QFixedRowsFilterProxyModel* filterProxy;
-    QFixedRowsDecorationProxyModel* decorationProxy;
-
-    QFixedRowsTableView* v;
+    QFixedRowsFilterProxyModel* filterProxy{nullptr};
+    QFixedRowsDecorationProxyModel* decorationProxy{nullptr};
+    QFixedRowsTableView* v{nullptr};
 };
 
-QFixedRowsTableViewPrivate::QFixedRowsTableViewPrivate(QFixedRowsTableView *tv)
+QFixedRowsTableViewPrivate::QFixedRowsTableViewPrivate(QFixedRowsTableView *tv) :
+    v{tv}
 {
-    decorationProxy = nullptr;
-    filterProxy = nullptr;
-    v = tv;
 }
 
 QFixedRowsTableViewPrivate::~QFixedRowsTableViewPrivate()
@@ -49,48 +46,30 @@ QFixedRowsTableViewPrivate::~QFixedRowsTableViewPrivate()
 class QFixedRowsDecorationProxyModelPrivate
 {
 public:
-    explicit QFixedRowsDecorationProxyModelPrivate(QFixedRowsDecorationProxyModel* pm);
-    ~QFixedRowsDecorationProxyModelPrivate();
+    explicit QFixedRowsDecorationProxyModelPrivate(QFixedRowsDecorationProxyModel* pm) : m{pm} {}
+    ~QFixedRowsDecorationProxyModelPrivate() {}
 
-    bool enabled;
+    bool enabled{false};
+    QFixedRowsDecorationProxyModel* m{nullptr};
     QPointer<QFixedRowsFilterProxyModel> filterProxy;
-    QList<QPersistentModelIndex> rows;
-
-    QFixedRowsDecorationProxyModel* m;
+    //QList<QPersistentModelIndex> rows;
 };
-
-QFixedRowsDecorationProxyModelPrivate::QFixedRowsDecorationProxyModelPrivate(QFixedRowsDecorationProxyModel *pm)
-{
-    enabled = false;
-    m = pm;
-}
-
-QFixedRowsDecorationProxyModelPrivate::~QFixedRowsDecorationProxyModelPrivate()
-{
-
-}
 
 class QFixedRowsFilterProxyModelPrivate
 {
 public:
-    explicit QFixedRowsFilterProxyModelPrivate(QFixedRowsFilterProxyModel* pm)
-    {
-        enabled = false;
-        m = pm;
-    }
+    explicit QFixedRowsFilterProxyModelPrivate(QFixedRowsFilterProxyModel* pm) : m{pm} {}
 
-    ~QFixedRowsFilterProxyModelPrivate()
-    {
-    }
+    ~QFixedRowsFilterProxyModelPrivate() {}
 
-    bool enabled;
+    bool enabled{false};
+    QFixedRowsFilterProxyModel* m{nullptr};
     QList<QPersistentModelIndex> rows;
-
-    QFixedRowsFilterProxyModel* m;
 };
 
 QFixedRowsFilterProxyModel::QFixedRowsFilterProxyModel(QObject *parent) :
-    QSortFilterProxyModel(parent), d(new QFixedRowsFilterProxyModelPrivate(this))
+    QSortFilterProxyModel(parent),
+    d(new QFixedRowsFilterProxyModelPrivate(this))
 {
 }
 

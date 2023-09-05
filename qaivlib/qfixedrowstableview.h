@@ -82,6 +82,7 @@ public slots:
      * If @p on is true the fixed rows mode is enabled.
      */
     void setFixedRowsMode(bool on);
+
 signals:
     /**
      * This signal is emitted when the table view has received the focus.

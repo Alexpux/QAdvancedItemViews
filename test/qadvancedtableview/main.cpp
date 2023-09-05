@@ -1,4 +1,5 @@
-#include <QtTest/QtTest>
+#include <QTest>
+#include <QSignalSpy>
 
 #include <QStandardItemModel>
 
@@ -22,9 +23,10 @@ private slots:
     void viewport();
 
     void hideColumn();
+
 private:
-    QAdvancedTableView* m_view;
-    QStandardItemModel* m_model;
+    QAdvancedTableView* m_view{nullptr};
+    QStandardItemModel* m_model{nullptr};
 };
 
 void QAdvancedTableViewTest::clicked()
@@ -80,7 +82,7 @@ void QAdvancedTableViewTest::selectionModel()
 void QAdvancedTableViewTest::setFilterType()
 {
     m_view->setFilterType(QTextFilter::Type, 1);
-    QTextFilter* f = qfilter_cast<QTextFilter*>(m_view->filterAt(0, 1));
+    const QTextFilter* f = qfilter_cast<QTextFilter*>(m_view->filterAt(0, 1));
     QVERIFY(f != 0);
 }
 

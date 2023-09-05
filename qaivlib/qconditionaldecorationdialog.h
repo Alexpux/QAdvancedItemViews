@@ -29,9 +29,8 @@ namespace Ui {
 class QConditionalDecorationDialog;
 }
 
-class QComboBox;
-
 class ValueEdit;
+class QComboBox;
 
 #include <qaivlib_global.h>
 
@@ -71,12 +70,14 @@ public:
     QVariantMap properties() const;
 
     void setProperties(const QModelIndex & index);
+
 private slots:
     void addPushButtonClicked();
     void columnComboBoxActivated(int index);
     void comparisonComboBoxActivated(int index);
     void iconSetComboBoxActivated(const QString & text);
     void removePushButtonClicked();
+
 private:
     int column(int row) const;
 
@@ -87,7 +88,7 @@ private:
 
     QVariantMap value(int row) const;
 
-    int m_defaultColumn;
+    int m_defaultColumn{0};
     QModelIndex m_index;
     QVariantMap cIconSets;
     QVariantMap cProperties;

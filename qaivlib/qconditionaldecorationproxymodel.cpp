@@ -34,17 +34,14 @@ public:
     explicit QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel* pm);
     ~QConditionalDecorationProxyModelPrivate();
 
-    QMap<int,QAbstractItemModelDecoration*> columnDecorationMap;
-
-    QMap<QString,QVariant> iconSets;
-    QSize iconSize;
-    int iconSpacing;
-    QConditionalDecorationProxyModel* m;
+    int iconSpacing{3};
+    QConditionalDecorationProxyModel* m{nullptr};
+    QSize iconSize{QSize(16, 16)};
+    QMap<QString, QVariant> iconSets;
+    QMap<int, QAbstractItemModelDecoration*> columnDecorationMap;
 };
 
 QConditionalDecorationProxyModelPrivate::QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel *pm) :
-    iconSize(QSize(16, 16)),
-    iconSpacing(3),
     m(pm)
 {
 }
@@ -56,7 +53,8 @@ QConditionalDecorationProxyModelPrivate::~QConditionalDecorationProxyModelPrivat
 }
 
 QConditionalDecorationProxyModel::QConditionalDecorationProxyModel(QObject *parent) :
-    QSortFilterProxyModel(parent), d(new QConditionalDecorationProxyModelPrivate(this))
+    QSortFilterProxyModel(parent),
+    d(new QConditionalDecorationProxyModelPrivate(this))
 {
     QVariantMap m;
     m["blue"] = ":/qaiv/flag/blue";
@@ -124,12 +122,12 @@ QVariant QConditionalDecorationProxyModel::data(const QModelIndex &index, int ro
         return QVariant();
     }
     if (role == Qt::DecorationRole) {
-        QAbstractItemModelDecoration* decoration = d->columnDecorationMap.value(index.column(), 0);
+        const QAbstractItemModelDecoration* decoration = d->columnDecorationMap.value(index.column(), 0);
         if (decoration) {
             return decoration->decorate(index);
         }
     } else if (role == QConditionalDecorationProxyModel::ConditionalDecorationRole) {
-        QAbstractItemModelDecoration* decoration = d->columnDecorationMap.value(index.column(), 0);
+        const QAbstractItemModelDecoration* decoration = d->columnDecorationMap.value(index.column(), 0);
         if (decoration) {
             return decoration->properties();
         }

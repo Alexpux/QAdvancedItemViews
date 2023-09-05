@@ -1,4 +1,4 @@
-#include <QtTest/QtTest>
+#include <QTest>
 
 #include <QStandardItemModel>
 
@@ -20,18 +20,15 @@ private slots:
     void qSourceModel();
 
     void initTestCase();
+
 private:
-    QAdvancedTableView* m_view;
-    QStandardItemModel* m_model;
-    QUniqueValuesProxyModel* m_proxy;
+    QAdvancedTableView* m_view{nullptr};
+    QStandardItemModel* m_model{nullptr};
+    QUniqueValuesProxyModel* m_proxy{nullptr};
 };
 
-QAIVTest::QAIVTest(QObject *parent) : QObject(parent),
-    m_view(nullptr),
-    m_model(nullptr),
-    m_proxy(nullptr)
+QAIVTest::QAIVTest(QObject *parent) : QObject(parent)
 {
-
 }
 
 void QAIVTest::qsourcemodel_cast()

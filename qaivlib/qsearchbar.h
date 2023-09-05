@@ -37,16 +37,20 @@ class QAIVLIBSHARED_EXPORT QSearchBar : public QWidget
 public:
     explicit QSearchBar(QWidget* parent = nullptr);
     ~QSearchBar();
+
 signals:
     void expressionChanged(const QString & text);
     void searchNext();
     void searchPrevious();
+
 public slots:
     void clear();
     void match(QAbstractItemModel* model);
     //bool match(const QModelIndex & start, int role, const QVariant & value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap)) const;
+
 private slots:
     void expressionChangedHandler(const QString & text);
+
 private:
     QSearchBarPrivate* d;
     Ui::QSearchBar *ui;

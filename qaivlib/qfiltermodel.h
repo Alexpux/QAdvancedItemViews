@@ -48,6 +48,7 @@ public:
       * Destroys the default filter model.
       */
     ~QFilterModel();
+
 protected:
     /**
       * @reimp QAbstractFilterModel::createFilter()

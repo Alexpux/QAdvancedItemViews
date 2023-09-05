@@ -45,8 +45,8 @@ private:
     void writeDecoration(QXmlStreamWriter & stream, const QVariant & decoration);
     void writeFont(QXmlStreamWriter & stream, const QFont & font);
 
-    QIODevice* m_device;
-    int m_imageId;
+    QIODevice* m_device{nullptr};
+    int m_imageId{1};
 };
 
 #endif // QTABLEMODELWORDMLWRITER_P_H

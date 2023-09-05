@@ -52,12 +52,14 @@ public:
       * Destroys the clickable label.
       */
     ~QClickableLabel();
+
 signals:
     /**
       * This signal is emitted when the button is activated (i.e. pressed down then released while the mouse cursor is inside the label.
       * @p buttons contains the state of the mouse buttons. E.g. left mouse button clicked.
       */
     void clicked(Qt::MouseButtons buttons);
+
 protected:
     /**
       * Reimplemented from QLabel::mousePressEvent(QMouseEvent* event).

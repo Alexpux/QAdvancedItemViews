@@ -34,6 +34,7 @@ class QAIVDesignerCollection : public QObject, public QDesignerCustomWidgetColle
 public:
     explicit QAIVDesignerCollection(QObject *parent = nullptr);
     virtual QList<QDesignerCustomWidgetInterface*> customWidgets() const;
+
 private:
      QList<QDesignerCustomWidgetInterface*> m_widgets;
 };

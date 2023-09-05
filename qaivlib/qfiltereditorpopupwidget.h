@@ -32,8 +32,8 @@ public:
     ~QFilterEditorPopupWidget();
 
     virtual bool cancelAndClose(QObject* obj, int key) const;
-
     virtual bool commitAndClose(QObject* obj, int key) const;
+
 private:
 
 };

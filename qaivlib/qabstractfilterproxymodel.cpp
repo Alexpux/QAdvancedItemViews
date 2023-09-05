@@ -29,17 +29,15 @@ public:
     explicit QAbstractFilterProxyModelPrivate(QAbstractFilterProxyModel* pm);
     ~QAbstractFilterProxyModelPrivate();
 
-    QAbstractFilterProxyModel* m;
-    QAbstractFilterModel* filterModel;
-    int lastResultCount;
+    int lastResultCount{-1};
+    QAbstractFilterProxyModel* m{nullptr};
+    QAbstractFilterModel* filterModel{nullptr};
 };
 
 
-QAbstractFilterProxyModelPrivate::QAbstractFilterProxyModelPrivate(QAbstractFilterProxyModel *pm)
+QAbstractFilterProxyModelPrivate::QAbstractFilterProxyModelPrivate(QAbstractFilterProxyModel *pm) :
+    m{pm}
 {
-    m = pm;
-    filterModel = nullptr;
-    lastResultCount = -1;
 }
 
 QAbstractFilterProxyModelPrivate::~QAbstractFilterProxyModelPrivate()
@@ -92,7 +90,7 @@ QModelIndex QAbstractFilterProxyModel::getIndexForModel(const QAbstractItemModel
         const QAbstractProxyModel* p = qobject_cast<const QAbstractProxyModel*>(model);
 
         if (p) {
-            QAbstractItemModel * sModel = p->sourceModel();
+            const QAbstractItemModel * sModel = p->sourceModel();
             if (sModel == sourceIndex.model()) {
                 return p->mapFromSource(sourceIndex);
             } else {

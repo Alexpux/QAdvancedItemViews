@@ -24,25 +24,25 @@
 #include <QCheckBox>
 #include <QDialog>
 #include <QGroupBox>
+#include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
 #include <QListWidget>
 #include <QMetaType>
 #include <QSignalMapper>
-#include <QStyledItemDelegate>
 #include <QSortFilterProxyModel>
 #include <QStringList>
+#include <QStyledItemDelegate>
 #include <QTableView>
 #include <QTableWidget>
-#include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QWidget>
 
 #include "qadvancedtableview.h"
 #include "qclickablelabel.h"
 
-class QComboBox;
 class QAbstractItemDelegate;
+class QComboBox;
 class QLineEdit;
 class QStandardItemModel;
 

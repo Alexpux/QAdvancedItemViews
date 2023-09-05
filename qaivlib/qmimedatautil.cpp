@@ -11,7 +11,7 @@
 
 void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, QAbstractFilterProxyModel* proxy, int role)
 {
-    if (mimeData == 0 || model == 0 || horizontalHeader == 0) {
+    if (!mimeData || !model || !horizontalHeader) {
         return;
     }
     QByteArray d;
@@ -37,7 +37,7 @@ void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelect
 
 void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, QAbstractFilterProxyModel* proxy, int role)
 {
-    if (mimeData == 0 || model == 0 || horizontalHeader == 0) {
+    if (!mimeData || !model || !horizontalHeader) {
         return;
     }
     QByteArray d;
@@ -128,7 +128,7 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelec
 
 void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, QAbstractFilterProxyModel* proxy, int role)
 {
-    if (mimeData == 0 || model == 0 || horizontalHeader == 0) {
+    if (!mimeData || !model || !horizontalHeader) {
         return;
     }
     QByteArray d;
@@ -212,7 +212,7 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QTableView* view, int role)
 QPair<QModelIndex, QModelIndex> selectionEdges(QItemSelection selection)
 {
     QPair<QModelIndex, QModelIndex> p;
-    for (QItemSelectionRange range : selection) {
+    for (const QItemSelectionRange &range : selection) {
         if (!p.first.isValid()) {
             p.first = range.topLeft();
         } else {

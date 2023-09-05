@@ -26,12 +26,16 @@
 #include "qfiltermodel.h"
 #include "qfilterviewitemdelegate.h"
 
-#include <QtWidgets>
+#include <QCheckBox>
+#include <QDialogButtonBox>
+#include <QLineEdit>
+#include <QStandardItemModel>
+#include <QToolButton>
+#include <QVBoxLayout>
 
 QSelectionListFilterEditorPopup::QSelectionListFilterEditorPopup(QWidget* parent) :
     QFilterEditorPopupWidget(parent)
 {
-    m_mode = 0; // 0 = Selected values 1 = empty 2 = not empty
     m_model = new QStandardItemModel(this);
     m_checkStateProxy = new QCheckStateProxyModel(this);
     connect(m_checkStateProxy, &QCheckStateProxyModel::dataChanged, this, &QSelectionListFilterEditorPopup::checkStateProxyDataChanged);
@@ -169,7 +173,7 @@ void QSelectionListFilterEditorPopup::selectCheckBoxStateChanged(int state)
 QVariantList QSelectionListFilterEditorPopup::selectedValues() const
 {
     QVariantList v;
-    for (QModelIndex i : m_checkStateProxy->checkedIndexes()) {
+    for (const QModelIndex &i : m_checkStateProxy->checkedIndexes()) {
         v.append(i.data());
     }
     return v;
@@ -197,8 +201,8 @@ QSelectionListFilterEditor::QSelectionListFilterEditor(QWidget* parent) :
     setPopup(popUp);
     setFocusProxy(popUp);
     connect(popUp, &QSelectionListFilterEditorPopup::modeChanged, this, &QSelectionListFilterEditor::modeSelected);
-    connect(popUp, &QSelectionListFilterEditorPopup::accepted, [this](){ commitAndClose(); });
-    connect(popUp, &QSelectionListFilterEditorPopup::rejected, [this](){ cancelAndClose(); });
+    connect(popUp, &QSelectionListFilterEditorPopup::accepted, this, [=](){ emit commitAndClose(); });
+    connect(popUp, &QSelectionListFilterEditorPopup::rejected, this, [=](){ emit cancelAndClose(); });
 }
 
 QSelectionListFilterEditor::~QSelectionListFilterEditor()
@@ -290,9 +294,9 @@ void QSelectionListFilter::setEditorData(QWidget* editor, const QModelIndex & in
 void QSelectionListFilter::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index)
 {
     Q_UNUSED(index);
-    QSelectionListFilterEditor* w = qobject_cast<QSelectionListFilterEditor*>(editor);
+    const QSelectionListFilterEditor* w = qobject_cast<QSelectionListFilterEditor*>(editor);
     if (w) {
-        QSelectionListFilterEditorPopup* p = qobject_cast<QSelectionListFilterEditorPopup*>(w->popup());
+        const QSelectionListFilterEditorPopup* p = qobject_cast<QSelectionListFilterEditorPopup*>(w->popup());
         QVariantMap properties(index.data(Qt::EditRole).toMap());
         properties["mode"] = p->mode();
         if (p->mode() > 0) {

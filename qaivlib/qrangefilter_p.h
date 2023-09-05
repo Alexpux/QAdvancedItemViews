@@ -40,9 +40,10 @@ public:
     void setRangeFrom(const QString & text);
 
     void setRangeTo(const QString & text);
+
 private:
-    QLineEdit* m_rangeFrom;
-    QLineEdit* m_rangeTo;
+    QLineEdit* m_rangeFrom{nullptr};
+    QLineEdit* m_rangeTo{nullptr};
 };
 
 class QRangeFilterEditor : public QFilterEditorWidget
@@ -59,6 +60,7 @@ public:
     void setRangeFrom(const QString & text);
 
     void setRangeTo(const QString & text);
+
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 };

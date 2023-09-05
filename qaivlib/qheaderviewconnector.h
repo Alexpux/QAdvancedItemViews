@@ -40,10 +40,10 @@ public:
       * Adds the given header @p view to the lists of aligned header views.
       */
     void append(QHeaderView* view);
-signals:
 
 public slots:
     void adjustSectionSize();
+
 private slots:
     void scrollBarRangeChanged(int min, int max);
     void scrollBarSilderMoved(int value);
@@ -51,10 +51,14 @@ private slots:
     void sectionResized(int logicalIndex, int oldSize, int newSize);
     void sortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
     void viewDestroyed(QObject* object);
+
 private:
-    bool cAdjustSectionSizePending;
-    QList<QPointer< QHeaderView> > cHeaderViewList;
+    bool cAdjustSectionSizePending{true};
+    QList<QPointer<QHeaderView>> cHeaderViewList;
     Qt::Orientation cOrientation;
+
+signals:
+
 };
 
 #endif // QHEADERVIEWCONNECTOR_H

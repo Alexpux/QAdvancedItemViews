@@ -50,8 +50,8 @@
 
 #include "spinboxitemdelegate.h"
 
-FilterProxyModel::FilterProxyModel(QObject* parent)
-    : QFilterModelProxy(parent)
+FilterProxyModel::FilterProxyModel(QObject* parent) :
+    QFilterModelProxy(parent)
 {
 }
 
@@ -147,7 +147,7 @@ void MainWindow::decoratedTableViewCustomContextMenuRequested(const QPoint & poi
     QModelIndex mIndex = ui->decorationProxyModelTableView->currentIndex();
     QConditionalDecorationDialog* mDlg = new QConditionalDecorationDialog(mIndex, this);
     if (mDlg->exec()){
-        QAbstractItemModel* mModel = (QAbstractItemModel*)(mIndex.model());
+        QAbstractItemModel* mModel = const_cast<QAbstractItemModel*>(mIndex.model());
         if (mModel)
             mModel->setData(mIndex, mDlg->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
     }
@@ -160,7 +160,7 @@ void MainWindow::decoratedGroupingTreeViewCustomContextMenuRequested(const QPoin
     QModelIndex mIndex = ui->decoratedGroupingTreeView->selectionModel()->currentIndex();
     QConditionalDecorationDialog* mDlg = new QConditionalDecorationDialog(mIndex, this);
     if (mDlg->exec()){
-        QAbstractItemModel* mModel = (QAbstractItemModel*)(mIndex.model());
+        QAbstractItemModel* mModel = const_cast<QAbstractItemModel*>(mIndex.model());
         if (mModel)
             mModel->setData(mIndex, mDlg->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
     }

@@ -21,6 +21,8 @@
 #ifndef QTABLEMODELXMLWRITER_P_H
 #define QTABLEMODELXMLWRITER_P_H
 
+#include <Qt>
+
 class QAdvancedTableView;
 class QIODevice;
 class QTableView;
@@ -34,13 +36,12 @@ public:
     void setIncludeHeader(bool on);
     void setRole(int role);
     bool write(QAdvancedTableView* view, bool all);
-
     bool write(QTableView* view, bool all);
 
 private:
-    QIODevice* m_device;
-    bool m_includeHeader;
-    int m_role;
+    bool m_includeHeader{true};
+    int m_role{Qt::DisplayRole};
+    QIODevice* m_device{nullptr};
 };
 
 #endif // QTABLEMODELXMLWRITER_P_H

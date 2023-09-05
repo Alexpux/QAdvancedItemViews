@@ -21,6 +21,11 @@
 #ifndef QGROUPINGPROXYMODEL_P_H
 #define QGROUPINGPROXYMODEL_P_H
 
+#include <QList>
+#include <QMap>
+#include <QString>
+#include <QVariant>
+
 class QGroupingProxyModelGroup
 {
 public:
@@ -70,14 +75,13 @@ public:
     int sourceModelRow() const;
 
     QList<int> sourceModelRows() const;
+
 private:
-    QList<QGroupingProxyModelGroup*> cChildren;
-    QMap<int,QVariant> cData;
-    QGroupingProxyModelGroup* cParent;
-
-    int cSourceModelRow;
-
+    QGroupingProxyModelGroup* cParent{nullptr};
+    int cSourceModelRow{-1};
     QList<int> cSourceModelRows;
+    QList<QGroupingProxyModelGroup*> cChildren;
+    QMap<int, QVariant> cData;
 };
 
 #endif // QGROUPINGPROXYMODEL_P_H

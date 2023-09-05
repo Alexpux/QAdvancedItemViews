@@ -27,14 +27,13 @@ public:
     explicit QAbstractItemModelDecorationPrivate(QAbstractItemModelDecoration* md);
     ~QAbstractItemModelDecorationPrivate();
 
-    QMap<QString,QVariant> properties;
-
-    QAbstractItemModelDecoration* m;
+    QAbstractItemModelDecoration* m{nullptr};
+    QMap<QString, QVariant> properties;
 };
 
-QAbstractItemModelDecorationPrivate::QAbstractItemModelDecorationPrivate(QAbstractItemModelDecoration *md)
+QAbstractItemModelDecorationPrivate::QAbstractItemModelDecorationPrivate(QAbstractItemModelDecoration *md) :
+    m{md}
 {
-    m = md;
 }
 
 QAbstractItemModelDecorationPrivate::~QAbstractItemModelDecorationPrivate()

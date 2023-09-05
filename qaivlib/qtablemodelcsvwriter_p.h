@@ -32,10 +32,10 @@ public:
     ~QTableModelCsvWriter();
 
     bool writeAll(QAdvancedTableView* view, bool all);
-
     bool writeAll(QTableView* view, bool all);
+
 private:
-    QIODevice* m_device;
+    QIODevice* m_device{nullptr};
 };
 
 #endif // QTABLEMODELCSVWRITER_P_H

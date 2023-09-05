@@ -28,10 +28,9 @@
 #include <QKeyEvent>
 #include <QWindow>
 
-QFilterEditorWidget::QFilterEditorWidget(QWidget *parent)
-    : QWidget(parent)
+QFilterEditorWidget::QFilterEditorWidget(QWidget *parent) :
+    QWidget(parent)
 {
-    m_popup = nullptr;
 }
 
 QFilterEditorWidget::~QFilterEditorWidget()

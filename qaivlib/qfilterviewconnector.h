@@ -44,6 +44,7 @@ signals:
 
 public slots:
     void adjustVerticalHeaderWidth();
+
 private slots:
     void dataViewHorizontalScrollBarRangeChanged(int min, int max);
     void dataViewHorizontalScrollBarSilderMoved(int value);
@@ -55,10 +56,11 @@ private slots:
     void filterViewHorizontalSectionMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
     void filterViewHorizontalSectionResized(int logicalIndex, int oldSize, int newSize);
     void filterViewHorizontalSortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
+
 private:
-    QFilterView* cFilterView;
-    QTableView* cTableView;
-    QTreeView* cTreeView;
+    QFilterView* cFilterView{nullptr};
+    QTableView* cTableView{nullptr};
+    QTreeView* cTreeView{nullptr};
 };
 
 #endif // QFILTERVIEWCONNECTOR_H

@@ -18,9 +18,11 @@ public:
      * Destroys the push button.
      */
     ~QTableModelExportPushButton();
+
 signals:
     void exportAllTriggered(const QByteArray & format);
     void exportSelectionTriggered(const QByteArray & format);
+
 private slots:
     void exportAllTriggeredImpl();
     void exportSelectionTriggeredImpl();

@@ -6,9 +6,9 @@
 
 #include "qaivlib_global.h"
 
+class QAdvancedTableView;
 class QItemSelectionModel;
 class QMimeData;
-class QAdvancedTableView;
 class QTableView;
 
 QAIVLIBSHARED_EXPORT void qMimeDataAddCsv(QMimeData* mimeData, QAdvancedTableView* view, int role = Qt::DisplayRole);

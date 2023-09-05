@@ -139,7 +139,6 @@ QValueFilter::QValueFilter(int row, int column) :
 
 QValueFilter::~QValueFilter()
 {
-
 }
 
 QWidget* QValueFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
@@ -238,11 +237,11 @@ void QValueFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewI
 QDebug operator<<(QDebug dbg, const QValueFilter & f)
 {
     dbg << "(QValueFilter:"
-      << "row:" << f.row()
-      << "column:" << f.column()
-      << "enabled:" << f.isEnabled()
-      << "value:" << f.property("value")
-      << "matchFlag" << static_cast<Qt::MatchFlag>(f.property("matchFlag").toInt())
-      << ")";
+        << "row:" << f.row()
+        << "column:" << f.column()
+        << "enabled:" << f.isEnabled()
+        << "value:" << f.property("value")
+        << "matchFlag" << static_cast<Qt::MatchFlag>(f.property("matchFlag").toInt())
+        << ")";
     return dbg.space();
 }

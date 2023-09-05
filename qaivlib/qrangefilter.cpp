@@ -105,7 +105,6 @@ bool QRangeFilterEditor::eventFilter(QObject *obj, QEvent *event)
 QRangeFilter::QRangeFilter(int row, int column) :
     QAbstractFilter(QRangeFilter::Type, row, column)
 {
-
 }
 
 QRangeFilter::~QRangeFilter()
@@ -131,7 +130,7 @@ QVariant QRangeFilter::data(int role) const
         } else if (!property("rangeFrom").toString().isNull() && property("rangeTo").toString().isNull()) {
             return QString(QObject::tr("%1 - <any>")).arg(property("rangeFrom").toString());
         }
-        return QString("%1 - %2").arg(property("rangeFrom").toString()).arg(property("rangeTo").toString());
+        return QString("%1 - %2").arg(property("rangeFrom").toString(), property("rangeTo").toString());
     }
     return QVariant();
 }
@@ -237,9 +236,9 @@ void QRangeFilter::setEditorData(QWidget * editor, const QModelIndex & index)
 void QRangeFilter::setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index)
 {
     Q_UNUSED(index);
-    QRangeFilterEditor* w = qobject_cast<QRangeFilterEditor*>(editor);
+    const QRangeFilterEditor* w = qobject_cast<QRangeFilterEditor*>(editor);
     if (w) {
-        QRangeFilterEditorPopup* p = qobject_cast<QRangeFilterEditorPopup*>(w->popup());
+        const QRangeFilterEditorPopup* p = qobject_cast<QRangeFilterEditorPopup*>(w->popup());
         QVariantMap properties(index.data(Qt::EditRole).toMap());
         if (p->rangeFrom().isEmpty()) {
             properties["rangeFrom"] = QVariant();
@@ -266,11 +265,11 @@ void QRangeFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewI
 QDebug operator<<(QDebug dbg, const QRangeFilter & f)
 {
     dbg << "(QRangeFilter:"
-      << "row:" << f.row()
-      << "column:" << f.column()
-      << "enabled:" << f.isEnabled()
-      << "from:" << f.property("rangeFrom")
-      << "to:" << f.property("rangeTo")
-      << ")";
+        << "row:" << f.row()
+        << "column:" << f.column()
+        << "enabled:" << f.isEnabled()
+        << "from:" << f.property("rangeFrom")
+        << "to:" << f.property("rangeTo")
+        << ")";
     return dbg.space();
 }

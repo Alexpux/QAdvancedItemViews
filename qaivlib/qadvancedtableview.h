@@ -763,11 +763,10 @@ private slots:
     void viewLayoutChangedImpl();
 
 private:
-    QModelIndex mapToSource(const QModelIndex & index) const;
-
     QAdvancedTableViewPrivate* d;
-
     Ui::QAdvancedTableView *ui;
+
+    QModelIndex mapToSource(const QModelIndex & index) const;
 };
 
 #endif // QADVANCEDTABLEVIEW_H

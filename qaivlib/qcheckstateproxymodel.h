@@ -50,7 +50,7 @@ public:
     /**
       * Returns a list with the checked indexes.
       */
-    QModelIndexList checkedIndexes() const;
+    const QModelIndexList &checkedIndexes() const;
     /**
      * @reimp
      */
@@ -88,6 +88,7 @@ public:
       * @reimp
       */
     virtual void setSourceModel(QAbstractItemModel *sourceModel);
+
 public slots:
     /**
      * If @p checked is true, all checkable items are checked.
@@ -97,9 +98,11 @@ public slots:
      * If @p checked is true, the item specified by the given @p index is checked.
      */
     void setChecked(const QModelIndex & index, bool checked);
+
 private slots:
     void sourceModelRowsAboutToBeRemoved(const QModelIndex & parent, int start, int end);
     void sourceModelAboutToBeReset();
+
 private:
     QCheckStateProxyModelPrivate* d;
 };

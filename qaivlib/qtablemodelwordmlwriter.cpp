@@ -31,8 +31,8 @@
 #include <QIODevice>
 #include <QTableView>
 
-QTableModelWordMLWriter::QTableModelWordMLWriter(QIODevice* device)
-    : m_device(device), m_imageId(1)
+QTableModelWordMLWriter::QTableModelWordMLWriter(QIODevice* device) :
+    m_device(device)
 {
 }
 
@@ -422,7 +422,7 @@ bool QTableModelWordMLWriter::write(QTableView* view, bool all)
     e.first = qSourceIndex(e.first);
     e.second = qSourceIndex(e.second);
 
-    QMap<int,int> width;
+    QMap<int, int> width;
 
     stream.writeStartElement("w:tblGrid");
     for (int c = e.first.column(); c <= e.second.column(); c++) {

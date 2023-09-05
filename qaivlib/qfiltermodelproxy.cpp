@@ -24,8 +24,8 @@
 #include "qabstractfilter.h"
 #include "qabstractfiltermodel.h"
 
-QFilterModelProxy::QFilterModelProxy(QObject* parent)
-    : QAbstractFilterProxyModel(parent)
+QFilterModelProxy::QFilterModelProxy(QObject* parent) :
+    QAbstractFilterProxyModel(parent)
 {
 }
 
@@ -39,8 +39,9 @@ QVariant QFilterModelProxy::data(const QModelIndex & index, int role) const
         QBrush b = qvariant_cast<QBrush>(QAbstractFilterProxyModel::data(index, role));
         QModelIndex mSourceIndex = mapToSource(index);
         QList<QColor> cl;
-        for(int iRow = 0; iRow < filterModel()->rowCount(); iRow++) {
-            for (QAbstractFilter* f : filterModel()->filtersAtRow(iRow)) {
+        for (int iRow = 0; iRow < filterModel()->rowCount(); iRow++) {
+            QList<QAbstractFilter*> filters = filterModel()->filtersAtRow(iRow);
+            for (const QAbstractFilter* f : filters) {
                 int t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
                 if (f->isEnabled()) {
                     if (filterModel()->matchMode() == QAdvancedItemViews::MatchNormal) {
@@ -62,7 +63,7 @@ QVariant QFilterModelProxy::data(const QModelIndex & index, int role) const
             qreal s = 1 / ((qreal)cl.size() - 1);
             g.setColorAt(0, cl.first());
             g.setColorAt(1, cl.last());
-            for (qreal i  = 1; i < cl.size() - 1; i++) {
+            for (int i = 1; i < cl.size() - 1; i++) {
                 g.setColorAt(s * i, cl.at(i));
             }
             return QBrush(g);
@@ -79,10 +80,12 @@ bool QFilterModelProxy::filterAcceptsRow(int source_row, const QModelIndex & sou
         return true;
     }
     int r = -1;
-    for(int iRow = 0; iRow < filterModel()->rowCount(); iRow++) {
+    for (int iRow = 0; iRow < filterModel()->rowCount(); iRow++) {
         int rr = -1;
         int fc = 0;
-        for (QAbstractFilter* f : filterModel()->filtersAtRow(iRow)) {
+
+        QList<QAbstractFilter*> filters = filterModel()->filtersAtRow(iRow);
+        for (const QAbstractFilter* f : filters) {
             int t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
             if (f->isEnabled()) {
                 fc++;

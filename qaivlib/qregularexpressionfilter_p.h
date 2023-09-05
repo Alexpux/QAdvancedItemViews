@@ -52,8 +52,8 @@ private slots:
 
 private:
     Qt::CaseSensitivity m_sensitivity;
-    QLineEdit* m_patternEdit;
-    QClickableLabel* m_sensitivityLabel;
+    QLineEdit* m_patternEdit{nullptr};
+    QClickableLabel* m_sensitivityLabel{nullptr};
 };
 
 #endif // QREGULAREXPRESSIONFILTER_P_H

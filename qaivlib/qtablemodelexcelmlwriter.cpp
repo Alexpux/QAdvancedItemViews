@@ -31,8 +31,8 @@
 #include <QTableView>
 #include <QXmlStreamWriter>
 
-QTableModelExcelMLWriter::QTableModelExcelMLWriter(QIODevice* device)
-    : m_device(device), m_includeHeader(true), m_role(Qt::DisplayRole)
+QTableModelExcelMLWriter::QTableModelExcelMLWriter(QIODevice* device) :
+    m_device(device)
 {
 }
 

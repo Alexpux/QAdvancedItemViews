@@ -27,24 +27,22 @@ public:
     explicit QSingleColumnProxyModelPrivate(QSingleColumnProxyModel* pm);
     ~QSingleColumnProxyModelPrivate();
 
-    int modelColumn;
-
-    QSingleColumnProxyModel* m;
+    int modelColumn{0};
+    QSingleColumnProxyModel* m{nullptr};
 };
 
-QSingleColumnProxyModelPrivate::QSingleColumnProxyModelPrivate(QSingleColumnProxyModel *pm)
+QSingleColumnProxyModelPrivate::QSingleColumnProxyModelPrivate(QSingleColumnProxyModel *pm) :
+    m{pm}
 {
-    modelColumn = 0;
-    m = pm;
 }
 
 QSingleColumnProxyModelPrivate::~QSingleColumnProxyModelPrivate()
 {
-
 }
 
 QSingleColumnProxyModel::QSingleColumnProxyModel(QObject *parent) :
-    QSortFilterProxyModel(parent), d(new QSingleColumnProxyModelPrivate(this))
+    QSortFilterProxyModel(parent),
+    d(new QSingleColumnProxyModelPrivate(this))
 {
 }
 

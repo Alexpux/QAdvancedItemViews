@@ -41,25 +41,19 @@ public:
 
     ~QFilterViewPrivate();
 
-    QFilterViewConnector* filterViewConnector;
+    bool filterVisible{true};
+    int allowedFilterTypes{0xFFFF};
+    int defaultFilterType{QAbstractFilter::Type};
+    int maxFilterVisible{3};
 
-    int allowedFilterTypes;
-    int defaultFilterType;
-    bool filterVisible;
-    int maxFilterVisible;
-
-    QFilterView* v;
+    QFilterView* v{nullptr};
+    QFilterViewConnector* filterViewConnector{nullptr};
 };
 
-QFilterViewPrivate::QFilterViewPrivate(QFilterView *fw)
+QFilterViewPrivate::QFilterViewPrivate(QFilterView *fw) :
+    v{fw}
 {
-    allowedFilterTypes = 0xFFFF;
-    defaultFilterType = QAbstractFilter::Type;
-    filterVisible = true;
-    maxFilterVisible = 3;
     filterViewConnector = new QFilterViewConnector(fw);
-
-    v = fw;
 }
 
 QFilterViewPrivate::QFilterViewPrivate(const QFilterViewPrivate &other)
@@ -89,7 +83,6 @@ QFilterViewPrivate &QFilterViewPrivate::operator=(const QFilterViewPrivate &othe
 
 QFilterViewPrivate::~QFilterViewPrivate()
 {
-
 }
 
 /**
@@ -177,7 +170,8 @@ void QFilterView::changeProperties()
 void QFilterView::disableSelectedFilters()
 {
     QVariantMap properties;
-    for (QModelIndex index : selectionModel()->selectedIndexes()) {
+    QModelIndexList lst = selectionModel()->selectedIndexes();
+    for (const QModelIndex &index : lst) {
         properties = index.data(Qt::EditRole).toMap();
         if (!properties.isEmpty()) {
             properties["enabled"] = false;
@@ -193,7 +187,8 @@ void QFilterView::disableSelectedFilters()
 void QFilterView::enableSelectedFilters()
 {
     QVariantMap properties;
-    for (QModelIndex index : selectionModel()->selectedIndexes()) {
+    QModelIndexList lst = selectionModel()->selectedIndexes();
+    for (const QModelIndex &index : lst) {
         properties = index.data(Qt::EditRole).toMap();
         if (!properties.isEmpty()) {
             properties["enabled"] = true;
@@ -204,7 +199,7 @@ void QFilterView::enableSelectedFilters()
 
 void QFilterView::contextMenuEvent(QContextMenuEvent* event)
 {
-    QAbstractFilterModel* m = qobject_cast<QAbstractFilterModel*>(model());
+    const QAbstractFilterModel* m = qobject_cast<QAbstractFilterModel*>(model());
     if (!m) {
         event->ignore();
         return;
@@ -229,7 +224,8 @@ void QFilterView::contextMenuEvent(QContextMenuEvent* event)
             properties["column"] = selection.first().column();
             properties["enabled"] = true;
             QVariantList mTypes = selection.first().data(QAbstractFilterModel::ColumnFilterTypesRole).toList();
-            for (QAbstractFilterModel::FilterTypeEntry entry : m->registeredFilterTypes()) {
+            QList<QAbstractFilterModel::FilterTypeEntry> fTypes = m->registeredFilterTypes();
+            for (const QAbstractFilterModel::FilterTypeEntry &entry : fTypes) {
                 if (entry.type == QAbstractFilter::Type) {
                     menu->addSeparator();
                 } else {
@@ -431,7 +427,8 @@ void QFilterView::toggleFilter(const QModelIndex & index)
 void QFilterView::toggleSelectedFilters()
 {
     QVariantMap properties;
-    for (QModelIndex index : selectionModel()->selectedIndexes()) {
+    QModelIndexList lst = selectionModel()->selectedIndexes();
+    for (const QModelIndex &index : lst) {
         properties = index.data(Qt::EditRole).toMap();
         if (!properties.isEmpty()) {
             properties["enabled"] = !properties.value("enabled").toBool();

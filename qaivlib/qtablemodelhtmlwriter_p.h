@@ -44,8 +44,9 @@ private:
     void writeCharacters(QXmlStreamWriter & stream, const QString & text);
     void writeDecoration(QXmlStreamWriter & stream, const QVariant & decoration);
     void writeFontAttributes(QXmlStreamWriter & stream, const QFont & font);
-    QIODevice* m_device;
-    bool m_includeHeader;
+
+    QIODevice* m_device{nullptr};
+    bool m_includeHeader{true};
 };
 
 #endif // QTABLEMODELHTMLWRITER_P_H

@@ -30,20 +30,18 @@ public:
     explicit QAbstractFilterPrivate(QAbstractFilter* af);
     ~QAbstractFilterPrivate();
 
+    QAbstractFilter* f{nullptr};
     QIcon icon;
     QMap<QString, QVariant> properties;
-
-    QAbstractFilter* f;
 };
 
-QAbstractFilterPrivate::QAbstractFilterPrivate(QAbstractFilter *af)
+QAbstractFilterPrivate::QAbstractFilterPrivate(QAbstractFilter *af) :
+    f{af}
 {
-    f = af;
 }
 
 QAbstractFilterPrivate::~QAbstractFilterPrivate()
 {
-
 }
 
 QAbstractFilter::QAbstractFilter() :

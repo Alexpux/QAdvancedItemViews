@@ -35,11 +35,13 @@ public:
     ~ShowMoreColumnsDialog();
 
     bool isHidden(int index) const;
+
 private slots:
     void textEdited(const QString & text);
+
 private:
-    QSortFilterProxyModel* m_proxy;
-    QTableView* m_view;
+    QSortFilterProxyModel* m_proxy{nullptr};
+    QTableView* m_view{nullptr};
 };
 
 #endif // QADVANCEDHEADERVIEW_P_H

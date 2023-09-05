@@ -21,20 +21,20 @@
 
 #include "qfiltergroup.h"
 
-QFilterGroup::QFilterGroup() :
-    cEnabled(false)
+#include <algorithm>
+
+QFilterGroup::QFilterGroup()
 {
 }
 
 QFilterGroup::QFilterGroup(const QString & name) :
-    cEnabled(false),
     cName(name)
 {
 }
 
 QFilterGroup::~QFilterGroup()
 {
-    qDeleteAll(cFilterList.begin(), cFilterList.end());
+    qDeleteAll(cFilterList);
     cFilterList.clear();
 }
 
@@ -58,11 +58,17 @@ QAbstractFilter* QFilterGroup::filter(int index) const
 
 QAbstractFilter* QFilterGroup::filterAtColumn(int column) const
 {
-    for (QAbstractFilter* mFilter : cFilterList) {
+    QList<QAbstractFilter*>::const_iterator it;
+    it = std::find_if(cFilterList.cbegin(), cFilterList.cend(),
+                      [&column](const QAbstractFilter* mFilter) { return mFilter->column() == column; });
+    if (it != cFilterList.end()) {
+        return *it;
+    }
+    /*for (QAbstractFilter* mFilter : cFilterList) {
         if (mFilter->column() == column) {
             return mFilter;
         }
-    }
+    }*/
     return nullptr;
 }
 
@@ -73,12 +79,15 @@ QList<QAbstractFilter*> QFilterGroup::filters() const
 
 bool QFilterGroup::hasFilter(int index) const
 {
-    for (QAbstractFilter* mFilter : cFilterList) {
+    return std::any_of(cFilterList.cbegin(), cFilterList.cend(),
+                       [&index](const QAbstractFilter* mFilter) { return mFilter->column() == index; });
+
+    /*for (const QAbstractFilter* mFilter : cFilterList) {
         if (mFilter->column() == index) {
             return true;
         }
     }
-    return false;
+    return false;*/
 }
 
 QString QFilterGroup::name() const

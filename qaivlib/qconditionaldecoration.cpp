@@ -71,7 +71,7 @@ QVariant QConditionalDecoration::decorate(const QModelIndex & index, int role) c
 {
     Q_UNUSED(role)
     const QConditionalDecorationProxyModel* model = qobject_cast<const QConditionalDecorationProxyModel*>(index.model());
-    if (model == 0) {
+    if (!model) {
         return QVariant();
     }
     QVariantList definitions  = property("conditions").toList();

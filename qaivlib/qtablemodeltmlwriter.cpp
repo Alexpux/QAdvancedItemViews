@@ -31,8 +31,8 @@
 #include <QTableView>
 #include <QXmlStreamWriter>
 
-QTableModelHtmlWriter::QTableModelHtmlWriter(QIODevice* device)
-    : m_device(device), m_includeHeader(true)
+QTableModelHtmlWriter::QTableModelHtmlWriter(QIODevice* device) :
+    m_device(device)
 {
 }
 

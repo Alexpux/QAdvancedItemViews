@@ -49,6 +49,7 @@ public:
      * @sa popup();
      */
     void setPopup(QFilterEditorPopupWidget* widget);
+
 signals:
     /**
      * This signal must be emitted when the editor widget has completed editing the data, wants to write it back into the model.
@@ -67,11 +68,13 @@ signals:
      * This signal must be emitted when editing shall be canceled and to close the editor.
      */
     void cancelAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
+
 public slots:
     /**
      * If @p visible is true, the popop widget is shown.
      */
     void showPopup(bool visible = true);
+
 protected:
     /**
      * @reimp QWidget::eventFilter()
@@ -81,10 +84,11 @@ protected:
      * @reimp QWidget::moveEvent()
      */
     void moveEvent(QMoveEvent* e);
-private:
-    void movePopup();
 
-    QFilterEditorPopupWidget* m_popup;
+private:
+    QFilterEditorPopupWidget* m_popup{nullptr};
+
+    void movePopup();
 };
 
 #endif // QFILTEREDITORWIDGET_H
