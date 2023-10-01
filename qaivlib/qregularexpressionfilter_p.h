@@ -22,7 +22,7 @@
 #define QREGULAREXPRESSIONFILTER_P_H
 
 #include <QWidget>
-#include <QRegExp>
+#include <QRegularExpression>
 
 class QCheckBox;
 class QComboBox;
