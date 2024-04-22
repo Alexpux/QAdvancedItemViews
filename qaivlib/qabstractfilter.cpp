@@ -21,26 +21,20 @@
 
 #include "qabstractfilter.h"
 
-#include "qadvancedtableview.h"
-//#include <qfiltergroup.h>
+// #include <qfiltergroup.h>
 
-class QAbstractFilterPrivate
-{
+class QAbstractFilterPrivate {
 public:
-    explicit QAbstractFilterPrivate(QAbstractFilter* af);
-    ~QAbstractFilterPrivate();
+    explicit QAbstractFilterPrivate(QAbstractFilter *af);
+    ~QAbstractFilterPrivate() = default;
 
-    QAbstractFilter* f{nullptr};
+    QAbstractFilter *f { nullptr };
     QIcon icon;
     QMap<QString, QVariant> properties;
 };
 
 QAbstractFilterPrivate::QAbstractFilterPrivate(QAbstractFilter *af) :
-    f{af}
-{
-}
-
-QAbstractFilterPrivate::~QAbstractFilterPrivate()
+    f { af }
 {
 }
 
@@ -71,10 +65,10 @@ QAbstractFilter::QAbstractFilter(int type, int row, int column) :
     d->properties["highlightColor"] = QColor("red");
 }
 
-QAbstractFilter::QAbstractFilter(const QMap<QString, QVariant> & properties) :
+QAbstractFilter::QAbstractFilter(const QMap<QString, QVariant> &properties) :
     d(new QAbstractFilterPrivate(this))
 {
-    QMapIterator<QString,QVariant> mIt(properties);
+    QMapIterator<QString, QVariant> mIt(properties);
     while (mIt.hasNext()) {
         mIt.next();
         d->properties[mIt.key()] = mIt.value();
@@ -100,7 +94,7 @@ int QAbstractFilter::column() const
     return d->properties.value("column", -1).toInt();
 }
 
-void QAbstractFilter::addContextMenuActions(QMenu* menu, QWidget* receiver)
+void QAbstractFilter::addContextMenuActions(QMenu *menu, QWidget *receiver)
 {
     Q_UNUSED(menu);
     Q_UNUSED(receiver);
@@ -114,18 +108,17 @@ QColor QAbstractFilter::highlightColor() const
 bool QAbstractFilter::isEnabled() const
 {
     if (!isValid()) {
-        return  false;
+        return false;
     }
     return d->properties.value("enabled", false).toBool();
 }
 
 bool QAbstractFilter::isValid() const
 {
-    return d->properties.value("type").toInt() != QAbstractFilter::Type &&
-           d->properties.value("column").toInt() > -1;
+    return d->properties.value("type").toInt() != QAbstractFilter::Type && d->properties.value("column").toInt() > -1;
 }
 
-QMap<QString,QVariant> QAbstractFilter::properties() const
+QMap<QString, QVariant> QAbstractFilter::properties() const
 {
     return d->properties;
 }
@@ -135,7 +128,7 @@ int QAbstractFilter::row() const
     return d->properties.value("row", -1).toInt();
 }
 
-QVariant QAbstractFilter::property(const QString & key, const QVariant & defaultValue) const
+QVariant QAbstractFilter::property(const QString &key, const QVariant &defaultValue) const
 {
     return d->properties.value(key, defaultValue);
 }
@@ -145,12 +138,12 @@ void QAbstractFilter::setEnabled(bool on)
     d->properties["enabled"] = on;
 }
 
-void QAbstractFilter::setHighlightColor(const QColor & color)
+void QAbstractFilter::setHighlightColor(const QColor &color)
 {
     setProperty("highlightColor", color);
 }
 
-void QAbstractFilter::setProperty(const QString & name, const QVariant & value)
+void QAbstractFilter::setProperty(const QString &name, const QVariant &value)
 {
     d->properties[name] = value;
 }

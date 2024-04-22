@@ -19,6 +19,12 @@
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include "qadvancedheaderview.h"
+
+#include "qabstractfiltermodel.h"
+#include "qadvancedheaderview_p.h"
+#include "qfilterview.h"
+
 #include <QAction>
 #include <QCheckBox>
 #include <QContextMenuEvent>
@@ -32,19 +38,13 @@
 #include <QTableView>
 #include <QVBoxLayout>
 
-#include "qadvancedheaderview.h"
-#include "qadvancedheaderview_p.h"
-
-#include "qabstractfiltermodel.h"
-#include "qfilterview.h"
-
-ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView* headerView) :
+ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView *headerView) :
     QDialog(headerView)
 {
     setWindowTitle(tr("More columns..."));
-    QVBoxLayout* l = new QVBoxLayout(this);
+    auto *l = new QVBoxLayout(this);
 
-    QLineEdit* e = new QLineEdit(this);
+    auto *e = new QLineEdit(this);
     e->setPlaceholderText(tr("Search for..."));
     connect(e, &QLineEdit::textEdited, this, &ShowMoreColumnsDialog::textEdited);
     l->addWidget(e);
@@ -56,15 +56,15 @@ ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView* headerView) :
 
     m_view->setFocus();
 
-    QDialogButtonBox* b = new QDialogButtonBox(this);
+    auto *b = new QDialogButtonBox(this);
     b->setOrientation(Qt::Horizontal);
-    b->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+    b->setStandardButtons(QDialogButtonBox::Cancel | QDialogButtonBox::Ok);
     l->addWidget(b);
 
     connect(b, &QDialogButtonBox::accepted, this, &ShowMoreColumnsDialog::accept);
     connect(b, &QDialogButtonBox::rejected, this, &ShowMoreColumnsDialog::reject);
 
-    QStandardItemModel* m = new QStandardItemModel(this);
+    auto *m = new QStandardItemModel(this);
     m->setColumnCount(1);
     m->setRowCount(headerView->model()->columnCount());
 
@@ -77,15 +77,11 @@ ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView* headerView) :
     m_view->verticalHeader()->setVisible(false);
 
     for (int iColumn = 0; iColumn < headerView->model()->columnCount(); iColumn++) {
-        QStandardItem* item = new QStandardItem(headerView->model()->headerData(iColumn, Qt::Horizontal).toString());
+        auto *item = new QStandardItem(headerView->model()->headerData(iColumn, Qt::Horizontal).toString());
         item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
-        item->setData(headerView->isSectionHidden(iColumn)?Qt::Unchecked:Qt::Checked, Qt::CheckStateRole);
+        item->setData(headerView->isSectionHidden(iColumn) ? Qt::Unchecked : Qt::Checked, Qt::CheckStateRole);
         m->setItem(iColumn, 0, item);
     }
-}
-
-ShowMoreColumnsDialog::~ShowMoreColumnsDialog()
-{
 }
 
 bool ShowMoreColumnsDialog::isHidden(int index) const
@@ -96,30 +92,30 @@ bool ShowMoreColumnsDialog::isHidden(int index) const
     return false;
 }
 
-void ShowMoreColumnsDialog::textEdited(const QString & text)
+void ShowMoreColumnsDialog::textEdited(const QString &text)
 {
-    //for (int i = 0; i < m_view->model()->rowCount(); i++) {
+    // for (int i = 0; i < m_view->model()->rowCount(); i++) {
     //	if (m_view->model()->index(i, 0).data().toString().contains(text, Qt::CaseInsensitive)) {
     //		m_view->selectRow(i);
     //		break;
     //	}
-    //}
+    // }
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 12, 0))
     m_proxy->setFilterRegularExpression(text);
+#else
+    m_proxy->setFilterRegExp(text);
+#endif
 }
 
-QAdvancedHeaderView::QAdvancedHeaderView(Qt::Orientation orientation, QWidget* parent)
-    : QHeaderView(orientation, parent)
+QAdvancedHeaderView::QAdvancedHeaderView(Qt::Orientation orientation, QWidget *parent) :
+    QHeaderView(orientation, parent)
 {
     setSectionsClickable(true);
 }
 
-QAdvancedHeaderView::~QAdvancedHeaderView()
-{
-}
-
 void QAdvancedHeaderView::addFilterSetActionTriggered()
 {
-    QAction* a = qobject_cast<QAction*>(sender());
+    auto *a = qobject_cast<QAction *>(sender());
     if (a) {
         model()->insertRows(a->data().toInt(), 1);
     } else {
@@ -127,9 +123,9 @@ void QAdvancedHeaderView::addFilterSetActionTriggered()
     }
 }
 
-void QAdvancedHeaderView::contextMenuEvent(QContextMenuEvent* event)
+void QAdvancedHeaderView::contextMenuEvent(QContextMenuEvent *event)
 {
-    QAction* a;
+    QAction *a = nullptr;
     QMenu menu;
     if (orientation() == Qt::Horizontal) {
         int column = logicalIndexAt(event->pos());
@@ -140,7 +136,7 @@ void QAdvancedHeaderView::contextMenuEvent(QContextMenuEvent* event)
             menu.addAction(a);
         }
         menu.addAction(tr("Show All Columns"), this, &QAdvancedHeaderView::showAllColumns);
-        QVector<QAction*> actions(model()->columnCount() < 11 ? model()->columnCount() : 10);
+        QVector<QAction *> actions(model()->columnCount() < 11 ? model()->columnCount() : 10);
         for (int iColumn = 0; iColumn < model()->columnCount() && iColumn < 10; iColumn++) {
             a = new QAction(model()->headerData(iColumn, Qt::Horizontal).toString(), &menu);
             a->setCheckable(true);
@@ -150,19 +146,19 @@ void QAdvancedHeaderView::contextMenuEvent(QContextMenuEvent* event)
             connect(a, &QAction::toggled, this, &QAdvancedHeaderView::sectionToggled);
         }
         menu.addSeparator();
-        QMenu* columnsMenu = menu.addMenu(QIcon(":/qadvancedtableviews/columns.select"), tr("Columns"));
-        for (int iAction = 0; iAction < actions.size(); iAction++) {
-            columnsMenu->addAction(actions.at(iAction));
+        QMenu *columnsMenu = menu.addMenu(QIcon(":/qadvancedtableviews/columns.select"), tr("Columns"));
+        for (const auto &act : actions) {
+            columnsMenu->addAction(act);
         }
         if (model()->columnCount() > 10) {
             columnsMenu->addSeparator();
             columnsMenu->addAction(tr("More Columns..."), this, &QAdvancedHeaderView::moreColumnsActionTriggered);
         }
 
-        const QAbstractFilterModel* filterModel = qobject_cast<QAbstractFilterModel*>(model());
+        const QAbstractFilterModel *filterModel = qobject_cast<QAbstractFilterModel *>(model());
         if (filterModel) {
             menu.addSeparator();
-            QMenu* modeMenu = menu.addMenu(tr("Mode"));
+            QMenu *modeMenu = menu.addMenu(tr("Mode"));
             a = modeMenu->addAction(tr("Filter"), this, &QAdvancedHeaderView::filterModeActionTriggered);
             a->setCheckable(true);
             a->setChecked(filterModel->mode() == QAdvancedItemViews::FilterMode);
@@ -177,7 +173,7 @@ void QAdvancedHeaderView::contextMenuEvent(QContextMenuEvent* event)
             a->setChecked(filterModel->matchMode() == QAdvancedItemViews::MatchInverted);
         }
 
-        const QFilterView* mvew = qobject_cast<QFilterView*>(parentWidget());
+        const QFilterView *mvew = qobject_cast<QFilterView *>(parentWidget());
         if (mvew) {
             menu.addSeparator();
             if (mvew->filterVisible()) {
@@ -204,7 +200,7 @@ void QAdvancedHeaderView::contextMenuEvent(QContextMenuEvent* event)
 
 void QAdvancedHeaderView::filterModeActionTriggered()
 {
-    QAbstractFilterModel* m = qobject_cast<QAbstractFilterModel*>(model());
+    auto *m = qobject_cast<QAbstractFilterModel *>(model());
     if (m) {
         m->setMode(QAdvancedItemViews::FilterMode);
     }
@@ -212,14 +208,15 @@ void QAdvancedHeaderView::filterModeActionTriggered()
 
 void QAdvancedHeaderView::hideFilterActionTriggered()
 {
-    QFilterView* v = qobject_cast<QFilterView*>(parentWidget());
+    auto *v = qobject_cast<QFilterView *>(parentWidget());
     if (v) {
         v->setFilterVisible(false);
     }
 }
+
 void QAdvancedHeaderView::hideSectionActionTriggered()
 {
-    QAction* a = qobject_cast<QAction*>(sender());
+    auto *a = qobject_cast<QAction *>(sender());
     if (a) {
         setSectionHidden(a->data().toInt(), true);
         emit visibleSectionsCountChanged();
@@ -228,7 +225,7 @@ void QAdvancedHeaderView::hideSectionActionTriggered()
 
 void QAdvancedHeaderView::highlightModeActionTriggered()
 {
-    QAbstractFilterModel* m = qobject_cast<QAbstractFilterModel*>(model());
+    auto *m = qobject_cast<QAbstractFilterModel *>(model());
     if (m) {
         m->setMode(QAdvancedItemViews::HighlightMode);
     }
@@ -236,7 +233,7 @@ void QAdvancedHeaderView::highlightModeActionTriggered()
 
 void QAdvancedHeaderView::invertedMatchModeActionTriggered()
 {
-    QAbstractFilterModel* m = qobject_cast<QAbstractFilterModel*>(model());
+    auto *m = qobject_cast<QAbstractFilterModel *>(model());
     if (m) {
         if (m->matchMode() == QAdvancedItemViews::MatchNormal) {
             m->setMatchMode(QAdvancedItemViews::MatchInverted);
@@ -248,7 +245,7 @@ void QAdvancedHeaderView::invertedMatchModeActionTriggered()
 
 void QAdvancedHeaderView::moreColumnsActionTriggered()
 {
-    ShowMoreColumnsDialog* d = new ShowMoreColumnsDialog(this);
+    auto *d = new ShowMoreColumnsDialog(this);
     if (d->exec()) {
         for (int i = 0; i < model()->columnCount(); i++) {
             setSectionHidden(i, d->isHidden(i));
@@ -260,11 +257,12 @@ void QAdvancedHeaderView::moreColumnsActionTriggered()
 
 void QAdvancedHeaderView::removeFilterSetActionTriggered()
 {
-    QAction* a = qobject_cast<QAction*>(sender());
+    auto *a = qobject_cast<QAction *>(sender());
     if (a) {
         if (QMessageBox::question(this, tr("Remove Filter"),
                                   QString(tr("Please confirm to delete filter '%1'.")).arg(model()->headerData(a->data().toInt(), Qt::Vertical, Qt::DisplayRole).toString()),
-                                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes) {
+                                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No)
+            == QMessageBox::Yes) {
             model()->removeRows(a->data().toInt(), 1);
         }
     }
@@ -272,7 +270,7 @@ void QAdvancedHeaderView::removeFilterSetActionTriggered()
 
 void QAdvancedHeaderView::renameFilterActionTriggered()
 {
-    QAction* a = qobject_cast<QAction*>(sender());
+    auto *a = qobject_cast<QAction *>(sender());
     if (a) {
         QString name = QInputDialog::getText(this, tr("Rename Filter Set"), tr("Name"), QLineEdit::Normal, model()->headerData(a->data().toInt(), Qt::Vertical, Qt::DisplayRole).toString());
         if (!name.isEmpty()) {
@@ -281,9 +279,9 @@ void QAdvancedHeaderView::renameFilterActionTriggered()
     }
 }
 
-void QAdvancedHeaderView::sectionToggled( bool on )
+void QAdvancedHeaderView::sectionToggled(bool on)
 {
-    QAction* a = qobject_cast<QAction*>(sender());
+    auto *a = qobject_cast<QAction *>(sender());
     if (a) {
         setSectionHidden(a->data().toInt(), !on);
         emit visibleSectionsCountChanged();
@@ -300,7 +298,7 @@ void QAdvancedHeaderView::showAllColumns()
 
 void QAdvancedHeaderView::showFilterActionTriggered()
 {
-    QFilterView* v = qobject_cast<QFilterView*>(parentWidget());
+    auto *v = qobject_cast<QFilterView *>(parentWidget());
     if (v) {
         v->setFilterVisible(true);
     }
@@ -308,7 +306,7 @@ void QAdvancedHeaderView::showFilterActionTriggered()
 
 void QAdvancedHeaderView::toggleSortOrderActionTriggered()
 {
-    const QAction* a = qobject_cast<QAction*>(sender());
+    const QAction *a = qobject_cast<QAction *>(sender());
     if (a) {
         Qt::SortOrder sortOrder = sortIndicatorOrder();
         if (sortOrder == Qt::AscendingOrder) {

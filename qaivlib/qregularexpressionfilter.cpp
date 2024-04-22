@@ -20,6 +20,8 @@
 ******************************************************************************/
 
 #include "qregularexpressionfilter.h"
+
+#include "qclickablelabel.h"
 #include "qregularexpressionfilter_p.h"
 
 #include <QCheckBox>
@@ -29,12 +31,10 @@
 #include <QLabel>
 #include <QLineEdit>
 
-#include "qclickablelabel.h"
-
-QRegularExpressionFilterEditor::QRegularExpressionFilterEditor(QWidget* parent) :
+QRegularExpressionFilterEditor::QRegularExpressionFilterEditor(QWidget *parent) :
     QWidget(parent)
 {
-    QHBoxLayout* l = new QHBoxLayout(this);
+    auto *l = new QHBoxLayout(this);
     l->setSpacing(0);
     l->setContentsMargins(0, 0, 0, 0);
     l->setSpacing(6);
@@ -51,10 +51,6 @@ QRegularExpressionFilterEditor::QRegularExpressionFilterEditor(QWidget* parent) 
     setCaseSensitivity(Qt::CaseInsensitive);
     setFocusPolicy(Qt::StrongFocus);
     setAutoFillBackground(true);
-}
-
-QRegularExpressionFilterEditor::~QRegularExpressionFilterEditor()
-{
 }
 
 Qt::CaseSensitivity QRegularExpressionFilterEditor::caseSenstivity() const
@@ -101,7 +97,7 @@ QRegularExpressionFilter::QRegularExpressionFilter(int row, int column) :
     setProperty("caseSensitivity", Qt::CaseInsensitive);
 }
 
-QWidget* QRegularExpressionFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QWidget *QRegularExpressionFilter::createEditor(QFilterViewItemDelegate *delegate, QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(delegate)
     Q_UNUSED(option)
@@ -117,7 +113,7 @@ QVariant QRegularExpressionFilter::data(int role) const
     return QVariant();
 }
 
-bool QRegularExpressionFilter::matches(const QVariant & value, int type) const
+bool QRegularExpressionFilter::matches(const QVariant &value, int type) const
 {
     Q_UNUSED(type);
     QRegularExpression::PatternOptions opts;
@@ -142,19 +138,19 @@ QRegularExpression QRegularExpressionFilter::regExp() const
     return regExpr;
 }
 
-void QRegularExpressionFilter::setEditorData(QWidget * editor, const QModelIndex & index)
+void QRegularExpressionFilter::setEditorData(QWidget *editor, const QModelIndex &index)
 {
     Q_UNUSED(index)
-    QRegularExpressionFilterEditor* w = qobject_cast<QRegularExpressionFilterEditor*>(editor);
+    auto *w = qobject_cast<QRegularExpressionFilterEditor *>(editor);
     if (w) {
         w->setCaseSensitivity(static_cast<Qt::CaseSensitivity>(property("caseSensitivity").toInt()));
         w->setPattern(property("pattern").toString());
     }
 }
 
-void QRegularExpressionFilter::setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index)
+void QRegularExpressionFilter::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index)
 {
-    const QRegularExpressionFilterEditor* w = qobject_cast<QRegularExpressionFilterEditor*>(editor);
+    const auto *w = qobject_cast<QRegularExpressionFilterEditor *>(editor);
     if (w) {
         QVariantMap p(index.data(Qt::EditRole).toMap());
         p["pattern"] = w->pattern();
@@ -166,15 +162,15 @@ void QRegularExpressionFilter::setModelData(QWidget* editor, QAbstractItemModel 
     }
 }
 
-void QRegularExpressionFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
+void QRegularExpressionFilter::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
     Q_UNUSED(index)
     editor->setGeometry(option.rect);
 }
 
-QDebug operator<<(QDebug dbg, const QRegularExpressionFilter & f)
+QDebug operator<<(QDebug dbg, const QRegularExpressionFilter &f)
 {
-    dbg << "(QRegExpFilter:"
+    dbg << "(QRegularExpressionFilter:"
         << "row:" << f.row()
         << "column:" << f.column()
         << "enabled:" << f.isEnabled()

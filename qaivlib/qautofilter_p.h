@@ -21,8 +21,9 @@
 #ifndef QAUTOFILTER_P_H
 #define QAUTOFILTER_P_H
 
-#include "qfiltereditorwidget.h"
 #include "qfiltereditorpopupwidget.h"
+#include "qfiltereditorwidget.h"
+
 #include <QStandardItemModel>
 
 class QCheckBox;
@@ -35,20 +36,19 @@ class QCheckStateProxyModel;
 class QSingleColumnProxyModel;
 class QUniqueValuesProxyModel;
 
-class QAutoFilterEditorPopup : public QFilterEditorPopupWidget
-{
+class QAutoFilterEditorPopup : public QFilterEditorPopupWidget {
     Q_OBJECT
 public:
-    explicit QAutoFilterEditorPopup(QWidget* parent);
-    ~QAutoFilterEditorPopup();
+    explicit QAutoFilterEditorPopup(QWidget *parent);
+    ~QAutoFilterEditorPopup() = default;
 
     int mode() const;
 
     QVariantList selectedValues(int role = Qt::DisplayRole) const;
 
-    void setSelectedValues(const QVariantList & values);
+    void setSelectedValues(const QVariantList &values);
 
-    void setSourceModel(QAbstractItemModel* model, int column);
+    void setSourceModel(QAbstractItemModel *model, int column);
 
 signals:
     void accepted();
@@ -57,35 +57,34 @@ signals:
 
 private slots:
     void uniqueValueModelProgressChanged(int progress);
-    void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    void checkStateProxyDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void emptyToolButtonClicked();
     void notEmptyToolButtonClicked();
-    void searchForTextEdited(const QString & text);
+    void searchForTextEdited(const QString &text);
     void selectCheckBoxStateChanged(int state);
 
 private:
-    int m_mode{0};
-    QToolButton* m_emptyToolButton{nullptr};
-    QLineEdit* m_lineEdit{nullptr};
-    QListView* m_listView{nullptr};
-    QToolButton* m_notEmptyToolButton{nullptr};
-    QProgressDialog* m_progress{nullptr};
-    QCheckBox* m_selectCheckBox{nullptr};
+    int m_mode { 0 };
+    QToolButton *m_emptyToolButton { nullptr };
+    QLineEdit *m_lineEdit { nullptr };
+    QListView *m_listView { nullptr };
+    QToolButton *m_notEmptyToolButton { nullptr };
+    QProgressDialog *m_progress { nullptr };
+    QCheckBox *m_selectCheckBox { nullptr };
 
-    QCheckStateProxyModel* m_checkStateProxy{nullptr};
-    QSingleColumnProxyModel* m_singleColumnProxy{nullptr};
-    QUniqueValuesProxyModel* m_singleValueProxy{nullptr};
+    QCheckStateProxyModel *m_checkStateProxy { nullptr };
+    QSingleColumnProxyModel *m_singleColumnProxy { nullptr };
+    QUniqueValuesProxyModel *m_singleValueProxy { nullptr };
 };
 
-class QAutoFilterEditor : public QFilterEditorWidget
-{
+class QAutoFilterEditor : public QFilterEditorWidget {
     Q_OBJECT
 public:
-    explicit QAutoFilterEditor(QWidget* parent = nullptr);
+    explicit QAutoFilterEditor(QWidget *parent = nullptr);
 
     QVariantList selectedValues(int role = Qt::DisplayRole) const;
 
-    void setSourceModel(QAbstractItemModel* model, int column);
+    void setSourceModel(QAbstractItemModel *model, int column);
 
 public slots:
     void modeSelected();

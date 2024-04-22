@@ -19,24 +19,18 @@
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-#include "qtablemodelhtmlwriter_p.h"
-
-#include "qaiv.h"
 #include "qabstractfilterproxymodel.h"
 #include "qadvancedtableview.h"
 #include "qmimedatautil.h"
+#include "qtablemodelhtmlwriter_p.h"
 
 #include <QBuffer>
 #include <QDebug>
 #include <QTableView>
 #include <QXmlStreamWriter>
 
-QTableModelHtmlWriter::QTableModelHtmlWriter(QIODevice* device) :
+QTableModelHtmlWriter::QTableModelHtmlWriter(QIODevice *device) :
     m_device(device)
-{
-}
-
-QTableModelHtmlWriter::~QTableModelHtmlWriter()
 {
 }
 
@@ -45,9 +39,9 @@ void QTableModelHtmlWriter::setIncludeHeader(bool on)
     m_includeHeader = on;
 }
 
-bool QTableModelHtmlWriter::write(QAdvancedTableView* view, bool all)
+bool QTableModelHtmlWriter::write(QAdvancedTableView *view, bool all)
 {
-    if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
+    if (!m_device->isWritable() && !m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelHtmlWriter::writeAll: the device can not be opened for writing";
         return false;
     }
@@ -61,7 +55,7 @@ bool QTableModelHtmlWriter::write(QAdvancedTableView* view, bool all)
 
     stream.writeStartElement("body");
     stream.writeStartElement("table");
-    stream.writeAttribute("border", view->showGrid()?"1":"0");
+    stream.writeAttribute("border", view->showGrid() ? "1" : "0");
     if (view->showGrid()) {
         stream.writeAttribute("style", "border-style:none");
     }
@@ -122,9 +116,9 @@ bool QTableModelHtmlWriter::write(QAdvancedTableView* view, bool all)
     return true;
 }
 
-bool QTableModelHtmlWriter::write(QTableView* view, bool all)
+bool QTableModelHtmlWriter::write(QTableView *view, bool all)
 {
-    if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
+    if (!m_device->isWritable() && !m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelHtmlWriter::writeAll: the device can not be opened for writing";
         return false;
     }
@@ -138,7 +132,7 @@ bool QTableModelHtmlWriter::write(QTableView* view, bool all)
 
     stream.writeStartElement("body");
     stream.writeStartElement("table");
-    stream.writeAttribute("border", view->showGrid()?"1":"0");
+    stream.writeAttribute("border", view->showGrid() ? "1" : "0");
     if (view->showGrid()) {
         stream.writeAttribute("style", "border-style:none");
     }
@@ -200,7 +194,7 @@ bool QTableModelHtmlWriter::write(QTableView* view, bool all)
     return true;
 }
 
-void QTableModelHtmlWriter::writeAlignment(QXmlStreamWriter & stream, int f)
+void QTableModelHtmlWriter::writeAlignment(QXmlStreamWriter &stream, int f)
 {
     if (f & Qt::AlignBottom) {
         stream.writeAttribute("valign", "bottom");
@@ -219,14 +213,14 @@ void QTableModelHtmlWriter::writeAlignment(QXmlStreamWriter & stream, int f)
     }
 }
 
-void QTableModelHtmlWriter::writeBackgroundColor(QXmlStreamWriter & stream, const QBrush & b)
+void QTableModelHtmlWriter::writeBackgroundColor(QXmlStreamWriter &stream, const QBrush &b)
 {
     if (b.style() != Qt::NoBrush) {
         stream.writeAttribute("bgcolor", b.color().name());
     }
 }
 
-void QTableModelHtmlWriter::writeBorderStyle(QXmlStreamWriter & stream, Qt::PenStyle p)
+void QTableModelHtmlWriter::writeBorderStyle(QXmlStreamWriter &stream, Qt::PenStyle p)
 {
     if (p == Qt::DashLine) {
         stream.writeAttribute("style", "border-style:dashed");
@@ -239,7 +233,7 @@ void QTableModelHtmlWriter::writeBorderStyle(QXmlStreamWriter & stream, Qt::PenS
     }
 }
 
-void QTableModelHtmlWriter::writeCharacters(QXmlStreamWriter & stream, const QString & text)
+void QTableModelHtmlWriter::writeCharacters(QXmlStreamWriter &stream, const QString &text)
 {
     if (text.isEmpty()) {
         stream.writeCharacters(QChar(QChar::Nbsp));
@@ -248,7 +242,7 @@ void QTableModelHtmlWriter::writeCharacters(QXmlStreamWriter & stream, const QSt
     }
 }
 
-void QTableModelHtmlWriter::writeDecoration(QXmlStreamWriter & stream, const QVariant & decoration)
+void QTableModelHtmlWriter::writeDecoration(QXmlStreamWriter &stream, const QVariant &decoration)
 {
     QIcon icon = qvariant_cast<QIcon>(decoration);
     QPixmap pixmap;
@@ -267,12 +261,11 @@ void QTableModelHtmlWriter::writeDecoration(QXmlStreamWriter & stream, const QVa
     stream.writeStartElement("img");
     stream.writeAttribute("src", QString("data:image/png;base64,%1").arg(bytes.toBase64().data()));
     stream.writeEndElement();
-
 }
 
-void QTableModelHtmlWriter::writeFontAttributes(QXmlStreamWriter & stream, const QFont & font)
+void QTableModelHtmlWriter::writeFontAttributes(QXmlStreamWriter &stream, const QFont &font)
 {
     QFontInfo i(font);
     stream.writeAttribute("face", i.family());
-    //stream.writeAttribute("size", QString("%1").arg(i.pixelSize()));
+    // stream.writeAttribute("size", QString("%1").arg(i.pixelSize()));
 }

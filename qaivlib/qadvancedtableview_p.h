@@ -21,6 +21,9 @@
 #ifndef QFILTERTABLEVIEW_P_H
 #define QFILTERTABLEVIEW_P_H
 
+#include "qadvancedtableview.h"
+#include "qclickablelabel.h"
+
 #include <QCheckBox>
 #include <QDialog>
 #include <QGroupBox>
@@ -38,28 +41,24 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-#include "qadvancedtableview.h"
-#include "qclickablelabel.h"
-
 class QAbstractItemDelegate;
 class QComboBox;
 class QLineEdit;
 class QStandardItemModel;
 
-class QAdvancedTableViewProxy : public QTableView
-{
+class QAdvancedTableViewProxy : public QTableView {
     Q_OBJECT
 public:
-    explicit QAdvancedTableViewProxy(QWidget* parent = nullptr);
-    ~QAdvancedTableViewProxy();
+    explicit QAdvancedTableViewProxy(QWidget *parent = nullptr);
+    ~QAdvancedTableViewProxy() = default;
 
 signals:
     void focusReceived();
 
 protected:
-    void closeEditor(QWidget * editor, QAbstractItemDelegate::EndEditHint hint) override;
+    void closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint) override;
     void focusInEvent(QFocusEvent *event) override;
-    //void mousePressEvent(QMouseEvent *event) override;
+    // void mousePressEvent(QMouseEvent *event) override;
 };
 
 #endif // QFILTERTABLEVIEW_P_H

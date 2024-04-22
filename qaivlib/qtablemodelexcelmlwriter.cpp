@@ -19,24 +19,19 @@
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-#include "qtablemodelexcelmlwriter_p.h"
-
-#include "qaiv.h"
-#include "qadvancedtableview.h"
 #include "qabstractfilterproxymodel.h"
+#include "qadvancedtableview.h"
+#include "qaiv.h"
 #include "qmimedatautil.h"
+#include "qtablemodelexcelmlwriter_p.h"
 
 #include <QDebug>
 #include <QIODevice>
 #include <QTableView>
 #include <QXmlStreamWriter>
 
-QTableModelExcelMLWriter::QTableModelExcelMLWriter(QIODevice* device) :
+QTableModelExcelMLWriter::QTableModelExcelMLWriter(QIODevice *device) :
     m_device(device)
-{
-}
-
-QTableModelExcelMLWriter::~QTableModelExcelMLWriter()
 {
 }
 
@@ -50,9 +45,9 @@ void QTableModelExcelMLWriter::setRole(int role)
     m_role = role;
 }
 
-bool QTableModelExcelMLWriter::write(QAdvancedTableView* view, bool all)
+bool QTableModelExcelMLWriter::write(QAdvancedTableView *view, bool all)
 {
-    if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
+    if (!m_device->isWritable() && !m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelExcelMLWriter::writeAll: the device can not be opened for writing";
         return false;
     }
@@ -147,9 +142,9 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView* view, bool all)
     return true;
 }
 
-bool QTableModelExcelMLWriter::write(QTableView* view, bool all)
+bool QTableModelExcelMLWriter::write(QTableView *view, bool all)
 {
-    if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
+    if (!m_device->isWritable() && !m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelExcelMLWriter::writeAll: the device can not be opened for writing";
         return false;
     }
@@ -229,7 +224,7 @@ bool QTableModelExcelMLWriter::write(QTableView* view, bool all)
 
                 stream.writeStartElement("Data");
                 stream.writeAttribute("ss:Type", "String");
-                //l << "\"" + view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
+                // l << "\"" + view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
                 stream.writeCharacters(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(m_role).toString());
                 // end tag <Data>
                 stream.writeEndElement();

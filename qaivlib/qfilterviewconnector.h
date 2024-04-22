@@ -21,25 +21,24 @@
 #ifndef QFILTERVIEWCONNECTOR_H
 #define QFILTERVIEWCONNECTOR_H
 
-#include <QObject>
-
 #include "qaivlib_global.h"
+
+#include <QObject>
 
 class QFilterView;
 class QTableView;
 class QTreeView;
 
 //! The QFilterViewConnector class connects a QFilterView with a QTableView or QTreeView.
-class QAIVLIBSHARED_EXPORT QFilterViewConnector : public QObject
-{
+class QAIVLIBSHARED_EXPORT QFilterViewConnector : public QObject {
     Q_OBJECT
 public:
-    explicit QFilterViewConnector(QFilterView* filterView);
-    explicit QFilterViewConnector(QFilterView* filterView, QTableView* tableView, QObject *parent = nullptr);
-    explicit QFilterViewConnector(QFilterView* filterView, QTreeView* treeView, QObject *parent = nullptr);
+    explicit QFilterViewConnector(QFilterView *filterView);
+    explicit QFilterViewConnector(QFilterView *filterView, QTableView *tableView, QObject *parent = nullptr);
+    explicit QFilterViewConnector(QFilterView *filterView, QTreeView *treeView, QObject *parent = nullptr);
 
-    void setDataView(QTableView* view);
-    void setDataView(QTreeView* view);
+    void setDataView(QTableView *view);
+    void setDataView(QTreeView *view);
 signals:
 
 public slots:
@@ -58,9 +57,9 @@ private slots:
     void filterViewHorizontalSortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
 
 private:
-    QFilterView* cFilterView{nullptr};
-    QTableView* cTableView{nullptr};
-    QTreeView* cTreeView{nullptr};
+    QFilterView *cFilterView { nullptr };
+    QTableView *cTableView { nullptr };
+    QTreeView *cTreeView { nullptr };
 };
 
 #endif // QFILTERVIEWCONNECTOR_H

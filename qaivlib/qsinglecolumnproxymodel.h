@@ -21,8 +21,9 @@
 #ifndef QSINGLECOLUMNPROXYMODEL_H
 #define QSINGLECOLUMNPROXYMODEL_H
 
-#include <QSortFilterProxyModel>
 #include "qaivlib_global.h"
+
+#include <QSortFilterProxyModel>
 
 class QSingleColumnProxyModelPrivate;
 
@@ -30,40 +31,39 @@ class QSingleColumnProxyModelPrivate;
 /**
  * @ingroup proxy
  */
-class QAIVLIBSHARED_EXPORT QSingleColumnProxyModel : public QSortFilterProxyModel
-{
+class QAIVLIBSHARED_EXPORT QSingleColumnProxyModel : public QSortFilterProxyModel {
     Q_OBJECT
     //! @property(sourceModelColumn)
     /**
-      * This property holds the column of the source model that is used.
-      * By default, this property contains 0, indicating that the first column of the source model is used.
-      */
+     * This property holds the column of the source model that is used.
+     * By default, this property contains 0, indicating that the first column of the source model is used.
+     */
     Q_PROPERTY(int sourceModelColumn READ sourceModelColumn WRITE setSourceModelColumn)
 
 public:
     /**
-      * Constructs a QSingleColumnProxyModel with the given @p parent.
-      */
+     * Constructs a QSingleColumnProxyModel with the given @p parent.
+     */
     explicit QSingleColumnProxyModel(QObject *parent = nullptr);
     /**
-      * Destoys the QSingleColumnProxyModel.
-      */
+     * Destoys the QSingleColumnProxyModel.
+     */
     ~QSingleColumnProxyModel();
     /**
-      * Returns source model's column used by this proxy.
-      */
+     * Returns source model's column used by this proxy.
+     */
     int sourceModelColumn() const;
 
 public slots:
     /**
-      * Sets the source model @p column used by this proxy.
-      */
+     * Sets the source model @p column used by this proxy.
+     */
     void setSourceModelColumn(int column);
 
 private:
-    QSingleColumnProxyModelPrivate* d;
+    QSingleColumnProxyModelPrivate *d;
 
-    bool filterAcceptsColumn(int source_column, const QModelIndex & source_parent) const;
+    bool filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const override;
 };
 
 #endif // QSINGLECOLUMNPROXYMODEL_H

@@ -26,19 +26,18 @@
 
 #include <QDebug>
 
-#define MAGICNUMBER 0x544156
+constexpr int MAGICNUMBER = 0x544156;
 
-class QConditionalDecorationProxyModelPrivate
-{
+class QConditionalDecorationProxyModelPrivate {
 public:
-    explicit QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel* pm);
+    explicit QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel *pm);
     ~QConditionalDecorationProxyModelPrivate();
 
-    int iconSpacing{3};
-    QConditionalDecorationProxyModel* m{nullptr};
-    QSize iconSize{QSize(16, 16)};
+    int iconSpacing { 3 };
+    QConditionalDecorationProxyModel *m { nullptr };
+    QSize iconSize { QSize(16, 16) };
     QMap<QString, QVariant> iconSets;
-    QMap<int, QAbstractItemModelDecoration*> columnDecorationMap;
+    QMap<int, QAbstractItemModelDecoration *> columnDecorationMap;
 };
 
 QConditionalDecorationProxyModelPrivate::QConditionalDecorationProxyModelPrivate(QConditionalDecorationProxyModel *pm) :
@@ -97,21 +96,21 @@ QConditionalDecorationProxyModel::~QConditionalDecorationProxyModel()
     delete d;
 }
 
-void QConditionalDecorationProxyModel::addDecoration(int column, QAbstractItemModelDecoration* decoration)
+void QConditionalDecorationProxyModel::addDecoration(int column, QAbstractItemModelDecoration *decoration)
 {
     decoration->setProperty("column", column);
     d->columnDecorationMap[column] = decoration;
     invalidate();
 }
 
-void QConditionalDecorationProxyModel::addIcon(const QString & set, const QString & name, const QString & resource)
+void QConditionalDecorationProxyModel::addIcon(const QString &set, const QString &name, const QString &resource)
 {
     QVariantMap m = d->iconSets.value(set).toMap();
     m[name] = resource;
     d->iconSets[set] = m;
 }
 
-void QConditionalDecorationProxyModel::addIconSet(const QString &name, const QVariantMap icons)
+void QConditionalDecorationProxyModel::addIconSet(const QString &name, const QVariantMap &icons)
 {
     d->iconSets[name] = icons;
 }
@@ -122,12 +121,12 @@ QVariant QConditionalDecorationProxyModel::data(const QModelIndex &index, int ro
         return QVariant();
     }
     if (role == Qt::DecorationRole) {
-        const QAbstractItemModelDecoration* decoration = d->columnDecorationMap.value(index.column(), 0);
+        const QAbstractItemModelDecoration *decoration = d->columnDecorationMap.value(index.column(), 0);
         if (decoration) {
             return decoration->decorate(index);
         }
     } else if (role == QConditionalDecorationProxyModel::ConditionalDecorationRole) {
-        const QAbstractItemModelDecoration* decoration = d->columnDecorationMap.value(index.column(), 0);
+        const QAbstractItemModelDecoration *decoration = d->columnDecorationMap.value(index.column(), 0);
         if (decoration) {
             return decoration->properties();
         }
@@ -167,12 +166,12 @@ int QConditionalDecorationProxyModel::iconSpacing() const
     return d->iconSpacing;
 }
 
-bool QConditionalDecorationProxyModel::restoreState(const QByteArray & state)
+bool QConditionalDecorationProxyModel::restoreState(const QByteArray &state)
 {
     QDataStream s(state);
-    int count;
-    quint32 mn;
-    quint32 v;
+    int count = 0;
+    quint32 mn = 0;
+    quint32 v = 0;
     s >> mn;
     if (mn != MAGICNUMBER) {
         qWarning() << Q_FUNC_INFO << "magic number invalid";
@@ -187,7 +186,7 @@ bool QConditionalDecorationProxyModel::restoreState(const QByteArray & state)
     for (int i = 0; i < count; i++) {
         QVariantMap p;
         s >> p;
-        QConditionalDecoration* deco = new QConditionalDecoration();
+        auto *deco = new QConditionalDecoration();
         deco->setProperties(p);
     }
     return true;
@@ -200,7 +199,7 @@ QByteArray QConditionalDecorationProxyModel::stateState() const
 
     s << (quint32)MAGICNUMBER << (quint32)1 << d->iconSize << d->iconSpacing << d->columnDecorationMap.size();
 
-    QMapIterator<int,QAbstractItemModelDecoration*> it(d->columnDecorationMap);
+    QMapIterator<int, QAbstractItemModelDecoration *> it(d->columnDecorationMap);
     while (it.hasNext()) {
         s << it.value()->properties();
         it.next();
@@ -208,10 +207,10 @@ QByteArray QConditionalDecorationProxyModel::stateState() const
     return ba;
 }
 
-bool QConditionalDecorationProxyModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool QConditionalDecorationProxyModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (role == QConditionalDecorationProxyModel::ConditionalDecorationRole) {
-        QAbstractItemModelDecoration* decoration = d->columnDecorationMap.value(index.column(), 0);
+        QAbstractItemModelDecoration *decoration = d->columnDecorationMap.value(index.column(), 0);
         if (decoration) {
             decoration->setProperties(value.toMap());
         } else {
@@ -224,7 +223,7 @@ bool QConditionalDecorationProxyModel::setData(const QModelIndex & index, const 
     return QSortFilterProxyModel::setData(index, value, role);
 }
 
-void QConditionalDecorationProxyModel::setIconSize(const QSize & size)
+void QConditionalDecorationProxyModel::setIconSize(const QSize &size)
 {
     if (size != d->iconSize) {
         d->iconSize = size;

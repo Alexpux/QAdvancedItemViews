@@ -20,6 +20,7 @@
 ******************************************************************************/
 
 #include "qconditionaldecoration.h"
+
 #include "qconditionaldecorationproxymodel.h"
 
 #include <QDateTime>
@@ -41,9 +42,9 @@ QConditionalDecoration::QConditionalDecoration(int column) :
     setProperty("pixmapSize", QSize(16, 16));
 }
 
-void QConditionalDecoration::addCondition(QConditionalDecoration::MatchFlag matchFlag, const QVariant & value, const QString & set, const QString & name)
+void QConditionalDecoration::addCondition(QConditionalDecoration::MatchFlag matchFlag, const QVariant &value, const QString &set, const QString &name)
 {
-    QVariantList conditions  = property("conditions").toList();
+    QVariantList conditions = property("conditions").toList();
     QVariantMap condition;
     condition["column"] = property("column").toInt();
     condition["matchFlag"] = matchFlag;
@@ -67,21 +68,21 @@ int QConditionalDecoration::count() const
     return property("conditions").toList().size();
 }
 
-QVariant QConditionalDecoration::decorate(const QModelIndex & index, int role) const
+QVariant QConditionalDecoration::decorate(const QModelIndex &index, int role) const
 {
     Q_UNUSED(role)
-    const QConditionalDecorationProxyModel* model = qobject_cast<const QConditionalDecorationProxyModel*>(index.model());
+    const QConditionalDecorationProxyModel *model = qobject_cast<const QConditionalDecorationProxyModel *>(index.model());
     if (!model) {
         return QVariant();
     }
-    QVariantList definitions  = property("conditions").toList();
+    QVariantList definitions = property("conditions").toList();
     QVariantMap m;
     QList<QPixmap> pl;
-    for (int iDefinitions = 0; iDefinitions < definitions.size(); iDefinitions++) {
-        m = definitions.at(iDefinitions).toMap();
+    for (const auto &defs : definitions) {
+        m = defs.toMap();
         if (matches(index, m)) {
             pl << model->icon(m.value("set").toString(), m.value("name").toString()).pixmap(model->iconSize());
-            //return model->icon(p.value("set").toString(), p.value("name").toString()).pixmap(property("pixmapSize").toSize());
+            // return model->icon(p.value("set").toString(), p.value("name").toString()).pixmap(property("pixmapSize").toSize());
         }
     }
     if (!pl.isEmpty()) {
@@ -92,12 +93,11 @@ QVariant QConditionalDecoration::decorate(const QModelIndex & index, int role) c
             painter.drawPixmap(model->iconSize().width() * i + (i * model->iconSpacing()), 0, pl.at(i));
         }
         return p;
-    } else {
-        if (property("defaultSet").isNull()) {
-            return QVariant();
-        }
-        return model->icon(property("defaultSet").toString(), property("defaultName").toString());
     }
+    if (property("defaultSet").isNull()) {
+        return QVariant();
+    }
+    return model->icon(property("defaultSet").toString(), property("defaultName").toString());
 }
 
 QString QConditionalDecoration::iconName(int index) const
@@ -108,7 +108,7 @@ QString QConditionalDecoration::iconName(int index) const
     return QString();
 }
 
-bool QConditionalDecoration::matches(const QModelIndex & index, const QVariantMap & properties) const
+bool QConditionalDecoration::matches(const QModelIndex &index, const QVariantMap &properties) const
 {
     QVariant data;
     data = index.model()->index(index.row(), properties.value("column", index.column()).toInt()).data(property("dataRole").toInt());
@@ -194,7 +194,7 @@ void QConditionalDecoration::setHighlightRole(int role)
     setProperty("dataRole", role);
 }
 
-void QConditionalDecoration::setDefaultDecoration(const QString & set, const QString & name)
+void QConditionalDecoration::setDefaultDecoration(const QString &set, const QString &name)
 {
     setProperty("defaultSet", set);
     setProperty("defaultName", name);
@@ -265,7 +265,7 @@ bool QConditionalDecoration::greaterOrEqualThan(const QVariant &left, const QVar
     return false;
 }
 
-bool QConditionalDecoration::greaterThan(const QVariant & left, const QVariant & right) const
+bool QConditionalDecoration::greaterThan(const QVariant &left, const QVariant &right) const
 {
     if (left.type() == QVariant::Char) {
         if (left.toChar() > right.toString().at(0)) {
@@ -311,7 +311,7 @@ bool QConditionalDecoration::greaterThan(const QVariant & left, const QVariant &
     return false;
 }
 
-bool QConditionalDecoration::lessOrEqualThan(const QVariant & left, const QVariant & right) const
+bool QConditionalDecoration::lessOrEqualThan(const QVariant &left, const QVariant &right) const
 {
     if (lessThan(left, right)) {
         return true;
@@ -322,7 +322,7 @@ bool QConditionalDecoration::lessOrEqualThan(const QVariant & left, const QVaria
     return false;
 }
 
-bool QConditionalDecoration::lessThan(const QVariant & left, const QVariant & right) const
+bool QConditionalDecoration::lessThan(const QVariant &left, const QVariant &right) const
 {
     if (left.type() == QVariant::Char) {
         if (left.toChar() < right.toString().at(0)) {

@@ -30,52 +30,51 @@ class QAbstractItemModelDecorationPrivate;
 #include <QVariantMap>
 
 //! The QDecoration class is a base class for item model decorations.
-class QAIVLIBSHARED_EXPORT QAbstractItemModelDecoration
-{
+class QAIVLIBSHARED_EXPORT QAbstractItemModelDecoration {
 public:
     /**
-      * Constructs an empty QAbstractItemModelDecoration.
-      */
+     * Constructs an empty QAbstractItemModelDecoration.
+     */
     QAbstractItemModelDecoration();
     QAbstractItemModelDecoration(const QAbstractItemModelDecoration &c);
-    QAbstractItemModelDecoration & operator=(const QAbstractItemModelDecoration &c);
+    QAbstractItemModelDecoration &operator=(const QAbstractItemModelDecoration &c);
     /**
-      * Destroys the QAbstractItemModelDecoration.
-      */
+     * Destroys the QAbstractItemModelDecoration.
+     */
     virtual ~QAbstractItemModelDecoration();
 
-    virtual QVariant decorate(const QModelIndex & index, int role = Qt::DecorationRole) const = 0;
+    virtual QVariant decorate(const QModelIndex &index, int role = Qt::DecorationRole) const = 0;
     /**
-      *
-      */
+     *
+     */
     QIcon defaultIcon() const;
     /**
-      * Returns the value of the property specified by the given @p key.
-      */
-    QVariant property(const QString & key, const QVariant & defaultValue = QVariant()) const;
+     * Returns the value of the property specified by the given @p key.
+     */
+    QVariant property(const QString &key, const QVariant &defaultValue = QVariant()) const;
     /**
-      * Returns the filter's properties.
-      */
+     * Returns the filter's properties.
+     */
     QMap<QString, QVariant> properties() const;
     /**
      * Restore the decoration's state and properties to the @p state specified.
      * @sa saveState()
      */
-    bool restoreState(const QByteArray & state);
+    bool restoreState(const QByteArray &state);
     /**
      * Saves the decoration's state and properties.
      * @sa restoreState()
      */
     QByteArray saveState() const;
     /**
-      * Sets the filter definition's property specified by @p key to the given @p value.
-      */
-    void setProperty(const QString & name, const QVariant & value);
+     * Sets the filter definition's property specified by @p key to the given @p value.
+     */
+    void setProperty(const QString &name, const QVariant &value);
 
-    void setProperties(const QVariantMap & properties);
+    void setProperties(const QVariantMap &properties);
 
 private:
-    QAbstractItemModelDecorationPrivate* d;
+    QAbstractItemModelDecorationPrivate *d;
 };
 
 #endif // QABSTRACTITEMMODELDECORATION_H

@@ -21,50 +21,49 @@
 #ifndef QCLICKABLELABEL_H
 #define QCLICKABLELABEL_H
 
-#include <QLabel>
-
 #include "qaivlib_global.h"
+
+#include <QLabel>
 
 //! The QClickableLabel widget provides a text or image display and responses to mouse button clicks.
 /** @ingroup widgets
-  * QClickableLabel is used for displaying text or an image. User interaction functionality is provided.
-  * The visual appearance of the label can be configured in various ways, and it can be used for specifying a focus mnemonic key for another widget.
-  *
-  * A QClickableLabel can contain any of the content types specified for QLabel.
-  *
-  * @code
-  * QClickableLabel* clickableLabel = new QClickableLabel(this);
-  * clickableLabel->setText(tr("Clickable Label"));
-  * connect(clickableLabel, &QClickableLabel::clicked, this, &Class::clickedOnLabel);
-  * @endcode
-  */
-class QAIVLIBSHARED_EXPORT QClickableLabel : public QLabel
-{
+ * QClickableLabel is used for displaying text or an image. User interaction functionality is provided.
+ * The visual appearance of the label can be configured in various ways, and it can be used for specifying a focus mnemonic key for another widget.
+ *
+ * A QClickableLabel can contain any of the content types specified for QLabel.
+ *
+ * @code
+ * QClickableLabel* clickableLabel = new QClickableLabel(this);
+ * clickableLabel->setText(tr("Clickable Label"));
+ * connect(clickableLabel, &QClickableLabel::clicked, this, &Class::clickedOnLabel);
+ * @endcode
+ */
+class QAIVLIBSHARED_EXPORT QClickableLabel : public QLabel {
     Q_OBJECT
 public:
     /**
-      * Constructs an empty label.
-      *
-      * The @p parent is passed to the QLabel constructor.
-      */
-    explicit QClickableLabel(QWidget* parent = nullptr);
+     * Constructs an empty label.
+     *
+     * The @p parent is passed to the QLabel constructor.
+     */
+    explicit QClickableLabel(QWidget *parent = nullptr);
     /**
-      * Destroys the clickable label.
-      */
-    ~QClickableLabel();
+     * Destroys the clickable label.
+     */
+    ~QClickableLabel() = default;
 
 signals:
     /**
-      * This signal is emitted when the button is activated (i.e. pressed down then released while the mouse cursor is inside the label.
-      * @p buttons contains the state of the mouse buttons. E.g. left mouse button clicked.
-      */
+     * This signal is emitted when the button is activated (i.e. pressed down then released while the mouse cursor is inside the label.
+     * @p buttons contains the state of the mouse buttons. E.g. left mouse button clicked.
+     */
     void clicked(Qt::MouseButtons buttons);
 
 protected:
     /**
-      * Reimplemented from QLabel::mousePressEvent(QMouseEvent* event).
-      */
-    void mousePressEvent(QMouseEvent* event);
+     * Reimplemented from QLabel::mousePressEvent(QMouseEvent* event).
+     */
+    void mousePressEvent(QMouseEvent *event) override;
 };
 
 #endif // QCLICKABLELABEL_H

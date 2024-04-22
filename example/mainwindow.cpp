@@ -19,6 +19,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 #include "mainwindow.h"
+
+#include "spinboxitemdelegate.h"
 #include "ui_mainwindow.h"
 
 #include <QClipboard>
@@ -30,47 +32,37 @@
 #include <QScrollBar>
 #include <QStandardItemModel>
 #include <QTime>
-
 #include <qadvancedheaderview.h>
+#include <qconditionaldecoration.h>
 #include <qconditionaldecorationdialog.h>
 #include <qconditionaldecorationproxymodel.h>
 #include <qfiltermodel.h>
 #include <qfiltermodelproxy.h>
 #include <qfilterviewconnector.h>
-#include <qgroupingproxymodel.h>
-#include <qconditionaldecoration.h>
 #include <qfixedrowstableview.h>
+#include <qgroupingproxymodel.h>
 #include <qmimedatautil.h>
 #include <qrangefilter.h>
-#include <quniquevaluesproxymodel.h>
 #include <qselectionlistfilter.h>
 #include <qtablemodelwriter.h>
 #include <qtextfilter.h>
+#include <quniquevaluesproxymodel.h>
 #include <qvaluefilter.h>
 
-#include "spinboxitemdelegate.h"
+FilterProxyModel::FilterProxyModel(QObject *parent) :
+    QFilterModelProxy(parent) { }
 
-FilterProxyModel::FilterProxyModel(QObject* parent) :
-    QFilterModelProxy(parent)
-{
-}
+FilterProxyModel::~FilterProxyModel() { }
 
-FilterProxyModel::~FilterProxyModel()
-{
-}
+SelectionListDataProviderProxy::SelectionListDataProviderProxy(QObject *parent) :
+    QIdentityProxyModel(parent) { }
 
-SelectionListDataProviderProxy::SelectionListDataProviderProxy(QObject* parent) :
-    QIdentityProxyModel(parent)
-{
-}
+SelectionListDataProviderProxy::~SelectionListDataProviderProxy() { }
 
-SelectionListDataProviderProxy::~SelectionListDataProviderProxy()
+QVariant SelectionListDataProviderProxy::data(const QModelIndex &proxyIndex,
+                                              int role) const
 {
-}
-
-QVariant SelectionListDataProviderProxy::data(const QModelIndex & proxyIndex, int role) const
-{
-    if (role == QAdvancedItemViews::SelectionListFilterDataRole){
+    if (role == QAdvancedItemViews::SelectionListFilterDataRole) {
         QVariantList l;
         l << "Qt's tools" << "general software development";
         return l;
@@ -79,14 +71,13 @@ QVariant SelectionListDataProviderProxy::data(const QModelIndex & proxyIndex, in
 }
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     // hide search bar
     ui->searchBar->hide();
 
-    QMenu* m = new QMenu(this);
+    QMenu *m = new QMenu(this);
     m->addAction(ui->singleViewAction);
     m->addAction(ui->horizontalSplitAction);
     ui->splitModeToolButton->setMenu(m);
@@ -109,132 +100,140 @@ MainWindow::MainWindow(QWidget *parent) :
     initTabLargeTableView();
 
     ui->sourceModelTableView->setModel(m_model);
-    ui->sourceModelTableView->setHorizontalHeader(new QAdvancedHeaderView(Qt::Horizontal, ui->sourceModelTableView));
+    ui->sourceModelTableView->setHorizontalHeader(
+        new QAdvancedHeaderView(Qt::Horizontal, ui->sourceModelTableView));
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
+MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::aboutQtActionTriggered()
-{
-    QApplication::aboutQt();
-}
+void MainWindow::aboutQtActionTriggered() { QApplication::aboutQt(); }
 
-void MainWindow::advancedTableViewResultChanged(int filterRows, int unfilteredRows)
+void MainWindow::advancedTableViewResultChanged(int filterRows,
+                                                int unfilteredRows)
 {
-    ui->advancedTableViewResultLabel->setText(tr("Result: %1 of %2").arg(filterRows).arg(unfilteredRows));
+    ui->advancedTableViewResultLabel->setText(
+        tr("Result: %1 of %2").arg(filterRows).arg(unfilteredRows));
 }
 
 void MainWindow::copy()
 {
-    QTableView* v = qobject_cast<QTableView*>(QApplication::focusWidget());
-    if (v == 0){
+    QTableView *v = qobject_cast<QTableView *>(QApplication::focusWidget());
+    if (!v) {
         return;
     }
-    QClipboard* clipboard = QApplication::clipboard();
-    QMimeData* mimeData = new QMimeData();
+    QClipboard *clipboard = QApplication::clipboard();
+    QMimeData *mimeData = new QMimeData();
     qMimeDataAddCsv(mimeData, v);
     qMimeDataAddHtml(mimeData, v);
     qMimeDataAddPlainText(mimeData, v);
     clipboard->setMimeData(mimeData);
 }
 
-void MainWindow::decoratedTableViewCustomContextMenuRequested(const QPoint & point)
+void MainWindow::decoratedTableViewCustomContextMenuRequested(
+    const QPoint &point)
 {
     Q_UNUSED(point)
     QModelIndex mIndex = ui->decorationProxyModelTableView->currentIndex();
-    QConditionalDecorationDialog* mDlg = new QConditionalDecorationDialog(mIndex, this);
-    if (mDlg->exec()){
-        QAbstractItemModel* mModel = const_cast<QAbstractItemModel*>(mIndex.model());
-        if (mModel)
-            mModel->setData(mIndex, mDlg->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
+    QConditionalDecorationDialog *mDlg = new QConditionalDecorationDialog(mIndex, this);
+    if (mDlg->exec()) {
+        QAbstractItemModel *mModel = const_cast<QAbstractItemModel *>(mIndex.model());
+        if (mModel) {
+            mModel->setData(
+                mIndex, mDlg->properties(),
+                QConditionalDecorationProxyModel::ConditionalDecorationRole);
+        }
     }
     delete mDlg;
 }
 
-void MainWindow::decoratedGroupingTreeViewCustomContextMenuRequested(const QPoint &point)
+void MainWindow::decoratedGroupingTreeViewCustomContextMenuRequested(
+    const QPoint &point)
 {
     Q_UNUSED(point)
     QModelIndex mIndex = ui->decoratedGroupingTreeView->selectionModel()->currentIndex();
-    QConditionalDecorationDialog* mDlg = new QConditionalDecorationDialog(mIndex, this);
-    if (mDlg->exec()){
-        QAbstractItemModel* mModel = const_cast<QAbstractItemModel*>(mIndex.model());
-        if (mModel)
-            mModel->setData(mIndex, mDlg->properties(), QConditionalDecorationProxyModel::ConditionalDecorationRole);
+    QConditionalDecorationDialog *mDlg = new QConditionalDecorationDialog(mIndex, this);
+    if (mDlg->exec()) {
+        QAbstractItemModel *mModel = const_cast<QAbstractItemModel *>(mIndex.model());
+        if (mModel) {
+            mModel->setData(
+                mIndex, mDlg->properties(),
+                QConditionalDecorationProxyModel::ConditionalDecorationRole);
+        }
     }
     delete mDlg;
 }
 
-void MainWindow::exitActionTriggered()
-{
-    qApp->exit();
-}
+void MainWindow::exitActionTriggered() { qApp->exit(); }
 
-void MainWindow::exportAll(const QByteArray & format)
+void MainWindow::exportAll(const QByteArray &format)
 {
     QFile file;
-    if (format == "CSV"){
+    if (format == "CSV") {
         file.setFileName("c:/temp/qaiv.csv");
-    } else if (format == "HTML"){
+    } else if (format == "HTML") {
         file.setFileName("c:/temp/qaiv.html");
-    } else if (format == "WordML"){
+    } else if (format == "WordML") {
         file.setFileName("c:/temp/qaiv_word.xml");
-    } else if (format == "SpreadsheetML"){
+    } else if (format == "SpreadsheetML") {
         file.setFileName("c:/temp/qaiv_excel.xml");
     }
     QTableModelWriter writer(&file, format);
-    if (ui->tabWidget->currentIndex() == 0){
+    if (ui->tabWidget->currentIndex() == 0) {
         writer.writeAll(ui->filterTableView);
     }
-    QMessageBox::information(this, tr("File saved"), tr("View saved as %1").arg(file.fileName()));
+    QMessageBox::information(this, tr("File saved"),
+                             tr("View saved as %1").arg(file.fileName()));
 }
 
-void MainWindow::exportSelection(const QByteArray & format)
+void MainWindow::exportSelection(const QByteArray &format)
 {
     QFile file;
-    if (format == "CSV"){
+    if (format == "CSV") {
         file.setFileName("c:/temp/qaiv.csv");
-    } else if (format == "HTML"){
+    } else if (format == "HTML") {
         file.setFileName("c:/temp/qaiv.html");
-    } else if (format == "WordML"){
+    } else if (format == "WordML") {
         file.setFileName("c:/temp/qaiv_word.xml");
-    } else if (format == "SpreadsheetML"){
+    } else if (format == "SpreadsheetML") {
         file.setFileName("c:/temp/qaiv_excel.xml");
     }
     QTableModelWriter writer(&file, format);
-    if (ui->tabWidget->currentIndex() == 0){
+    if (ui->tabWidget->currentIndex() == 0) {
         writer.writeSelection(ui->filterTableView);
     }
-    QMessageBox::information(this, tr("File saved"), tr("View saved as %1").arg(file.fileName()));
+    QMessageBox::information(this, tr("File saved"),
+                             tr("View saved as %1").arg(file.fileName()));
 }
 
 void MainWindow::groupWindowsCheckBoxToggled(bool on)
 {
-    if (on){
-        m_groupingProxy->addGroup(QIcon(":/icons/folder"), tr("Windows Developers"), "Windows developers");
+    if (on) {
+        m_groupingProxy->addGroup(QIcon(":/icons/folder"), tr("Windows Developers"),
+                                  "Windows developers");
     } else {
-        m_groupingProxy->removeGroup(m_groupingProxy->findText(tr("Windows Developers")));
+        m_groupingProxy->removeGroup(
+            m_groupingProxy->findText(tr("Windows Developers")));
     }
-    for (int i = 0; i < m_groupingProxy->rowCount(); i++){
+    for (int i = 0; i < m_groupingProxy->rowCount(); i++) {
         ui->groupingTreeView->setFirstColumnSpanned(i, QModelIndex(), true);
     }
 }
 
 void MainWindow::groupUnixCheckBoxToggled(bool on)
 {
-    if (on){
-        m_groupingProxy->addGroup(QIcon(":/icons/folder"), tr("Unix Developers"), "Unix developers");
+    if (on) {
+        m_groupingProxy->addGroup(QIcon(":/icons/folder"), tr("Unix Developers"),
+                                  "Unix developers");
     } else {
-        m_groupingProxy->removeGroup(m_groupingProxy->findText(tr("Unix Developers")));
+        m_groupingProxy->removeGroup(
+            m_groupingProxy->findText(tr("Unix Developers")));
     }
 }
 
 void MainWindow::pinRowsToolButtonClicked()
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    if (ui->filterTableView->showFixedRows()){
+    if (ui->filterTableView->showFixedRows()) {
         ui->filterTableView->setShowFixedRows(false);
         ui->pinRowsToolButton->setIcon(QIcon(":/qaiv/pin/enabled"));
     } else {
@@ -248,24 +247,26 @@ void MainWindow::populatePushButtonClicked()
 {
     QList<QByteArray> w;
     QFile f(QApplication::applicationDirPath() + "/lorem_ipsum.txt");
-    if (f.open(QIODevice::ReadOnly)){
+    if (f.open(QIODevice::ReadOnly)) {
         w = f.readAll().split(' ');
         f.close();
     }
-    QProgressDialog* d = new QProgressDialog(tr("Reading file..."), tr("Cancel"), 0, 30000, this);
+    QProgressDialog *d = new QProgressDialog(tr("Reading file..."), tr("Cancel"), 0, 30000, this);
     d->setMinimumDuration(0);
     d->setWindowModality(Qt::WindowModal);
 
-    QStandardItemModel* m = new QStandardItemModel(this);
+    QStandardItemModel *m = new QStandardItemModel(this);
     m->setColumnCount(10);
     QStringList l;
-    l << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum";
+    l << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum"
+      << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum"
+      << "Lorem ipsum" << "Lorem ipsum";
     m->setHorizontalHeaderLabels(l);
     int wi = 0;
-    for (int i = 0; i < 30000 && !d->wasCanceled(); i++){
+    for (int i = 0; i < 30000 && !d->wasCanceled(); i++) {
         d->setValue(wi);
-        QList<QStandardItem*> items;
-        for (int c = 0; c < 10; c++){
+        QList<QStandardItem *> items;
+        for (int c = 0; c < 10; c++) {
             items << new QStandardItem(QString(w.at(wi)));
             wi++;
         }
@@ -279,7 +280,8 @@ void MainWindow::populatePushButtonClicked()
     QApplication::restoreOverrideCursor();
 }
 
-void MainWindow::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
+void MainWindow::selectionChanged(const QItemSelection &selected,
+                                  const QItemSelection &deselected)
 {
     Q_UNUSED(deselected)
     ui->copyAction->setEnabled(!selected.isEmpty());
@@ -287,10 +289,10 @@ void MainWindow::selectionChanged(const QItemSelection & selected, const QItemSe
 
 void MainWindow::splitActionTriggered()
 {
-    if (sender() == ui->singleViewAction){
+    if (sender() == ui->singleViewAction) {
         ui->filterTableView->splitView(false);
         ui->splitModeToolButton->setIcon(ui->singleViewAction->icon());
-    } else if (sender() == ui->horizontalSplitAction){
+    } else if (sender() == ui->horizontalSplitAction) {
         ui->filterTableView->splitView(true);
         ui->splitModeToolButton->setIcon(ui->horizontalSplitAction->icon());
     }
@@ -299,7 +301,7 @@ void MainWindow::splitActionTriggered()
 void MainWindow::initModel()
 {
     bool singleRow = false;
-    if (singleRow){
+    if (singleRow) {
         m_model = new QStandardItemModel(1, 12, this);
     } else {
         m_model = new QStandardItemModel(26, 12, this);
@@ -318,22 +320,24 @@ void MainWindow::initModel()
     m_model->setHeaderData(10, Qt::Horizontal, tr("Qt Versions"));
     m_model->setHeaderData(11, Qt::Horizontal, tr("OS"));
 
-    if (singleRow){
+    if (singleRow) {
         m_model->setData(m_model->index(0, 0), 1);
         m_model->setData(m_model->index(0, 4), QChar(65));
         m_model->setData(m_model->index(0, 5), QChar(97));
         m_model->setData(m_model->index(0, 6), QTime::currentTime());
         m_model->setData(m_model->index(0, 7), QDateTime::currentDateTime());
     } else {
-        for(int iRows = 0; iRows < m_model->rowCount(); iRows++){
+        for (int iRows = 0; iRows < m_model->rowCount(); iRows++) {
             m_model->setData(m_model->index(iRows, 0), iRows + 1);
             m_model->setData(m_model->index(iRows, 4), QChar(65 + iRows));
             m_model->setData(m_model->index(iRows, 5), QChar(97 + iRows));
-            m_model->setData(m_model->index(iRows, 6), QTime::currentTime().addSecs(iRows * 10));
-            m_model->setData(m_model->index(iRows, 7), QDateTime::currentDateTime().addDays(iRows));
+            m_model->setData(m_model->index(iRows, 6),
+                             QTime::currentTime().addSecs(iRows * 10));
+            m_model->setData(m_model->index(iRows, 7),
+                             QDateTime::currentDateTime().addDays(iRows));
         }
 
-        for(int iRows = 0; iRows < m_model->rowCount(); iRows += 2){
+        for (int iRows = 0; iRows < m_model->rowCount(); iRows += 2) {
             m_model->setData(m_model->index(iRows, 8), QChar(65 + iRows));
             m_model->setData(m_model->index(iRows + 1, 8), QChar(65 + iRows));
         }
@@ -342,12 +346,12 @@ void MainWindow::initModel()
     m_model->setData(m_model->index(0, 2), "general software development");
     m_model->setData(m_model->index(0, 3), "Active");
 
-    if (!singleRow){
+    if (!singleRow) {
         m_model->setData(m_model->index(1, 1), "QtGui");
         m_model->setData(m_model->index(1, 2), "general software development");
         m_model->setData(m_model->index(1, 3), "Active");
 
-        m_model->setData(m_model->index(2 ,1), "QtMultimedia");
+        m_model->setData(m_model->index(2, 1), "QtMultimedia");
         m_model->setData(m_model->index(2, 2), "general software development");
         m_model->setData(m_model->index(2, 3), "Deprecated");
 
@@ -419,7 +423,7 @@ void MainWindow::initModel()
     m_model->setData(m_model->index(0, 9), QDate(1998, 7, 10));
     m_model->setData(m_model->index(0, 10), "1.40");
 
-    if (!singleRow){
+    if (!singleRow) {
         m_model->setData(m_model->index(1, 9), QDate(1998, 10, 2));
         m_model->setData(m_model->index(1, 10), "1.41");
 
@@ -491,7 +495,7 @@ void MainWindow::initModel()
     }
     // Columns OS
     m_model->setData(m_model->index(0, 11), "Windows");
-    if (!singleRow){
+    if (!singleRow) {
         m_model->setData(m_model->index(1, 11), "Windows CE");
         m_model->setData(m_model->index(2, 11), "Mac OS X");
         m_model->setData(m_model->index(3, 11), "Linux");
@@ -501,10 +505,14 @@ void MainWindow::initModel()
 
 void MainWindow::initTabAdvancedTableView()
 {
-    connect(ui->filterTableView->filterProxyModel(), &QAbstractFilterProxyModel::resultCountChanged, this, &MainWindow::advancedTableViewResultChanged);
-    connect(ui->filterTableView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::selectionChanged);
+    connect(ui->filterTableView->filterProxyModel(),
+            &QAbstractFilterProxyModel::resultCountChanged, this,
+            &MainWindow::advancedTableViewResultChanged);
+    connect(ui->filterTableView->selectionModel(),
+            &QItemSelectionModel::selectionChanged, this,
+            &MainWindow::selectionChanged);
 
-    SelectionListDataProviderProxy* p = new SelectionListDataProviderProxy(this);
+    SelectionListDataProviderProxy *p = new SelectionListDataProviderProxy(this);
     p->setSourceModel(m_model);
     ui->filterTableView->setModel(p);
     ui->filterTableView->setFilterProxyModel(new FilterProxyModel(this));
@@ -524,15 +532,17 @@ void MainWindow::initTabAdvancedTableView()
 
     ui->filterTableView->setItemDelegateForColumn(0, new SpinBoxDelegate(this));
     // ------------------------------------
-    // Column 'Qt': All filter types allowed. The default filter type is set to Text Filter
+    // Column 'Qt': All filter types allowed. The default filter type is set to
+    // Text Filter
     // ------------------------------------
     ui->filterTableView->setDefaultFilterType(1, QTextFilter::Type);
     // ------------------------------------
-    // Column 'Qt': All filter types allowed. The default filter type is set to Text Filter
+    // Column 'Qt': All filter types allowed. The default filter type is set to
+    // Text Filter
     // ------------------------------------
     ui->filterTableView->setFilterType(QSelectionListFilter::Type, 2);
-    QSelectionListFilter* selectionListFilter = qfilter_cast<QSelectionListFilter*>(ui->filterTableView->filterAt(0, 2));
-    if (selectionListFilter){
+    QSelectionListFilter *selectionListFilter = qfilter_cast<QSelectionListFilter *>(ui->filterTableView->filterAt(0, 2));
+    if (selectionListFilter) {
         selectionListFilter->setDataSource(QSelectionListFilter::Model);
         selectionListFilter->setEnabled(false);
     }
@@ -540,8 +550,8 @@ void MainWindow::initTabAdvancedTableView()
     // Column 'Maturity Level'
     // ------------------------------------
     ui->filterTableView->setFilterType(QSelectionListFilter::Type, 3);
-    selectionListFilter = qfilter_cast<QSelectionListFilter*>(ui->filterTableView->filterAt(0, 3));
-    if (selectionListFilter){
+    selectionListFilter = qfilter_cast<QSelectionListFilter *>(ui->filterTableView->filterAt(0, 3));
+    if (selectionListFilter) {
         QVariantList values;
         values << "Deprecated" << "Done" << "Maintained";
         selectionListFilter->setValues(values);
@@ -552,40 +562,53 @@ void MainWindow::initTabAdvancedTableView()
 
 void MainWindow::initTabConditionalDecorationProxyModel()
 {
-    QConditionalDecorationProxyModel* proxy = new QConditionalDecorationProxyModel(this);
+    QConditionalDecorationProxyModel *proxy = new QConditionalDecorationProxyModel(this);
     //
-    QConditionalDecoration* decoration = new QConditionalDecoration(3);
-    decoration->addCondition(QConditionalDecoration::IsEqual, "Active", "leds", "green (on)");
-    decoration->addCondition(QConditionalDecoration::IsEqual, "Deprecated", "leds", "red (on)");
-    decoration->addCondition(QConditionalDecoration::IsEqual, "Done", "leds", "yellow (on)");
-    decoration->addCondition(QConditionalDecoration::IsEqual, "Maintained", "leds", "orange (on)");
+    QConditionalDecoration *decoration = new QConditionalDecoration(3);
+    decoration->addCondition(QConditionalDecoration::IsEqual, "Active", "leds",
+                             "green (on)");
+    decoration->addCondition(QConditionalDecoration::IsEqual, "Deprecated",
+                             "leds", "red (on)");
+    decoration->addCondition(QConditionalDecoration::IsEqual, "Done", "leds",
+                             "yellow (on)");
+    decoration->addCondition(QConditionalDecoration::IsEqual, "Maintained",
+                             "leds", "orange (on)");
     decoration->setDefaultDecoration("leds", "white (on)");
     proxy->addDecoration(3, decoration);
 
     decoration = new QConditionalDecoration(11);
-    decoration->addCondition(QConditionalDecoration::Contains, "Linux", "emoticon", "Happy");
-    decoration->addCondition(QConditionalDecoration::Contains, "Mac", "emoticon", "Neutral");
-    decoration->addCondition(QConditionalDecoration::Contains, "Windows", "emoticon", "Unhappy");
+    decoration->addCondition(QConditionalDecoration::Contains, "Linux",
+                             "emoticon", "Happy");
+    decoration->addCondition(QConditionalDecoration::Contains, "Mac", "emoticon",
+                             "Neutral");
+    decoration->addCondition(QConditionalDecoration::Contains, "Windows",
+                             "emoticon", "Unhappy");
     proxy->addDecoration(11, decoration);
 
     proxy->setSourceModel(m_model);
     ui->decorationProxyModelTableView->setModel(proxy);
-    connect(ui->decorationProxyModelTableView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::selectionChanged);
+    connect(ui->decorationProxyModelTableView->selectionModel(),
+            &QItemSelectionModel::selectionChanged, this,
+            &MainWindow::selectionChanged);
 }
 
 void MainWindow::initTabGroupingProxyModel()
 {
-    ui->groupingTreeView->setHeader(new QAdvancedHeaderView(Qt::Horizontal, ui->groupingTreeView));
+    ui->groupingTreeView->setHeader(
+        new QAdvancedHeaderView(Qt::Horizontal, ui->groupingTreeView));
 
     m_groupingProxy = new QGroupingProxyModel(this);
     m_groupingProxy->setModelColumn(2);
-    m_groupingProxy->addGroup(QIcon(":/icons/folder"), "general software development");
-    m_groupingProxy->addGroup(QIcon(":/icons/folder"), "Qt's Tools", "Qt's tools");
+    m_groupingProxy->addGroup(QIcon(":/icons/folder"),
+                              "general software development");
+    m_groupingProxy->addGroup(QIcon(":/icons/folder"), "Qt's Tools",
+                              "Qt's tools");
     m_groupingProxy->setSourceModel(m_model);
 
-    m_groupingProxy->setData(m_groupingProxy->index(0, 0), QIcon(":/icons/folder"), Qt::DecorationRole);
+    m_groupingProxy->setData(m_groupingProxy->index(0, 0),
+                             QIcon(":/icons/folder"), Qt::DecorationRole);
 
-    QSortFilterProxyModel* proxy = new QSortFilterProxyModel(this);
+    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
     proxy->setSourceModel(m_groupingProxy);
     //
     ui->groupingTreeView->setModel(m_groupingProxy);
@@ -593,7 +616,7 @@ void MainWindow::initTabGroupingProxyModel()
 
 void MainWindow::initTabConditionalDecorationAndGrouping()
 {
-    QConditionalDecorationProxyModel* decorationProxyModel = new QConditionalDecorationProxyModel(this);
+    QConditionalDecorationProxyModel *decorationProxyModel = new QConditionalDecorationProxyModel(this);
     decorationProxyModel->setSourceModel(m_groupingProxy);
     //
     ui->decoratedGroupingTreeView->setModel(decorationProxyModel);
@@ -626,17 +649,21 @@ void MainWindow::initTabLargeTableView()
     //    QStandardItemModel* model = new QStandardItemModel(this);
     //    ui->largeTableView->setModel(model);
     ui->largeTableView->setShowFixedRows(true);
-    connect(ui->largeTableView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::selectionChanged);
+    connect(ui->largeTableView->selectionModel(),
+            &QItemSelectionModel::selectionChanged, this,
+            &MainWindow::selectionChanged);
 }
 
 void MainWindow::initTabUniqueValuesProxyModel()
 {
-    QUniqueValuesProxyModel* uniqueValuesProxyModel = new QUniqueValuesProxyModel(this);
+    QUniqueValuesProxyModel *uniqueValuesProxyModel = new QUniqueValuesProxyModel(this);
     ui->uniqueValuesTableView->setModel(uniqueValuesProxyModel);
     uniqueValuesProxyModel->setModelColumn(8);
     uniqueValuesProxyModel->setSourceModel(m_model);
     ui->uniqueValuesTableView->resizeRowsToContents();
-    connect(ui->uniqueValuesTableView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::selectionChanged);
+    connect(ui->uniqueValuesTableView->selectionModel(),
+            &QItemSelectionModel::selectionChanged, this,
+            &MainWindow::selectionChanged);
 }
 
 void MainWindow::restoreStateToolButtonClicked()
@@ -649,16 +676,13 @@ void MainWindow::saveStateToolButtonClicked()
     m_state = ui->filterTableView->saveState();
 }
 
-void MainWindow::search()
-{
-    ui->searchBar->show();
-}
+void MainWindow::search() { ui->searchBar->show(); }
 
-void MainWindow::search(const QString & expression)
+void MainWindow::search(const QString &expression)
 {
     Q_UNUSED(expression)
-    QSearchBar* searchBar = qobject_cast<QSearchBar*>(sender());
-    if (searchBar == 0){
+    QSearchBar *searchBar = qobject_cast<QSearchBar *>(sender());
+    if (!searchBar) {
         return;
     }
     searchBar->match(ui->filterTableView->model());

@@ -24,18 +24,16 @@
 #include <QFrame>
 
 //! The QFilterEditorPopupWidget class provides a base class for filter editor popup widgets.
-class QFilterEditorPopupWidget : public QFrame
-{
+class QFilterEditorPopupWidget : public QFrame {
     Q_OBJECT
 public:
     explicit QFilterEditorPopupWidget(QWidget *parent);
-    ~QFilterEditorPopupWidget();
+    ~QFilterEditorPopupWidget() = default;
 
-    virtual bool cancelAndClose(QObject* obj, int key) const;
-    virtual bool commitAndClose(QObject* obj, int key) const;
+    virtual bool cancelAndClose(QObject *obj, int key) const;
+    virtual bool commitAndClose(QObject *obj, int key) const;
 
 private:
-
 };
 
 #endif // QFILTEREDITORPOPUPWIDGET_H

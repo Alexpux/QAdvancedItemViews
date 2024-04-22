@@ -21,22 +21,17 @@
 
 #include "qsinglecolumnproxymodel.h"
 
-class QSingleColumnProxyModelPrivate
-{
+class QSingleColumnProxyModelPrivate {
 public:
-    explicit QSingleColumnProxyModelPrivate(QSingleColumnProxyModel* pm);
-    ~QSingleColumnProxyModelPrivate();
+    explicit QSingleColumnProxyModelPrivate(QSingleColumnProxyModel *pm);
+    ~QSingleColumnProxyModelPrivate() = default;
 
-    int modelColumn{0};
-    QSingleColumnProxyModel* m{nullptr};
+    int modelColumn { 0 };
+    QSingleColumnProxyModel *m { nullptr };
 };
 
 QSingleColumnProxyModelPrivate::QSingleColumnProxyModelPrivate(QSingleColumnProxyModel *pm) :
-    m{pm}
-{
-}
-
-QSingleColumnProxyModelPrivate::~QSingleColumnProxyModelPrivate()
+    m { pm }
 {
 }
 

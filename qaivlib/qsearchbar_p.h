@@ -3,11 +3,10 @@
 
 #include <QModelIndexList>
 
-class QSearchBarPrivate
-{
+class QSearchBarPrivate {
 public:
-    QSearchBarPrivate();
-    ~QSearchBarPrivate();
+    QSearchBarPrivate() = default;
+    ~QSearchBarPrivate() = default;
 
     QModelIndexList results;
 };

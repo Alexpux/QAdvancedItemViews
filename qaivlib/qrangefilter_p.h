@@ -21,45 +21,43 @@
 #ifndef QRANGEFILTER_P_H
 #define QRANGEFILTER_P_H
 
-#include "qfiltereditorwidget.h"
 #include "qfiltereditorpopupwidget.h"
+#include "qfiltereditorwidget.h"
 
 class QLineEdit;
 
-class QRangeFilterEditorPopup : public QFilterEditorPopupWidget
-{
+class QRangeFilterEditorPopup : public QFilterEditorPopupWidget {
     Q_OBJECT
 public:
-    explicit QRangeFilterEditorPopup(QWidget* parent);
-    ~QRangeFilterEditorPopup();
+    explicit QRangeFilterEditorPopup(QWidget *parent);
+    ~QRangeFilterEditorPopup() = default;
 
     QString rangeFrom() const;
 
     QString rangeTo() const;
 
-    void setRangeFrom(const QString & text);
+    void setRangeFrom(const QString &text);
 
-    void setRangeTo(const QString & text);
+    void setRangeTo(const QString &text);
 
 private:
-    QLineEdit* m_rangeFrom{nullptr};
-    QLineEdit* m_rangeTo{nullptr};
+    QLineEdit *m_rangeFrom { nullptr };
+    QLineEdit *m_rangeTo { nullptr };
 };
 
-class QRangeFilterEditor : public QFilterEditorWidget
-{
+class QRangeFilterEditor : public QFilterEditorWidget {
     Q_OBJECT
 public:
-    explicit QRangeFilterEditor(QWidget* parent = nullptr);
-    ~QRangeFilterEditor();
+    explicit QRangeFilterEditor(QWidget *parent = nullptr);
+    ~QRangeFilterEditor() = default;
 
     QString rangeFrom() const;
 
     QString rangeTo() const;
 
-    void setRangeFrom(const QString & text);
+    void setRangeFrom(const QString &text);
 
-    void setRangeTo(const QString & text);
+    void setRangeTo(const QString &text);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;

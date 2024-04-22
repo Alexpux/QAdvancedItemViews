@@ -31,40 +31,41 @@
  * @image html autofilter01.png "QAutoFilter Editor"
  * The Editor allows to filter on empty item, not empty items or a set of OR-combined values found in the specified column.
  */
-class QAIVLIBSHARED_EXPORT QAutoFilter : public QAbstractFilter
-{
+class QAIVLIBSHARED_EXPORT QAutoFilter : public QAbstractFilter {
 public:
     enum {
         Type = 0
     };
+
     /**
-      * Construtcs an auto filter with the given @p row and @p column.
-      */
+     * Construtcs an auto filter with the given @p row and @p column.
+     */
     QAutoFilter(int row, int column);
+    QAutoFilter(const QAutoFilter &) = delete;
     /**
-      * Returns the widget used to edit the filter specified by @p index for editing. The @p parent widget and style @p option are used to control how the editor widget appears.
-      */
-    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const override;
+     * Returns the widget used to edit the filter specified by @p index for editing. The @p parent widget and style @p option are used to control how the editor widget appears.
+     */
+    QWidget *createEditor(QFilterViewItemDelegate *delegate, QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     /**
-      * Returns the data stored under the given @p role for this filter.
-      * @see setData()
-      * @remarks Returns an invalid QVariant if the no data exists for the given @p role.
-      */
+     * Returns the data stored under the given @p role for this filter.
+     * @see setData()
+     * @remarks Returns an invalid QVariant if the no data exists for the given @p role.
+     */
     QVariant data(int role = Qt::DisplayRole) const override;
 
-    bool matches(const QVariant & value, int type) const override;
+    bool matches(const QVariant &value, int type) const override;
     /**
      * Sets the contents of the given @p editor to the data for the filter at the given @p index. Note that the @p index contains information about the filter model being used.
      */
-    void setEditorData(QWidget* editor, const QModelIndex & index) override;
+    void setEditorData(QWidget *editor, const QModelIndex &index) override;
     /**
      * Sets the data for the filter at the given @p index in the filter @p model to the contents of the given @p editor.
      */
-    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index) override;
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) override;
     /**
      * Updates the filter's @p editor geometry specified by index according to the style option given.
      */
-    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) override;
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) override;
 };
 
 #endif // QAUTOFILTER_H

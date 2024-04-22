@@ -1,13 +1,10 @@
-#include <QTest>
-
 #include <QStandardItemModel>
-
-#include <qaiv.h>
+#include <QTest>
 #include <qadvancedtableview.h>
+#include <qaiv.h>
 #include <quniquevaluesproxymodel.h>
 
-class QAIVTest: public QObject
-{
+class QAIVTest : public QObject {
     Q_OBJECT
 public:
     explicit QAIVTest(QObject *parent = nullptr);
@@ -22,23 +19,22 @@ private slots:
     void initTestCase();
 
 private:
-    QAdvancedTableView* m_view{nullptr};
-    QStandardItemModel* m_model{nullptr};
-    QUniqueValuesProxyModel* m_proxy{nullptr};
+    QAdvancedTableView *m_view { nullptr };
+    QStandardItemModel *m_model { nullptr };
+    QUniqueValuesProxyModel *m_proxy { nullptr };
 };
 
-QAIVTest::QAIVTest(QObject *parent) : QObject(parent)
-{
-}
+QAIVTest::QAIVTest(QObject *parent) :
+    QObject(parent) { }
 
 void QAIVTest::qsourcemodel_cast()
 {
-    QCOMPARE(m_model, ::qsourcemodel_cast<QStandardItemModel*>(m_view->model()));
+    QCOMPARE(m_model, ::qsourcemodel_cast<QStandardItemModel *>(m_view->model()));
 }
 
 void QAIVTest::qSourceIndex()
 {
-    QModelIndex sindex = m_model->index(0 ,0);
+    QModelIndex sindex = m_model->index(0, 0);
     QModelIndex pindex = ::qSourceIndex(m_proxy->index(0, 0));
     QCOMPARE(sindex, pindex);
 }
@@ -50,14 +46,14 @@ void QAIVTest::qSourceModel()
 
 void QAIVTest::initTestCase()
 {
-    m_view = new QAdvancedTableView(0);
+    m_view = new QAdvancedTableView();
     m_view->show();
 
     m_model = new QStandardItemModel(this);
     m_model->setColumnCount(2);
 
-    QStandardItem* item;
-    QList<QStandardItem*> items;
+    QStandardItem *item;
+    QList<QStandardItem *> items;
 
     item = new QStandardItem("0, 0");
     item->setEnabled(true);

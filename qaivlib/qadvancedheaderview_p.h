@@ -27,21 +27,20 @@
 class QSortFilterProxyModel;
 class QTableView;
 
-class ShowMoreColumnsDialog : public QDialog
-{
+class ShowMoreColumnsDialog : public QDialog {
     Q_OBJECT
 public:
-    explicit ShowMoreColumnsDialog(QHeaderView* headerView);
-    ~ShowMoreColumnsDialog();
+    explicit ShowMoreColumnsDialog(QHeaderView *headerView);
+    ~ShowMoreColumnsDialog() = default;
 
     bool isHidden(int index) const;
 
 private slots:
-    void textEdited(const QString & text);
+    void textEdited(const QString &text);
 
 private:
-    QSortFilterProxyModel* m_proxy{nullptr};
-    QTableView* m_view{nullptr};
+    QSortFilterProxyModel *m_proxy { nullptr };
+    QTableView *m_view { nullptr };
 };
 
 #endif // QADVANCEDHEADERVIEW_P_H

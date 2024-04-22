@@ -21,8 +21,8 @@
 #ifndef QREGULAREXPRESSIONFILTER_P_H
 #define QREGULAREXPRESSIONFILTER_P_H
 
-#include <QWidget>
 #include <QRegularExpression>
+#include <QWidget>
 
 class QCheckBox;
 class QComboBox;
@@ -32,12 +32,11 @@ class QFrame;
 
 class QClickableLabel;
 
-class QRegularExpressionFilterEditor : public QWidget
-{
+class QRegularExpressionFilterEditor : public QWidget {
     Q_OBJECT
 public:
-    explicit QRegularExpressionFilterEditor(QWidget* parent = nullptr);
-    ~QRegularExpressionFilterEditor();
+    explicit QRegularExpressionFilterEditor(QWidget *parent = nullptr);
+    ~QRegularExpressionFilterEditor() = default;
 
     Qt::CaseSensitivity caseSenstivity() const;
 
@@ -45,15 +44,15 @@ public:
 
     void setCaseSensitivity(Qt::CaseSensitivity caseSensitivity);
 
-    void setPattern(const QString & pattern);
+    void setPattern(const QString &pattern);
 
 private slots:
     void sensitivityLabelClicked(Qt::MouseButtons buttons);
 
 private:
-    Qt::CaseSensitivity m_sensitivity;
-    QLineEdit* m_patternEdit{nullptr};
-    QClickableLabel* m_sensitivityLabel{nullptr};
+    Qt::CaseSensitivity m_sensitivity { Qt::CaseInsensitive };
+    QLineEdit *m_patternEdit { nullptr };
+    QClickableLabel *m_sensitivityLabel { nullptr };
 };
 
 #endif // QREGULAREXPRESSIONFILTER_P_H

@@ -21,6 +21,9 @@
 
 #include "qrangefilter.h"
 
+#include "qfilterviewitemdelegate.h"
+#include "qrangefilter_p.h"
+
 #include <QDate>
 #include <QDateTime>
 #include <QDebug>
@@ -29,16 +32,12 @@
 #include <QKeyEvent>
 #include <QLineEdit>
 
-#include "qrangefilter_p.h"
-#include "qfilterviewitemdelegate.h"
-
-QRangeFilterEditorPopup::QRangeFilterEditorPopup(QWidget* parent) :
-    QFilterEditorPopupWidget(parent)
+QRangeFilterEditorPopup::QRangeFilterEditorPopup(QWidget *parent) :
+    QFilterEditorPopupWidget(parent),
+    m_rangeFrom(new QLineEdit(this)),
+    m_rangeTo(new QLineEdit(this))
 {
-    m_rangeFrom = new QLineEdit(this);
-    m_rangeTo = new QLineEdit(this);
-
-    QFormLayout* l = new QFormLayout(this);
+    auto *l = new QFormLayout(this);
     l->addRow(tr("From:"), m_rangeFrom);
     l->addRow(tr("To:"), m_rangeTo);
     setLayout(l);
@@ -47,10 +46,6 @@ QRangeFilterEditorPopup::QRangeFilterEditorPopup(QWidget* parent) :
     m_rangeTo->installEventFilter(parent);
 
     m_rangeFrom->setFocus();
-}
-
-QRangeFilterEditorPopup::~QRangeFilterEditorPopup()
-{
 }
 
 QString QRangeFilterEditorPopup::rangeFrom() const
@@ -63,41 +58,34 @@ QString QRangeFilterEditorPopup::rangeTo() const
     return m_rangeTo->text();
 }
 
-void QRangeFilterEditorPopup::setRangeFrom( const QString & text )
+void QRangeFilterEditorPopup::setRangeFrom(const QString &text)
 {
     m_rangeFrom->setText(text);
 }
 
-void QRangeFilterEditorPopup::setRangeTo( const QString & text )
+void QRangeFilterEditorPopup::setRangeTo(const QString &text)
 {
     m_rangeTo->setText(text);
 }
 
-
-QRangeFilterEditor::QRangeFilterEditor( QWidget* parent )
-    : QFilterEditorWidget(parent)
+QRangeFilterEditor::QRangeFilterEditor(QWidget *parent) :
+    QFilterEditorWidget(parent)
 {
     setPopup(new QRangeFilterEditorPopup(this));
-}
-
-QRangeFilterEditor::~QRangeFilterEditor()
-{
 }
 
 bool QRangeFilterEditor::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress) {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        auto *keyEvent = dynamic_cast<QKeyEvent *>(event);
         if (keyEvent->key() == Qt::Key_Return) {
             emit commitAndClose();
             return true;
-        } else {
-            return QObject::eventFilter(obj, event);
         }
-    } else {
-        return QObject::eventFilter(obj, event);
     }
+    return QObject::eventFilter(obj, event);
 }
+
 //-----------------------------------------------
 // class QRangeFilter
 //-----------------------------------------------
@@ -107,15 +95,11 @@ QRangeFilter::QRangeFilter(int row, int column) :
 {
 }
 
-QRangeFilter::~QRangeFilter()
-{
-}
-
-QWidget* QRangeFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QWidget *QRangeFilter::createEditor(QFilterViewItemDelegate *delegate, QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(option);
     Q_UNUSED(index);
-    QRangeFilterEditor* e = new QRangeFilterEditor(parent);
+    auto *e = new QRangeFilterEditor(parent);
     QObject::connect(e, &QRangeFilterEditor::commitAndClose, delegate, &QFilterViewItemDelegate::commitAndClose);
     return e;
 }
@@ -123,122 +107,172 @@ QWidget* QRangeFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* 
 QVariant QRangeFilter::data(int role) const
 {
     if (role == Qt::DisplayRole) {
-        if (property("rangeFrom").toString().isNull() && property("rangeTo").toString().isNull()) {
+        QString propFrom = property("rangeFrom").toString();
+        QString propTo = property("rangeTo").toString();
+        if (propFrom.isNull() && propTo.isNull()) {
             return QObject::tr("<any> - <any>");
-        } else if (property("rangeFrom").toString().isNull() && !property("rangeTo").toString().isNull()) {
-            return QString(QObject::tr("<any> - %1")).arg(property("rangeTo").toString());
-        } else if (!property("rangeFrom").toString().isNull() && property("rangeTo").toString().isNull()) {
-            return QString(QObject::tr("%1 - <any>")).arg(property("rangeFrom").toString());
         }
-        return QString("%1 - %2").arg(property("rangeFrom").toString(), property("rangeTo").toString());
+        if (propFrom.isNull() && !propTo.isNull()) {
+            return QString(QObject::tr("<any> - %1")).arg(propTo);
+        }
+        if (!propFrom.isNull() && propTo.isNull()) {
+            return QString(QObject::tr("%1 - <any>")).arg(propFrom);
+        }
+        return QString("%1 - %2").arg(propFrom, propTo);
     }
     return QVariant();
 }
 
-bool QRangeFilter::matches(const QVariant & value, int type) const
+bool QRangeFilter::matches(const QVariant &value, int type) const
 {
     Q_UNUSED(type);
-    if (value.type() == QVariant::Char) {
-        if (property("rangeFrom").isValid() && property("rangeTo").isValid()) {
-            return value.toChar() >= property("rangeFrom").toString().at(0) && value.toChar() <= property("rangeTo").toString().at(0);
-        } else if (property("rangeFrom").isValid()) {
-            return value.toChar() >= property("rangeFrom").toString().at(0);
-        } else if (property("rangeTo").isValid()) {
-            return value.toChar() <= property("rangeTo").toString().at(0);
+    QVariant propFrom = property("rangeFrom");
+    QVariant propTo = property("rangeTo");
+
+    switch (value.type()) {
+    case QVariant::Char: {
+        if (propFrom.isValid() && propTo.isValid()) {
+            return value.toChar() >= propFrom.toString().at(0) && value.toChar() <= propTo.toString().at(0);
         }
-    } else if (value.type() == QVariant::Date) {
-        if (property("rangeFrom").isValid() && property("rangeTo").isValid()) {
-            return value.toDate() >= property("rangeFrom").toDate() && value.toDate() <= property("rangeTo").toDate();
-        } else if (property("rangeFrom").isValid()) {
-            return value.toDate() >= property("rangeFrom").toDate();
-        } else if (property("rangeTo").isValid()) {
-            return value.toDate() <= property("rangeTo").toDate();
+        if (propFrom.isValid()) {
+            return value.toChar() >= propFrom.toString().at(0);
         }
-    } else if (value.type() == QVariant::DateTime) {
-        if (property("rangeFrom").isValid() && property("rangeTo").isValid()) {
-            return value.toDateTime() >= property("rangeFrom").toDateTime() && value.toDateTime() <= property("rangeTo").toDateTime();
-        } else if (property("rangeFrom").isValid()) {
-            return value.toDateTime() >= property("rangeFrom").toDateTime();
-        } else if (property("rangeTo").isValid()) {
-            return value.toDateTime() <= property("rangeTo").toDateTime();
+        if (propTo.isValid()) {
+            return value.toChar() <= propTo.toString().at(0);
         }
-    } else if (value.type() == QVariant::Double) {
-        if (property("rangeFrom").isValid() && property("rangeTo").isValid()) {
-            return value.toDouble() >= property("rangeFrom").toDouble() && value.toDouble() <= property("rangeTo").toDouble();
-        } else if (property("rangeFrom").isValid()) {
-            return value.toDouble() >= property("rangeFrom").toDouble();
-        } else if (property("rangeTo").isValid()) {
-            return value.toDouble() <= property("rangeTo").toDouble();
+        break;
+    }
+    case QVariant::Date: {
+        if (propFrom.isValid() && propTo.isValid()) {
+            return value.toDate() >= propFrom.toDate() && value.toDate() <= propTo.toDate();
         }
-    } else if (value.type() == QVariant::Int) {
-        if (property("rangeFrom").isValid() && property("rangeTo").isValid()) {
-            return value.toInt() >= property("rangeFrom").toInt() && value.toInt() <= property("rangeTo").toInt();
-        } else if (property("rangeFrom").isValid()) {
-            return value.toInt() >= property("rangeFrom").toInt();
-        } else if (property("rangeTo").isValid()) {
-            return value.toInt() <= property("rangeTo").toInt();
+        if (propFrom.isValid()) {
+            return value.toDate() >= propFrom.toDate();
         }
-    } else if (value.type() == QVariant::LongLong) {
-        if (property("rangeFrom").isValid() && property("rangeTo").isValid()) {
-            return value.toLongLong() >= property("rangeFrom").toLongLong() && value.toLongLong() <= property("rangeTo").toLongLong();
-        } else if (property("rangeFrom").isValid()) {
-            return value.toLongLong() >= property("rangeFrom").toLongLong();
-        } else if (property("rangeTo").isValid()) {
-            return value.toLongLong() <= property("rangeTo").toLongLong();
+        if (propTo.isValid()) {
+            return value.toDate() <= propTo.toDate();
         }
-    } else if (value.type() == QVariant::String) {
-        if (property("rangeFrom").isValid() && property("rangeTo").isValid()) {
-            return value.toString() >= property("rangeFrom").toString() && value.toString() <= property("rangeTo").toString();
-        } else if (property("rangeFrom").isValid()) {
-            return value.toString() >= property("rangeFrom").toString();
-        } else if (property("rangeTo").isValid()) {
-            return value.toString() <= property("rangeTo").toString();
+        break;
+    }
+    case QVariant::DateTime: {
+        if (propFrom.isValid() && propTo.isValid()) {
+            return value.toDateTime() >= propFrom.toDateTime() && value.toDateTime() <= propTo.toDateTime();
         }
-    } else if (value.type() == QVariant::Time) {
-        if (property("rangeFrom").isValid() && property("rangeTo").isValid()) {
-            return value.toTime() >= property("rangeFrom").toTime() && value.toTime() <= property("rangeTo").toTime();
-        } else if (property("rangeFrom").isValid()) {
-            return value.toTime() >= property("rangeFrom").toTime();
-        } else if (property("rangeTo").isValid()) {
-            return value.toTime() <= property("rangeTo").toTime();
+        if (propFrom.isValid()) {
+            return value.toDateTime() >= propFrom.toDateTime();
         }
-    } else if (value.type() == QVariant::UInt) {
-        if (property("rangeFrom").isValid() && property("rangeTo").isValid()) {
-            return value.toUInt() >= property("rangeFrom").toUInt() && value.toUInt() <= property("rangeTo").toUInt();
-        } else if (property("rangeFrom").isValid()) {
-            return value.toUInt() >= property("rangeFrom").toUInt();
-        } else if (property("rangeTo").isValid()) {
-            return value.toUInt() <= property("rangeTo").toUInt();
+        if (propTo.isValid()) {
+            return value.toDateTime() <= propTo.toDateTime();
         }
-    } else if (value.type() == QVariant::ULongLong) {
-        if (property("rangeFrom").isValid() && property("rangeTo").isValid()) {
-            return value.toULongLong() >= property("rangeFrom").toULongLong() && value.toULongLong() <= property("rangeTo").toULongLong();
-        } else if (property("rangeFrom").isValid()) {
-            return value.toULongLong() >= property("rangeFrom").toULongLong();
-        } else if (property("rangeTo").isValid()) {
-            return value.toULongLong() <= property("rangeTo").toULongLong();
+        break;
+    }
+    case QVariant::Double: {
+        if (propFrom.isValid() && propTo.isValid()) {
+            return value.toDouble() >= propFrom.toDouble() && value.toDouble() <= propTo.toDouble();
         }
+        if (propFrom.isValid()) {
+            return value.toDouble() >= propFrom.toDouble();
+        }
+        if (propTo.isValid()) {
+            return value.toDouble() <= propTo.toDouble();
+        }
+        break;
+    }
+    case QVariant::Int: {
+        if (propFrom.isValid() && propTo.isValid()) {
+            return value.toInt() >= propFrom.toInt() && value.toInt() <= propTo.toInt();
+        }
+        if (propFrom.isValid()) {
+            return value.toInt() >= propFrom.toInt();
+        }
+        if (propTo.isValid()) {
+            return value.toInt() <= propTo.toInt();
+        }
+        break;
+    }
+    case QVariant::LongLong: {
+        if (propFrom.isValid() && propTo.isValid()) {
+            return value.toLongLong() >= propFrom.toLongLong() && value.toLongLong() <= propTo.toLongLong();
+        }
+        if (propFrom.isValid()) {
+            return value.toLongLong() >= propFrom.toLongLong();
+        }
+        if (propTo.isValid()) {
+            return value.toLongLong() <= propTo.toLongLong();
+        }
+        break;
+    }
+    case QVariant::String: {
+        if (propFrom.isValid() && propTo.isValid()) {
+            return value.toString() >= propFrom.toString() && value.toString() <= propTo.toString();
+        }
+        if (propFrom.isValid()) {
+            return value.toString() >= propFrom.toString();
+        }
+        if (propTo.isValid()) {
+            return value.toString() <= propTo.toString();
+        }
+        break;
+    }
+    case QVariant::Time: {
+        if (propFrom.isValid() && propTo.isValid()) {
+            return value.toTime() >= propFrom.toTime() && value.toTime() <= propTo.toTime();
+        }
+        if (propFrom.isValid()) {
+            return value.toTime() >= propFrom.toTime();
+        }
+        if (propTo.isValid()) {
+            return value.toTime() <= propTo.toTime();
+        }
+        break;
+    }
+    case QVariant::UInt: {
+        if (propFrom.isValid() && propTo.isValid()) {
+            return value.toUInt() >= propFrom.toUInt() && value.toUInt() <= propTo.toUInt();
+        }
+        if (propFrom.isValid()) {
+            return value.toUInt() >= propFrom.toUInt();
+        }
+        if (propTo.isValid()) {
+            return value.toUInt() <= propTo.toUInt();
+        }
+        break;
+    }
+    case QVariant::ULongLong: {
+        if (propFrom.isValid() && propTo.isValid()) {
+            return value.toULongLong() >= propFrom.toULongLong() && value.toULongLong() <= propTo.toULongLong();
+        }
+        if (propFrom.isValid()) {
+            return value.toULongLong() >= propFrom.toULongLong();
+        }
+        if (propTo.isValid()) {
+            return value.toULongLong() <= propTo.toULongLong();
+        }
+        break;
+    }
+    default:
+        break;
     }
     return true;
 }
 
-void QRangeFilter::setEditorData(QWidget * editor, const QModelIndex & index)
+void QRangeFilter::setEditorData(QWidget *editor, const QModelIndex &index)
 {
     Q_UNUSED(index);
-    QRangeFilterEditor* w = qobject_cast<QRangeFilterEditor*>(editor);
+    auto *w = qobject_cast<QRangeFilterEditor *>(editor);
     if (w) {
-        QRangeFilterEditorPopup* p = qobject_cast<QRangeFilterEditorPopup*>(w->popup());
+        auto *p = qobject_cast<QRangeFilterEditorPopup *>(w->popup());
         p->setRangeFrom(property("rangeFrom").toString());
         p->setRangeTo(property("rangeTo").toString());
     }
 }
 
-void QRangeFilter::setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index)
+void QRangeFilter::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index)
 {
     Q_UNUSED(index);
-    const QRangeFilterEditor* w = qobject_cast<QRangeFilterEditor*>(editor);
+    const QRangeFilterEditor *w = qobject_cast<QRangeFilterEditor *>(editor);
     if (w) {
-        const QRangeFilterEditorPopup* p = qobject_cast<QRangeFilterEditorPopup*>(w->popup());
+        const QRangeFilterEditorPopup *p = qobject_cast<QRangeFilterEditorPopup *>(w->popup());
         QVariantMap properties(index.data(Qt::EditRole).toMap());
         if (p->rangeFrom().isEmpty()) {
             properties["rangeFrom"] = QVariant();
@@ -246,7 +280,7 @@ void QRangeFilter::setModelData(QWidget* editor, QAbstractItemModel * model, con
             properties["rangeFrom"] = p->rangeFrom();
         }
         if (p->rangeTo().isEmpty()) {
-            properties["rangeTo"] =  QVariant();
+            properties["rangeTo"] = QVariant();
         } else {
             properties["rangeTo"] = p->rangeTo();
         }
@@ -254,15 +288,15 @@ void QRangeFilter::setModelData(QWidget* editor, QAbstractItemModel * model, con
     }
 }
 
-void QRangeFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
+void QRangeFilter::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
     Q_UNUSED(index)
-    QRangeFilterEditor* e = qobject_cast<QRangeFilterEditor*>(editor);
+    auto *e = qobject_cast<QRangeFilterEditor *>(editor);
     e->setGeometry(option.rect);
     e->showPopup();
 }
 
-QDebug operator<<(QDebug dbg, const QRangeFilter & f)
+QDebug operator<<(QDebug dbg, const QRangeFilter &f)
 {
     dbg << "(QRangeFilter:"
         << "row:" << f.row()

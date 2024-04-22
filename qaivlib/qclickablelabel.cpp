@@ -23,16 +23,12 @@
 
 #include <QMouseEvent>
 
-QClickableLabel::QClickableLabel(QWidget* parent) :
+QClickableLabel::QClickableLabel(QWidget *parent) :
     QLabel(parent)
 {
 }
 
-QClickableLabel::~QClickableLabel()
-{
-}
-
-void QClickableLabel::mousePressEvent(QMouseEvent* event)
+void QClickableLabel::mousePressEvent(QMouseEvent *event)
 {
     emit clicked(event->buttons());
 }

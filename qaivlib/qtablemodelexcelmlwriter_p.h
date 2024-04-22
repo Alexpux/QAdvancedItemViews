@@ -27,21 +27,20 @@ class QAdvancedTableView;
 class QIODevice;
 class QTableView;
 
-class QTableModelExcelMLWriter
-{
+class QTableModelExcelMLWriter {
 public:
-    explicit QTableModelExcelMLWriter(QIODevice* device);
-    ~QTableModelExcelMLWriter();
+    explicit QTableModelExcelMLWriter(QIODevice *device);
+    ~QTableModelExcelMLWriter() = default;
 
     void setIncludeHeader(bool on);
     void setRole(int role);
-    bool write(QAdvancedTableView* view, bool all);
-    bool write(QTableView* view, bool all);
+    bool write(QAdvancedTableView *view, bool all);
+    bool write(QTableView *view, bool all);
 
 private:
-    bool m_includeHeader{true};
-    int m_role{Qt::DisplayRole};
-    QIODevice* m_device{nullptr};
+    bool m_includeHeader { true };
+    int m_role { Qt::DisplayRole };
+    QIODevice *m_device { nullptr };
 };
 
 #endif // QTABLEMODELXMLWRITER_P_H

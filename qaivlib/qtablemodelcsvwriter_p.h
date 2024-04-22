@@ -25,17 +25,16 @@ class QAdvancedTableView;
 class QIODevice;
 class QTableView;
 
-class QTableModelCsvWriter
-{
+class QTableModelCsvWriter {
 public:
-    explicit QTableModelCsvWriter(QIODevice* device);
-    ~QTableModelCsvWriter();
+    explicit QTableModelCsvWriter(QIODevice *device);
+    ~QTableModelCsvWriter() = default;
 
-    bool writeAll(QAdvancedTableView* view, bool all);
-    bool writeAll(QTableView* view, bool all);
+    bool writeAll(QAdvancedTableView *view, bool all);
+    bool writeAll(QTableView *view, bool all);
 
 private:
-    QIODevice* m_device{nullptr};
+    QIODevice *m_device { nullptr };
 };
 
 #endif // QTABLEMODELCSVWRITER_P_H

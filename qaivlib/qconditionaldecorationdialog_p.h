@@ -32,33 +32,30 @@ class QModelIndex;
 class QTableView;
 class ValueEdit;
 
-class RangeEdit : public QWidget
-{
+class RangeEdit : public QWidget {
     Q_OBJECT
 public:
-    RangeEdit(QAbstractItemModel* model, int column, QWidget* parent = nullptr);
+    RangeEdit(QAbstractItemModel *model, int column, QWidget *parent = nullptr);
 
     void setColumn(int col);
 
-    void setRange(const QVariant & from, const QVariant & to);
+    void setRange(const QVariant &from, const QVariant &to);
 
     QVariant rangeFrom() const;
 
     QVariant rangeTo() const;
 
 private:
-    int m_column{0};
-    ValueEdit* m_fromEdit{nullptr};
-    ValueEdit* m_toEdit{nullptr};
-    QAbstractItemModel* m_model{nullptr};
+    int m_column { 0 };
+    ValueEdit *m_fromEdit { nullptr };
+    ValueEdit *m_toEdit { nullptr };
+    QAbstractItemModel *m_model { nullptr };
 };
 
-
-class SelectValueDialog : public QDialog
-{
+class SelectValueDialog : public QDialog {
     Q_OBJECT
 public:
-    SelectValueDialog(QAbstractItemModel* model, int column, QWidget* parent);
+    SelectValueDialog(QAbstractItemModel *model, int column, QWidget *parent);
 
     int selectedColumn() const;
 
@@ -69,25 +66,24 @@ public:
     void setSelectionMode(QAbstractItemView::SelectionMode mode);
 
 private slots:
-    //void columnsComboBoxActivate(int index);
-    void doubleClicked(const QModelIndex & index);
+    // void columnsComboBoxActivate(int index);
+    void doubleClicked(const QModelIndex &index);
 
 private:
-    QComboBox* m_columnsComboBox{nullptr};
-    QTableView* m_view{nullptr};
+    QComboBox *m_columnsComboBox { nullptr };
+    QTableView *m_view { nullptr };
 };
 
-class ValueEdit : public QWidget
-{
+class ValueEdit : public QWidget {
     Q_OBJECT
 public:
-    ValueEdit(QAbstractItemModel* model, int column, QWidget* parent = nullptr);
+    ValueEdit(QAbstractItemModel *model, int column, QWidget *parent = nullptr);
 
     int column() const;
 
     void setColumn(int col);
 
-    void setValue(const QVariant & value);
+    void setValue(const QVariant &value);
 
     QVariant value() const;
 
@@ -95,10 +91,9 @@ private slots:
     void buttonClicked();
 
 private:
-    int m_column{0};
-    QLineEdit* m_edit{nullptr};
-    QAbstractItemModel* m_model{nullptr};
+    int m_column { 0 };
+    QLineEdit *m_edit { nullptr };
+    QAbstractItemModel *m_model { nullptr };
 };
-
 
 #endif // QCONDITIONALDECORATIONDIALOG_P_H

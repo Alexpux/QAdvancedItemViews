@@ -29,21 +29,15 @@ QFilterEditorPopupWidget::QFilterEditorPopupWidget(QWidget *parent) :
     QFrame(parent, Qt::Popup | Qt::Window)
 {
 }
-/**
- * Destroys the QFilterEditorPopupWidget.
- */
-QFilterEditorPopupWidget::~QFilterEditorPopupWidget()
-{
-}
 
-bool QFilterEditorPopupWidget::cancelAndClose(QObject* obj, int key) const
+bool QFilterEditorPopupWidget::cancelAndClose(QObject *obj, int key) const
 {
     Q_UNUSED(obj);
     Q_UNUSED(key);
     return false;
 }
 
-bool QFilterEditorPopupWidget::commitAndClose(QObject* obj, int key) const
+bool QFilterEditorPopupWidget::commitAndClose(QObject *obj, int key) const
 {
     Q_UNUSED(obj);
     Q_UNUSED(key);

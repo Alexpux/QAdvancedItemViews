@@ -21,14 +21,13 @@
 #ifndef QFILTEREDITORWIDGET_H
 #define QFILTEREDITORWIDGET_H
 
-#include <QWidget>
 #include <QAbstractItemDelegate>
+#include <QWidget>
 
 class QFilterEditorPopupWidget;
 
 //! The class QFilterEditorBase provides the base class for implenting a filter editor
-class QFilterEditorWidget : public QWidget
-{
+class QFilterEditorWidget : public QWidget {
     Q_OBJECT
 public:
     /**
@@ -38,17 +37,17 @@ public:
     /**
      * Destroys the QFilterEditorBase.
      */
-    ~QFilterEditorWidget();
+    ~QFilterEditorWidget() = default;
     /**
      * Returns the popup widget, or 0 if the editor does not have a popup widget.
      * @see setPopup()
      */
-    QFilterEditorPopupWidget* popup() const;
+    QFilterEditorPopupWidget *popup() const;
     /**
      * Sets the popup widget to @p widget.
      * @sa popup();
      */
-    void setPopup(QFilterEditorPopupWidget* widget);
+    void setPopup(QFilterEditorPopupWidget *widget);
 
 signals:
     /**
@@ -79,14 +78,14 @@ protected:
     /**
      * @reimp QWidget::eventFilter()
      */
-    virtual bool eventFilter(QObject* object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
     /**
      * @reimp QWidget::moveEvent()
      */
-    void moveEvent(QMoveEvent* e);
+    void moveEvent(QMoveEvent *e) override;
 
 private:
-    QFilterEditorPopupWidget* m_popup{nullptr};
+    QFilterEditorPopupWidget *m_popup { nullptr };
 
     void movePopup();
 };

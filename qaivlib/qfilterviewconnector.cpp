@@ -20,6 +20,7 @@
 ******************************************************************************/
 
 #include "qfilterviewconnector.h"
+
 #include "qfilterview.h"
 
 #include <QHeaderView>
@@ -27,7 +28,7 @@
 #include <QTableView>
 #include <QTreeView>
 
-QFilterViewConnector::QFilterViewConnector(QFilterView* filterView) :
+QFilterViewConnector::QFilterViewConnector(QFilterView *filterView) :
     QObject(filterView)
 {
     cFilterView = filterView;
@@ -39,7 +40,7 @@ QFilterViewConnector::QFilterViewConnector(QFilterView* filterView) :
     }
 }
 
-QFilterViewConnector::QFilterViewConnector(QFilterView* filterView, QTableView* tableView, QObject* parent) :
+QFilterViewConnector::QFilterViewConnector(QFilterView *filterView, QTableView *tableView, QObject *parent) :
     QObject(parent)
 {
     cFilterView = filterView;
@@ -53,7 +54,7 @@ QFilterViewConnector::QFilterViewConnector(QFilterView* filterView, QTableView* 
     setDataView(tableView);
 }
 
-QFilterViewConnector::QFilterViewConnector(QFilterView* filterView, QTreeView* treeView, QObject* parent) :
+QFilterViewConnector::QFilterViewConnector(QFilterView *filterView, QTreeView *treeView, QObject *parent) :
     QObject(parent)
 {
     cFilterView = filterView;
@@ -71,9 +72,9 @@ QFilterViewConnector::QFilterViewConnector(QFilterView* filterView, QTreeView* t
 void QFilterViewConnector::setDataView(QTableView *view)
 {
     if (cTableView) {
-        disconnect(cFilterView->horizontalHeader(), 0, this, 0);
-        disconnect(cTableView->horizontalScrollBar(), 0, this, 0);
-        disconnect(cTableView->verticalHeader(), 0, this, 0);
+        disconnect(cFilterView->horizontalHeader(), nullptr, this, nullptr);
+        disconnect(cTableView->horizontalScrollBar(), nullptr, this, nullptr);
+        disconnect(cTableView->verticalHeader(), nullptr, this, nullptr);
     }
     cTableView = view;
     if (cTableView) {
@@ -91,7 +92,7 @@ void QFilterViewConnector::setDataView(QTableView *view)
 void QFilterViewConnector::setDataView(QTreeView *view)
 {
     if (cTreeView) {
-        disconnect(cTreeView->header(), 0, this, 0);
+        disconnect(cTreeView->header(), nullptr, this, nullptr);
     }
     cTreeView = view;
     if (cTreeView) {
@@ -114,7 +115,6 @@ void QFilterViewConnector::adjustVerticalHeaderWidth()
             cFilterView->verticalHeader()->blockSignals(true);
             cFilterView->verticalHeader()->setFixedWidth(cTableView->verticalHeader()->width());
             cFilterView->verticalHeader()->blockSignals(false);
-
         }
         if (cFilterView->model()->rowCount() > cFilterView->maxVisibileFilterSets()) {
             cTableView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -178,7 +178,6 @@ void QFilterViewConnector::dataViewVerticalScrollBarRangeChanged(int min, int ma
             cFilterView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
         }
     }
-
 }
 
 void QFilterViewConnector::filterViewHorizontalSectionMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex)

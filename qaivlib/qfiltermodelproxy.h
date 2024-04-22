@@ -22,7 +22,6 @@
 #define QFILTERMODELPROXY_H
 
 #include "qabstractfilterproxymodel.h"
-
 #include "qaivlib_global.h"
 
 class QAbstractFilterModel;
@@ -31,26 +30,25 @@ class QAbstractFilterModel;
 /**
  *
  */
-class QAIVLIBSHARED_EXPORT QFilterModelProxy : public QAbstractFilterProxyModel
-{
+class QAIVLIBSHARED_EXPORT QFilterModelProxy : public QAbstractFilterProxyModel {
     Q_OBJECT
 public:
     /**
      * Constructs a filter model with the given @p parent.
      */
-    explicit QFilterModelProxy(QObject* parent = nullptr);
+    explicit QFilterModelProxy(QObject *parent = nullptr);
     /**
      * Destroys the filter model.
      */
-    ~QFilterModelProxy();
+    ~QFilterModelProxy() = default;
 
-    QVariant data(const QModelIndex & index, int role) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
 
 protected:
     /**
      * @reimp
      */
-    bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const override;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 };
 
 #endif // QFILTERMODELPROXY_H

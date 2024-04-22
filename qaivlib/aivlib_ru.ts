@@ -10,18 +10,18 @@
     <message>
         <location filename="qabstractfiltermodel.cpp" line="73"/>
         <source>&lt;Filter&gt;</source>
-        <translation>&lt;Фильтр&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qabstractfiltermodel.cpp" line="117"/>
         <source>&lt;all&gt;</source>
-        <translation>&lt;все&gt;</translation>
+        <translation>&lt;Все&gt;</translation>
     </message>
     <message>
         <location filename="qabstractfiltermodel.cpp" line="223"/>
         <location filename="qabstractfiltermodel.cpp" line="232"/>
         <source>&lt;filter&gt;</source>
-        <translation>&lt;фильтр&gt;</translation>
+        <translation>&lt;Фильтр&gt;</translation>
     </message>
 </context>
 <context>
@@ -516,12 +516,12 @@
     <message>
         <location filename="qregularexpressionfilter.cpp" line="86"/>
         <source>The filter is case sensitive</source>
-        <translation>Фильтр учитывает регистр символов</translation>
+        <translation type="unfinished">Фильтр учитывает регистр символов</translation>
     </message>
     <message>
         <location filename="qregularexpressionfilter.cpp" line="89"/>
         <source>The filter is case insensitive</source>
-        <translation>Фильтр не учитывает регистр символов</translation>
+        <translation type="unfinished">Фильтр не учитывает регистр символов</translation>
     </message>
 </context>
 <context>

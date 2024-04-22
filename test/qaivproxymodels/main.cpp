@@ -1,45 +1,39 @@
-#include <QTest>
-
 #include <QMetaType>
 #include <QModelIndex>
 #include <QSignalSpy>
 #include <QStandardItemModel>
-
-#include <qaiv.h>
+#include <QTest>
 #include <qadvancedtableview.h>
+#include <qaiv.h>
 #include <qcheckstateproxymodel.h>
 #include <quniquevaluesproxymodel.h>
 
 Q_DECLARE_METATYPE(QModelIndex)
 
-class QTestCase : public QObject
-{
+class QTestCase : public QObject {
     Q_OBJECT
 public:
     explicit QTestCase(QObject *parent = nullptr);
-    QStandardItemModel* model() const
-    {
-        return m_model;
-    }
+
+    QStandardItemModel *model() const { return m_model; }
 
 protected:
     void initModel();
 
 private:
-    QStandardItemModel* m_model{nullptr};
+    QStandardItemModel *m_model { nullptr };
 };
 
-QTestCase::QTestCase(QObject *parent) : QObject(parent)
-{
-}
+QTestCase::QTestCase(QObject *parent) :
+    QObject(parent) { }
 
 void QTestCase::initModel()
 {
     m_model = new QStandardItemModel(this);
     m_model->setColumnCount(2);
 
-    QStandardItem* item;
-    QList<QStandardItem*> items;
+    QStandardItem *item;
+    QList<QStandardItem *> items;
 
     item = new QStandardItem("0, 0");
     item->setEnabled(true);
@@ -74,16 +68,12 @@ void QTestCase::initModel()
     m_model->appendRow(items);
 };
 
-class QCheckStateProxyModelTestCase : public QTestCase
-{
+class QCheckStateProxyModelTestCase : public QTestCase {
     Q_OBJECT
 public:
     explicit QCheckStateProxyModelTestCase(QObject *parent = nullptr);
 
-    QCheckStateProxyModel* proxy() const
-    {
-        return m_proxy;
-    }
+    QCheckStateProxyModel *proxy() const { return m_proxy; }
 
 private slots:
     void cleanup();
@@ -99,14 +89,12 @@ private slots:
     void setSourceModel();
 
 private:
-    QAdvancedTableView* m_view{nullptr};
-    QCheckStateProxyModel* m_proxy{nullptr};
+    QAdvancedTableView *m_view { nullptr };
+    QCheckStateProxyModel *m_proxy { nullptr };
 };
 
 QCheckStateProxyModelTestCase::QCheckStateProxyModelTestCase(QObject *parent) :
-    QTestCase(parent)
-{
-}
+    QTestCase(parent) { }
 
 void QCheckStateProxyModelTestCase::cleanup()
 {
@@ -120,10 +108,12 @@ void QCheckStateProxyModelTestCase::data()
     QCOMPARE(proxy()->index(1, 1).data().toString(), QString("1, 1"));
     proxy()->setColumnCheckable(1);
     proxy()->setData(proxy()->index(1, 1), Qt::Checked, Qt::CheckStateRole);
-    QCOMPARE(proxy()->index(1, 1).data(Qt::CheckStateRole).toInt(), int(Qt::Checked));
+    QCOMPARE(proxy()->index(1, 1).data(Qt::CheckStateRole).toInt(),
+             int(Qt::Checked));
 
     proxy()->setData(proxy()->index(1, 1), Qt::Unchecked, Qt::CheckStateRole);
-    QCOMPARE(proxy()->index(1, 1).data(Qt::CheckStateRole).toInt(), int(Qt::Unchecked));
+    QCOMPARE(proxy()->index(1, 1).data(Qt::CheckStateRole).toInt(),
+             int(Qt::Unchecked));
 
     QCOMPARE(spy.count(), 2);
 }
@@ -140,7 +130,7 @@ void QCheckStateProxyModelTestCase::initTestCase()
 
     initModel();
 
-    m_view = new QAdvancedTableView(0);
+    m_view = new QAdvancedTableView();
     m_view->show();
 }
 
@@ -163,7 +153,8 @@ void QCheckStateProxyModelTestCase::setAllChecked()
     proxy()->setColumnCheckable(0);
     proxy()->setColumnCheckable(1);
     proxy()->setAllChecked();
-    QCOMPARE(proxy()->checkedIndexes().size(), proxy()->rowCount() * proxy()->checkableColumnsCount());
+    QCOMPARE(proxy()->checkedIndexes().size(),
+             proxy()->rowCount() * proxy()->checkableColumnsCount());
     proxy()->setAllChecked(false);
     QCOMPARE(proxy()->checkedIndexes().size(), 0);
 
@@ -198,7 +189,7 @@ void QCheckStateProxyModelTestCase::setColumnCheckable()
 
 void QCheckStateProxyModelTestCase::setSourceModel()
 {
-    QCheckStateProxyModel* p = new QCheckStateProxyModel(this);
+    QCheckStateProxyModel *p = new QCheckStateProxyModel(this);
     QSignalSpy modelAboutToBeReset(p, SIGNAL(modelAboutToBeReset()));
     QSignalSpy modelReset(p, SIGNAL(modelAboutToBeReset()));
     p->setSourceModel(model());

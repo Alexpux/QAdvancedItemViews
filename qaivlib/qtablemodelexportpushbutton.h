@@ -1,13 +1,12 @@
 #ifndef QTABLEMODELEXPORTPUSHBUTTON_H
 #define QTABLEMODELEXPORTPUSHBUTTON_H
 
-#include <QPushButton>
-
 #include "qaivlib_global.h"
 
+#include <QPushButton>
+
 //! The QTableModelExportPushButton widget provides a command button for exporting table model data.
-class QAIVLIBSHARED_EXPORT QTableModelExportPushButton : public QPushButton
-{
+class QAIVLIBSHARED_EXPORT QTableModelExportPushButton : public QPushButton {
     Q_OBJECT
 public:
     /**
@@ -17,11 +16,11 @@ public:
     /**
      * Destroys the push button.
      */
-    ~QTableModelExportPushButton();
+    ~QTableModelExportPushButton() = default;
 
 signals:
-    void exportAllTriggered(const QByteArray & format);
-    void exportSelectionTriggered(const QByteArray & format);
+    void exportAllTriggered(const QByteArray &format);
+    void exportSelectionTriggered(const QByteArray &format);
 
 private slots:
     void exportAllTriggeredImpl();

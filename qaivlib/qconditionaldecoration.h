@@ -22,13 +22,12 @@
 #define QCONDITONALDECORATION_H
 
 #include "qabstractmodelitemdecoration.h"
-
 #include "qaivlib_global.h"
 
 class QConditionalDecorationProxyModel;
+
 //! The QConditionalDecoration provides a conditional decorarion for model items.
-class QAIVLIBSHARED_EXPORT QConditionalDecoration : public QAbstractItemModelDecoration
-{
+class QAIVLIBSHARED_EXPORT QConditionalDecoration : public QAbstractItemModelDecoration {
 public:
     /**
      * This enum describes the type of matches that can be used when decorating an item.
@@ -52,57 +51,59 @@ public:
         StartsWith, /*!< The data provided by the item starts with the search term. */
         StartsNotWith /**< The data provided by the item does not start the value. */
     };
+
     /**
-      * Constructs an invalid QConditionalDecoration.
-      */
+     * Constructs an invalid QConditionalDecoration.
+     */
     QConditionalDecoration();
+    QConditionalDecoration(const QConditionalDecoration &) = delete;
     /**
-      * Constructs a QConditionalDecoration with the specified @p column.
-      */
+     * Constructs a QConditionalDecoration with the specified @p column.
+     */
     explicit QConditionalDecoration(int column);
     /**
      * Adds a condition with the given @p matchFlag and @p value.
      */
-    void addCondition( QConditionalDecoration::MatchFlag matchFlag, const QVariant & value, const QString & set, const QString & name);
+    void addCondition(QConditionalDecoration::MatchFlag matchFlag, const QVariant &value, const QString &set, const QString &name);
     /**
-      * Returns the match flag for the given @p index or QModelItemDecoration::MatchFlagInvalid if @p index does not exists.
-      */
+     * Returns the match flag for the given @p index or QModelItemDecoration::MatchFlagInvalid if @p index does not exists.
+     */
     QConditionalDecoration::MatchFlag matchFlag(int index) const;
     /**
-      * Returns the number of conditions.
-      */
+     * Returns the number of conditions.
+     */
     int count() const;
     /**
      * Returns the decoration for the given @p index.
      */
-    QVariant decorate(const QModelIndex & index, int role = Qt::DecorationRole) const override;
+    QVariant decorate(const QModelIndex &index, int role = Qt::DecorationRole) const override;
     /**
-      * Returns the icon name of the condition at the given @p index or QString::null if @p index does not exists.
-      */
+     * Returns the icon name of the condition at the given @p index or QString::null if @p index does not exists.
+     */
     QString iconName(int index) const;
 
-    bool matches(const QModelIndex & index, const QVariantMap & properties) const;
+    bool matches(const QModelIndex &index, const QVariantMap &properties) const;
     /**
-      * Returns the properties of the condition at the given @p index.
-      */
+     * Returns the properties of the condition at the given @p index.
+     */
     QVariantMap properties(int index) const;
     /**
-      * Sets the item @p role that is used to query the source model's data when highlighting items.
-      */
+     * Sets the item @p role that is used to query the source model's data when highlighting items.
+     */
     void setHighlightRole(int role);
 
-    void setDefaultDecoration(const QString & set, const QString & name);
+    void setDefaultDecoration(const QString &set, const QString &name);
     /**
-      * Returns the value at the given @p index.
-      */
+     * Returns the value at the given @p index.
+     */
     QVariant value(int index) const;
 
 private:
-    bool equal(const QVariant & left, const QVariant & right) const;
-    bool greaterOrEqualThan(const QVariant & left, const QVariant & right) const;
-    bool greaterThan(const QVariant & left, const QVariant & right) const;
-    bool lessOrEqualThan(const QVariant & left, const QVariant & right) const;
-    bool lessThan(const QVariant & left, const QVariant & right) const;
+    bool equal(const QVariant &left, const QVariant &right) const;
+    bool greaterOrEqualThan(const QVariant &left, const QVariant &right) const;
+    bool greaterThan(const QVariant &left, const QVariant &right) const;
+    bool lessOrEqualThan(const QVariant &left, const QVariant &right) const;
+    bool lessThan(const QVariant &left, const QVariant &right) const;
 };
 
 #endif // QCONDITONALDECORATION_H

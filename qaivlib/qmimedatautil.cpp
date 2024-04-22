@@ -1,15 +1,15 @@
 #include "qmimedatautil.h"
 
-#include "qaiv.h"
-#include "qadvancedtableview.h"
 #include "qabstractfilterproxymodel.h"
+#include "qadvancedtableview.h"
+#include "qaiv.h"
 
 #include <QMimeData>
 #include <QTableView>
 #include <QTextStream>
 #include <QXmlStreamWriter>
 
-void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, QAbstractFilterProxyModel* proxy, int role)
+void qMimeDataAddCsv(QMimeData *mimeData, QAbstractItemModel *model, QItemSelectionModel *selectionModel, QHeaderView *horizontalHeader, QAbstractFilterProxyModel *proxy, int role)
 {
     if (!mimeData || !model || !horizontalHeader) {
         return;
@@ -22,7 +22,7 @@ void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelect
         for (int c = e.first.column(); c <= e.second.column(); c++) {
             if (!horizontalHeader->isSectionHidden(c)) {
                 QModelIndex index;
-                if (proxy == 0) {
+                if (proxy == nullptr) {
                     index = qSourceIndex(model->index(r, horizontalHeader->visualIndex(c)));
                 } else {
                     index = proxy->mapToSource(proxy->index(r, horizontalHeader->visualIndex(c)));
@@ -30,12 +30,12 @@ void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelect
                 l << "\"" + index.data(role).toString() + "\"";
             }
         }
-        stream << l.join(";") << Qt::endl;
+        stream << l.join(";") << ENDL;
     }
     mimeData->setData("text/csv", d);
 }
 
-void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, QAbstractFilterProxyModel* proxy, int role)
+void qMimeDataAddHtml(QMimeData *mimeData, QAbstractItemModel *model, QItemSelectionModel *selectionModel, QHeaderView *horizontalHeader, QAbstractFilterProxyModel *proxy, int role)
 {
     if (!mimeData || !model || !horizontalHeader) {
         return;
@@ -59,7 +59,7 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelec
         for (int c = e.first.column(); c <= e.second.column(); c++) {
             if (!horizontalHeader->isSectionHidden(c)) {
                 QModelIndex index;
-                if (proxy == 0) {
+                if (proxy == nullptr) {
                     index = qSourceIndex(model->index(r, horizontalHeader->visualIndex(c)));
                 } else {
                     index = proxy->mapToSource(proxy->index(r, horizontalHeader->visualIndex(c)));
@@ -111,7 +111,7 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelec
                 }
                 // close tag <td>
                 stream.writeEndElement();
-                //stream.writeTextElement("td", model->index(r, horizontalHeader->visualIndex(c)).data(role).toString());
+                // stream.writeTextElement("td", model->index(r, horizontalHeader->visualIndex(c)).data(role).toString());
             }
         }
         // close tag tr
@@ -126,7 +126,7 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelec
     mimeData->setData("text/html", d);
 }
 
-void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItemSelectionModel* selectionModel, QHeaderView* horizontalHeader, QAbstractFilterProxyModel* proxy, int role)
+void qMimeDataAddPlainText(QMimeData *mimeData, QAbstractItemModel *model, QItemSelectionModel *selectionModel, QHeaderView *horizontalHeader, QAbstractFilterProxyModel *proxy, int role)
 {
     if (!mimeData || !model || !horizontalHeader) {
         return;
@@ -139,7 +139,7 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItem
         for (int c = e.first.column(); c <= e.second.column(); c++) {
             if (!horizontalHeader->isSectionHidden(c)) {
                 QModelIndex index;
-                if (proxy == 0) {
+                if (proxy == nullptr) {
                     index = qSourceIndex(model->index(r, horizontalHeader->visualIndex(c)));
                 } else {
                     index = proxy->mapToSource(proxy->index(r, horizontalHeader->visualIndex(c)));
@@ -147,7 +147,7 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItem
                 l << index.data(role).toString();
             }
         }
-        stream << l.join("\t") << Qt::endl;
+        stream << l.join("\t") << ENDL;
     }
     mimeData->setData("text/plain", d);
 }
@@ -156,24 +156,25 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItem
  * @ingroup utils
  * Adds the @view's selection as CSV data to the given QMimeData container @p mimeData.
  */
-void qMimeDataAddCsv(QMimeData* mimeData, QAdvancedTableView* view, int role)
+void qMimeDataAddCsv(QMimeData *mimeData, QAdvancedTableView *view, int role)
 {
     qMimeDataAddCsv(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), view->filterProxyModel(), role);
 }
+
 /**
  * @ingroup utils
  * Adds the @view's selection as CSV data to the given QMimeData container @p mimeData.
  */
-void qMimeDataAddCsv(QMimeData* mimeData, QTableView* view, int role)
+void qMimeDataAddCsv(QMimeData *mimeData, QTableView *view, int role)
 {
-    qMimeDataAddCsv(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), 0, role);
+    qMimeDataAddCsv(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), nullptr, role);
 }
 
 /**
  * @ingroup utils
  * Adds the current @view's selection as a HTML table to the given QMimeData container @p mimeData.
  */
-void qMimeDataAddHtml(QMimeData* mimeData, QAdvancedTableView* view, int role)
+void qMimeDataAddHtml(QMimeData *mimeData, QAdvancedTableView *view, int role)
 {
     qMimeDataAddHtml(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), view->filterProxyModel(), role);
 }
@@ -182,16 +183,16 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAdvancedTableView* view, int role)
  * @ingroup utils
  * Adds the current @view's selection as a HTML table to the given QMimeData container @p mimeData.
  */
-void qMimeDataAddHtml(QMimeData* mimeData, QTableView* view, int role)
+void qMimeDataAddHtml(QMimeData *mimeData, QTableView *view, int role)
 {
-    qMimeDataAddHtml(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), 0, role);
+    qMimeDataAddHtml(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), nullptr, role);
 }
 
 /**
  * @ingroup utils
  * Adds the current @view's selection as plain text the given QMimeData container @p mimeData.
  */
-void qMimeDataAddPlainText(QMimeData* mimeData, QAdvancedTableView* view, int role)
+void qMimeDataAddPlainText(QMimeData *mimeData, QAdvancedTableView *view, int role)
 {
     qMimeDataAddPlainText(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), view->filterProxyModel(), role);
 }
@@ -200,16 +201,16 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QAdvancedTableView* view, int ro
  * @ingroup utils
  * Adds the current @view's selection as plain text the given QMimeData container @p mimeData.
  */
-void qMimeDataAddPlainText(QMimeData* mimeData, QTableView* view, int role)
+void qMimeDataAddPlainText(QMimeData *mimeData, QTableView *view, int role)
 {
-    qMimeDataAddPlainText(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), 0, role);
+    qMimeDataAddPlainText(mimeData, view->model(), view->selectionModel(), view->horizontalHeader(), nullptr, role);
 }
 
 /**
  * @ingroup utils
  * Returns a QModelIndex pair describing the top left and bottom right edges og the given @p selection.
  */
-QPair<QModelIndex, QModelIndex> selectionEdges(QItemSelection selection)
+QPair<QModelIndex, QModelIndex> selectionEdges(const QItemSelection &selection)
 {
     QPair<QModelIndex, QModelIndex> p;
     for (const QItemSelectionRange &range : selection) {

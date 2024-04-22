@@ -24,24 +24,20 @@
 #include "qabstractfilter.h"
 #include "qabstractfiltermodel.h"
 
-QFilterModelProxy::QFilterModelProxy(QObject* parent) :
+QFilterModelProxy::QFilterModelProxy(QObject *parent) :
     QAbstractFilterProxyModel(parent)
 {
 }
 
-QFilterModelProxy::~QFilterModelProxy()
-{
-}
-
-QVariant QFilterModelProxy::data(const QModelIndex & index, int role) const
+QVariant QFilterModelProxy::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::BackgroundRole && filterModel()->mode() == QAdvancedItemViews::HighlightMode) {
         QBrush b = qvariant_cast<QBrush>(QAbstractFilterProxyModel::data(index, role));
         QModelIndex mSourceIndex = mapToSource(index);
         QList<QColor> cl;
         for (int iRow = 0; iRow < filterModel()->rowCount(); iRow++) {
-            QList<QAbstractFilter*> filters = filterModel()->filtersAtRow(iRow);
-            for (const QAbstractFilter* f : filters) {
+            QList<QAbstractFilter *> filters = filterModel()->filtersAtRow(iRow);
+            for (const QAbstractFilter *f : qAsConst(filters)) {
                 int t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
                 if (f->isEnabled()) {
                     if (filterModel()->matchMode() == QAdvancedItemViews::MatchNormal) {
@@ -58,7 +54,8 @@ QVariant QFilterModelProxy::data(const QModelIndex & index, int role) const
         }
         if (cl.size() == 1) {
             return QBrush(cl.first());
-        } else if (cl.size() > 1) {
+        }
+        if (cl.size() > 1) {
             QLinearGradient g(QPointF(0, 50), QPointF(100, 50));
             qreal s = 1 / ((qreal)cl.size() - 1);
             g.setColorAt(0, cl.first());
@@ -73,7 +70,7 @@ QVariant QFilterModelProxy::data(const QModelIndex & index, int role) const
     return QAbstractFilterProxyModel::data(index, role);
 }
 
-bool QFilterModelProxy::filterAcceptsRow(int source_row, const QModelIndex & source_parent) const
+bool QFilterModelProxy::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     Q_UNUSED(source_parent)
     if (filterModel()->mode() == QAdvancedItemViews::HighlightMode) {
@@ -84,8 +81,8 @@ bool QFilterModelProxy::filterAcceptsRow(int source_row, const QModelIndex & sou
         int rr = -1;
         int fc = 0;
 
-        QList<QAbstractFilter*> filters = filterModel()->filtersAtRow(iRow);
-        for (const QAbstractFilter* f : filters) {
+        QList<QAbstractFilter *> filters = filterModel()->filtersAtRow(iRow);
+        for (const QAbstractFilter *f : qAsConst(filters)) {
             int t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
             if (f->isEnabled()) {
                 fc++;
@@ -111,7 +108,6 @@ bool QFilterModelProxy::filterAcceptsRow(int source_row, const QModelIndex & sou
                 r++;
             }
         }
-
     }
     if (r == -1) {
         return true;

@@ -21,25 +21,24 @@
 #ifndef QHEADERVIEWCONNECTOR_H
 #define QHEADERVIEWCONNECTOR_H
 
+#include "qaivlib_global.h"
+
 #include <QHeaderView>
 #include <QObject>
 #include <QPointer>
 
-#include "qaivlib_global.h"
-
 //! The QHeaderViewConnector class provides a connector to align QHeaderViews.
-class QAIVLIBSHARED_EXPORT QHeaderViewConnector : public QObject
-{
+class QAIVLIBSHARED_EXPORT QHeaderViewConnector : public QObject {
     Q_OBJECT
 public:
     /**
-      * Constructs a QHeaderViewConnector for the given @p orientation.
-      */
+     * Constructs a QHeaderViewConnector for the given @p orientation.
+     */
     explicit QHeaderViewConnector(Qt::Orientation orientation, QObject *parent = nullptr);
     /**
-      * Adds the given header @p view to the lists of aligned header views.
-      */
-    void append(QHeaderView* view);
+     * Adds the given header @p view to the lists of aligned header views.
+     */
+    void append(QHeaderView *view);
 
 public slots:
     void adjustSectionSize();
@@ -50,15 +49,14 @@ private slots:
     void sectionMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
     void sectionResized(int logicalIndex, int oldSize, int newSize);
     void sortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
-    void viewDestroyed(QObject* object);
+    void viewDestroyed(QObject *object);
 
 private:
-    bool cAdjustSectionSizePending{true};
+    bool cAdjustSectionSizePending { true };
     QList<QPointer<QHeaderView>> cHeaderViewList;
     Qt::Orientation cOrientation;
 
 signals:
-
 };
 
 #endif // QHEADERVIEWCONNECTOR_H

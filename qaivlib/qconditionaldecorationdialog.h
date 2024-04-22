@@ -27,7 +27,7 @@
 
 namespace Ui {
 class QConditionalDecorationDialog;
-}
+} // namespace Ui
 
 class ValueEdit;
 class QComboBox;
@@ -51,44 +51,43 @@ class QComboBox;
  * </table>
  * @image html qconditionaldecorationdialog02.png "QConditionalDecorationDialog: Select Value"
  */
-class QAIVLIBSHARED_EXPORT QConditionalDecorationDialog : public QDialog
-{
+class QAIVLIBSHARED_EXPORT QConditionalDecorationDialog : public QDialog {
     Q_OBJECT
 
 public:
     /**
-      * Constructs a conditional decoration dialog for the given @p index and with the given @p parent.
-      */
-    explicit QConditionalDecorationDialog(const QModelIndex & index, QWidget *parent = nullptr);
+     * Constructs a conditional decoration dialog for the given @p index and with the given @p parent.
+     */
+    explicit QConditionalDecorationDialog(const QModelIndex &index, QWidget *parent = nullptr);
     /**
-      * Destroys the QConditionalDecorationDialog.
-      */
+     * Destroys the QConditionalDecorationDialog.
+     */
     ~QConditionalDecorationDialog();
     /**
-      * Returns the properties.
-      */
+     * Returns the properties.
+     */
     QVariantMap properties() const;
 
-    void setProperties(const QModelIndex & index);
+    void setProperties(const QModelIndex &index);
 
 private slots:
     void addPushButtonClicked();
     void columnComboBoxActivated(int index);
     void comparisonComboBoxActivated(int index);
-    void iconSetComboBoxActivated(const QString & text);
+    void iconSetComboBoxActivated(const QString &text);
     void removePushButtonClicked();
 
 private:
     int column(int row) const;
 
-    QComboBox* columnComboBox();
-    QComboBox* conditionsComboBox();
-    QComboBox* iconSetComboBox(const QString & name);
-    ValueEdit* valueEdit();
+    QComboBox *columnComboBox();
+    QComboBox *conditionsComboBox();
+    QComboBox *iconSetComboBox(const QString &name);
+    ValueEdit *valueEdit();
 
     QVariantMap value(int row) const;
 
-    int m_defaultColumn{0};
+    int m_defaultColumn { 0 };
     QModelIndex m_index;
     QVariantMap cIconSets;
     QVariantMap cProperties;

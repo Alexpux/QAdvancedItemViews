@@ -21,52 +21,52 @@
 #ifndef QTEXTFILTER_H
 #define QTEXTFILTER_H
 
-#include "qaivlib_global.h"
 #include "qabstractfilter.h"
+#include "qaivlib_global.h"
 
 //! The QTextFilter class implements a filter on the textual (string) representation of a value.
 /**
  * @ingroup filter
  * @image html textfilter01.png "QTextFilter Editor"
  */
-class QAIVLIBSHARED_EXPORT QTextFilter : public QAbstractFilter
-{
+class QAIVLIBSHARED_EXPORT QTextFilter : public QAbstractFilter {
 public:
     enum {
         Type = 4
     };
+
     /**
-      * Constructs a text filter for the given @p column.
-      */
+     * Constructs a text filter for the given @p column.
+     */
     QTextFilter(int row, int column);
     /**
-      *
-      */
-    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const override;
+     *
+     */
+    QWidget *createEditor(QFilterViewItemDelegate *delegate, QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    void addContextMenuActions(QMenu* menu, QWidget* receiver) override;
+    void addContextMenuActions(QMenu *menu, QWidget *receiver) override;
     /**
-      * Returns the data stored under the given @p role for this filter.
-      * @see setData()
-      * @remarks Returns an invalid QVariant if the no data exists for the given @p role.
-      */
+     * Returns the data stored under the given @p role for this filter.
+     * @see setData()
+     * @remarks Returns an invalid QVariant if the no data exists for the given @p role.
+     */
     QVariant data(int role = Qt::DisplayRole) const override;
 
-    bool matches(const QVariant & value, int type) const override;
+    bool matches(const QVariant &value, int type) const override;
     /**
      * Sets the contents of the given @p editor to the data for the filter at the given @p index. Note that the @p index contains information about the filter model being used.
      */
-    void setEditorData(QWidget * editor, const QModelIndex & index) override;
+    void setEditorData(QWidget *editor, const QModelIndex &index) override;
     /**
      * Sets the data for the filter at the given @p index in the filter @p model to the contents of the given @p editor.
      */
-    void setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index) override;
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) override;
     /**
      * Updates the filter's @p editor geometry specified by index according to the style option given.
      */
-    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) override;
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) override;
 };
 
-QDebug operator<<(QDebug dbg, const QTextFilter & f);
+QDebug operator<<(QDebug dbg, const QTextFilter &f);
 
 #endif // QTEXTFILTER_H

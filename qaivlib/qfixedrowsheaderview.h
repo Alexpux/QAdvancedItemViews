@@ -21,22 +21,17 @@
 #ifndef QFIXEDROWSHEADERVIEW_H
 #define QFIXEDROWSHEADERVIEW_H
 
-#include <QHeaderView>
-
 #include "qaivlib_global.h"
 
-class QAIVLIBSHARED_EXPORT QFixedRowsHeaderView : public QHeaderView
-{
+#include <QHeaderView>
+
+class QAIVLIBSHARED_EXPORT QFixedRowsHeaderView : public QHeaderView {
     Q_OBJECT
 public:
     explicit QFixedRowsHeaderView(Qt::Orientation orientation, QWidget *parent = nullptr);
 
-signals:
-
-public slots:
-
 protected:
-    virtual void mouseReleaseEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent *event) override;
 };
 
 #endif // QFIXEDROWSHEADERVIEW_H

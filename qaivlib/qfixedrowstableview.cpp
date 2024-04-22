@@ -23,47 +23,43 @@
 
 #include <QDebug>
 
-class QFixedRowsTableViewPrivate
-{
+class QFixedRowsTableViewPrivate {
 public:
-    explicit QFixedRowsTableViewPrivate(QFixedRowsTableView* tv);
-    ~QFixedRowsTableViewPrivate();
+    explicit QFixedRowsTableViewPrivate(QFixedRowsTableView *tv);
+    ~QFixedRowsTableViewPrivate() = default;
 
-    QFixedRowsFilterProxyModel* filterProxy{nullptr};
-    QFixedRowsDecorationProxyModel* decorationProxy{nullptr};
-    QFixedRowsTableView* v{nullptr};
+    QFixedRowsFilterProxyModel *filterProxy { nullptr };
+    QFixedRowsDecorationProxyModel *decorationProxy { nullptr };
+    QFixedRowsTableView *v { nullptr };
 };
 
 QFixedRowsTableViewPrivate::QFixedRowsTableViewPrivate(QFixedRowsTableView *tv) :
-    v{tv}
+    v { tv }
 {
 }
 
-QFixedRowsTableViewPrivate::~QFixedRowsTableViewPrivate()
-{
-}
-
-class QFixedRowsDecorationProxyModelPrivate
-{
+class QFixedRowsDecorationProxyModelPrivate {
 public:
-    explicit QFixedRowsDecorationProxyModelPrivate(QFixedRowsDecorationProxyModel* pm) : m{pm} {}
-    ~QFixedRowsDecorationProxyModelPrivate() {}
+    explicit QFixedRowsDecorationProxyModelPrivate(QFixedRowsDecorationProxyModel *pm) :
+        m { pm } { }
 
-    bool enabled{false};
-    QFixedRowsDecorationProxyModel* m{nullptr};
+    ~QFixedRowsDecorationProxyModelPrivate() = default;
+
+    bool enabled { false };
+    QFixedRowsDecorationProxyModel *m { nullptr };
     QPointer<QFixedRowsFilterProxyModel> filterProxy;
-    //QList<QPersistentModelIndex> rows;
+    // QList<QPersistentModelIndex> rows;
 };
 
-class QFixedRowsFilterProxyModelPrivate
-{
+class QFixedRowsFilterProxyModelPrivate {
 public:
-    explicit QFixedRowsFilterProxyModelPrivate(QFixedRowsFilterProxyModel* pm) : m{pm} {}
+    explicit QFixedRowsFilterProxyModelPrivate(QFixedRowsFilterProxyModel *pm) :
+        m { pm } { }
 
-    ~QFixedRowsFilterProxyModelPrivate() {}
+    ~QFixedRowsFilterProxyModelPrivate() = default;
 
-    bool enabled{false};
-    QFixedRowsFilterProxyModel* m{nullptr};
+    bool enabled { false };
+    QFixedRowsFilterProxyModel *m { nullptr };
     QList<QPersistentModelIndex> rows;
 };
 
@@ -110,7 +106,7 @@ bool QFixedRowsFilterProxyModel::isEnabled() const
 
 bool QFixedRowsFilterProxyModel::isRowPinned(int row) const
 {
-    if (sourceModel() == 0 || !d->enabled) {
+    if (sourceModel() == nullptr || !d->enabled) {
         return false;
     }
     return d->rows.contains(QPersistentModelIndex(sourceModel()->index(row, 0)));
@@ -150,7 +146,6 @@ void QFixedRowsFilterProxyModel::setRowFixed(const QModelIndex &index, bool fixe
     if (fixed) {
 
     } else {
-
     }
 }
 
@@ -205,11 +200,11 @@ void QFixedRowsDecorationProxyModel::setEnabled(bool on)
     }
 }
 
-void QFixedRowsDecorationProxyModel::toggleRow(const QModelIndex & index)
+void QFixedRowsDecorationProxyModel::toggleRow(const QModelIndex &index)
 {
     QModelIndex i(index);
-    const QAbstractProxyModel* p;
-    while (i.model() != sourceModel() && (p = qobject_cast<const QAbstractProxyModel*>(i.model()))) {
+    const QAbstractProxyModel *p;
+    while (i.model() != sourceModel() && (p = qobject_cast<const QAbstractProxyModel *>(i.model()))) {
         i = p->mapToSource(i);
     }
     d->filterProxy->toggleRow(i);
@@ -304,10 +299,9 @@ void QFixedRowsTableView::updateHeight()
 void QFixedRowsTableView::verticalHeaderSectionClicked(int section)
 {
     QModelIndex i = model()->index(section, 0);
-    const QAbstractProxyModel* proxy;
-    while ((proxy = qobject_cast<const QAbstractProxyModel*>(i.model()))) {
+    const QAbstractProxyModel *proxy;
+    while ((proxy = qobject_cast<const QAbstractProxyModel *>(i.model()))) {
         i = proxy->mapToSource(i);
     }
     d->filterProxy->toggleRow(i);
 }
-

@@ -21,76 +21,74 @@
 #ifndef QABSTRACTFILTERPROXYMODEL_H
 #define QABSTRACTFILTERPROXYMODEL_H
 
-#include <QSortFilterProxyModel>
-
 #include "qaivlib_global.h"
+
+#include <QSortFilterProxyModel>
 
 class QAbstractFilterModel;
 class QAbstractFilterProxyModelPrivate;
 
 //! The QAbstractFilterProxyModel provides an abstract base class for filter models.
-class QAIVLIBSHARED_EXPORT QAbstractFilterProxyModel : public QSortFilterProxyModel
-{
+class QAIVLIBSHARED_EXPORT QAbstractFilterProxyModel : public QSortFilterProxyModel {
     Q_OBJECT
-//    Q_PROPERTY(QAdvancedItemViews::FilterProxyModelMode mode READ mode WRITE setMode)
+    //    Q_PROPERTY(QAdvancedItemViews::FilterProxyModelMode mode READ mode WRITE setMode)
 public:
     /**
-      * Constructs a QAbstractFilterProxyModel with the given @p parent.
-      */
-    QAbstractFilterProxyModel(QObject* parent = nullptr);
+     * Constructs a QAbstractFilterProxyModel with the given @p parent.
+     */
+    explicit QAbstractFilterProxyModel(QObject *parent = nullptr);
     /**
      * Destroys the filter proxy model.
      */
     ~QAbstractFilterProxyModel();
     /**
-      * Returns the filter model accosiated with proxy model.
-      * @see setFilterModel()
-      */
-    QAbstractFilterModel* filterModel() const;
+     * Returns the filter model accosiated with proxy model.
+     * @see setFilterModel()
+     */
+    QAbstractFilterModel *filterModel() const;
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     /**
-      * Sets the filter @p model providing the filter definitions.
-      * @see filterModel()
-      */
-    void setFilterModel(QAbstractFilterModel* filterModel);
+     * Sets the filter @p model providing the filter definitions.
+     * @see filterModel()
+     */
+    void setFilterModel(QAbstractFilterModel *filterModel);
     /**
      * @reimp QSortFilterProxyModel
      */
-    virtual void setSourceModel(QAbstractItemModel* sourceModel) override;
+    void setSourceModel(QAbstractItemModel *sourceModel) override;
 
     virtual QModelIndex mapDeepFromSource(const QModelIndex &sourceIndex) const;
 
-    //QModelIndex mapFromSource(const QModelIndex &sourceIndex) const override;
+    // QModelIndex mapFromSource(const QModelIndex &sourceIndex) const override;
 
 signals:
     /**
-      * This signal is emitted before the filter current filtering is invalidated.
-      * @see resultChanged()
-      */
+     * This signal is emitted before the filter current filtering is invalidated.
+     * @see resultChanged()
+     */
     void resultAboutToChange();
     /**
-      * This signal is emitted after the filtering has been completed.
-      * @see resultChanged(), resultCountChanged()
-      */
+     * This signal is emitted after the filtering has been completed.
+     * @see resultChanged(), resultCountChanged()
+     */
     void resultChanged();
     /**
-      * This signal is emitted whenever the number of rows in the filtered result set has changed.
-      */
+     * This signal is emitted whenever the number of rows in the filtered result set has changed.
+     */
     void resultCountChanged(int filteredRows, int unfilteredRows);
 
 protected:
     void emitResultCountChanged();
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const override = 0;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override = 0;
 
 private slots:
     void updateResult();
 
 private:
-    QAbstractFilterProxyModelPrivate* d;
+    QAbstractFilterProxyModelPrivate *d;
 
-    QModelIndex getIndexForModel(const QAbstractItemModel* model, const QModelIndex &sourceIndex) const;
+    QModelIndex getIndexForModel(const QAbstractItemModel *model, const QModelIndex &sourceIndex) const;
 };
 
 #endif // QABSTRACTFILTERPROXYMODEL_H
-

@@ -21,21 +21,20 @@
 #ifndef QSHAREDITEMSELECTIONMODEL_H
 #define QSHAREDITEMSELECTIONMODEL_H
 
-#include <QItemSelectionModel>
-
 #include "qaivlib_global.h"
+
+#include <QItemSelectionModel>
 
 class QSharedItemSelectionModelPrivate;
 
 //! The QSharedItemSelectionModel class implements a selection model which can be shared by other selection models.
-class QAIVLIBSHARED_EXPORT QSharedItemSelectionModel : public QItemSelectionModel
-{
+class QAIVLIBSHARED_EXPORT QSharedItemSelectionModel : public QItemSelectionModel {
     Q_OBJECT
 public:
     /**
      * Constructs a QSharedItemSelectionModel.
      */
-    QSharedItemSelectionModel(QAbstractItemModel* model, QItemSelectionModel* shared, QObject *parent = nullptr);
+    QSharedItemSelectionModel(QAbstractItemModel *model, QItemSelectionModel *shared, QObject *parent = nullptr);
     /**
      * Destroys the QSharedItemSelectionModel.
      */
@@ -45,17 +44,17 @@ public slots:
     /**
      * @reimp QItemSelectionModel::select()
      */
-    void select(const QModelIndex & index, QItemSelectionModel::SelectionFlags command);
+    void select(const QModelIndex &index, QItemSelectionModel::SelectionFlags command) override;
     /**
      * @reimp QItemSelectionModel::select()
      */
-    void select(const QItemSelection & selection, QItemSelectionModel::SelectionFlags command);
+    void select(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command) override;
 
 private slots:
-    void sharedSelectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
+    void sharedSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
-    QSharedItemSelectionModelPrivate* d;
+    QSharedItemSelectionModelPrivate *d;
 };
 
 #endif // QSHAREDITEMSELECTIONMODEL_H

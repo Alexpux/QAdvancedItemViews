@@ -21,12 +21,12 @@
 #ifndef QABSTRACTFILTERMODEL_H
 #define QABSTRACTFILTERMODEL_H
 
+#include "qaiv.h"
+#include "qaivlib_global.h"
+
 #include <QAbstractItemModel>
 #include <QAction>
 #include <QMenu>
-
-#include "qaiv.h"
-#include "qaivlib_global.h"
 
 class QAbstractFilterProxyModel;
 class QAbstractFilter;
@@ -36,10 +36,9 @@ class QAbstractFilterModelPrivate;
 
 //! The QAbstractFilterModel class provides the abstract interface for filter model classes.
 /**
-  * The QAbstractFilterModel class defines the standard interface that filter models must use to be able to interoperate with an advanced table view.
-  */
-class QAIVLIBSHARED_EXPORT QAbstractFilterModel : public QAbstractItemModel
-{
+ * The QAbstractFilterModel class defines the standard interface that filter models must use to be able to interoperate with an advanced table view.
+ */
+class QAIVLIBSHARED_EXPORT QAbstractFilterModel : public QAbstractItemModel {
     Q_OBJECT
 public:
     struct FilterTypeEntry {
@@ -48,6 +47,7 @@ public:
         QString text;
         QString tooltip;
     };
+
     /**
      * The QAbstractFilterModel defined additional item data roles for data needed by the view.
      */
@@ -56,93 +56,94 @@ public:
         DefaultFilterTypeRole,
         ColumnFilterTypesRole
     };
+
     /**
-      * Constructs an abstract filter model with the given @p parent.
-      */
-    QAbstractFilterModel(QObject* parent = nullptr);
+     * Constructs an abstract filter model with the given @p parent.
+     */
+    explicit QAbstractFilterModel(QObject *parent = nullptr);
     /**
-      * Destroys the abstract filter model.
-      */
+     * Destroys the abstract filter model.
+     */
     ~QAbstractFilterModel();
     /**
-      * @reimp
-      * Returns the number of columns of the underlaying data (source) model.
-      */
-    int columnCount(const QModelIndex & parent = QModelIndex()) const;
+     * @reimp
+     * Returns the number of columns of the underlaying data (source) model.
+     */
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     /**
-      *
-      */
-    virtual QAbstractFilter* createFilter(const QModelIndex & index, const QVariantMap & properties) const = 0;
+     *
+     */
+    virtual QAbstractFilter *createFilter(const QModelIndex &index, const QVariantMap &properties) const = 0;
     /**
-      * Returns the data stored under the given @p role for the filter referred to by the @p index.
-      * @note
-      * Returns an invalid QVariant if the given @p index is invalid or no folter exists for the the given @p index.
-      * @see setData()
-      */
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+     * Returns the data stored under the given @p role for the filter referred to by the @p index.
+     * @note
+     * Returns an invalid QVariant if the given @p index is invalid or no folter exists for the the given @p index.
+     * @see setData()
+     */
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     /**
-      * Returns the filter group for the given @p index or 0 if no filter group exists for the specified @p index.
-      */
-    QFilterGroup* filterGroup(const QModelIndex & index) const;
+     * Returns the filter group for the given @p index or 0 if no filter group exists for the specified @p index.
+     */
+    QFilterGroup *filterGroup(const QModelIndex &index) const;
     /**
-      * Return the filter group at @p row or 0 if there is no filter group at the specified @p row.
-      */
-    QFilterGroup* groupAt(int row) const;
+     * Return the filter group at @p row or 0 if there is no filter group at the specified @p row.
+     */
+    QFilterGroup *groupAt(int row) const;
     /**
-      * Returns the filter at the specified @p index.
-      */
-    QAbstractFilter* filter(const QModelIndex & index) const;
+     * Returns the filter at the specified @p index.
+     */
+    QAbstractFilter *filter(const QModelIndex &index) const;
     QIcon filterDisabledIcon() const;
     QIcon filterEnabledIcon() const;
-    QList<QAbstractFilter*> filtersAtRow(int row) const;
+    QList<QAbstractFilter *> filtersAtRow(int row) const;
     /**
-      * Returns the item flags for the given @p index.
-      */
-    Qt::ItemFlags flags(const QModelIndex & index) const;
+     * Returns the item flags for the given @p index.
+     */
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
 
-    bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
+    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
     QAdvancedItemViews::FilterMatchMode matchMode() const;
 
     QAdvancedItemViews::FilterProxyMode mode() const;
     /**
-      * Returns an invalid index.
-      */
-    QModelIndex parent(const QModelIndex & index) const;
+     * Returns an invalid index.
+     */
+    QModelIndex parent(const QModelIndex &index) const override;
     /**
-      * Returns a list of registered filter types.
-      */
+     * Returns a list of registered filter types.
+     */
     QList<FilterTypeEntry> registeredFilterTypes() const;
 
-    bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     /**
-      * Sets the default filter type for the specified @p column to @p type.
-      */
+     * Sets the default filter type for the specified @p column to @p type.
+     */
     void setDefaultFilterType(int column, int type);
-    void setFilterDisabledIcon(const QIcon & icon);
-    void setFilterEnabledIcon(const QIcon & icon);
-    bool setHeaderData (int section, Qt::Orientation orientation, const QVariant & value, int role = Qt::EditRole);
+    void setFilterDisabledIcon(const QIcon &icon);
+    void setFilterEnabledIcon(const QIcon &icon);
+    bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
 
     void setMatchMode(QAdvancedItemViews::FilterMatchMode flag);
 
     void setMode(QAdvancedItemViews::FilterProxyMode mode);
     /**
-      * Sets the given source @p model to be processed by the filter model.
-      * @see sourceModel()
-      */
-    void setSourceModel(QAbstractItemModel* model);
+     * Sets the given source @p model to be processed by the filter model.
+     * @see sourceModel()
+     */
+    void setSourceModel(QAbstractItemModel *model);
     /**
-      * Returns the model that contains the data this filter model is used for filtering.
-      */
-    QAbstractItemModel* sourceModel() const;
+     * Returns the model that contains the data this filter model is used for filtering.
+     */
+    QAbstractItemModel *sourceModel() const;
 
 signals:
     void matchModeChanged(QAdvancedItemViews::FilterMatchMode mode);
@@ -150,19 +151,19 @@ signals:
 
 protected:
     /**
-      * Registers the given filter @p type with its @p text and @p toolTip.
-      */
-    bool registerFilter(int type, const QString & text, const QString & toolTip = QString());
+     * Registers the given filter @p type with its @p text and @p toolTip.
+     */
+    bool registerFilter(int type, const QString &text, const QString &toolTip = QString());
     /**
-      * @overload registerFilter(int type, const QIcon & icon, const QString & text, const QString & toolTip = QString())
-      */
-    bool registerFilter(int type, const QIcon & icon, const QString & text, const QString & toolTip = QString());
+     * @overload registerFilter(int type, const QIcon & icon, const QString & text, const QString & toolTip = QString())
+     */
+    bool registerFilter(int type, const QIcon &icon, const QString &text, const QString &toolTip = QString());
 
 private slots:
     void sourceModelLayoutChanged();
 
 private:
-    QAbstractFilterModelPrivate* d;
+    QAbstractFilterModelPrivate *d;
 };
 
 #endif // QABSTRACTFILTERMODEL_H

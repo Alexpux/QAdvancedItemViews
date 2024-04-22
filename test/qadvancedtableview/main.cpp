@@ -1,14 +1,11 @@
-#include <QTest>
 #include <QSignalSpy>
-
 #include <QStandardItemModel>
-
-#include <qadvancedtableview.h>
+#include <QTest>
 #include <qabstractfilter.h>
+#include <qadvancedtableview.h>
 #include <qtextfilter.h>
 
-class QAdvancedTableViewTest: public QObject
-{
+class QAdvancedTableViewTest : public QObject {
     Q_OBJECT
 private slots:
     void clicked();
@@ -25,65 +22,69 @@ private slots:
     void hideColumn();
 
 private:
-    QAdvancedTableView* m_view{nullptr};
-    QStandardItemModel* m_model{nullptr};
+    QAdvancedTableView *m_view { nullptr };
+    QStandardItemModel *m_model { nullptr };
 };
 
 void QAdvancedTableViewTest::clicked()
 {
     QSignalSpy spy(m_view, SIGNAL(clicked(QModelIndex)));
-    QTest::mouseClick(m_view->viewport(), Qt::LeftButton, Qt::KeyboardModifiers(), QPoint(20, 20));
+    QTest::mouseClick(m_view->viewport(), Qt::LeftButton, Qt::KeyboardModifiers(),
+                      QPoint(20, 20));
     QCOMPARE(spy.count(), 1);
 }
 
 void QAdvancedTableViewTest::currentIndex()
 {
-    //QModelIndex i = m_view->model()->index(0, 1);
-    //m_view->setCurrentIndex(i);
-    //QModelIndex c = m_view->currentIndex();
-    //QCOMPARE(m_view->currentIndex(), i);
+    // QModelIndex i = m_view->model()->index(0, 1);
+    // m_view->setCurrentIndex(i);
+    // QModelIndex c = m_view->currentIndex();
+    // QCOMPARE(m_view->currentIndex(), i);
 }
 
 void QAdvancedTableViewTest::doubleClicked()
 {
     QSignalSpy spy(m_view, SIGNAL(doubleClicked(QModelIndex)));
-    QTest::mouseDClick(m_view->viewport(), Qt::LeftButton, Qt::KeyboardModifiers(), QPoint(20, 20));
+    QTest::mouseDClick(m_view->viewport(), Qt::LeftButton,
+                       Qt::KeyboardModifiers(), QPoint(20, 20));
     QCOMPARE(spy.count(), 1);
 }
 
 void QAdvancedTableViewTest::indexAt()
 {
-    QModelIndex i = m_view->indexAt(QPoint(20,20));
+    QModelIndex i = m_view->indexAt(QPoint(20, 20));
     QCOMPARE(i, m_view->model()->index(0, 0));
 }
 
-void QAdvancedTableViewTest::model()
-{
-    QCOMPARE(m_view->model(), m_model);
-}
+void QAdvancedTableViewTest::model() { QCOMPARE(m_view->model(), m_model); }
 
 void QAdvancedTableViewTest::pressed()
 {
     QSignalSpy spy(m_view, SIGNAL(pressed(QModelIndex)));
-    QTest::mousePress(m_view->viewport(), Qt::LeftButton, Qt::KeyboardModifiers(), QPoint(20, 20));
+    QTest::mousePress(m_view->viewport(), Qt::LeftButton, Qt::KeyboardModifiers(),
+                      QPoint(20, 20));
     QCOMPARE(spy.count(), 1);
 }
 
 void QAdvancedTableViewTest::selectionModel()
 {
     m_view->selectAll();
-    QCOMPARE(m_view->selectionModel()->selectedRows().size(), m_view->model()->rowCount());
-    for (int i = 0; i < m_view->model()->rowCount(); i++){
-        m_view->selectionModel()->select(m_view->selectionModel()->model()->index(0,0), QItemSelectionModel::Deselect);
-        QCOMPARE(m_view->selectionModel()->selectedRows().size(), m_view->model()->rowCount() - 1);
+    QCOMPARE(m_view->selectionModel()->selectedRows().size(),
+             m_view->model()->rowCount());
+    for (int i = 0; i < m_view->model()->rowCount(); i++) {
+        m_view->selectionModel()->select(
+            m_view->selectionModel()->model()->index(0, 0),
+            QItemSelectionModel::Deselect);
+        QCOMPARE(m_view->selectionModel()->selectedRows().size(),
+                 m_view->model()->rowCount() - 1);
     }
 }
 
 void QAdvancedTableViewTest::setFilterType()
 {
     m_view->setFilterType(QTextFilter::Type, 1);
-    const QTextFilter* f = qfilter_cast<QTextFilter*>(m_view->filterAt(0, 1));
-    QVERIFY(f != 0);
+    const QTextFilter *f = qfilter_cast<QTextFilter *>(m_view->filterAt(0, 1));
+    QVERIFY(f != nullptr);
 }
 
 void QAdvancedTableViewTest::viewport()
@@ -103,14 +104,14 @@ void QAdvancedTableViewTest::hideColumn()
 
 void QAdvancedTableViewTest::initTestCase()
 {
-    m_view = new QAdvancedTableView(0);
+    m_view = new QAdvancedTableView();
     m_view->show();
 
     m_model = new QStandardItemModel(this);
     m_model->setColumnCount(2);
 
-    QStandardItem* item;
-    QList<QStandardItem*> items;
+    QStandardItem *item;
+    QList<QStandardItem *> items;
 
     item = new QStandardItem("0, 0");
     item->setEnabled(true);

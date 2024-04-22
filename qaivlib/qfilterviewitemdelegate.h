@@ -21,39 +21,38 @@
 #ifndef QFILTERVIEWITEMDELEGATE_H
 #define QFILTERVIEWITEMDELEGATE_H
 
+#include "qaivlib_global.h"
+
 #include <QListWidgetItem>
 #include <QStyledItemDelegate>
 
-#include "qaivlib_global.h"
-
 //! The QFilterViewItemDelegate class provides display and editing facilities for filter from a filter model.
-class QAIVLIBSHARED_EXPORT QFilterViewItemDelegate : public QStyledItemDelegate
-{
+class QAIVLIBSHARED_EXPORT QFilterViewItemDelegate : public QStyledItemDelegate {
     Q_OBJECT
 public:
     /**
-      * Constructs an item delegate with the given @p parent.
-      */
-    explicit QFilterViewItemDelegate(QObject* parent);
+     * Constructs an item delegate with the given @p parent.
+     */
+    explicit QFilterViewItemDelegate(QObject *parent);
     /**
-      * Destroys the item delegate.
-      */
-    ~QFilterViewItemDelegate();
+     * Destroys the item delegate.
+     */
+    ~QFilterViewItemDelegate() = default;
     /**
-      * @reimp
-      * @see QAbstractFilter:createEditor()
-      */
-    QWidget* createEditor(QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+     * @reimp
+     * @see QAbstractFilter:createEditor()
+     */
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    void setEditorData(QWidget * editor, const QModelIndex & index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
 
-    void setModelData(QWidget * editor, QAbstractItemModel * model, const QModelIndex & index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 
-    QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     /**
      * Updates the editor for the item specified by index according to the style option given.
      */
-    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 public slots:
     void commitAndClose(QAbstractItemDelegate::EndEditHint hint = QAbstractItemDelegate::NoHint);
@@ -62,12 +61,12 @@ public slots:
 private slots:
     void comboxBoxItemActivated(int index);
 
-    void listWidgetCurrentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+    void listWidgetCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 
     void lineEditReturnPressed();
 
 private:
-    bool m_enableFilter{false};
+    bool m_enableFilter { false };
 };
 
 #endif // QFILTERVIEWITEMDELEGATE_H

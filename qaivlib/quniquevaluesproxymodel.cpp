@@ -25,24 +25,19 @@
 
 #define MT QHash
 
-class QUniqueValuesProxyModelPrivate
-{
+class QUniqueValuesProxyModelPrivate {
 public:
-    explicit QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel* pm);
-    ~QUniqueValuesProxyModelPrivate();
+    explicit QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel *pm);
+    ~QUniqueValuesProxyModelPrivate() = default;
 
-    bool emptyValues{true};
-    int modelColumn{0};
-    QUniqueValuesProxyModel* m{nullptr};
+    bool emptyValues { true };
+    int modelColumn { 0 };
+    QUniqueValuesProxyModel *m { nullptr };
     MT<QString, QList<int>> valueMap;
 };
 
 QUniqueValuesProxyModelPrivate::QUniqueValuesProxyModelPrivate(QUniqueValuesProxyModel *pm) :
-    m{pm}
-{
-}
-
-QUniqueValuesProxyModelPrivate::~QUniqueValuesProxyModelPrivate()
+    m { pm }
 {
 }
 
@@ -56,7 +51,7 @@ QUniqueValuesProxyModel::~QUniqueValuesProxyModel()
     delete d;
 }
 
-QVariant QUniqueValuesProxyModel::data(const QModelIndex & index, int role) const
+QVariant QUniqueValuesProxyModel::data(const QModelIndex &index, int role) const
 {
     return mapToSource(index).data(role);
 }
@@ -66,13 +61,13 @@ bool QUniqueValuesProxyModel::emptyItemsAllowed() const
     return d->emptyValues;
 }
 
-bool QUniqueValuesProxyModel::filterAcceptsRow(int source_row, const QModelIndex & source_parent) const
+bool QUniqueValuesProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     Q_UNUSED(source_parent)
     return isDuplicate(source_row);
 }
 
-bool QUniqueValuesProxyModel::insertRows(int row, int count, const QModelIndex & parent)
+bool QUniqueValuesProxyModel::insertRows(int row, int count, const QModelIndex &parent)
 {
     return QSortFilterProxyModel::insertRows(row, count, parent);
 }
@@ -90,7 +85,7 @@ void QUniqueValuesProxyModel::setModelColumn(int colum)
     endResetModel();
 }
 
-void QUniqueValuesProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
+void QUniqueValuesProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
     connect(sourceModel, &QAbstractItemModel::layoutChanged, this, &QUniqueValuesProxyModel::buildMap);
     connect(sourceModel, &QAbstractItemModel::modelReset, this, &QUniqueValuesProxyModel::buildMap);
@@ -122,7 +117,7 @@ void QUniqueValuesProxyModel::buildMap()
 {
     beginResetModel();
     d->valueMap.clear();
-    if (sourceModel() == 0) {
+    if (sourceModel() == nullptr) {
         return;
     }
     MT<QString, QList<int>>::Iterator it;

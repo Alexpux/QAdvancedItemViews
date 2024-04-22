@@ -15,22 +15,27 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QApplication>
-#include <QTranslator>
-#include <QLibraryInfo>
-#include <QDir>
 #include "mainwindow.h"
+
+#include <QApplication>
+#include <QDir>
+#include <QLibraryInfo>
+#include <QTranslator>
 
 void loadTranslators()
 {
-    QTranslator* toolkitTranslator = new QTranslator(qApp);
-    QTranslator* applicationTranslator = new QTranslator(qApp);
+    QTranslator *toolkitTranslator = new QTranslator(qApp);
+    QTranslator *applicationTranslator = new QTranslator(qApp);
 
-    if(toolkitTranslator->load(QLocale::system(), "qt", "_", QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
+    if (toolkitTranslator->load(
+            QLocale::system(), "qt", "_",
+            QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
         qApp->installTranslator(toolkitTranslator);
     }
 
-    if(applicationTranslator->load(QLocale::system(), "aivlib", "_", QDir(QApplication::applicationDirPath()).filePath("translations"))) {
+    if (applicationTranslator->load(
+            QLocale::system(), "aivlib", "_",
+            QDir(QApplication::applicationDirPath()).filePath("translations"))) {
         qApp->installTranslator(applicationTranslator);
     }
 }

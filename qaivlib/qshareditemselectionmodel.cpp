@@ -21,22 +21,17 @@
 
 #include "qshareditemselectionmodel.h"
 
-class QSharedItemSelectionModelPrivate
-{
+class QSharedItemSelectionModelPrivate {
 public:
-    explicit QSharedItemSelectionModelPrivate(QSharedItemSelectionModel* sm);
-    ~QSharedItemSelectionModelPrivate();
+    explicit QSharedItemSelectionModelPrivate(QSharedItemSelectionModel *sm);
+    ~QSharedItemSelectionModelPrivate() = default;
 
-    QItemSelectionModel* shared{nullptr};
-    QSharedItemSelectionModel* m{nullptr};
+    QItemSelectionModel *shared { nullptr };
+    QSharedItemSelectionModel *m { nullptr };
 };
 
 QSharedItemSelectionModelPrivate::QSharedItemSelectionModelPrivate(QSharedItemSelectionModel *sm) :
-    m{sm}
-{
-}
-
-QSharedItemSelectionModelPrivate::~QSharedItemSelectionModelPrivate()
+    m { sm }
 {
 }
 
@@ -69,4 +64,3 @@ void QSharedItemSelectionModel::sharedSelectionChanged(const QItemSelection &sel
     QItemSelectionModel::select(selected, QItemSelectionModel::Select);
     QItemSelectionModel::select(deselected, QItemSelectionModel::Deselect);
 }
-

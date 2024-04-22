@@ -20,16 +20,17 @@
 ******************************************************************************/
 
 #include "qtextfilter.h"
-#include "qtextfilter_p.h"
+
 #include "qfilterview.h"
+#include "qtextfilter_p.h"
 
 #include <QDebug>
 #include <QHBoxLayout>
 
-QTextFilterEditor::QTextFilterEditor(QWidget* parent) :
+QTextFilterEditor::QTextFilterEditor(QWidget *parent) :
     QWidget(parent)
 {
-    QHBoxLayout* mLayout = new QHBoxLayout(this);
+    auto *mLayout = new QHBoxLayout(this);
     mLayout->setSpacing(0);
     mLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -51,10 +52,6 @@ QTextFilterEditor::QTextFilterEditor(QWidget* parent) :
 
     setFocusPolicy(Qt::StrongFocus);
     setAutoFillBackground(true);
-}
-
-QTextFilterEditor::~QTextFilterEditor()
-{
 }
 
 Qt::CaseSensitivity QTextFilterEditor::caseSensitivity() const
@@ -118,7 +115,7 @@ void QTextFilterEditor::setMatchFlag(Qt::MatchFlag flag)
     cMatchFlag = flag;
 }
 
-void QTextFilterEditor::setText(const QString & text)
+void QTextFilterEditor::setText(const QString &text)
 {
     cValueLineEdit->setText(text);
 }
@@ -135,7 +132,7 @@ QTextFilter::QTextFilter(int row, int column) :
     setProperty("matchFlag", Qt::MatchContains);
 }
 
-QWidget* QTextFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const
+QWidget *QTextFilter::createEditor(QFilterViewItemDelegate *delegate, QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(delegate)
     Q_UNUSED(option)
@@ -143,9 +140,9 @@ QWidget* QTextFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* p
     return new QTextFilterEditor(parent);
 }
 
-void QTextFilter::addContextMenuActions(QMenu* menu, QWidget* receiver)
+void QTextFilter::addContextMenuActions(QMenu *menu, QWidget *receiver)
 {
-    QFilterView *receiver_filter = qobject_cast<QFilterView *>(receiver);
+    auto *receiver_filter = qobject_cast<QFilterView *>(receiver);
     if (!receiver_filter) {
         return;
     }
@@ -155,7 +152,7 @@ void QTextFilter::addContextMenuActions(QMenu* menu, QWidget* receiver)
     mDefaultProperties["row"] = property("row").toInt();
     mDefaultProperties["column"] = property("column").toInt();
 
-    QAction* mAction = nullptr;
+    QAction *mAction = nullptr;
     mAction = menu->addAction(QIcon(":/qaiv/filter/case_insensitive"), QObject::tr("Case insensitive"), receiver_filter, &QFilterView::changeProperties);
     mAction->setCheckable(true);
     mAction->setChecked(property("caseSensitivity").toInt() == Qt::CaseInsensitive);
@@ -201,25 +198,24 @@ QVariant QTextFilter::data(int role) const
     return QVariant();
 }
 
-bool QTextFilter::matches(const QVariant & value, int type) const
+bool QTextFilter::matches(const QVariant &value, int type) const
 {
     Q_UNUSED(type);
 
-    Qt::CaseSensitivity mSensitivity;
-    Qt::MatchFlag mFlag;
-    mSensitivity = static_cast<Qt::CaseSensitivity>(property("caseSensitivity", Qt::CaseInsensitive).toInt());
-    mFlag = static_cast<Qt::MatchFlag>(property("matchFlag", Qt::MatchStartsWith).toInt());
+    Qt::CaseSensitivity mSensitivity = static_cast<Qt::CaseSensitivity>(property("caseSensitivity", Qt::CaseInsensitive).toInt());
+    Qt::MatchFlag mFlag = static_cast<Qt::MatchFlag>(property("matchFlag", Qt::MatchStartsWith).toInt());
     if (mFlag == Qt::MatchContains) {
         return value.toString().contains(property("value").toString(), mSensitivity);
-    } else if (mFlag == Qt::MatchEndsWith) {
+    }
+    if (mFlag == Qt::MatchEndsWith) {
         return QString::compare(value.toString().right(property("value").toString().length()), property("value").toString(), mSensitivity) == 0;
     }
     return QString::compare(value.toString().left(property("value").toString().length()), property("value").toString(), mSensitivity) == 0;
 }
 
-void QTextFilter::setEditorData(QWidget * editor, const QModelIndex & index)
+void QTextFilter::setEditorData(QWidget *editor, const QModelIndex &index)
 {
-    QTextFilterEditor* e = qobject_cast<QTextFilterEditor*>(editor);
+    auto *e = qobject_cast<QTextFilterEditor *>(editor);
     if (e) {
         QVariantMap p = index.data(Qt::EditRole).toMap();
         e->setText(p.value("value").toString());
@@ -228,9 +224,9 @@ void QTextFilter::setEditorData(QWidget * editor, const QModelIndex & index)
     }
 }
 
-void QTextFilter::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index)
+void QTextFilter::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index)
 {
-    const QTextFilterEditor* e = qobject_cast<QTextFilterEditor*>(editor);
+    const QTextFilterEditor *e = qobject_cast<QTextFilterEditor *>(editor);
     if (e) {
         QVariantMap p(index.data(Qt::EditRole).toMap());
         p["value"] = e->text();
@@ -243,13 +239,13 @@ void QTextFilter::setModelData(QWidget* editor, QAbstractItemModel* model, const
     }
 }
 
-void QTextFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
+void QTextFilter::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
     Q_UNUSED(index)
     editor->setGeometry(option.rect);
 }
 
-QDebug operator<<(QDebug dbg, const QTextFilter & f)
+QDebug operator<<(QDebug dbg, const QTextFilter &f)
 {
     dbg << "(QValueFilter:"
         << "row:" << f.row()

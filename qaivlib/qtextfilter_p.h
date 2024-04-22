@@ -21,17 +21,16 @@
 #ifndef QTEXTFILTER_P_H
 #define QTEXTFILTER_P_H
 
+#include "qclickablelabel.h"
+
 #include <QLineEdit>
 #include <QWidget>
 
-#include "qclickablelabel.h"
-
-class QTextFilterEditor : public QWidget
-{
+class QTextFilterEditor : public QWidget {
     Q_OBJECT
 public:
-    explicit QTextFilterEditor(QWidget* parent = nullptr);
-    ~QTextFilterEditor();
+    explicit QTextFilterEditor(QWidget *parent = nullptr);
+    ~QTextFilterEditor() = default;
 
     Qt::CaseSensitivity caseSensitivity() const;
 
@@ -41,7 +40,7 @@ public:
 
     void setMatchFlag(Qt::MatchFlag flag);
 
-    void setText(const QString & text);
+    void setText(const QString &text);
 
     QString text() const;
 
@@ -53,9 +52,9 @@ private:
     Qt::CaseSensitivity cSensitivity;
     Qt::MatchFlag cMatchFlag;
 
-    QLineEdit* cValueLineEdit{nullptr};
-    QClickableLabel* cSensitivityLabel{nullptr};
-    QClickableLabel* cMatchFlagsLabel{nullptr};
+    QLineEdit *cValueLineEdit { nullptr };
+    QClickableLabel *cSensitivityLabel { nullptr };
+    QClickableLabel *cMatchFlagsLabel { nullptr };
 };
 
 #endif // QTEXTFILTER_P_H

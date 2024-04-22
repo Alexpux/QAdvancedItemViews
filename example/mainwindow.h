@@ -21,8 +21,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include <QIdentityProxyModel>
+#include <QMainWindow>
 
 class QStandardItemModel;
 class QGroupingProxyModel;
@@ -30,27 +30,25 @@ class QGroupingProxyModel;
 
 namespace Ui {
 class MainWindow;
-}
+} // namespace Ui
 
-class FilterProxyModel : public QFilterModelProxy
-{
+class FilterProxyModel : public QFilterModelProxy {
     Q_OBJECT
 public:
-    explicit FilterProxyModel(QObject* parent = nullptr);
+    explicit FilterProxyModel(QObject *parent = nullptr);
     ~FilterProxyModel();
 };
 
-class SelectionListDataProviderProxy : public QIdentityProxyModel
-{
+class SelectionListDataProviderProxy : public QIdentityProxyModel {
     Q_OBJECT
 public:
-    explicit SelectionListDataProviderProxy(QObject* parent);
+    explicit SelectionListDataProviderProxy(QObject *parent);
     ~SelectionListDataProviderProxy();
-    QVariant data(const QModelIndex & proxyIndex, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &proxyIndex,
+                  int role = Qt::DisplayRole) const override;
 };
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -63,11 +61,11 @@ public slots:
 
     void copy();
 
-    void decoratedTableViewCustomContextMenuRequested(const QPoint & point);
-    void decoratedGroupingTreeViewCustomContextMenuRequested(const QPoint & point);
+    void decoratedTableViewCustomContextMenuRequested(const QPoint &point);
+    void decoratedGroupingTreeViewCustomContextMenuRequested(const QPoint &point);
 
-    void exportAll(const QByteArray & format);
-    void exportSelection(const QByteArray & format);
+    void exportAll(const QByteArray &format);
+    void exportSelection(const QByteArray &format);
 
     void exitActionTriggered();
 
@@ -81,8 +79,9 @@ public slots:
 
     void saveStateToolButtonClicked();
     void search();
-    void search(const QString & expression);
-    void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
+    void search(const QString &expression);
+    void selectionChanged(const QItemSelection &selected,
+                          const QItemSelection &deselected);
     void splitActionTriggered();
 
 private:
@@ -97,10 +96,10 @@ private:
 
     void initTabUniqueValuesProxyModel();
 
-    QByteArray m_state;
-    QGroupingProxyModel* m_groupingProxy;
-    QStandardItemModel* m_model;
     Ui::MainWindow *ui;
+    QByteArray m_state;
+    QGroupingProxyModel *m_groupingProxy { nullptr };
+    QStandardItemModel *m_model { nullptr };
 };
 
 #endif // MAINWINDOW_H

@@ -21,22 +21,17 @@
 
 #include "qabstractmodelitemdecoration.h"
 
-class QAbstractItemModelDecorationPrivate
-{
+class QAbstractItemModelDecorationPrivate {
 public:
-    explicit QAbstractItemModelDecorationPrivate(QAbstractItemModelDecoration* md);
-    ~QAbstractItemModelDecorationPrivate();
+    explicit QAbstractItemModelDecorationPrivate(QAbstractItemModelDecoration *md);
+    ~QAbstractItemModelDecorationPrivate() = default;
 
-    QAbstractItemModelDecoration* m{nullptr};
+    QAbstractItemModelDecoration *m { nullptr };
     QMap<QString, QVariant> properties;
 };
 
 QAbstractItemModelDecorationPrivate::QAbstractItemModelDecorationPrivate(QAbstractItemModelDecoration *md) :
-    m{md}
-{
-}
-
-QAbstractItemModelDecorationPrivate::~QAbstractItemModelDecorationPrivate()
+    m { md }
 {
 }
 
@@ -72,7 +67,7 @@ QIcon QAbstractItemModelDecoration::defaultIcon() const
     return QIcon();
 }
 
-QVariant QAbstractItemModelDecoration::property(const QString & key, const QVariant & defaultValue) const
+QVariant QAbstractItemModelDecoration::property(const QString &key, const QVariant &defaultValue) const
 {
     return d->properties.value(key, defaultValue);
 }
@@ -82,7 +77,7 @@ QMap<QString, QVariant> QAbstractItemModelDecoration::properties() const
     return d->properties;
 }
 
-bool QAbstractItemModelDecoration::restoreState(const QByteArray & state)
+bool QAbstractItemModelDecoration::restoreState(const QByteArray &state)
 {
     QDataStream s(state);
     QVariantMap m;
@@ -99,12 +94,12 @@ QByteArray QAbstractItemModelDecoration::saveState() const
     return ba;
 }
 
-void QAbstractItemModelDecoration::setProperty(const QString & name, const QVariant & value)
+void QAbstractItemModelDecoration::setProperty(const QString &name, const QVariant &value)
 {
     d->properties[name] = value;
 }
 
-void QAbstractItemModelDecoration::setProperties(const QVariantMap & properties)
+void QAbstractItemModelDecoration::setProperties(const QVariantMap &properties)
 {
     d->properties = properties;
 }

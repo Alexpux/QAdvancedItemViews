@@ -21,39 +21,38 @@
 #ifndef QFILTERMODEL_H
 #define QFILTERMODEL_H
 
-#include <QMenu>
-
 #include "qabstractfiltermodel.h"
 #include "qaivlib_global.h"
 
+#include <QMenu>
+
 //! The QFilterModel class provides a default implementation of a filter model.
 /**
-  * The following filters are provided by QDefaultFilterModel:
-  * @li QAutoFilter
-  * @li QRangeFilter
-  * @li QRegularExpressionFilter
-  * @li QSelectionListFilter
-  * @li QTextFilter
-  * @li QValueFilter
-  */
-class QAIVLIBSHARED_EXPORT QFilterModel : public QAbstractFilterModel
-{
+ * The following filters are provided by QDefaultFilterModel:
+ * @li QAutoFilter
+ * @li QRangeFilter
+ * @li QRegularExpressionFilter
+ * @li QSelectionListFilter
+ * @li QTextFilter
+ * @li QValueFilter
+ */
+class QAIVLIBSHARED_EXPORT QFilterModel : public QAbstractFilterModel {
     Q_OBJECT
 public:
     /**
-      * Constructs a default filter model with the given @p parent.
-      */
-    explicit QFilterModel(QObject* parent);
+     * Constructs a default filter model with the given @p parent.
+     */
+    explicit QFilterModel(QObject *parent);
     /**
-      * Destroys the default filter model.
-      */
-    ~QFilterModel();
+     * Destroys the default filter model.
+     */
+    ~QFilterModel() = default;
 
 protected:
     /**
-      * @reimp QAbstractFilterModel::createFilter()
-      */
-    QAbstractFilter* createFilter(const QModelIndex & index, const QVariantMap & properties) const override;
+     * @reimp QAbstractFilterModel::createFilter()
+     */
+    QAbstractFilter *createFilter(const QModelIndex &index, const QVariantMap &properties) const override;
 };
 
 #endif // QFILTERMODEL_H

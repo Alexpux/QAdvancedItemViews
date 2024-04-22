@@ -20,12 +20,13 @@
 ******************************************************************************/
 
 #include "qfiltereditorwidget.h"
+
 #include "qfiltereditorpopupwidget.h"
 
 #include <QApplication>
-#include <QScreen>
 #include <QEvent>
 #include <QKeyEvent>
+#include <QScreen>
 #include <QWindow>
 
 QFilterEditorWidget::QFilterEditorWidget(QWidget *parent) :
@@ -33,18 +34,15 @@ QFilterEditorWidget::QFilterEditorWidget(QWidget *parent) :
 {
 }
 
-QFilterEditorWidget::~QFilterEditorWidget()
-{
-}
-
-bool QFilterEditorWidget::eventFilter(QObject* object, QEvent* event)
+bool QFilterEditorWidget::eventFilter(QObject *object, QEvent *event)
 {
     if (m_popup) {
         if (event->type() == QEvent::Hide) {
             emit commitAndClose();
             return true;
-        } else if ( event->type() == QEvent::KeyPress) {
-            QKeyEvent* keyEvent = static_cast<QKeyEvent *>(event);
+        }
+        if (event->type() == QEvent::KeyPress) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
             if (popup()->cancelAndClose(object, keyEvent->key())) {
                 emit cancelAndClose();
                 return true;
@@ -58,7 +56,7 @@ bool QFilterEditorWidget::eventFilter(QObject* object, QEvent* event)
     return QObject::eventFilter(object, event);
 }
 
-void QFilterEditorWidget::moveEvent(QMoveEvent* e)
+void QFilterEditorWidget::moveEvent(QMoveEvent *e)
 {
     QWidget::moveEvent(e);
     if (m_popup) {
@@ -80,12 +78,12 @@ void QFilterEditorWidget::movePopup()
     }
 }
 
-QFilterEditorPopupWidget* QFilterEditorWidget::popup() const
+QFilterEditorPopupWidget *QFilterEditorWidget::popup() const
 {
     return m_popup;
 }
 
-void QFilterEditorWidget::setPopup(QFilterEditorPopupWidget* widget)
+void QFilterEditorWidget::setPopup(QFilterEditorPopupWidget *widget)
 {
     m_popup = widget;
 }

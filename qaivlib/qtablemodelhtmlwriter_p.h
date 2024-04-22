@@ -27,27 +27,26 @@ class QTableView;
 
 #include <QXmlStreamWriter>
 
-class QTableModelHtmlWriter
-{
+class QTableModelHtmlWriter {
 public:
-    explicit QTableModelHtmlWriter(QIODevice* device);
-    ~QTableModelHtmlWriter();
+    explicit QTableModelHtmlWriter(QIODevice *device);
+    ~QTableModelHtmlWriter() = default;
 
     void setIncludeHeader(bool on);
 
-    bool write(QAdvancedTableView* view, bool all);
-    bool write(QTableView* view, bool all);
-private:
-    void writeAlignment(QXmlStreamWriter & stream, int f);
-    void writeBackgroundColor(QXmlStreamWriter & stream, const QBrush & b);
-    void writeBorderStyle(QXmlStreamWriter & stream, Qt::PenStyle p);
-    void writeCharacters(QXmlStreamWriter & stream, const QString & text);
-    void writeDecoration(QXmlStreamWriter & stream, const QVariant & decoration);
-    void writeFontAttributes(QXmlStreamWriter & stream, const QFont & font);
+    bool write(QAdvancedTableView *view, bool all);
+    bool write(QTableView *view, bool all);
 
-    QIODevice* m_device{nullptr};
-    bool m_includeHeader{true};
+private:
+    void writeAlignment(QXmlStreamWriter &stream, int f);
+    void writeBackgroundColor(QXmlStreamWriter &stream, const QBrush &b);
+    void writeBorderStyle(QXmlStreamWriter &stream, Qt::PenStyle p);
+    void writeCharacters(QXmlStreamWriter &stream, const QString &text);
+    void writeDecoration(QXmlStreamWriter &stream, const QVariant &decoration);
+    void writeFontAttributes(QXmlStreamWriter &stream, const QFont &font);
+
+    QIODevice *m_device { nullptr };
+    bool m_includeHeader { true };
 };
 
 #endif // QTABLEMODELHTMLWRITER_P_H
-

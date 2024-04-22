@@ -21,9 +21,9 @@
 #ifndef QADVANCEDHEADERVIEW_H
 #define QADVANCEDHEADERVIEW_H
 
-#include <QHeaderView>
-
 #include "qaivlib_global.h"
+
+#include <QHeaderView>
 
 //! The QAdvancedHeaderView class provides a header view to manage to appearance of the related view.
 /**
@@ -35,23 +35,22 @@
  * @image html qadvancedheaderview03.png QAdvancedHeaderView Context Menu - Filter Model
  *
  */
-class QAIVLIBSHARED_EXPORT QAdvancedHeaderView : public QHeaderView
-{
+class QAIVLIBSHARED_EXPORT QAdvancedHeaderView : public QHeaderView {
     Q_OBJECT
 public:
     /**
-      * Creates a new generic header with the given @p orientation and @p parent.
-      */
-    explicit QAdvancedHeaderView(Qt::Orientation orientation, QWidget* parent = nullptr);
+     * Creates a new generic header with the given @p orientation and @p parent.
+     */
+    explicit QAdvancedHeaderView(Qt::Orientation orientation, QWidget *parent = nullptr);
     /**
-      * Destroys the header.
-      */
-    ~QAdvancedHeaderView();
+     * Destroys the header.
+     */
+    ~QAdvancedHeaderView() = default;
 
 public slots:
     /**
-      * Shows all columns.
-      */
+     * Shows all columns.
+     */
     void showAllColumns();
 
 private slots:
@@ -80,7 +79,7 @@ private slots:
     void toggleSortOrderActionTriggered();
 
 protected:
-    void contextMenuEvent(QContextMenuEvent * event);
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
 signals:
     void visibleSectionsCountChanged();

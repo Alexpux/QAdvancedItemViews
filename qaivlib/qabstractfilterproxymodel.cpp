@@ -23,24 +23,18 @@
 
 #include "qfiltermodel.h"
 
-class QAbstractFilterProxyModelPrivate
-{
+class QAbstractFilterProxyModelPrivate {
 public:
-    explicit QAbstractFilterProxyModelPrivate(QAbstractFilterProxyModel* pm);
-    ~QAbstractFilterProxyModelPrivate();
+    explicit QAbstractFilterProxyModelPrivate(QAbstractFilterProxyModel *pm);
+    ~QAbstractFilterProxyModelPrivate() = default;
 
-    int lastResultCount{-1};
-    QAbstractFilterProxyModel* m{nullptr};
-    QAbstractFilterModel* filterModel{nullptr};
+    int lastResultCount { -1 };
+    QAbstractFilterProxyModel *m { nullptr };
+    QAbstractFilterModel *filterModel { nullptr };
 };
 
-
 QAbstractFilterProxyModelPrivate::QAbstractFilterProxyModelPrivate(QAbstractFilterProxyModel *pm) :
-    m{pm}
-{
-}
-
-QAbstractFilterProxyModelPrivate::~QAbstractFilterProxyModelPrivate()
+    m { pm }
 {
 }
 
@@ -55,7 +49,7 @@ QAbstractFilterProxyModel::~QAbstractFilterProxyModel()
     delete d;
 }
 
-QAbstractFilterModel* QAbstractFilterProxyModel::filterModel() const
+QAbstractFilterModel *QAbstractFilterProxyModel::filterModel() const
 {
     return d->filterModel;
 }
@@ -72,7 +66,7 @@ QVariant QAbstractFilterProxyModel::headerData(int section, Qt::Orientation orie
     return QSortFilterProxyModel::headerData(section, orientation, role);
 }
 
-void QAbstractFilterProxyModel::setFilterModel(QAbstractFilterModel* filterModel)
+void QAbstractFilterProxyModel::setFilterModel(QAbstractFilterModel *filterModel)
 {
     if (d->filterModel) {
         disconnect(d->filterModel);
@@ -85,17 +79,17 @@ void QAbstractFilterProxyModel::setFilterModel(QAbstractFilterModel* filterModel
     d->filterModel->setSourceModel(sourceModel());
 }
 
-QModelIndex QAbstractFilterProxyModel::getIndexForModel(const QAbstractItemModel* model, const QModelIndex &sourceIndex) const {
+QModelIndex QAbstractFilterProxyModel::getIndexForModel(const QAbstractItemModel *model, const QModelIndex &sourceIndex) const
+{
     if (model) {
-        const QAbstractProxyModel* p = qobject_cast<const QAbstractProxyModel*>(model);
+        const QAbstractProxyModel *p = qobject_cast<const QAbstractProxyModel *>(model);
 
         if (p) {
-            const QAbstractItemModel * sModel = p->sourceModel();
+            const QAbstractItemModel *sModel = p->sourceModel();
             if (sModel == sourceIndex.model()) {
                 return p->mapFromSource(sourceIndex);
-            } else {
-                return p->mapFromSource(getIndexForModel(sModel, sourceIndex));
             }
+            return p->mapFromSource(getIndexForModel(sModel, sourceIndex));
         }
     }
     return QModelIndex();
@@ -111,17 +105,18 @@ QModelIndex QAbstractFilterProxyModel::getIndexForModel(const QAbstractItemModel
     return QSortFilterProxyModel::mapFromSource(sourceIndex);
 }*/
 
-QModelIndex QAbstractFilterProxyModel::mapDeepFromSource(const QModelIndex &sourceIndex) const {
+QModelIndex QAbstractFilterProxyModel::mapDeepFromSource(const QModelIndex &sourceIndex) const
+{
     if (sourceIndex.isValid()) {
         return getIndexForModel(this, sourceIndex);
     }
     return QModelIndex();
 }
 
-void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
+void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
     if (d->filterModel->sourceModel()) {
-        disconnect(d->filterModel->sourceModel(), 0, this, 0);
+        disconnect(d->filterModel->sourceModel(), nullptr, this, nullptr);
     }
     QSortFilterProxyModel::setSourceModel(sourceModel);
     d->filterModel->setSourceModel(sourceModel);

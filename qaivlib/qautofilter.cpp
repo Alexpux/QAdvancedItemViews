@@ -25,8 +25,8 @@
 #include "qautofilter_p.h"
 #include "qcheckstateproxymodel.h"
 #include "qfilterviewitemdelegate.h"
-#include "quniquevaluesproxymodel.h"
 #include "qsinglecolumnproxymodel.h"
+#include "quniquevaluesproxymodel.h"
 
 #include <QCheckBox>
 #include <QDialogButtonBox>
@@ -36,16 +36,16 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
-QAutoFilterEditorPopup::QAutoFilterEditorPopup(QWidget* parent) :
+QAutoFilterEditorPopup::QAutoFilterEditorPopup(QWidget *parent) :
     QFilterEditorPopupWidget(parent)
 {
     m_progress = new QProgressDialog(this);
     m_progress->setMaximum(100);
     m_mode = 0; // 0 = Selected values 1 = empty 2 = not empty
-    QVBoxLayout* l = new QVBoxLayout();
+    QVBoxLayout *l = new QVBoxLayout();
     l->setContentsMargins(6, 6, 6, 6);
 
-    QVBoxLayout* lb = new QVBoxLayout();
+    QVBoxLayout *lb = new QVBoxLayout();
     lb->setSpacing(3);
     m_emptyToolButton = new QToolButton(this);
     m_emptyToolButton->setText(tr("Empty"));
@@ -62,7 +62,7 @@ QAutoFilterEditorPopup::QAutoFilterEditorPopup(QWidget* parent) :
     l->addLayout(lb);
     connect(m_notEmptyToolButton, &QToolButton::clicked, this, &QAutoFilterEditorPopup::notEmptyToolButtonClicked);
 
-    QFrame* f = new QFrame(this);
+    QFrame *f = new QFrame(this);
     f->setFrameShape(QFrame::HLine);
     f->setFrameShadow(QFrame::Sunken);
     l->addWidget(f);
@@ -99,7 +99,7 @@ QAutoFilterEditorPopup::QAutoFilterEditorPopup(QWidget* parent) :
     m_listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_listView->installEventFilter(parent);
 
-    QDialogButtonBox* b = new QDialogButtonBox(this);
+    QDialogButtonBox *b = new QDialogButtonBox(this);
     b->addButton(QDialogButtonBox::Ok);
     b->addButton(QDialogButtonBox::Cancel);
     connect(b, &QDialogButtonBox::accepted, this, &QAutoFilterEditorPopup::accepted);
@@ -107,11 +107,7 @@ QAutoFilterEditorPopup::QAutoFilterEditorPopup(QWidget* parent) :
     l->addWidget(b);
 }
 
-QAutoFilterEditorPopup::~QAutoFilterEditorPopup()
-{
-}
-
-void QAutoFilterEditorPopup::checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight)
+void QAutoFilterEditorPopup::checkStateProxyDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
     Q_UNUSED(topLeft);
     Q_UNUSED(bottomRight);
@@ -143,9 +139,9 @@ void QAutoFilterEditorPopup::notEmptyToolButtonClicked()
     emit modeChanged();
 }
 
-void QAutoFilterEditorPopup::searchForTextEdited(const QString & text)
+void QAutoFilterEditorPopup::searchForTextEdited(const QString &text)
 {
-    QModelIndexList mIndexes = m_checkStateProxy->match(m_checkStateProxy->index(0,0), Qt::DisplayRole, text);
+    QModelIndexList mIndexes = m_checkStateProxy->match(m_checkStateProxy->index(0, 0), Qt::DisplayRole, text);
     if (!mIndexes.isEmpty()) {
         m_listView->setCurrentIndex(mIndexes.first());
     }
@@ -171,7 +167,7 @@ QVariantList QAutoFilterEditorPopup::selectedValues(int role) const
     return v;
 }
 
-void QAutoFilterEditorPopup::setSelectedValues(const QVariantList & values)
+void QAutoFilterEditorPopup::setSelectedValues(const QVariantList &values)
 {
     m_checkStateProxy->setCheckedValues(0, values);
 }
@@ -197,8 +193,8 @@ QAutoFilterEditor::QAutoFilterEditor(QWidget *parent) :
     setPopup(popUp);
     setFocusProxy(popUp);
     connect(popUp, &QAutoFilterEditorPopup::modeChanged, this, &QAutoFilterEditor::modeSelected);
-    connect(popUp, &QAutoFilterEditorPopup::accepted, this, [=](){ emit commitAndClose(); });
-    connect(popUp, &QAutoFilterEditorPopup::rejected, this, [=](){ emit cancelAndClose(); });
+    connect(popUp, &QAutoFilterEditorPopup::accepted, this, [=]() { emit commitAndClose(); });
+    connect(popUp, &QAutoFilterEditorPopup::rejected, this, [=]() { emit cancelAndClose(); });
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -209,7 +205,7 @@ void QAutoFilterEditor::modeSelected()
 
 void QAutoFilterEditor::setSourceModel(QAbstractItemModel *model, int column)
 {
-    QAutoFilterEditorPopup* e = qobject_cast<QAutoFilterEditorPopup*>(popup());
+    QAutoFilterEditorPopup *e = qobject_cast<QAutoFilterEditorPopup *>(popup());
     e->setSourceModel(model, column);
 }
 
@@ -218,11 +214,11 @@ QAutoFilter::QAutoFilter(int row, int column) :
 {
 }
 
-QWidget* QAutoFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QWidget *QAutoFilter::createEditor(QFilterViewItemDelegate *delegate, QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(option);
     Q_UNUSED(index);
-    QAutoFilterEditor* e = new QAutoFilterEditor(parent);
+    QAutoFilterEditor *e = new QAutoFilterEditor(parent);
     QObject::connect(e, &QAutoFilterEditor::cancelAndClose, delegate, &QFilterViewItemDelegate::cancelAndClose);
     QObject::connect(e, &QAutoFilterEditor::commitAndClose, delegate, &QFilterViewItemDelegate::commitAndClose);
     return e;
@@ -231,42 +227,49 @@ QWidget* QAutoFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* p
 QVariant QAutoFilter::data(int role) const
 {
     if (role == Qt::DisplayRole) {
-        if (property("mode").toInt() == 0) {
-            if (property("selectedValues").toList().isEmpty()) {
+        int val = property("mode").toInt();
+        switch (val) {
+        case 0: {
+            QVariantList selected = property("selectedValues").toList();
+            if (selected.isEmpty()) {
                 return QObject::tr("<none>");
-            } else {
-                if (property("selectedValues").toList().size() == 1) {
-                    return QString(QObject::tr("%1 entry")).arg(property("selectedValues").toList().size());
-                } else {
-                    return QString(QObject::tr("%1 entries")).arg(property("selectedValues").toList().size());
-                }
             }
-        } else if (property("mode").toInt() == 1) {
+            if (selected.size() == 1) {
+                return QString(QObject::tr("%1 entry")).arg(selected.size());
+            }
+            return QString(QObject::tr("%1 entries")).arg(selected.size());
+        }
+        case 1: {
             return QObject::tr("Empty");
-        } else if (property("mode").toInt() == 2) {
+        }
+        case 2: {
             return QObject::tr("Not Empty");
+        }
+        default:
+            break;
         }
     }
     return QVariant();
 }
 
-bool QAutoFilter::matches(const QVariant & value, int type) const
+bool QAutoFilter::matches(const QVariant &value, int type) const
 {
     Q_UNUSED(type);
     if (property("mode").toInt() == 1) {
         return value.toString().isEmpty();
-    } else if (property("mode").toInt() == 2) {
+    }
+    if (property("mode").toInt() == 2) {
         return !value.toString().isEmpty();
     }
     return property("selectedValues").toList().contains(value);
 }
 
-void QAutoFilter::setEditorData(QWidget* editor, const QModelIndex & index)
+void QAutoFilter::setEditorData(QWidget *editor, const QModelIndex &index)
 {
-    QAutoFilterEditor* w = qobject_cast<QAutoFilterEditor*>(editor);
+    QAutoFilterEditor *w = qobject_cast<QAutoFilterEditor *>(editor);
     if (w) {
-        QAutoFilterEditorPopup* p = qobject_cast<QAutoFilterEditorPopup*>(w->popup());
-        const QAbstractFilterModel* m = qobject_cast<const QAbstractFilterModel*>(index.model());
+        QAutoFilterEditorPopup *p = qobject_cast<QAutoFilterEditorPopup *>(w->popup());
+        const QAbstractFilterModel *m = qobject_cast<const QAbstractFilterModel *>(index.model());
         if (m) {
             p->setSourceModel(m->sourceModel(), column());
             p->setSelectedValues(property("selectedValues").toList());
@@ -274,11 +277,11 @@ void QAutoFilter::setEditorData(QWidget* editor, const QModelIndex & index)
     }
 }
 
-void QAutoFilter::setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index)
+void QAutoFilter::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index)
 {
-    const QAutoFilterEditor* w = qobject_cast<QAutoFilterEditor*>(editor);
+    const QAutoFilterEditor *w = qobject_cast<QAutoFilterEditor *>(editor);
     if (w) {
-        const QAutoFilterEditorPopup* p = qobject_cast<QAutoFilterEditorPopup*>(w->popup());
+        const QAutoFilterEditorPopup *p = qobject_cast<QAutoFilterEditorPopup *>(w->popup());
         QVariantMap properties(index.data(Qt::EditRole).toMap());
         properties["selectedValues"] = p->selectedValues();
         properties["mode"] = p->mode();
@@ -294,10 +297,10 @@ void QAutoFilter::setModelData(QWidget* editor, QAbstractItemModel * model, cons
     }
 }
 
-void QAutoFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
+void QAutoFilter::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
     Q_UNUSED(index);
-    QAutoFilterEditor* e = qobject_cast<QAutoFilterEditor*>(editor);
+    QAutoFilterEditor *e = qobject_cast<QAutoFilterEditor *>(editor);
     if (e) {
         e->setGeometry(option.rect);
         e->showPopup();

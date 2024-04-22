@@ -20,18 +20,11 @@
 ******************************************************************************/
 
 #include "qsearchbar.h"
+
 #include "qsearchbar_p.h"
 #include "ui_qsearchbar.h"
 
 #include <QAbstractItemModel>
-
-QSearchBarPrivate::QSearchBarPrivate()
-{
-}
-
-QSearchBarPrivate::~QSearchBarPrivate()
-{
-}
 
 QSearchBar::QSearchBar(QWidget *parent) :
     QWidget(parent),
@@ -45,6 +38,7 @@ QSearchBar::~QSearchBar()
 {
     delete ui;
 }
+
 /**
  * Clears the current expression and result.
  */
@@ -53,12 +47,12 @@ void QSearchBar::clear()
     ui->expressionLineEdit->clear();
 }
 
-void QSearchBar::expressionChangedHandler(const QString & text)
+void QSearchBar::expressionChangedHandler(const QString &text)
 {
     emit expressionChanged(text);
 }
 
-void QSearchBar::match(QAbstractItemModel* model)
+void QSearchBar::match(QAbstractItemModel *model)
 {
     if (model) {
         d->results = model->match(model->index(0, 0), Qt::DisplayRole, ui->expressionLineEdit->text());

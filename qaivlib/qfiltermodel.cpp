@@ -30,8 +30,8 @@
 #include "qtextfilter.h"
 #include "qvaluefilter.h"
 
-QFilterModel::QFilterModel(QObject* parent)
-    : QAbstractFilterModel(parent)
+QFilterModel::QFilterModel(QObject *parent) :
+    QAbstractFilterModel(parent)
 {
     registerFilter(QTextFilter::Type, QIcon(":/qaiv/filter/text"), tr("Text Filter"), tr("Filter on the textual representation of values"));
     registerFilter(QRangeFilter::Type, QIcon(":/qaiv/filter/range"), tr("Range Filter"));
@@ -41,30 +41,42 @@ QFilterModel::QFilterModel(QObject* parent)
     registerFilter(QSelectionListFilter::Type, QIcon(":/qaiv/filter/selection"), tr("Selection List Filter"));
 }
 
-QFilterModel::~QFilterModel()
+QAbstractFilter *QFilterModel::createFilter(const QModelIndex &index, const QVariantMap &properties) const
 {
-}
-
-QAbstractFilter* QFilterModel::createFilter(const QModelIndex & index, const QVariantMap & properties) const
-{
-    QAbstractFilter* filter = nullptr;
-    QFilterGroup* group = filterGroup(index);
+    QAbstractFilter *filter = nullptr;
+    QFilterGroup *group = filterGroup(index);
     if (!group) {
         return nullptr;
     }
     if (index.row() < rowCount()) {
-        if (properties.value("type").toInt() == QRangeFilter::Type) {
+        int propVal = properties.value("type").toInt();
+        switch (propVal) {
+        case QRangeFilter::Type: {
             filter = new QRangeFilter(index.row(), index.column());
-        } else if (properties.value("type").toInt() == QValueFilter::Type) {
+            break;
+        }
+        case QValueFilter::Type: {
             filter = new QValueFilter(index.row(), index.column());
-        } else if (properties.value("type").toInt() == QTextFilter::Type) {
+            break;
+        }
+        case QTextFilter::Type: {
             filter = new QTextFilter(index.row(), index.column());
-        } else if (properties.value("type").toInt() == QAutoFilter::Type) {
+            break;
+        }
+        case QAutoFilter::Type: {
             filter = new QAutoFilter(index.row(), index.column());
-        } else if (properties.value("type").toInt() == QRegularExpressionFilter::Type) {
+            break;
+        }
+        case QRegularExpressionFilter::Type: {
             filter = new QRegularExpressionFilter(index.row(), index.column());
-        } else if (properties.value("type").toInt() == QSelectionListFilter::Type) {
+            break;
+        }
+        case QSelectionListFilter::Type: {
             filter = new QSelectionListFilter(index.row(), index.column());
+            break;
+        }
+        default:
+            break;
         }
     }
     if (filter) {

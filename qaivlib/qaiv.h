@@ -71,20 +71,22 @@
  *
  */
 //! QAdvancedItemViews
-class QAIVLIBSHARED_EXPORT QAdvancedItemViews
-{
+class QAIVLIBSHARED_EXPORT QAdvancedItemViews {
 public:
-    QAdvancedItemViews();
+    QAdvancedItemViews() = default;
+
     //! This enum describes the modes of a filter proxy.
     enum FilterProxyMode {
         FilterMode,
         HighlightMode
     };
+
     //! This enumj describes the filter match mode.
     enum FilterMatchMode {
         MatchNormal, /*<! The filter matches if the condition is fullfilled */
         MatchInverted /*<! The filter matches if the condition is not fullfilled */
     };
+
     //! This enum decribes additional item data roles
     enum ItemDataRole {
         AutoFilterRole = Qt::UserRole + 42101,
@@ -97,27 +99,26 @@ public:
         ValueRole,
         IconSetsRole
     };
-
 };
 
-QAIVLIBSHARED_EXPORT QModelIndex qSourceIndex(const QModelIndex & index);
-QAIVLIBSHARED_EXPORT const QAbstractItemModel* qSourceModel(const QModelIndex & index);
-QAIVLIBSHARED_EXPORT QAbstractItemModel* qSourceModel(QAbstractItemModel* model);
+QAIVLIBSHARED_EXPORT QModelIndex qSourceIndex(const QModelIndex &index);
+QAIVLIBSHARED_EXPORT const QAbstractItemModel *qSourceModel(const QModelIndex &index);
+QAIVLIBSHARED_EXPORT QAbstractItemModel *qSourceModel(QAbstractItemModel *model);
 
 /**
  * @ingroup utils
  * Returns the given @p model cast to type T if the model of the given @p index is of type T (or of a subclass); otherwise returns 0. If @p index is invalod then it will also return 0.
  */
 template <class T>
-inline T qsourcemodel_cast(const QModelIndex & index)
+inline T qsourcemodel_cast(const QModelIndex &index)
 {
     QModelIndex i(index);
     T s = qobject_cast<T>(i.model());
     if (s) {
         return s;
     }
-    QAbstractProxyModel* p;
-    while ((p = qobject_cast<QAbstractProxyModel*>(i.model()))) {
+    QAbstractProxyModel *p = nullptr;
+    while ((p = qobject_cast<QAbstractProxyModel *>(i.model()))) {
         T s2 = qobject_cast<T>(p);
         if (s2) {
             return s2;
@@ -131,15 +132,16 @@ inline T qsourcemodel_cast(const QModelIndex & index)
  * @ingroup utils
  * Returns the given @p model cast to type T if the @p model is of type T (or of a subclass); otherwise returns 0. If @p model is 0 then it will also return 0.
  */
-template <class T> inline T qsourcemodel_cast(QAbstractItemModel* model)
+template <class T>
+inline T qsourcemodel_cast(QAbstractItemModel *model)
 {
-    QAbstractItemModel* m = model;
+    QAbstractItemModel *m = model;
     T s = qobject_cast<T>(m);
     if (s) {
         return s;
     }
-    QAbstractProxyModel* p;
-    while ((p = qobject_cast<QAbstractProxyModel*>(m))) {
+    QAbstractProxyModel *p = nullptr;
+    while ((p = qobject_cast<QAbstractProxyModel *>(m))) {
         T s2 = qobject_cast<T>(p->sourceModel());
         if (s2) {
             return s2;
@@ -154,15 +156,15 @@ template <class T> inline T qsourcemodel_cast(QAbstractItemModel* model)
  * Returns the given @p model cast to type T if the @p model is of type T (or of a subclass); otherwise returns 0. If @p model is 0 then it will also return 0.
  */
 template <class T>
-inline T qsourcemodel_cast(const QAbstractItemModel* model)
+inline T qsourcemodel_cast(const QAbstractItemModel *model)
 {
-    const QAbstractItemModel* m = model;
+    const QAbstractItemModel *m = model;
     T s = qobject_cast<T>(m);
     if (s) {
         return s;
     }
-    QAbstractProxyModel* p;
-    while ((p = qobject_cast<QAbstractProxyModel*>(m))) {
+    QAbstractProxyModel *p = nullptr;
+    while ((p = qobject_cast<QAbstractProxyModel *>(m))) {
         T s2 = qobject_cast<T>(p->sourceModel());
         if (s2) {
             return s2;

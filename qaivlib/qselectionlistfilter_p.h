@@ -21,37 +21,36 @@
 #ifndef QSELECTIONLISTFILTER_P_H
 #define QSELECTIONLISTFILTER_P_H
 
-#include <QStandardItemModel>
-
-#include "qfiltereditorwidget.h"
-#include "qfiltereditorpopupwidget.h"
 #include "qcheckstateproxymodel.h"
+#include "qfiltereditorpopupwidget.h"
+#include "qfiltereditorwidget.h"
+
+#include <QStandardItemModel>
 
 class QCheckBox;
 class QLineEdit;
 class QListView;
 class QToolButton;
 
-class QSelectionListFilterEditorPopup : public QFilterEditorPopupWidget
-{
+class QSelectionListFilterEditorPopup : public QFilterEditorPopupWidget {
     Q_OBJECT
 public:
-    explicit QSelectionListFilterEditorPopup(QWidget* parent);
-    ~QSelectionListFilterEditorPopup();
+    explicit QSelectionListFilterEditorPopup(QWidget *parent);
+    ~QSelectionListFilterEditorPopup() = default;
 
-    bool cancelAndClose(QObject* obj, int key) const override;
+    bool cancelAndClose(QObject *obj, int key) const override;
 
-    bool commitAndClose(QObject* obj, int key) const override;
+    bool commitAndClose(QObject *obj, int key) const override;
 
     int mode() const;
 
     QVariantList selectedValues() const;
 
-    void setSourceModel(QAbstractItemModel* model, int column);
+    void setSourceModel(QAbstractItemModel *model, int column);
 
-    void setSelectedValues(const QVariantList & selectedValues);
+    void setSelectedValues(const QVariantList &selectedValues);
 
-    void setValues(const QVariantList & values);
+    void setValues(const QVariantList &values);
 
     QVariantList values(int role = Qt::DisplayRole) const;
 
@@ -61,33 +60,32 @@ signals:
     void rejected();
 
 private slots:
-    void checkStateProxyDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    void checkStateProxyDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void emptyToolButtonClicked();
     void notEmptyToolButtonClicked();
-    void searchForTextEdited(const QString & text);
+    void searchForTextEdited(const QString &text);
     void selectCheckBoxStateChanged(int state);
 
 private:
     // 0 = Selected values
     // 1 = empty
     // 2 = not empty
-    int m_mode{0};
+    int m_mode { 0 };
 
-    QCheckStateProxyModel* m_checkStateProxy{nullptr};
-    QCheckBox* m_selectCheckBox{nullptr};
-    QLineEdit* m_lineEdit{nullptr};
-    QListView* m_listView{nullptr};
-    QToolButton* m_emptyToolButton{nullptr};
-    QToolButton* m_notEmptyToolButton{nullptr};
-    QStandardItemModel* m_model{nullptr};
+    QCheckStateProxyModel *m_checkStateProxy { nullptr };
+    QCheckBox *m_selectCheckBox { nullptr };
+    QLineEdit *m_lineEdit { nullptr };
+    QListView *m_listView { nullptr };
+    QToolButton *m_emptyToolButton { nullptr };
+    QToolButton *m_notEmptyToolButton { nullptr };
+    QStandardItemModel *m_model { nullptr };
 };
 
-class QSelectionListFilterEditor : public QFilterEditorWidget
-{
+class QSelectionListFilterEditor : public QFilterEditorWidget {
     Q_OBJECT
 public:
-    explicit QSelectionListFilterEditor(QWidget* parent = nullptr);
-    ~QSelectionListFilterEditor();
+    explicit QSelectionListFilterEditor(QWidget *parent = nullptr);
+    ~QSelectionListFilterEditor() = default;
 
 public slots:
     void modeSelected();

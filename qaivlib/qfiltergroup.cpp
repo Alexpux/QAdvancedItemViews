@@ -23,11 +23,7 @@
 
 #include <algorithm>
 
-QFilterGroup::QFilterGroup()
-{
-}
-
-QFilterGroup::QFilterGroup(const QString & name) :
+QFilterGroup::QFilterGroup(const QString &name) :
     cName(name)
 {
 }
@@ -38,7 +34,7 @@ QFilterGroup::~QFilterGroup()
     cFilterList.clear();
 }
 
-void QFilterGroup::add(QAbstractFilter* filter)
+void QFilterGroup::add(QAbstractFilter *filter)
 {
     cFilterList.append(filter);
 }
@@ -48,7 +44,7 @@ int QFilterGroup::count() const
     return cFilterList.size();
 }
 
-QAbstractFilter* QFilterGroup::filter(int index) const
+QAbstractFilter *QFilterGroup::filter(int index) const
 {
     if (index < cFilterList.size()) {
         return cFilterList.at(index);
@@ -56,11 +52,11 @@ QAbstractFilter* QFilterGroup::filter(int index) const
     return nullptr;
 }
 
-QAbstractFilter* QFilterGroup::filterAtColumn(int column) const
+QAbstractFilter *QFilterGroup::filterAtColumn(int column) const
 {
-    QList<QAbstractFilter*>::const_iterator it;
+    QList<QAbstractFilter *>::const_iterator it;
     it = std::find_if(cFilterList.cbegin(), cFilterList.cend(),
-                      [&column](const QAbstractFilter* mFilter) { return mFilter->column() == column; });
+                      [&column](const QAbstractFilter *mFilter) { return mFilter->column() == column; });
     if (it != cFilterList.end()) {
         return *it;
     }
@@ -72,7 +68,7 @@ QAbstractFilter* QFilterGroup::filterAtColumn(int column) const
     return nullptr;
 }
 
-QList<QAbstractFilter*> QFilterGroup::filters() const
+QList<QAbstractFilter *> QFilterGroup::filters() const
 {
     return cFilterList;
 }
@@ -80,7 +76,7 @@ QList<QAbstractFilter*> QFilterGroup::filters() const
 bool QFilterGroup::hasFilter(int index) const
 {
     return std::any_of(cFilterList.cbegin(), cFilterList.cend(),
-                       [&index](const QAbstractFilter* mFilter) { return mFilter->column() == index; });
+                       [&index](const QAbstractFilter *mFilter) { return mFilter->column() == index; });
 
     /*for (const QAbstractFilter* mFilter : cFilterList) {
         if (mFilter->column() == index) {
@@ -106,7 +102,7 @@ bool QFilterGroup::remove(int column)
     return false;
 }
 
-void QFilterGroup::setName(const QString & name)
+void QFilterGroup::setName(const QString &name)
 {
     cName = name;
 }

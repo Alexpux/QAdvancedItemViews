@@ -1,24 +1,24 @@
 #include "qtablemodelexportpushbutton.h"
 
-#include <QIcon>
 #include <QAction>
+#include <QIcon>
 #include <QMenu>
 
-QTableModelExportPushButton::QTableModelExportPushButton(QWidget *parent)
-    : QPushButton(parent)
+QTableModelExportPushButton::QTableModelExportPushButton(QWidget *parent) :
+    QPushButton(parent)
 {
     setIcon(QIcon(":/qaiv/table.export"));
 
     QAction *action = nullptr;
-    QMenu* menu = new QMenu(this);
+    auto *menu = new QMenu(this);
     action = menu->addAction(tr("Excel XML (Selection)"));
-    //a->setIcon(QIcon(":/qaiv/export.excel"));
+    // a->setIcon(QIcon(":/qaiv/export.excel"));
     action->setData(QByteArray("SpreadsheetML"));
     action->setToolTip(tr("Exports the selected items into an Excel XML spreadsheet"));
     connect(action, &QAction::triggered, this, &QTableModelExportPushButton::exportSelectionTriggeredImpl);
 
     action = menu->addAction(tr("Word XML (Selection)"));
-    //a->setIcon(QIcon(":/qaiv/export.word"));
+    // a->setIcon(QIcon(":/qaiv/export.word"));
     action->setData(QByteArray("WordML"));
     action->setToolTip(tr("Exports the selected items into an Word XML document"));
     connect(action, &QAction::triggered, this, &QTableModelExportPushButton::exportSelectionTriggeredImpl);
@@ -35,11 +35,11 @@ QTableModelExportPushButton::QTableModelExportPushButton(QWidget *parent)
 
     action = menu->addAction(tr("Excel XML (All)"));
     action->setData(QByteArray("SpreadsheetML"));
-    //a->setIcon(QIcon(":/qaiv/export.excel"));
+    // a->setIcon(QIcon(":/qaiv/export.excel"));
     connect(action, &QAction::triggered, this, &QTableModelExportPushButton::exportSelectionTriggeredImpl);
 
     action = menu->addAction(tr("Word XML (All)"));
-    //a->setIcon(QIcon(":/qaiv/export.word"));
+    // a->setIcon(QIcon(":/qaiv/export.word"));
     action->setData(QByteArray("WordML"));
     connect(action, &QAction::triggered, this, &QTableModelExportPushButton::exportSelectionTriggeredImpl);
 
@@ -54,13 +54,9 @@ QTableModelExportPushButton::QTableModelExportPushButton(QWidget *parent)
     setMenu(menu);
 }
 
-QTableModelExportPushButton::~QTableModelExportPushButton()
-{
-}
-
 void QTableModelExportPushButton::exportAllTriggeredImpl()
 {
-    QAction* action = qobject_cast<QAction*>(sender());
+    auto *action = qobject_cast<QAction *>(sender());
     if (action) {
         emit exportAllTriggered(action->data().toByteArray());
     }
@@ -68,7 +64,7 @@ void QTableModelExportPushButton::exportAllTriggeredImpl()
 
 void QTableModelExportPushButton::exportSelectionTriggeredImpl()
 {
-    QAction* action = qobject_cast<QAction*>(sender());
+    auto *action = qobject_cast<QAction *>(sender());
     if (action) {
         emit exportSelectionTriggered(action->data().toByteArray());
     }

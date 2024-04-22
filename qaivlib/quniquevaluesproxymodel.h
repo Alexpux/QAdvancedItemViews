@@ -21,18 +21,17 @@
 #ifndef QUNIQUEVALUESPROXYMODEL_H
 #define QUNIQUEVALUESPROXYMODEL_H
 
-#include <QSortFilterProxyModel>
-
 #include "qaivlib_global.h"
+
+#include <QSortFilterProxyModel>
 
 class QUniqueValuesProxyModelPrivate;
 
 //! The QUniqueValuesProxyModel provides a filter model remove duplicate values from a source model.
 /**
-  * @ingroup proxy
-  */
-class QAIVLIBSHARED_EXPORT QUniqueValuesProxyModel : public QSortFilterProxyModel
-{
+ * @ingroup proxy
+ */
+class QAIVLIBSHARED_EXPORT QUniqueValuesProxyModel : public QSortFilterProxyModel {
     Q_OBJECT
     Q_PROPERTY(bool emptyItemsAllowed READ emptyItemsAllowed WRITE setEmptyItemsAllowed)
     //! @property(modelColumn)
@@ -54,16 +53,16 @@ public:
     /**
      * @reimp QSortFilterProxyModel::data()
      */
-    QVariant data(const QModelIndex &index, int role) const;
+    QVariant data(const QModelIndex &index, int role) const override;
 
     bool emptyItemsAllowed() const;
     /**
      * Returns true if the item in the row indicated by the given source_row and source_parent contains a unique value in the model; otherwise returns false.
      * @note By default, the Qt::DisplayRole is used to determine if the row should be accepted or not.
      */
-    bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
-    virtual bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
+    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     /**
      * Returns model column used to determine unique value.
      * @see setModelColumn()
@@ -81,17 +80,17 @@ public:
     /**
      * @reimp QSortFilterProxyModel::setSourceModel()
      */
-    void setSourceModel(QAbstractItemModel* sourceModel);
+    void setSourceModel(QAbstractItemModel *sourceModel) override;
 
 signals:
     void progressChanged(int progress);
 
 private slots:
     void buildMap();
-    void sourceModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    void sourceModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 private:
-    QUniqueValuesProxyModelPrivate* d;
+    QUniqueValuesProxyModelPrivate *d;
 
     bool isDuplicate(int row) const;
 };

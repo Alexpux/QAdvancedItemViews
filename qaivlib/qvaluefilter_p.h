@@ -26,12 +26,11 @@
 class QClickableLabel;
 class QLineEdit;
 
-class QValueFilterEditor : public QWidget
-{
+class QValueFilterEditor : public QWidget {
     Q_OBJECT
 public:
-    explicit QValueFilterEditor(QWidget* parent = nullptr);
-    ~QValueFilterEditor();
+    explicit QValueFilterEditor(QWidget *parent = nullptr);
+    ~QValueFilterEditor() = default;
 
     Qt::CaseSensitivity caseSensitivity() const;
 
@@ -41,7 +40,7 @@ public:
 
     void setMatchFlag(Qt::MatchFlag flag);
 
-    void setText(const QString & text);
+    void setText(const QString &text);
 
     QString text() const;
 
@@ -53,9 +52,9 @@ private:
     Qt::CaseSensitivity m_sensitivity;
     Qt::MatchFlag m_matchFlag;
 
-    QLineEdit* m_valueLineEdit{nullptr};
-    QClickableLabel* m_sensitivityLabel{nullptr};
-    QClickableLabel* m_matchFlagsLabel{nullptr};
+    QLineEdit *m_valueLineEdit { nullptr };
+    QClickableLabel *m_sensitivityLabel { nullptr };
+    QClickableLabel *m_matchFlagsLabel { nullptr };
 };
 
 #endif // QVALUEFILTER_P_H

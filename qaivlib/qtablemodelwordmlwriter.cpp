@@ -19,30 +19,25 @@
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-#include "qtablemodelwordmlwriter_p.h"
-
-#include "qaiv.h"
 #include "qabstractfilterproxymodel.h"
 #include "qadvancedtableview.h"
+#include "qaiv.h"
 #include "qmimedatautil.h"
+#include "qtablemodelwordmlwriter_p.h"
 
 #include <QBuffer>
 #include <QDebug>
 #include <QIODevice>
 #include <QTableView>
 
-QTableModelWordMLWriter::QTableModelWordMLWriter(QIODevice* device) :
+QTableModelWordMLWriter::QTableModelWordMLWriter(QIODevice *device) :
     m_device(device)
 {
 }
 
-QTableModelWordMLWriter::~QTableModelWordMLWriter()
+bool QTableModelWordMLWriter::write(QAdvancedTableView *view, bool all)
 {
-}
-
-bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
-{
-    if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
+    if (!m_device->isWritable() && !m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelXmlWriter::writeAll: the device can not be opened for writing";
         return false;
     }
@@ -56,20 +51,20 @@ bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
     //
     stream.writeAttribute("xmlns:w", "http://schemas.microsoft.com/office/word/2003/wordml");
     stream.writeAttribute("xmlns:v", "urn:schemas-microsoft-com:vml");
-    //stream.writeAttribute("xmlns:w10", "urn:schemas-microsoft-com:office:word");
-    //stream.writeAttribute("xmlns:sl", "http://schemas.microsoft.com/schemaLibrary/2003/core");
-    //stream.writeAttribute("xmlns:aml", "http://schemas.microsoft.com/aml/2001/core");
+    // stream.writeAttribute("xmlns:w10", "urn:schemas-microsoft-com:office:word");
+    // stream.writeAttribute("xmlns:sl", "http://schemas.microsoft.com/schemaLibrary/2003/core");
+    // stream.writeAttribute("xmlns:aml", "http://schemas.microsoft.com/aml/2001/core");
     stream.writeAttribute("xmlns:wx", "http://schemas.microsoft.com/office/word/2003/auxHint");
     stream.writeAttribute("xmlns:o", "urn:schemas-microsoft-com:office:office");
-    //stream.writeAttribute("xmlns:dt", "uuid:C2F41010-65B3-11d1-A29F-00AA00C14882");
-    //stream.writeAttribute("w:macrosPresent", "no");
-    //stream.writeAttribute("w:embeddedObjPresent", "no");
-    //stream.writeAttribute("w:ocxPresent", "no");
-    //stream.writeAttribute("xml:space","preserve");
+    // stream.writeAttribute("xmlns:dt", "uuid:C2F41010-65B3-11d1-A29F-00AA00C14882");
+    // stream.writeAttribute("w:macrosPresent", "no");
+    // stream.writeAttribute("w:embeddedObjPresent", "no");
+    // stream.writeAttribute("w:ocxPresent", "no");
+    // stream.writeAttribute("xml:space","preserve");
 
-    //stream.writeEmptyElement("w:ignoreSubtree");
-    //stream.writeAttribute("w:val", "http://schemas.microsoft.com/office/word/2003/wordml/sp2");
-    // document properties
+    // stream.writeEmptyElement("w:ignoreSubtree");
+    // stream.writeAttribute("w:val", "http://schemas.microsoft.com/office/word/2003/wordml/sp2");
+    //  document properties
     stream.writeStartElement("o:DocumentProperties");
     stream.writeTextElement("o:Author", "qaiv");
     stream.writeTextElement("o:LastAuthor", "qaiv");
@@ -77,7 +72,7 @@ bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
     //<o:TotalTime>0</o:TotalTime>
     //<o:Created>2013-08-23T16:21:00Z</o:Created>
     //<o:LastSaved>2013-08-23T16:21:00Z</o:LastSaved>
-    //stream.writeTextElement("o:Pages", "1");
+    // stream.writeTextElement("o:Pages", "1");
     //<o:Words>1</o:Words>
     //<o:Characters>12</o:Characters>
     //<o:Lines>1</o:Lines>
@@ -87,23 +82,23 @@ bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
 
     stream.writeEndElement();
     //// fonts
-    //stream.writeStartElement("w:fonts");
-    //stream.writeStartElement("w:defaultFonts");
-    //   stream.writeAttribute("w:ascii", "Times New Roman");
-    //   stream.writeAttribute("w:fareast", "Times New Roman");
-    //   stream.writeAttribute("w:h-ansi", "Times New Roman");
-    //   stream.writeAttribute("w:cs", "Times New Roman");
-    //stream.writeEndElement();
-    //stream.writeEndElement();
+    // stream.writeStartElement("w:fonts");
+    // stream.writeStartElement("w:defaultFonts");
+    //    stream.writeAttribute("w:ascii", "Times New Roman");
+    //    stream.writeAttribute("w:fareast", "Times New Roman");
+    //    stream.writeAttribute("w:h-ansi", "Times New Roman");
+    //    stream.writeAttribute("w:cs", "Times New Roman");
+    // stream.writeEndElement();
+    // stream.writeEndElement();
     //// lists
-    //stream.writeStartElement("lists");
+    // stream.writeStartElement("lists");
 
-    //stream.writeEndElement();
+    // stream.writeEndElement();
     //// styles
-    //stream.writeStartElement("styles");
+    // stream.writeStartElement("styles");
 
-    //stream.writeEndElement();
-    // start body
+    // stream.writeEndElement();
+    //  start body
     stream.writeStartElement("w:body");
 
     stream.writeStartElement("w:tbl");
@@ -124,7 +119,6 @@ bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
     stream.writeAttribute("wx:bdrwidth", "10");
     stream.writeAttribute("w:space", "0");
     stream.writeAttribute("w:color", "auto");
-
 
     stream.writeEmptyElement("w:bottom");
     stream.writeAttribute("w:val", "single");
@@ -175,7 +169,7 @@ bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
         e.second = view->filterProxyModel()->index(view->filterProxyModel()->rowCount() - 1, view->filterProxyModel()->columnCount() - 1);
     }
 
-    QMap<int,int> width;
+    QMap<int, int> width;
 
     stream.writeStartElement("w:tblGrid");
     for (int c = e.first.column(); c <= e.second.column(); c++) {
@@ -186,7 +180,6 @@ bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
             width[c] = w;
         }
     }
-
 
     stream.writeEndElement();
     // write column header
@@ -241,7 +234,7 @@ bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
                 stream.writeEmptyElement("w:shd");
                 stream.writeAttribute("w:val", "clear");
                 stream.writeAttribute("w:color", "auto");
-                //stream.writeAttribute("w:fill", "auto");
+                // stream.writeAttribute("w:fill", "auto");
                 writeBackgroundColor(stream, qvariant_cast<QBrush>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));
                 // end tag <w:tcPr>
                 stream.writeEndElement();
@@ -256,14 +249,14 @@ bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
                 writeDecoration(stream, view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DecorationRole));
                 // write cell content
                 stream.writeTextElement("w:t", view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
-                //writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::TextAlignmentRole).toInt()));
-                //writeBorderStyle(stream, view->gridStyle());
-                //writeBackgroundColor(stream, qvariant_cast<QBrush>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));
-                //writeDecoration(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DecorationRole));
-                //stream.writeStartElement("font");
-                //writeFontAttributes(stream, qvariant_cast<QFont>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::FontRole)));
-                //writeCharacters(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
-                // end tag <w:r>
+                // writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::TextAlignmentRole).toInt()));
+                // writeBorderStyle(stream, view->gridStyle());
+                // writeBackgroundColor(stream, qvariant_cast<QBrush>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));
+                // writeDecoration(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DecorationRole));
+                // stream.writeStartElement("font");
+                // writeFontAttributes(stream, qvariant_cast<QFont>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::FontRole)));
+                // writeCharacters(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
+                //  end tag <w:r>
                 stream.writeEndElement();
                 // end tag <w:p>
                 stream.writeEndElement();
@@ -277,7 +270,7 @@ bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
     // end tag <tbl>
     stream.writeEndElement();
     // end tag <sect>
-    //stream.writeEndElement();
+    // stream.writeEndElement();
     // end tag <body>
     stream.writeEndElement();
     // end tag <wordDocument>
@@ -285,9 +278,9 @@ bool QTableModelWordMLWriter::write(QAdvancedTableView* view, bool all)
     return true;
 }
 
-bool QTableModelWordMLWriter::write(QTableView* view, bool all)
+bool QTableModelWordMLWriter::write(QTableView *view, bool all)
 {
-    if (!m_device->isWritable() && ! m_device->open(QIODevice::WriteOnly)) {
+    if (!m_device->isWritable() && !m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelXmlWriter::writeAll: the device can not be opened for writing";
         return false;
     }
@@ -301,20 +294,20 @@ bool QTableModelWordMLWriter::write(QTableView* view, bool all)
     //
     stream.writeAttribute("xmlns:w", "http://schemas.microsoft.com/office/word/2003/wordml");
     stream.writeAttribute("xmlns:v", "urn:schemas-microsoft-com:vml");
-    //stream.writeAttribute("xmlns:w10", "urn:schemas-microsoft-com:office:word");
-    //stream.writeAttribute("xmlns:sl", "http://schemas.microsoft.com/schemaLibrary/2003/core");
-    //stream.writeAttribute("xmlns:aml", "http://schemas.microsoft.com/aml/2001/core");
+    // stream.writeAttribute("xmlns:w10", "urn:schemas-microsoft-com:office:word");
+    // stream.writeAttribute("xmlns:sl", "http://schemas.microsoft.com/schemaLibrary/2003/core");
+    // stream.writeAttribute("xmlns:aml", "http://schemas.microsoft.com/aml/2001/core");
     stream.writeAttribute("xmlns:wx", "http://schemas.microsoft.com/office/word/2003/auxHint");
     stream.writeAttribute("xmlns:o", "urn:schemas-microsoft-com:office:office");
-    //stream.writeAttribute("xmlns:dt", "uuid:C2F41010-65B3-11d1-A29F-00AA00C14882");
-    //stream.writeAttribute("w:macrosPresent", "no");
-    //stream.writeAttribute("w:embeddedObjPresent", "no");
-    //stream.writeAttribute("w:ocxPresent", "no");
-    //stream.writeAttribute("xml:space","preserve");
+    // stream.writeAttribute("xmlns:dt", "uuid:C2F41010-65B3-11d1-A29F-00AA00C14882");
+    // stream.writeAttribute("w:macrosPresent", "no");
+    // stream.writeAttribute("w:embeddedObjPresent", "no");
+    // stream.writeAttribute("w:ocxPresent", "no");
+    // stream.writeAttribute("xml:space","preserve");
 
-    //stream.writeEmptyElement("w:ignoreSubtree");
-    //stream.writeAttribute("w:val", "http://schemas.microsoft.com/office/word/2003/wordml/sp2");
-    // document properties
+    // stream.writeEmptyElement("w:ignoreSubtree");
+    // stream.writeAttribute("w:val", "http://schemas.microsoft.com/office/word/2003/wordml/sp2");
+    //  document properties
     stream.writeStartElement("o:DocumentProperties");
     stream.writeTextElement("o:Author", "qaiv");
     stream.writeTextElement("o:LastAuthor", "qaiv");
@@ -322,7 +315,7 @@ bool QTableModelWordMLWriter::write(QTableView* view, bool all)
     //<o:TotalTime>0</o:TotalTime>
     //<o:Created>2013-08-23T16:21:00Z</o:Created>
     //<o:LastSaved>2013-08-23T16:21:00Z</o:LastSaved>
-    //stream.writeTextElement("o:Pages", "1");
+    // stream.writeTextElement("o:Pages", "1");
     //<o:Words>1</o:Words>
     //<o:Characters>12</o:Characters>
     //<o:Lines>1</o:Lines>
@@ -332,23 +325,23 @@ bool QTableModelWordMLWriter::write(QTableView* view, bool all)
 
     stream.writeEndElement();
     //// fonts
-    //stream.writeStartElement("w:fonts");
-    //stream.writeStartElement("w:defaultFonts");
-    //   stream.writeAttribute("w:ascii", "Times New Roman");
-    //   stream.writeAttribute("w:fareast", "Times New Roman");
-    //   stream.writeAttribute("w:h-ansi", "Times New Roman");
-    //   stream.writeAttribute("w:cs", "Times New Roman");
-    //stream.writeEndElement();
-    //stream.writeEndElement();
+    // stream.writeStartElement("w:fonts");
+    // stream.writeStartElement("w:defaultFonts");
+    //    stream.writeAttribute("w:ascii", "Times New Roman");
+    //    stream.writeAttribute("w:fareast", "Times New Roman");
+    //    stream.writeAttribute("w:h-ansi", "Times New Roman");
+    //    stream.writeAttribute("w:cs", "Times New Roman");
+    // stream.writeEndElement();
+    // stream.writeEndElement();
     //// lists
-    //stream.writeStartElement("lists");
+    // stream.writeStartElement("lists");
 
-    //stream.writeEndElement();
+    // stream.writeEndElement();
     //// styles
-    //stream.writeStartElement("styles");
+    // stream.writeStartElement("styles");
 
-    //stream.writeEndElement();
-    // start body
+    // stream.writeEndElement();
+    //  start body
     stream.writeStartElement("w:body");
 
     stream.writeStartElement("w:tbl");
@@ -369,7 +362,6 @@ bool QTableModelWordMLWriter::write(QTableView* view, bool all)
     stream.writeAttribute("wx:bdrwidth", "10");
     stream.writeAttribute("w:space", "0");
     stream.writeAttribute("w:color", "auto");
-
 
     stream.writeEmptyElement("w:bottom");
     stream.writeAttribute("w:val", "single");
@@ -486,7 +478,7 @@ bool QTableModelWordMLWriter::write(QTableView* view, bool all)
                 stream.writeEmptyElement("w:shd");
                 stream.writeAttribute("w:val", "clear");
                 stream.writeAttribute("w:color", "auto");
-                //stream.writeAttribute("w:fill", "auto");
+                // stream.writeAttribute("w:fill", "auto");
                 writeBackgroundColor(stream, qvariant_cast<QBrush>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));
                 // end tag <w:tcPr>
                 stream.writeEndElement();
@@ -501,14 +493,14 @@ bool QTableModelWordMLWriter::write(QTableView* view, bool all)
                 writeDecoration(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DecorationRole));
                 // write cell content
                 stream.writeTextElement("w:t", view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
-                //writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::TextAlignmentRole).toInt()));
-                //writeBorderStyle(stream, view->gridStyle());
-                //writeBackgroundColor(stream, qvariant_cast<QBrush>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));
-                //writeDecoration(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DecorationRole));
-                //stream.writeStartElement("font");
-                //writeFontAttributes(stream, qvariant_cast<QFont>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::FontRole)));
-                //writeCharacters(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
-                // end tag <w:r>
+                // writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::TextAlignmentRole).toInt()));
+                // writeBorderStyle(stream, view->gridStyle());
+                // writeBackgroundColor(stream, qvariant_cast<QBrush>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));
+                // writeDecoration(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DecorationRole));
+                // stream.writeStartElement("font");
+                // writeFontAttributes(stream, qvariant_cast<QFont>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::FontRole)));
+                // writeCharacters(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
+                //  end tag <w:r>
                 stream.writeEndElement();
                 // end tag <w:p>
                 stream.writeEndElement();
@@ -522,7 +514,7 @@ bool QTableModelWordMLWriter::write(QTableView* view, bool all)
     // end tag <tbl>
     stream.writeEndElement();
     // end tag <sect>
-    //stream.writeEndElement();
+    // stream.writeEndElement();
     // end tag <body>
     stream.writeEndElement();
     // end tag <wordDocument>
@@ -530,15 +522,15 @@ bool QTableModelWordMLWriter::write(QTableView* view, bool all)
     return true;
 }
 
-void QTableModelWordMLWriter::writeBackgroundColor(QXmlStreamWriter & stream, const QBrush & b)
+void QTableModelWordMLWriter::writeBackgroundColor(QXmlStreamWriter &stream, const QBrush &b)
 {
     if (b.style() != Qt::NoBrush) {
-        //stream.writeEmptyElement("w:color");
+        // stream.writeEmptyElement("w:color");
         stream.writeAttribute("w:fill", b.color().name());
     }
 }
 
-void QTableModelWordMLWriter::writeDecoration(QXmlStreamWriter & stream, const QVariant & decoration)
+void QTableModelWordMLWriter::writeDecoration(QXmlStreamWriter &stream, const QVariant &decoration)
 {
     QIcon icon = qvariant_cast<QIcon>(decoration);
     QPixmap pixmap;
@@ -575,7 +567,7 @@ void QTableModelWordMLWriter::writeDecoration(QXmlStreamWriter & stream, const Q
     m_imageId++;
 }
 
-void QTableModelWordMLWriter::writeFont(QXmlStreamWriter & stream, const QFont & font)
+void QTableModelWordMLWriter::writeFont(QXmlStreamWriter &stream, const QFont &font)
 {
     QFont f(font);
     if (f.family() == "MS Shell Dlg 2") {
