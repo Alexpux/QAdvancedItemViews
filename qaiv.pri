@@ -1,12 +1,16 @@
 QAIVLIB = qaivlib
 
-CONFIG += c++17
+CONFIG += c++20
+
+QMAKE_CXXFLAGS_RELEASE += -Wno-character-conversion
+QMAKE_CXXFLAGS_DEBUG += -Wno-character-conversion
+
+#DEFINES += QAIVLIB_SHARED
 
 win32 {
   contains(QMAKE_HOST.arch, x86_64) {
     message("Building Windows 64-bit")
     OUTARCH=64
-    DEFINES += _WINDOWS QT_LARGEFILE_SUPPORT QT_DLL QAIVLIB_SHARED QT_HAVE_MMX QT_HAVE_3DNOW QT_HAVE_SSE QT_HAVE_MMXEXT QT_HAVE_SSE2
   } else {
     message("Building Windows 32-bit")
     OUTARCH=32

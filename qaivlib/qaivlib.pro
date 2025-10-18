@@ -25,12 +25,11 @@ CONFIG += staticlib
 
 QT += core widgets
 
-include(../../common_win32.pri)
-include(../../protector.pri)
+include(../qaiv.pri)
 
 INCLUDEPATH += $${PWD}
 
-#DEFINES += QAIVLIB_LIBRARY
+DEFINES += QAIVLIB_LIBRARY
 
 HEADERS += qabstractfilter.h \
            qabstractfiltermodel.h \
