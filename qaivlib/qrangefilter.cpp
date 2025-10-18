@@ -76,9 +76,9 @@ QRangeFilterEditor::QRangeFilterEditor(QWidget *parent) :
 
 bool QRangeFilterEditor::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress) {
+    if (event && event->type() == QEvent::KeyPress) {
         auto *keyEvent = dynamic_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key_Return) {
+        if (keyEvent && keyEvent->key() == Qt::Key_Return) {
             emit commitAndClose();
             return true;
         }

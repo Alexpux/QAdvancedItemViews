@@ -233,7 +233,7 @@ struct QAdvancedMultiLevelHeaderView::DATA {
         }
         fnt.setBold(true);
         QFontMetrics fm(fnt);
-        opt.fontMetrics = fm;
+        opt.fontMetrics = std::move(fm);
 
         // opt.text = index.data(Qt::DisplayRole).toString();
     }

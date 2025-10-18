@@ -34,7 +34,7 @@ public:
 
     void setIncludeHeader(bool on);
     void setRole(int role);
-    bool write(QAdvancedTableView *view, bool all);
+    bool write(const QAdvancedTableView *view, bool all);
     bool write(QTableView *view, bool all);
 
 private:

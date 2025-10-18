@@ -35,8 +35,12 @@ QTableModelWordMLWriter::QTableModelWordMLWriter(QIODevice *device) :
 {
 }
 
-bool QTableModelWordMLWriter::write(QAdvancedTableView *view, bool all)
+bool QTableModelWordMLWriter::write(const QAdvancedTableView *view, bool all)
 {
+    if (!view) {
+        return false;
+    }
+
     if (!m_device->isWritable() && !m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelXmlWriter::writeAll: the device can not be opened for writing";
         return false;

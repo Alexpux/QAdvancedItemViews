@@ -41,7 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "qadvancedheaderitem.h"
 #include "qadvancedheaderview.h"
 
-class QAdvancedMultiLevelHeaderView : public QAdvancedHeaderView {
+class QAIVLIBSHARED_EXPORT QAdvancedMultiLevelHeaderView : public QAdvancedHeaderView {
     Q_OBJECT
     struct DATA;
 

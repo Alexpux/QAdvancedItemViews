@@ -45,8 +45,18 @@ void QTableModelExcelMLWriter::setRole(int role)
     m_role = role;
 }
 
-bool QTableModelExcelMLWriter::write(QAdvancedTableView *view, bool all)
+bool QTableModelExcelMLWriter::write(const QAdvancedTableView *view, bool all)
 {
+    if (!view) {
+        return false;
+    }
+    auto *proxyModel = view->filterProxyModel();
+    auto *hHeader = view->horizontalHeader();
+
+    if (!proxyModel || !hHeader) {
+        return false;
+    }
+
     if (!m_device->isWritable() && !m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelExcelMLWriter::writeAll: the device can not be opened for writing";
         return false;
@@ -95,18 +105,18 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView *view, bool all)
     if (!all) {
         e = selectionEdges(view->selectionModel()->selection());
     } else {
-        e.first = view->filterProxyModel()->index(0, 0);
-        e.second = view->filterProxyModel()->index(view->filterProxyModel()->rowCount() - 1, view->filterProxyModel()->columnCount() - 1);
+        e.first = proxyModel->index(0, 0);
+        e.second = proxyModel->index(proxyModel->rowCount() - 1, proxyModel->columnCount() - 1);
     }
     if (m_includeHeader) {
         stream.writeStartElement("Row");
         for (int c = e.first.column(); c <= e.second.column(); c++) {
-            if (!view->horizontalHeader()->isSectionHidden(c)) {
+            if (!hHeader->isSectionHidden(c)) {
                 stream.writeStartElement("Cell");
 
                 stream.writeStartElement("Data");
                 stream.writeAttribute("ss:Type", "String");
-                stream.writeCharacters(view->filterProxyModel()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, m_role).toString());
+                stream.writeCharacters(proxyModel->headerData(hHeader->visualIndex(c), Qt::Horizontal, m_role).toString());
                 // end tag <Data>
                 stream.writeEndElement();
                 // end tag <Cell>
@@ -119,12 +129,12 @@ bool QTableModelExcelMLWriter::write(QAdvancedTableView *view, bool all)
     for (int r = e.first.row(); r <= e.second.row(); r++) {
         stream.writeStartElement("Row");
         for (int c = e.first.column(); c <= e.second.column(); c++) {
-            if (!view->horizontalHeader()->isSectionHidden(c)) {
+            if (!hHeader->isSectionHidden(c)) {
                 stream.writeStartElement("Cell");
 
                 stream.writeStartElement("Data");
                 stream.writeAttribute("ss:Type", "String");
-                stream.writeCharacters(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(m_role).toString());
+                stream.writeCharacters(proxyModel->index(r, hHeader->visualIndex(c)).data(m_role).toString());
                 // end tag <Data>
                 stream.writeEndElement();
                 // end tag <Cell>

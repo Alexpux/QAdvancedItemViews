@@ -36,7 +36,7 @@ public:
     explicit QTableModelWordMLWriter(QIODevice *device);
     ~QTableModelWordMLWriter() = default;
 
-    bool write(QAdvancedTableView *view, bool all);
+    bool write(const QAdvancedTableView *view, bool all);
 
     bool write(QTableView *view, bool all);
 

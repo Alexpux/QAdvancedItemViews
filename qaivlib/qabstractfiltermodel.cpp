@@ -261,11 +261,10 @@ bool QAbstractFilterModel::removeRows(int row, int count, const QModelIndex &par
     beginRemoveRows(QModelIndex(), row, row + count - 1);
     for (int iCount = 0; iCount < count; iCount++) {
         QFilterGroup *fGroup = d->filterGroupList.at(row);
-        if (fGroup) {
-            delete fGroup;
-        }
+        delete fGroup;
         d->filterGroupList.removeAt(row);
     }
+
     for (int iRow = row; iRow < d->filterGroupList.size(); iRow++) {
         for (int iFilter = 0; iFilter < d->filterGroupList.at(iRow)->count(); iFilter++) {
             d->filterGroupList.at(iRow)->filter(iFilter)->setRow(d->filterGroupList.at(iRow)->filter(iFilter)->row() - count);

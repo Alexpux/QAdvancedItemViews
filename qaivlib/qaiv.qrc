@@ -1,4 +1,9 @@
 <RCC>
+  <qresource prefix="/svg">
+    <file alias="filter.svg">resources/filter.svg</file>
+    <file alias="up-arrow-blue.svg">resources/up-arrow-blue.svg</file>
+    <file alias="down-arrow-blue.svg">resources/down-arrow-blue.svg</file>
+  </qresource>
   <qresource prefix="/qaiv/emoticon">
     <file alias="smiley.neutral">resources/emoticon_neutral.ico</file>
     <file alias="smiley.happy">resources/emoticon_smile.ico</file>

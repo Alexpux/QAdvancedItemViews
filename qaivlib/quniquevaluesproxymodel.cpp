@@ -138,8 +138,8 @@ void QUniqueValuesProxyModel::buildMap()
         }
         emit progressChanged(iRow * 100 / c);
     }
-    emit progressChanged(100);
     endResetModel();
+    emit progressChanged(100);
     // invalidate();
 }
 

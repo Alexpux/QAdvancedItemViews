@@ -205,13 +205,13 @@ void QFilterView::contextMenuEvent(QContextMenuEvent *event)
         event->ignore();
         return;
     }
-    QMenu *menu = new QMenu(this);
+    QMenu menu(this);
 
     if (selection.size() > 1) {
-        menu->addAction(QIcon(":/qaiv/filter/enabled"), tr("Enable Filter"), this, &QFilterView::enableSelectedFilters);
-        menu->addAction(QIcon(":/qaiv/filter/disabled"), tr("Disable Filter"), this, &QFilterView::disableSelectedFilters);
-        menu->addSeparator();
-        menu->addAction(QIcon(":/qaiv/filter/toggle"), tr("Toggle Filter"), this, &QFilterView::toggleSelectedFilters);
+        menu.addAction(QIcon(":/qaiv/filter/enabled"), tr("Enable Filter"), this, &QFilterView::enableSelectedFilters);
+        menu.addAction(QIcon(":/qaiv/filter/disabled"), tr("Disable Filter"), this, &QFilterView::disableSelectedFilters);
+        menu.addSeparator();
+        menu.addAction(QIcon(":/qaiv/filter/toggle"), tr("Toggle Filter"), this, &QFilterView::toggleSelectedFilters);
     } else {
         QAction *action = nullptr;
         QVariantMap properties = selection.first().data(Qt::EditRole).toMap();
@@ -224,10 +224,10 @@ void QFilterView::contextMenuEvent(QContextMenuEvent *event)
             QList<QAbstractFilterModel::FilterTypeEntry> fTypes = m->registeredFilterTypes();
             for (const QAbstractFilterModel::FilterTypeEntry &entry : fTypes) {
                 if (entry.type == QAbstractFilter::Type) {
-                    menu->addSeparator();
+                    menu.addSeparator();
                 } else {
                     if (mTypes.isEmpty() || mTypes.contains(entry.type)) {
-                        action = menu->addAction(entry.icon, entry.text, this, &QFilterView::addFilter);
+                        action = menu.addAction(entry.icon, entry.text, this, &QFilterView::addFilter);
                         properties["type"] = entry.type;
                         action->setData(properties);
                         action->setToolTip(entry.tooltip);
@@ -235,36 +235,35 @@ void QFilterView::contextMenuEvent(QContextMenuEvent *event)
                 }
             }
         } else {
-            m->filter(selection.first())->addContextMenuActions(menu, this);
-            if (!menu->isEmpty()) {
-                menu->addSeparator();
+            m->filter(selection.first())->addContextMenuActions(&menu, this);
+            if (!menu.isEmpty()) {
+                menu.addSeparator();
             }
             if (properties.value("enabled").toBool()) {
-                action = menu->addAction(QIcon(":/qaiv/filter/disabled"), tr("Disable Filter"), this, &QFilterView::changeProperties);
+                action = menu.addAction(QIcon(":/qaiv/filter/disabled"), tr("Disable Filter"), this, &QFilterView::changeProperties);
                 properties["enabled"] = false;
             } else {
-                action = menu->addAction(QIcon(":/qaiv/filter/enabled"), tr("Enable Filter"), this, &QFilterView::changeProperties);
+                action = menu.addAction(QIcon(":/qaiv/filter/enabled"), tr("Enable Filter"), this, &QFilterView::changeProperties);
                 properties["enabled"] = true;
             }
             action->setData(properties);
             if (m->mode() == QAdvancedItemViews::HighlightMode) {
-                menu->addSeparator();
+                menu.addSeparator();
                 QPixmap pixmap(22, 22);
                 pixmap.fill(qvariant_cast<QColor>(properties.value("highlightColor")));
-                action = menu->addAction(tr("Change Color..."), this, &QFilterView::changeColor);
+                action = menu.addAction(tr("Change Color..."), this, &QFilterView::changeColor);
                 action->setIcon(QIcon(pixmap));
                 action->setData(properties);
             }
-            menu->addSeparator();
-            action = menu->addAction(tr("Remove filter"), this, &QFilterView::removeFilter);
+            menu.addSeparator();
+            action = menu.addAction(tr("Remove filter"), this, &QFilterView::removeFilter);
             action->setData(properties);
         }
     }
 
     // QMenu* mMenu = mModel->createStandardContextMenu(selectionModel()->selectedIndexes(), this);
-    menu->exec(viewport()->mapToGlobal(event->pos()));
+    menu.exec(viewport()->mapToGlobal(event->pos()));
     event->accept();
-    delete menu;
 }
 
 void QFilterView::focusInEvent(QFocusEvent *event)

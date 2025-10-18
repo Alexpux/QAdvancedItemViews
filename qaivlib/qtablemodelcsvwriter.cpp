@@ -65,6 +65,17 @@ bool QTableModelCsvWriter::writeAll(QAdvancedTableView *view, bool all)
 
 bool QTableModelCsvWriter::writeAll(QTableView *view, bool all)
 {
+    if (!view) {
+        return false;
+    }
+
+    auto *viewModel = view->model();
+    auto *hHeader = view->horizontalHeader();
+
+    if (!viewModel || !hHeader) {
+        return false;
+    }
+
     if (!m_device->isWritable() && !m_device->open(QIODevice::WriteOnly)) {
         qWarning() << "QTableModelCsvWriter::writeAll: the device can not be opened for writing";
         return false;
@@ -72,8 +83,6 @@ bool QTableModelCsvWriter::writeAll(QTableView *view, bool all)
     QTextStream stream(m_device);
 
     QPair<QModelIndex, QModelIndex> e;
-    auto *viewModel = view->model();
-    auto *hHeader = view->horizontalHeader();
     if (!all) {
         e = selectionEdges(view->selectionModel()->selection());
     } else {

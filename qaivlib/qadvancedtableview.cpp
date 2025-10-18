@@ -39,6 +39,7 @@
 #include <QScrollBar>
 #include <QTableView>
 #include <QTimer>
+#include <algorithm>
 
 #define V_CALL(_m_)              \
     ui->dataTableView->_m_;      \
@@ -1265,9 +1266,13 @@ void QAdvancedTableView::update(const QModelIndex &index)
 void QAdvancedTableView::dataModelLayoutChanged()
 {
     if (d->autoResizeRowsToContents) {
-        ui->dataTableView->resizeRowsToContents();
-        ui->fixedRowsTableView->resizeRowsToContents();
-        ui->splittedDataTableView->resizeRowsToContents();
+        // Throttle resize operations to prevent UI freezing with large datasets
+        // Using QTimer::singleShot defers the operation to the event loop
+        QTimer::singleShot(0, this, [this]() {
+            ui->dataTableView->resizeRowsToContents();
+            ui->fixedRowsTableView->resizeRowsToContents();
+            ui->splittedDataTableView->resizeRowsToContents();
+        });
     }
     auto *hHeader = ui->headerTableView->horizontalHeader();
     for (int i = 0; i < hHeader->count(); i++) {

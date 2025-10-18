@@ -59,7 +59,7 @@ private:
     QAdvancedHeaderItem *const _parent { nullptr };
     QAdvancedHeaderItem *_doppelganger { nullptr };
     TreeInfo *_treeinfo { nullptr };
-    QPixmap _pixmap;
+    QPixmap _pixmap { QPixmap() };
 
     enum class ItemTypeEnum { NORMAL,
                               PLACEHOLDER } _type;
@@ -98,6 +98,8 @@ public:
 private:
     explicit QAdvancedHeaderItem(const QString &name, RotationType rotation = RotationType::DEFAULT, QAdvancedHeaderItem *parent = nullptr, int depth = 0, ItemTypeEnum type = ItemTypeEnum::NORMAL);
     QAdvancedHeaderItem(const QAdvancedHeaderItem &other);
+
+    QAdvancedHeaderItem &operator=(QAdvancedHeaderItem &other) = delete;
 };
 
 #endif // QADVANCEDHEADERITEM_H

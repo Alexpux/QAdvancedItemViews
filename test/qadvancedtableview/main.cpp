@@ -89,10 +89,34 @@ void QAdvancedTableViewTest::setFilterType()
 
 void QAdvancedTableViewTest::viewport()
 {
+    // Qt6: Ensure widget is shown and active
+    m_view->show();
+    m_view->activateWindow();
+    QVERIFY(QTest::qWaitForWindowActive(m_view));
+    
+    // Qt6: Explicitly enable mouse tracking
     m_view->viewport()->setMouseTracking(true);
+    m_view->viewport()->setAttribute(Qt::WA_Hover, true);
+    
+    // Qt6: Set up signal spy
     QSignalSpy spy(m_view, SIGNAL(viewportEntered()));
-    QTest::mouseMove(m_view->viewport());
+    
+    // Qt6: Use QTest::mouseMove with specific position
+    QPoint centerPoint = m_view->viewport()->rect().center();
+    
+    // Move mouse away first, then back to trigger enter event
+    QTest::mouseMove(m_view->viewport(), QPoint(-10, -10));
+    QTest::qWait(100);
+    QTest::mouseMove(m_view->viewport(), centerPoint);
+    
+    // Qt6: Wait for signal with timeout
+    QVERIFY(QTest::qWaitFor([&spy]() { 
+        return spy.count() >= 1; 
+    }, 1000));
+    
     QCOMPARE(spy.count(), 1);
+    
+    // Cleanup
     m_view->viewport()->setMouseTracking(false);
 }
 

@@ -5,7 +5,8 @@
 #include <QPainter>
 #include <QPixmapCache>
 #include <QStyleOptionHeader>
-#include <qdrawutil.h>
+#include <QPainterPath>
+#include <QStyleOptionButton>
 
 static QWindow *qt_getWindow(const QWidget *widget)
 {
@@ -15,12 +16,12 @@ static QWindow *qt_getWindow(const QWidget *widget)
 static QPixmap cachedPixmap(const QString &img, const QSize &pixSize)
 {
     QPixmap pm;
-    if (!QPixmapCache::find(img, &pm)) {
+    // Create unique cache key including size for HiDPI support
+    QString cacheKey = QString("%1_%2x%3").arg(img).arg(pixSize.width()).arg(pixSize.height());
+    
+    if (!QPixmapCache::find(cacheKey, &pm)) {
         pm = QIcon(img).pixmap(pixSize);
-        // pm = QPixmap::fromImage(QImage(img), Qt::OrderedDither | Qt::OrderedAlphaDither);
-        // pm = pm.scaled(HeaderIconSize);
-
-        QPixmapCache::insert(img, pm);
+        QPixmapCache::insert(cacheKey, pm);
     }
     return pm;
 }
@@ -30,6 +31,9 @@ QAdvancedHeaderStyle::QAdvancedHeaderStyle(QStyle *style) :
     itemsSize(QSize(16, 16)),
     iconsSize(QSize(32, 32))
 {
+    // Set appropriate cache size for Qt6 - 10MB should be enough for table icons
+    // This prevents cache thrashing with large tables while not using too much memory
+    QPixmapCache::setCacheLimit(10240);
 }
 
 QAdvancedHeaderStyle::~QAdvancedHeaderStyle()
@@ -77,21 +81,35 @@ void QAdvancedHeaderStyle::drawControl(ControlElement element, const QStyleOptio
         break;
     }
     case CE_HeaderSection: {
-        qDrawShadePanel(p, opt->rect, opt->palette,
-                        opt->state & State_Sunken, 1,
-                        &opt->palette.brush(QPalette::Button));
-
-        /*QBrush fill;
-        if (opt->state & State_On)
-            fill = QBrush(opt->palette.light().color(), Qt::Dense4Pattern);
-        else
-            fill = opt->palette.brush(QPalette::Button);
-
-        if (opt->state & (State_Raised | State_Sunken)) {
-            qDrawWinButton(p, opt->rect, opt->palette, opt->state & State_Sunken, &fill);
+        // Modern Qt6 style drawing instead of deprecated qDrawShadePanel
+        p->save();
+        p->setPen(Qt::NoPen);
+        p->setBrush(opt->palette.button());
+        p->drawRect(opt->rect);
+        
+        // Draw border with proper shading for Qt6
+        QPen borderPen(opt->palette.mid().color());
+        borderPen.setWidth(1);
+        p->setPen(borderPen);
+        
+        if (opt->state & State_Sunken) {
+            // Sunken appearance - dark on top/left, light on bottom/right
+            p->setPen(opt->palette.dark().color());
+            p->drawLine(opt->rect.topLeft(), opt->rect.topRight());
+            p->drawLine(opt->rect.topLeft(), opt->rect.bottomLeft());
+            p->setPen(opt->palette.light().color());
+            p->drawLine(opt->rect.bottomLeft(), opt->rect.bottomRight());
+            p->drawLine(opt->rect.topRight(), opt->rect.bottomRight());
         } else {
-            p->fillRect(opt->rect, fill);
-        }*/
+            // Raised appearance - light on top/left, dark on bottom/right
+            p->setPen(opt->palette.light().color());
+            p->drawLine(opt->rect.topLeft(), opt->rect.topRight());
+            p->drawLine(opt->rect.topLeft(), opt->rect.bottomLeft());
+            p->setPen(opt->palette.dark().color());
+            p->drawLine(opt->rect.bottomLeft(), opt->rect.bottomRight());
+            p->drawLine(opt->rect.topRight(), opt->rect.bottomRight());
+        }
+        p->restore();
         break;
     }
     case CE_HeaderLabel: {
@@ -101,8 +119,9 @@ void QAdvancedHeaderStyle::drawControl(ControlElement element, const QStyleOptio
                 // int iconExtent = proxy()->pixelMetric(PM_LargeIconSize);
                 QSize iconElemSize = header->icon.actualSize(iconsSize);
                 QPixmap pixmap = header->icon.pixmap(qt_getWindow(widget), iconElemSize, (header->state & State_Enabled) ? QIcon::Normal : QIcon::Disabled);
-                // QPixmap pixmap = header->icon.pixmap(qt_getWindow(widget), iconElemSize);
-                int pixw = pixmap.width() / pixmap.devicePixelRatio();
+                // Proper HiDPI handling for Qt6.8+
+                qreal dpr = pixmap.devicePixelRatio();
+                int pixw = qRound(pixmap.width() / dpr);
                 QRect aligned = alignedRect(header->direction, QFlag(header->iconAlignment), pixmap.size() / pixmap.devicePixelRatio(), rect);
                 QRect inter = aligned.intersected(rect);
                 p->drawPixmap(inter.x(), inter.y(), pixmap,
@@ -127,12 +146,15 @@ void QAdvancedHeaderStyle::drawControl(ControlElement element, const QStyleOptio
         break;
     }
     case CE_HeaderEmptyArea: {
-        qDrawShadePanel(p, opt->rect, opt->palette,
-                        opt->state & State_Sunken, 1,
-                        &opt->palette.brush(QPalette::Button));
+        // Modern Qt6 style for empty area
+        p->save();
+        p->fillRect(opt->rect, opt->palette.button());
+        
+        // Draw simple border
+        p->setPen(opt->palette.mid().color());
+        p->drawRect(opt->rect.adjusted(0, 0, -1, -1));
+        p->restore();
         break;
-        // p->fillRect(opt->rect, opt->palette.window());
-        // break;
     }
     default:
         QProxyStyle::drawControl(element, opt, p, widget);

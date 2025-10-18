@@ -51,7 +51,8 @@ inline const QSize HeaderIconSize = QSize(32, 32);
 
 inline const QString HeaderFilterIcon = QStringLiteral(":/svg/filter.svg");
 
-inline const QSize HeaderSortMarkSize = QSize(24, 24);
+// Adjusted size for better Qt6.8+ HiDPI scaling
+inline const QSize HeaderSortMarkSize = QSize(16, 16);
 inline const QString HeaderSortUpIcon = QStringLiteral(":/svg/up-arrow-blue.svg");
 inline const QString HeaderSortDownIcon = QStringLiteral(":/svg/down-arrow-blue.svg");
 
