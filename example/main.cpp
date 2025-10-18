@@ -16,10 +16,12 @@
  */
 
 #include "mainwindow.h"
+#include "qaivlib_global.h"
 
 #include <QApplication>
 #include <QDir>
 #include <QLibraryInfo>
+#include <QStyleFactory>
 #include <QTranslator>
 
 void loadTranslators()
@@ -29,7 +31,7 @@ void loadTranslators()
 
     if (toolkitTranslator->load(
             QLocale::system(), "qt", "_",
-            QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
+            QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
         qApp->installTranslator(toolkitTranslator);
     }
 
@@ -44,6 +46,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    a.setStyle(QStyleFactory::create("Fusion"));
+#ifndef QAIVLIB_SHARED
+    Q_INIT_RESOURCE(qaiv);
+#endif
     loadTranslators();
     MainWindow w;
     w.show();

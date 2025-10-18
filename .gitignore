@@ -19,6 +19,7 @@
 *.sbr
 *.scc
 [Bb]in
+[Bb]uild
 [Dd]ebug*/
 obj/
 [Rr]elease*/
