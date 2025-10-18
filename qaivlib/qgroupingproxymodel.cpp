@@ -483,9 +483,10 @@ QByteArray QGroupingProxyModel::saveGroups() const
     stream << qint32(1) << qint32(d->modelColumn) << qint32(d->groupItemDataRole);
 
     for (int iGroup = 1; iGroup < d->root->childCount(); iGroup++) {
-        stream << d->root->child(iGroup)->data(Qt::DecorationRole)
-               << d->root->child(iGroup)->data(Qt::DisplayRole)
-               << d->root->child(iGroup)->data(Qt::EditRole);
+        auto *item = d->root->child(iGroup);
+        stream << item->data(Qt::DecorationRole)
+               << item->data(Qt::DisplayRole)
+               << item->data(Qt::EditRole);
     }
     return groups;
 }
@@ -603,9 +604,11 @@ int QGroupingProxyModel::groupAt(int sourceModelRow)
 void QGroupingProxyModel::moveRows(int row, int count)
 {
     for (int iGroup = 0; iGroup < d->root->childCount(); iGroup++) {
-        for (int iChild = 0; iChild < d->root->child(iGroup)->childCount(); iChild++) {
-            if (d->root->child(iGroup)->child(iChild)->sourceModelRow() >= row) {
-                d->root->child(iGroup)->child(iChild)->moveSourceRow(count);
+        auto *item = d->root->child(iGroup);
+        for (int iChild = 0; iChild < item->childCount(); iChild++) {
+            auto *subItem = item->child(iChild);
+            if (subItem->sourceModelRow() >= row) {
+                subItem->moveSourceRow(count);
             }
         }
     }

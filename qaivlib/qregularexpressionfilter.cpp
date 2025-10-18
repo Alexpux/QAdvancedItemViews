@@ -58,7 +58,7 @@ Qt::CaseSensitivity QRegularExpressionFilterEditor::caseSenstivity() const
     return m_sensitivity;
 }
 
-void QRegularExpressionFilterEditor::sensitivityLabelClicked(Qt::MouseButtons buttons)
+void QRegularExpressionFilterEditor::sensitivityLabelClicked(const Qt::MouseButtons &buttons)
 {
     if (buttons.testFlag(Qt::LeftButton)) {
         if (m_sensitivity == Qt::CaseInsensitive) {

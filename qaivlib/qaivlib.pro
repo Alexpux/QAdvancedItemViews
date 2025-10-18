@@ -19,24 +19,29 @@
 #** If not, see <http://www.gnu.org/licenses/>.
 #******************************************************************************/
 
-include(../qaiv.pri)
-
 TEMPLATE = lib
-
-TARGET = $${QAIVLIB}
+TARGET = qaivlib
+CONFIG += staticlib
 
 QT += core widgets
 
-CONFIG += debug_and_release
+include(../../common_win32.pri)
+include(../../protector.pri)
 
-DEFINES += QAIVLIB_LIBRARY
+INCLUDEPATH += $${PWD}
+
+#DEFINES += QAIVLIB_LIBRARY
 
 HEADERS += qabstractfilter.h \
            qabstractfiltermodel.h \
            qabstractfilterproxymodel.h \
            qabstractmodelitemdecoration.h \
+           qadvancedheaderitem.h \
+           qadvancedheaderstyle.h \
            qadvancedheaderview.h \
            qadvancedheaderview_p.h \
+           qadvancedmultilevelheaderview.h \
+           qadvancedtablemodel.h \
            qadvancedtableview.h \
            qadvancedtableview_p.h \
            qaiv.h \
@@ -89,7 +94,11 @@ SOURCES += qabstractfilter.cpp \
            qabstractfiltermodel.cpp \
            qabstractfilterproxymodel.cpp \
            qabstractmodelitemdecoration.cpp \
+           qadvancedheaderitem.cpp \
+           qadvancedheaderstyle.cpp \
            qadvancedheaderview.cpp \
+           qadvancedmultilevelheaderview.cpp \
+           qadvancedtablemodel.cpp \
            qadvancedtableview.cpp \
            qaiv.cpp \
            qautofilter.cpp \
@@ -131,6 +140,7 @@ FORMS += qadvancedtableview.ui \
          qconditionaldecorationdialog.ui \
          qsearchbar.ui
 
-TRANSLATIONS += qaivlib_de.ts aivlib_ru.ts
+TRANSLATIONS += ../../translations/qaivlib_en_GB.ts \
+                ../../translations/qaivlib_ru_RU.ts
 
 RESOURCES += qaiv.qrc

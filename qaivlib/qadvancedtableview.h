@@ -434,7 +434,7 @@ public:
     /**
      * Sets the current item to be the item at @p index.
      */
-    void setEditTriggers(QAbstractItemView::EditTriggers triggers);
+    void setEditTriggers(const QAbstractItemView::EditTriggers &triggers);
     /**
      * Sets the list of available filter @p types for the given @p column.
      * @see columnsFilterTypes()
@@ -555,6 +555,9 @@ public:
      * Returns true if word wrap is enabled. Otherwise false.
      */
     bool wordWrap() const;
+
+    void setSummaryType(int column, advSummaryFunc type);
+    void setSummaryTypes(QMap<int, advSummaryFunc> columnMap);
 
 signals:
     /**
@@ -762,6 +765,11 @@ private slots:
 
     void viewLayoutChanged();
     void viewLayoutChangedImpl();
+
+    void updateSummary();
+    void sectionsResize();
+
+    void adjustSummaryOffset();
 
 private:
     QAdvancedTableViewPrivate *d;

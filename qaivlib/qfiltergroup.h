@@ -84,7 +84,6 @@ public:
     void setName(const QString &name);
 
 private:
-    bool cEnabled { false };
     QString cName;
     QList<QAbstractFilter *> cFilterList;
 };

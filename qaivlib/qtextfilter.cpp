@@ -64,7 +64,7 @@ Qt::MatchFlag QTextFilterEditor::matchFlag() const
     return cMatchFlag;
 }
 
-void QTextFilterEditor::matchFlagsLabelClicked(Qt::MouseButtons buttons)
+void QTextFilterEditor::matchFlagsLabelClicked(const Qt::MouseButtons &buttons)
 {
     if (buttons.testFlag(Qt::LeftButton)) {
         if (cMatchFlag == Qt::MatchStartsWith) {
@@ -77,7 +77,7 @@ void QTextFilterEditor::matchFlagsLabelClicked(Qt::MouseButtons buttons)
     }
 }
 
-void QTextFilterEditor::sensitivityLabelClicked(Qt::MouseButtons buttons)
+void QTextFilterEditor::sensitivityLabelClicked(const Qt::MouseButtons &buttons)
 {
     if (buttons.testFlag(Qt::LeftButton)) {
         if (cSensitivity == Qt::CaseInsensitive) {

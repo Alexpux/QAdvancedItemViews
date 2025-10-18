@@ -107,14 +107,16 @@ void QFilterViewConnector::setDataView(QTreeView *view)
 void QFilterViewConnector::adjustVerticalHeaderWidth()
 {
     if (cTableView) {
-        if (cTableView->verticalHeader()->width() < cFilterView->verticalHeader()->width()) {
-            cTableView->verticalHeader()->blockSignals(true);
-            cTableView->verticalHeader()->setFixedWidth(cFilterView->verticalHeader()->width());
-            cTableView->verticalHeader()->blockSignals(false);
+        auto *vtableHeader = cTableView->verticalHeader();
+        auto *vfilterHeader = cFilterView->verticalHeader();
+        if (vtableHeader->width() < vfilterHeader->width()) {
+            vtableHeader->blockSignals(true);
+            vtableHeader->setFixedWidth(vfilterHeader->width());
+            vtableHeader->blockSignals(false);
         } else {
-            cFilterView->verticalHeader()->blockSignals(true);
-            cFilterView->verticalHeader()->setFixedWidth(cTableView->verticalHeader()->width());
-            cFilterView->verticalHeader()->blockSignals(false);
+            vfilterHeader->blockSignals(true);
+            vfilterHeader->setFixedWidth(vtableHeader->width());
+            vfilterHeader->blockSignals(false);
         }
         if (cFilterView->model()->rowCount() > cFilterView->maxVisibileFilterSets()) {
             cTableView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);

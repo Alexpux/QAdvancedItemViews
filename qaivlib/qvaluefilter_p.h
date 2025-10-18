@@ -45,8 +45,8 @@ public:
     QString text() const;
 
 private slots:
-    void sensitivityLabelClicked(Qt::MouseButtons buttons);
-    void matchFlagsLabelClicked(Qt::MouseButtons buttons);
+    void sensitivityLabelClicked(const Qt::MouseButtons &buttons);
+    void matchFlagsLabelClicked(const Qt::MouseButtons &buttons);
 
 private:
     Qt::CaseSensitivity m_sensitivity;

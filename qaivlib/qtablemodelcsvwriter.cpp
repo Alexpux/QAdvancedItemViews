@@ -43,17 +43,19 @@ bool QTableModelCsvWriter::writeAll(QAdvancedTableView *view, bool all)
     QTextStream stream(m_device);
 
     QPair<QModelIndex, QModelIndex> e;
+    auto *proxyModel = view->filterProxyModel();
+    auto *hHeader = view->horizontalHeader();
     if (!all) {
         e = selectionEdges(view->selectionModel()->selection());
     } else {
-        e.first = view->filterProxyModel()->index(0, 0);
-        e.second = view->filterProxyModel()->index(view->filterProxyModel()->rowCount() - 1, view->filterProxyModel()->columnCount() - 1);
+        e.first = proxyModel->index(0, 0);
+        e.second = proxyModel->index(proxyModel->rowCount() - 1, proxyModel->columnCount() - 1);
     }
     for (int r = e.first.row(); r <= e.second.row(); r++) {
         QStringList l;
         for (int c = e.first.column(); c <= e.second.column(); c++) {
-            if (!view->horizontalHeader()->isSectionHidden(c)) {
-                l << "\"" + view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
+            if (!hHeader->isSectionHidden(c)) {
+                l << "\"" + proxyModel->index(r, hHeader->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
             }
         }
         stream << l.join(";") << ENDL;
@@ -70,17 +72,19 @@ bool QTableModelCsvWriter::writeAll(QTableView *view, bool all)
     QTextStream stream(m_device);
 
     QPair<QModelIndex, QModelIndex> e;
+    auto *viewModel = view->model();
+    auto *hHeader = view->horizontalHeader();
     if (!all) {
         e = selectionEdges(view->selectionModel()->selection());
     } else {
-        e.first = view->model()->index(0, 0);
-        e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
+        e.first = viewModel->index(0, 0);
+        e.second = viewModel->index(viewModel->rowCount() - 1, viewModel->columnCount() - 1);
     }
     for (int r = e.first.row(); r <= e.second.row(); r++) {
         QStringList l;
         for (int c = e.first.column(); c <= e.second.column(); c++) {
-            if (!view->horizontalHeader()->isSectionHidden(c)) {
-                l << "\"" + view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
+            if (!hHeader->isSectionHidden(c)) {
+                l << "\"" + viewModel->index(r, hHeader->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
             }
         }
         stream << l.join(";") << ENDL;

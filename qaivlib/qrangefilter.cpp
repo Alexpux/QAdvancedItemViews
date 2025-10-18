@@ -129,8 +129,8 @@ bool QRangeFilter::matches(const QVariant &value, int type) const
     QVariant propFrom = property("rangeFrom");
     QVariant propTo = property("rangeTo");
 
-    switch (value.type()) {
-    case QVariant::Char: {
+    switch (value.typeId()) {
+    case QMetaType::Char: {
         if (propFrom.isValid() && propTo.isValid()) {
             return value.toChar() >= propFrom.toString().at(0) && value.toChar() <= propTo.toString().at(0);
         }
@@ -142,7 +142,7 @@ bool QRangeFilter::matches(const QVariant &value, int type) const
         }
         break;
     }
-    case QVariant::Date: {
+    case QMetaType::QDate: {
         if (propFrom.isValid() && propTo.isValid()) {
             return value.toDate() >= propFrom.toDate() && value.toDate() <= propTo.toDate();
         }
@@ -154,7 +154,7 @@ bool QRangeFilter::matches(const QVariant &value, int type) const
         }
         break;
     }
-    case QVariant::DateTime: {
+    case QMetaType::QDateTime: {
         if (propFrom.isValid() && propTo.isValid()) {
             return value.toDateTime() >= propFrom.toDateTime() && value.toDateTime() <= propTo.toDateTime();
         }
@@ -166,7 +166,7 @@ bool QRangeFilter::matches(const QVariant &value, int type) const
         }
         break;
     }
-    case QVariant::Double: {
+    case QMetaType::Double: {
         if (propFrom.isValid() && propTo.isValid()) {
             return value.toDouble() >= propFrom.toDouble() && value.toDouble() <= propTo.toDouble();
         }
@@ -178,7 +178,7 @@ bool QRangeFilter::matches(const QVariant &value, int type) const
         }
         break;
     }
-    case QVariant::Int: {
+    case QMetaType::Int: {
         if (propFrom.isValid() && propTo.isValid()) {
             return value.toInt() >= propFrom.toInt() && value.toInt() <= propTo.toInt();
         }
@@ -190,7 +190,7 @@ bool QRangeFilter::matches(const QVariant &value, int type) const
         }
         break;
     }
-    case QVariant::LongLong: {
+    case QMetaType::LongLong: {
         if (propFrom.isValid() && propTo.isValid()) {
             return value.toLongLong() >= propFrom.toLongLong() && value.toLongLong() <= propTo.toLongLong();
         }
@@ -202,7 +202,7 @@ bool QRangeFilter::matches(const QVariant &value, int type) const
         }
         break;
     }
-    case QVariant::String: {
+    case QMetaType::QString: {
         if (propFrom.isValid() && propTo.isValid()) {
             return value.toString() >= propFrom.toString() && value.toString() <= propTo.toString();
         }
@@ -214,7 +214,7 @@ bool QRangeFilter::matches(const QVariant &value, int type) const
         }
         break;
     }
-    case QVariant::Time: {
+    case QMetaType::QTime: {
         if (propFrom.isValid() && propTo.isValid()) {
             return value.toTime() >= propFrom.toTime() && value.toTime() <= propTo.toTime();
         }
@@ -226,7 +226,7 @@ bool QRangeFilter::matches(const QVariant &value, int type) const
         }
         break;
     }
-    case QVariant::UInt: {
+    case QMetaType::UInt: {
         if (propFrom.isValid() && propTo.isValid()) {
             return value.toUInt() >= propFrom.toUInt() && value.toUInt() <= propTo.toUInt();
         }
@@ -238,7 +238,7 @@ bool QRangeFilter::matches(const QVariant &value, int type) const
         }
         break;
     }
-    case QVariant::ULongLong: {
+    case QMetaType::ULongLong: {
         if (propFrom.isValid() && propTo.isValid()) {
             return value.toULongLong() >= propFrom.toULongLong() && value.toULongLong() <= propTo.toULongLong();
         }

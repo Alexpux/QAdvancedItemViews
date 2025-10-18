@@ -142,7 +142,7 @@ QIcon QConditionalDecorationProxyModel::icon(const QString &set, const QString &
     QVariantMap m = d->iconSets.value(set).toMap();
     if (!m.isEmpty()) {
         QVariant i = m.value(name);
-        if (i.type() == QVariant::Icon) {
+        if (i.typeId() == QMetaType::QIcon) {
             return qvariant_cast<QIcon>(i);
         }
         return QIcon(i.toString());

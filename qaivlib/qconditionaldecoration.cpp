@@ -75,22 +75,24 @@ QVariant QConditionalDecoration::decorate(const QModelIndex &index, int role) co
     if (!model) {
         return QVariant();
     }
+    QSize icon_size = model->iconSize();
     QVariantList definitions = property("conditions").toList();
     QVariantMap m;
     QList<QPixmap> pl;
     for (const auto &defs : definitions) {
         m = defs.toMap();
         if (matches(index, m)) {
-            pl << model->icon(m.value("set").toString(), m.value("name").toString()).pixmap(model->iconSize());
+            pl << model->icon(m.value("set").toString(), m.value("name").toString()).pixmap(icon_size);
             // return model->icon(p.value("set").toString(), p.value("name").toString()).pixmap(property("pixmapSize").toSize());
         }
     }
     if (!pl.isEmpty()) {
-        QPixmap p(model->iconSize().width() * pl.size() + (pl.size() * model->iconSpacing()), model->iconSize().height());
+        auto icon_spacing = model->iconSpacing();
+        QPixmap p(icon_size.width() * pl.size() + (pl.size() * icon_spacing), icon_size.height());
         p.fill(Qt::transparent);
         QPainter painter(&p);
         for (int i = 0; i < pl.size(); i++) {
-            painter.drawPixmap(model->iconSize().width() * i + (i * model->iconSpacing()), 0, pl.at(i));
+            painter.drawPixmap(icon_size.width() * i + (i * icon_spacing), 0, pl.at(i));
         }
         return p;
     }
@@ -210,43 +212,43 @@ QVariant QConditionalDecoration::value(int index) const
 
 bool QConditionalDecoration::equal(const QVariant &left, const QVariant &right) const
 {
-    if (left.type() == QVariant::Char) {
+    if (left.typeId() == QMetaType::Char) {
         if (left.toChar() == right.toString().at(0)) {
             return true;
         }
-    } else if (left.type() == QVariant::Date) {
+    } else if (left.typeId() == QMetaType::QDate) {
         if (left.toDate() == right.toDate()) {
             return true;
         }
-    } else if (left.type() == QVariant::DateTime) {
+    } else if (left.typeId() == QMetaType::QDateTime) {
         if (left.toDateTime() == right.toDateTime()) {
             return true;
         }
-    } else if (left.type() == QVariant::Double) {
+    } else if (left.typeId() == QMetaType::Double) {
         if (left.toDouble() == right.toDouble()) {
             return true;
         }
-    } else if (left.type() == QVariant::Int) {
+    } else if (left.typeId() == QMetaType::Int) {
         if (left.toInt() == right.toInt()) {
             return true;
         }
-    } else if (left.type() == QVariant::LongLong) {
+    } else if (left.typeId() == QMetaType::LongLong) {
         if (left.toLongLong() == right.toLongLong()) {
             return true;
         }
-    } else if (left.type() == QVariant::String) {
+    } else if (left.typeId() == QMetaType::QString) {
         if (left.toString() == right.toString()) {
             return true;
         }
-    } else if (left.type() == QVariant::Time) {
+    } else if (left.typeId() == QMetaType::QTime) {
         if (left.toTime() == right.toTime()) {
             return true;
         }
-    } else if (left.type() == QVariant::UInt) {
+    } else if (left.typeId() == QMetaType::UInt) {
         if (left.toUInt() == right.toUInt()) {
             return true;
         }
-    } else if (left.type() == QVariant::ULongLong) {
+    } else if (left.typeId() == QMetaType::ULongLong) {
         if (left.toULongLong() == right.toULongLong()) {
             return true;
         }
@@ -267,43 +269,43 @@ bool QConditionalDecoration::greaterOrEqualThan(const QVariant &left, const QVar
 
 bool QConditionalDecoration::greaterThan(const QVariant &left, const QVariant &right) const
 {
-    if (left.type() == QVariant::Char) {
+    if (left.typeId() == QMetaType::Char) {
         if (left.toChar() > right.toString().at(0)) {
             return true;
         }
-    } else if (left.type() == QVariant::Date) {
+    } else if (left.typeId() == QMetaType::QDate) {
         if (left.toDate() > right.toDate()) {
             return true;
         }
-    } else if (left.type() == QVariant::DateTime) {
+    } else if (left.typeId() == QMetaType::QDateTime) {
         if (left.toDateTime() > right.toDateTime()) {
             return true;
         }
-    } else if (left.type() == QVariant::Double) {
+    } else if (left.typeId() == QMetaType::Double) {
         if (left.toDouble() > right.toDouble()) {
             return true;
         }
-    } else if (left.type() == QVariant::Int) {
+    } else if (left.typeId() == QMetaType::Int) {
         if (left.toInt() > right.toInt()) {
             return true;
         }
-    } else if (left.type() == QVariant::LongLong) {
+    } else if (left.typeId() == QMetaType::LongLong) {
         if (left.toLongLong() > right.toLongLong()) {
             return true;
         }
-    } else if (left.type() == QVariant::String) {
+    } else if (left.typeId() == QMetaType::QString) {
         if (left.toString() > right.toString()) {
             return true;
         }
-    } else if (left.type() == QVariant::Time) {
+    } else if (left.typeId() == QMetaType::QTime) {
         if (left.toTime() > right.toTime()) {
             return true;
         }
-    } else if (left.type() == QVariant::UInt) {
+    } else if (left.typeId() == QMetaType::UInt) {
         if (left.toUInt() > right.toUInt()) {
             return true;
         }
-    } else if (left.type() == QVariant::ULongLong) {
+    } else if (left.typeId() == QMetaType::ULongLong) {
         if (left.toULongLong() > right.toULongLong()) {
             return true;
         }
@@ -324,43 +326,43 @@ bool QConditionalDecoration::lessOrEqualThan(const QVariant &left, const QVarian
 
 bool QConditionalDecoration::lessThan(const QVariant &left, const QVariant &right) const
 {
-    if (left.type() == QVariant::Char) {
+    if (left.typeId() == QMetaType::Char) {
         if (left.toChar() < right.toString().at(0)) {
             return true;
         }
-    } else if (left.type() == QVariant::Date) {
+    } else if (left.typeId() == QMetaType::QDate) {
         if (left.toDate() < right.toDate()) {
             return true;
         }
-    } else if (left.type() == QVariant::DateTime) {
+    } else if (left.typeId() == QMetaType::QDateTime) {
         if (left.toDateTime() < right.toDateTime()) {
             return true;
         }
-    } else if (left.type() == QVariant::Double) {
+    } else if (left.typeId() == QMetaType::Double) {
         if (left.toDouble() < right.toDouble()) {
             return true;
         }
-    } else if (left.type() == QVariant::Int) {
+    } else if (left.typeId() == QMetaType::Int) {
         if (left.toInt() < right.toInt()) {
             return true;
         }
-    } else if (left.type() == QVariant::LongLong) {
+    } else if (left.typeId() == QMetaType::LongLong) {
         if (left.toLongLong() < right.toLongLong()) {
             return true;
         }
-    } else if (left.type() == QVariant::String) {
+    } else if (left.typeId() == QMetaType::QString) {
         if (left.toString() < right.toString()) {
             return true;
         }
-    } else if (left.type() == QVariant::Time) {
+    } else if (left.typeId() == QMetaType::QTime) {
         if (left.toTime() < right.toTime()) {
             return true;
         }
-    } else if (left.type() == QVariant::UInt) {
+    } else if (left.typeId() == QMetaType::UInt) {
         if (left.toUInt() < right.toUInt()) {
             return true;
         }
-    } else if (left.type() == QVariant::ULongLong) {
+    } else if (left.typeId() == QMetaType::ULongLong) {
         if (left.toULongLong() < right.toULongLong()) {
             return true;
         }

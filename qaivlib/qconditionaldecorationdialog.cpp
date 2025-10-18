@@ -126,16 +126,16 @@ void QConditionalDecorationDialog::setProperties(const QModelIndex &index)
         ui->conditionsTableWidget->setCellWidget(iCondition, COLUMN_COLUMN, cb);
         //
         cb = conditionsComboBox();
-        cb->setCurrentIndex(cb->findData(mConditions.at(iCondition).toMap().value("matchFlag", QConditionalDecoration::Contains)));
+        cb->setCurrentIndex(cb->findData(props.value("matchFlag", QConditionalDecoration::Contains)));
         ui->conditionsTableWidget->setCellWidget(iCondition, COLUMN_CONDITION, cb);
         //
-        if (mConditions.at(iCondition).toMap().value("matchFlag").toInt() == QConditionalDecoration::IsBetween || mConditions.at(iCondition).toMap().value("matchFlag").toInt() == QConditionalDecoration::IsNotBetween) {
+        if (props.value("matchFlag").toInt() == QConditionalDecoration::IsBetween || props.value("matchFlag").toInt() == QConditionalDecoration::IsNotBetween) {
             auto *re = new RangeEdit(const_cast<QAbstractItemModel *>(index.model()), cProperties.value("column", 0).toInt(), this);
-            re->setRange(mConditions.at(iCondition).toMap().value("from"), mConditions.at(iCondition).toMap().value("to"));
+            re->setRange(props.value("from"), props.value("to"));
             ui->conditionsTableWidget->setCellWidget(iCondition, COLUMN_EDIT, re);
         } else {
             auto *ve = new ValueEdit(const_cast<QAbstractItemModel *>(index.model()), props.value("column", index.column()).toInt(), this);
-            ve->setValue(mConditions.at(iCondition).toMap().value("value"));
+            ve->setValue(props.value("value"));
             ui->conditionsTableWidget->setCellWidget(iCondition, COLUMN_EDIT, ve);
         }
         cb = new QComboBox(this);
@@ -143,14 +143,14 @@ void QConditionalDecorationDialog::setProperties(const QModelIndex &index)
         connect(cb, &QComboBox::currentTextChanged, this, &QConditionalDecorationDialog::iconSetComboBoxActivated);
         ui->conditionsTableWidget->setCellWidget(iCondition, COLUMN_SET, cb);
 
-        cb->setCurrentIndex(cb->findText(mConditions.at(iCondition).toMap().value("set").toString()));
+        cb->setCurrentIndex(cb->findText(props.value("set").toString()));
         if (cb->currentIndex() == 0) {
-            ui->conditionsTableWidget->setCellWidget(iCondition, COLUMN_ICON, iconSetComboBox(mConditions.at(iCondition).toMap().value("set").toString()));
+            ui->conditionsTableWidget->setCellWidget(iCondition, COLUMN_ICON, iconSetComboBox(props.value("set").toString()));
         }
 
         cb = qobject_cast<QComboBox *>(ui->conditionsTableWidget->cellWidget(iCondition, 4));
         if (cb) {
-            cb->setCurrentIndex(cb->findText(mConditions.at(iCondition).toMap().value("name").toString()));
+            cb->setCurrentIndex(cb->findText(props.value("name").toString()));
         }
     }
     ui->conditionsTableWidget->resizeColumnToContents(0);

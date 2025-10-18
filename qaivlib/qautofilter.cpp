@@ -93,7 +93,7 @@ QAutoFilterEditorPopup::QAutoFilterEditorPopup(QWidget *parent) :
     m_selectCheckBox->setText(tr("Select/Deselect all"));
     m_selectCheckBox->setTristate(true);
     m_selectCheckBox->installEventFilter(parent);
-    connect(m_selectCheckBox, &QCheckBox::stateChanged, this, &QAutoFilterEditorPopup::selectCheckBoxStateChanged);
+    connect(m_selectCheckBox, &QCheckBox::checkStateChanged, this, &QAutoFilterEditorPopup::selectCheckBoxStateChanged);
 
     l->addWidget(m_selectCheckBox);
     m_listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -147,7 +147,7 @@ void QAutoFilterEditorPopup::searchForTextEdited(const QString &text)
     }
 }
 
-void QAutoFilterEditorPopup::selectCheckBoxStateChanged(int state)
+void QAutoFilterEditorPopup::selectCheckBoxStateChanged(Qt::CheckState state)
 {
     if (state == Qt::Checked) {
         m_checkStateProxy->setAllChecked(true);
@@ -193,8 +193,8 @@ QAutoFilterEditor::QAutoFilterEditor(QWidget *parent) :
     setPopup(popUp);
     setFocusProxy(popUp);
     connect(popUp, &QAutoFilterEditorPopup::modeChanged, this, &QAutoFilterEditor::modeSelected);
-    connect(popUp, &QAutoFilterEditorPopup::accepted, this, [=]() { emit commitAndClose(); });
-    connect(popUp, &QAutoFilterEditorPopup::rejected, this, [=]() { emit cancelAndClose(); });
+    connect(popUp, &QAutoFilterEditorPopup::accepted, this, [this]() { emit commitAndClose(); });
+    connect(popUp, &QAutoFilterEditorPopup::rejected, this, [this]() { emit cancelAndClose(); });
     setFocusPolicy(Qt::StrongFocus);
 }
 

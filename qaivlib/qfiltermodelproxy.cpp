@@ -37,7 +37,7 @@ QVariant QFilterModelProxy::data(const QModelIndex &index, int role) const
         QList<QColor> cl;
         for (int iRow = 0; iRow < filterModel()->rowCount(); iRow++) {
             QList<QAbstractFilter *> filters = filterModel()->filtersAtRow(iRow);
-            for (const QAbstractFilter *f : qAsConst(filters)) {
+            for (const QAbstractFilter *f : std::as_const(filters)) {
                 int t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
                 if (f->isEnabled()) {
                     if (filterModel()->matchMode() == QAdvancedItemViews::MatchNormal) {
@@ -82,7 +82,7 @@ bool QFilterModelProxy::filterAcceptsRow(int source_row, const QModelIndex &sour
         int fc = 0;
 
         QList<QAbstractFilter *> filters = filterModel()->filtersAtRow(iRow);
-        for (const QAbstractFilter *f : qAsConst(filters)) {
+        for (const QAbstractFilter *f : std::as_const(filters)) {
             int t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
             if (f->isEnabled()) {
                 fc++;

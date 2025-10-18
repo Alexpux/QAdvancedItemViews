@@ -66,7 +66,7 @@ Qt::MatchFlag QValueFilterEditor::matchFlag() const
     return m_matchFlag;
 }
 
-void QValueFilterEditor::matchFlagsLabelClicked(Qt::MouseButtons buttons)
+void QValueFilterEditor::matchFlagsLabelClicked(const Qt::MouseButtons &buttons)
 {
     if (buttons.testFlag(Qt::LeftButton)) {
         if (m_matchFlag == Qt::MatchStartsWith) {
@@ -79,7 +79,7 @@ void QValueFilterEditor::matchFlagsLabelClicked(Qt::MouseButtons buttons)
     }
 }
 
-void QValueFilterEditor::sensitivityLabelClicked(Qt::MouseButtons buttons)
+void QValueFilterEditor::sensitivityLabelClicked(const Qt::MouseButtons &buttons)
 {
     if (buttons.testFlag(Qt::LeftButton)) {
         if (m_sensitivity == Qt::CaseInsensitive) {
@@ -154,22 +154,22 @@ bool QValueFilter::matches(const QVariant &value, int type) const
 {
     int t = type;
     if (t == -1) {
-        t = value.type();
+        t = value.typeId();
     }
     switch (t) {
-    case QVariant::Char:
+    case QMetaType::Char:
         return value.toChar() == property("value").toChar();
-    case QVariant::Date:
+    case QMetaType::QDate:
         return value.toDate() == property("value").toDate();
-    case QVariant::DateTime:
+    case QMetaType::QDateTime:
         return value.toDateTime() == property("value").toDateTime();
-    case QVariant::Double:
-        return value.toDouble() == property("value").toDouble();
-    case QVariant::Int:
+    case QMetaType::Double:
+        return (value.toDouble() - property("value").toDouble() < 0.00001);
+    case QMetaType::Int:
         return value.toInt() == property("value").toInt();
-    case QVariant::LongLong:
+    case QMetaType::LongLong:
         return value.toLongLong() == property("value").toLongLong();
-    case QVariant::String: {
+    case QMetaType::QString: {
         Qt::CaseSensitivity s = static_cast<Qt::CaseSensitivity>(property("caseSensitivity", Qt::CaseInsensitive).toInt());
         Qt::MatchFlag mf = static_cast<Qt::MatchFlag>(property("matchFlag", Qt::MatchStartsWith).toInt());
         if (mf == Qt::MatchContains) {
@@ -180,11 +180,11 @@ bool QValueFilter::matches(const QVariant &value, int type) const
         }
         return QString::compare(value.toString().left(property("value").toString().length()), property("value").toString(), s) == 0;
     }
-    case QVariant::Time:
+    case QMetaType::QTime:
         return value.toTime() == property("value").toTime();
-    case QVariant::UInt:
+    case QMetaType::UInt:
         return value.toUInt() == property("value").toUInt();
-    case QVariant::ULongLong:
+    case QMetaType::ULongLong:
         return value.toULongLong() == property("value").toULongLong();
     default:
         return value == property("value");

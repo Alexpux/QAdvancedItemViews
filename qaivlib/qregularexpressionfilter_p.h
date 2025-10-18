@@ -47,7 +47,7 @@ public:
     void setPattern(const QString &pattern);
 
 private slots:
-    void sensitivityLabelClicked(Qt::MouseButtons buttons);
+    void sensitivityLabelClicked(const Qt::MouseButtons &buttons);
 
 private:
     Qt::CaseSensitivity m_sensitivity { Qt::CaseInsensitive };

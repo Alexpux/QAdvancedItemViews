@@ -65,8 +65,9 @@ ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView *headerView) :
     connect(b, &QDialogButtonBox::rejected, this, &ShowMoreColumnsDialog::reject);
 
     auto *m = new QStandardItemModel(this);
+    auto *headerModel = headerView->model();
     m->setColumnCount(1);
-    m->setRowCount(headerView->model()->columnCount());
+    m->setRowCount(headerModel->columnCount());
 
     m_proxy = new QSortFilterProxyModel(this);
     m_proxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
@@ -76,8 +77,8 @@ ShowMoreColumnsDialog::ShowMoreColumnsDialog(QHeaderView *headerView) :
     m_view->horizontalHeader()->setVisible(false);
     m_view->verticalHeader()->setVisible(false);
 
-    for (int iColumn = 0; iColumn < headerView->model()->columnCount(); iColumn++) {
-        auto *item = new QStandardItem(headerView->model()->headerData(iColumn, Qt::Horizontal).toString());
+    for (int iColumn = 0; iColumn < headerModel->columnCount(); iColumn++) {
+        auto *item = new QStandardItem(headerModel->headerData(iColumn, Qt::Horizontal).toString());
         item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
         item->setData(headerView->isSectionHidden(iColumn) ? Qt::Unchecked : Qt::Checked, Qt::CheckStateRole);
         m->setItem(iColumn, 0, item);
@@ -245,14 +246,13 @@ void QAdvancedHeaderView::invertedMatchModeActionTriggered()
 
 void QAdvancedHeaderView::moreColumnsActionTriggered()
 {
-    auto *d = new ShowMoreColumnsDialog(this);
-    if (d->exec()) {
+    ShowMoreColumnsDialog d(this);
+    if (d.exec()) {
         for (int i = 0; i < model()->columnCount(); i++) {
-            setSectionHidden(i, d->isHidden(i));
+            setSectionHidden(i, d.isHidden(i));
         }
         emit visibleSectionsCountChanged();
     }
-    delete d;
 }
 
 void QAdvancedHeaderView::removeFilterSetActionTriggered()

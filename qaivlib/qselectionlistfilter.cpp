@@ -76,7 +76,7 @@ QSelectionListFilterEditorPopup::QSelectionListFilterEditorPopup(QWidget *parent
     m_selectCheckBox->setText(tr("Select/Deselect all"));
     m_selectCheckBox->setTristate(true);
     m_selectCheckBox->installEventFilter(parent);
-    connect(m_selectCheckBox, &QCheckBox::stateChanged, this, &QSelectionListFilterEditorPopup::selectCheckBoxStateChanged);
+    connect(m_selectCheckBox, &QCheckBox::checkStateChanged, this, &QSelectionListFilterEditorPopup::selectCheckBoxStateChanged);
 
     l->addWidget(m_selectCheckBox);
 
@@ -155,7 +155,7 @@ void QSelectionListFilterEditorPopup::searchForTextEdited(const QString &text)
     }
 }
 
-void QSelectionListFilterEditorPopup::selectCheckBoxStateChanged(int state)
+void QSelectionListFilterEditorPopup::selectCheckBoxStateChanged(Qt::CheckState state)
 {
     if (state == Qt::Checked) {
         m_checkStateProxy->setAllChecked(true);
@@ -226,13 +226,14 @@ QVariant QSelectionListFilter::data(int role) const
 {
     if (role == Qt::DisplayRole) {
         if (property("mode").toInt() == 0) {
-            if (property("selectedValues").toList().isEmpty()) {
+            auto valList = property("selectedValues").toList();
+            if (valList.isEmpty()) {
                 return QObject::tr("<none>");
             }
-            if (property("selectedValues").toList().size() == 1) {
-                return QString(QObject::tr("%1 entry")).arg(property("selectedValues").toList().size());
+            if (valList.size() == 1) {
+                return QString(QObject::tr("%1 entry")).arg(valList.size());
             }
-            return QString(QObject::tr("%1 entries")).arg(property("selectedValues").toList().size());
+            return QString(QObject::tr("%1 entries")).arg(valList.size());
         }
         if (property("mode").toInt() == 1) {
             return QObject::tr("Empty");

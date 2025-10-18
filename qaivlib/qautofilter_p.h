@@ -61,7 +61,7 @@ private slots:
     void emptyToolButtonClicked();
     void notEmptyToolButtonClicked();
     void searchForTextEdited(const QString &text);
-    void selectCheckBoxStateChanged(int state);
+    void selectCheckBoxStateChanged(Qt::CheckState state);
 
 private:
     int m_mode { 0 };

@@ -125,9 +125,10 @@ void QFilterView::addFilter()
 {
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
-        QModelIndex index = model()->index(action->data().toMap().value("row").toInt(), action->data().toMap().value("column").toInt());
+        auto data_map = action->data().toMap();
+        QModelIndex index = model()->index(data_map.value("row").toInt(), data_map.value("column").toInt());
         if (index.isValid()) {
-            model()->setData(index, action->data().toMap());
+            model()->setData(index, data_map);
             edit(index);
         }
     }
@@ -150,9 +151,10 @@ void QFilterView::changeProperties()
 {
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
-        QModelIndex index = model()->index(action->data().toMap().value("row").toInt(), action->data().toMap().value("column").toInt());
+        auto data_map = action->data().toMap();
+        QModelIndex index = model()->index(data_map.value("row").toInt(), data_map.value("column").toInt());
         if (index.isValid()) {
-            model()->setData(index, action->data().toMap());
+            model()->setData(index, data_map);
         }
     }
 }
@@ -214,10 +216,11 @@ void QFilterView::contextMenuEvent(QContextMenuEvent *event)
         QAction *action = nullptr;
         QVariantMap properties = selection.first().data(Qt::EditRole).toMap();
         if (properties.isEmpty()) {
-            properties["row"] = selection.first().row();
-            properties["column"] = selection.first().column();
+            auto firstSelected = selection.first();
+            properties["row"] = firstSelected.row();
+            properties["column"] = firstSelected.column();
             properties["enabled"] = true;
-            QVariantList mTypes = selection.first().data(QAbstractFilterModel::ColumnFilterTypesRole).toList();
+            QVariantList mTypes = firstSelected.data(QAbstractFilterModel::ColumnFilterTypesRole).toList();
             QList<QAbstractFilterModel::FilterTypeEntry> fTypes = m->registeredFilterTypes();
             for (const QAbstractFilterModel::FilterTypeEntry &entry : fTypes) {
                 if (entry.type == QAbstractFilter::Type) {

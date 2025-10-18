@@ -55,7 +55,7 @@ void QHeaderViewConnector::adjustSectionSize()
 {
     cAdjustSectionSizePending = false;
     int mWidth = 0;
-    for (QHeaderView *mHeaderView : qAsConst(cHeaderViewList)) {
+    for (QHeaderView *mHeaderView : std::as_const(cHeaderViewList)) {
         if (mHeaderView) {
             if (mWidth < mHeaderView->width()) {
                 mWidth = mHeaderView->width();
@@ -63,7 +63,7 @@ void QHeaderViewConnector::adjustSectionSize()
         }
     }
     if (mWidth > 0) {
-        for (QHeaderView *mHeaderView : qAsConst(cHeaderViewList)) {
+        for (QHeaderView *mHeaderView : std::as_const(cHeaderViewList)) {
             if (mHeaderView) {
                 mHeaderView->blockSignals(true);
                 mHeaderView->setFixedWidth(mWidth);
@@ -78,7 +78,7 @@ void QHeaderViewConnector::scrollBarRangeChanged(int min, int max)
     Q_UNUSED(min);
     Q_UNUSED(max);
     if (cOrientation == Qt::Vertical) {
-        for (QHeaderView *mHeaderView : qAsConst(cHeaderViewList)) {
+        for (QHeaderView *mHeaderView : std::as_const(cHeaderViewList)) {
             if (mHeaderView) {
                 QTableView *mTableView = qobject_cast<QTableView *>(mHeaderView->parentWidget());
                 if (mTableView) {
@@ -104,7 +104,7 @@ void QHeaderViewConnector::scrollBarRangeChanged(int min, int max)
 void QHeaderViewConnector::scrollBarSilderMoved(int value)
 {
     const QHeaderView *mSender = qobject_cast<QHeaderView *>(sender());
-    for (QHeaderView *mHeaderView : qAsConst(cHeaderViewList)) {
+    for (QHeaderView *mHeaderView : std::as_const(cHeaderViewList)) {
         if (mHeaderView && mHeaderView != mSender) {
             QTableView *mTableView = qobject_cast<QTableView *>(mHeaderView->parentWidget());
             if (mTableView) {
@@ -120,7 +120,7 @@ void QHeaderViewConnector::sectionMoved(int logicalIndex, int oldVisualIndex, in
 {
     Q_UNUSED(logicalIndex);
     const QHeaderView *mSender = qobject_cast<QHeaderView *>(sender());
-    for (QHeaderView *mHeaderView : qAsConst(cHeaderViewList)) {
+    for (QHeaderView *mHeaderView : std::as_const(cHeaderViewList)) {
         if (mHeaderView && mHeaderView != mSender) {
             mHeaderView->blockSignals(true);
             mHeaderView->moveSection(oldVisualIndex, newVisualIndex);
@@ -133,7 +133,7 @@ void QHeaderViewConnector::sectionResized(int logicalIndex, int oldSize, int new
 {
     Q_UNUSED(oldSize);
     const QHeaderView *mSender = qobject_cast<QHeaderView *>(sender());
-    for (QHeaderView *mHeaderView : qAsConst(cHeaderViewList)) {
+    for (QHeaderView *mHeaderView : std::as_const(cHeaderViewList)) {
         if (mHeaderView && mHeaderView != mSender) {
             mHeaderView->resizeSection(logicalIndex, newSize);
         }
@@ -146,7 +146,7 @@ void QHeaderViewConnector::sectionResized(int logicalIndex, int oldSize, int new
 void QHeaderViewConnector::sortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
 {
     const QHeaderView *mSender = qobject_cast<QHeaderView *>(sender());
-    for (QHeaderView *mHeaderView : qAsConst(cHeaderViewList)) {
+    for (QHeaderView *mHeaderView : std::as_const(cHeaderViewList)) {
         if (mHeaderView && mHeaderView != mSender) {
             mHeaderView->blockSignals(true);
             mHeaderView->setSortIndicator(logicalIndex, order);

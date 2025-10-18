@@ -189,11 +189,13 @@ bool QTableModelExcelMLWriter::write(QTableView *view, bool all)
 
     stream.writeStartElement("Table");
     QPair<QModelIndex, QModelIndex> e;
+    auto *viewModel = view->model();
+    auto *hHeader = view->horizontalHeader();
     if (!all) {
         e = selectionEdges(view->selectionModel()->selection());
     } else {
-        e.first = view->model()->index(0, 0);
-        e.second = view->model()->index(view->model()->rowCount() - 1, view->model()->columnCount() - 1);
+        e.first = viewModel->index(0, 0);
+        e.second = viewModel->index(viewModel->rowCount() - 1, viewModel->columnCount() - 1);
     }
     e.first = qSourceIndex(e.first);
     e.second = qSourceIndex(e.second);
@@ -201,12 +203,12 @@ bool QTableModelExcelMLWriter::write(QTableView *view, bool all)
     if (m_includeHeader) {
         stream.writeStartElement("Row");
         for (int c = e.first.column(); c <= e.second.column(); c++) {
-            if (!view->horizontalHeader()->isSectionHidden(c)) {
+            if (!hHeader->isSectionHidden(c)) {
                 stream.writeStartElement("Cell");
 
                 stream.writeStartElement("Data");
                 stream.writeAttribute("ss:Type", "String");
-                stream.writeCharacters(view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, m_role).toString());
+                stream.writeCharacters(viewModel->headerData(hHeader->visualIndex(c), Qt::Horizontal, m_role).toString());
                 // end tag <Data>
                 stream.writeEndElement();
                 // end tag <Cell>
@@ -219,13 +221,13 @@ bool QTableModelExcelMLWriter::write(QTableView *view, bool all)
     for (int r = e.first.row(); r <= e.second.row(); r++) {
         stream.writeStartElement("Row");
         for (int c = e.first.column(); c <= e.second.column(); c++) {
-            if (!view->horizontalHeader()->isSectionHidden(c)) {
+            if (!hHeader->isSectionHidden(c)) {
                 stream.writeStartElement("Cell");
 
                 stream.writeStartElement("Data");
                 stream.writeAttribute("ss:Type", "String");
-                // l << "\"" + view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
-                stream.writeCharacters(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(m_role).toString());
+                // l << "\"" + view->model()->index(r, hHeader->visualIndex(c)).data(Qt::DisplayRole).toString() + "\"";
+                stream.writeCharacters(viewModel->index(r, hHeader->visualIndex(c)).data(m_role).toString());
                 // end tag <Data>
                 stream.writeEndElement();
                 // end tag <Cell>

@@ -60,24 +60,26 @@ bool QTableModelHtmlWriter::write(QAdvancedTableView *view, bool all)
         stream.writeAttribute("style", "border-style:none");
     }
     //
+    auto *hHeader = view->horizontalHeader();
+    auto *proxyModel = view->filterProxyModel();
     QPair<QModelIndex, QModelIndex> e;
     if (!all) {
         e = selectionEdges(view->selectionModel()->selection());
     } else {
-        e.first = view->filterProxyModel()->index(0, 0);
-        e.second = view->filterProxyModel()->index(view->filterProxyModel()->rowCount() - 1, view->filterProxyModel()->columnCount() - 1);
+        e.first = proxyModel->index(0, 0);
+        e.second = proxyModel->index(proxyModel->rowCount() - 1, proxyModel->columnCount() - 1);
     }
     if (m_includeHeader) {
         // start tag <tr>
         stream.writeStartElement("tr");
         writeBorderStyle(stream, view->gridStyle());
         for (int c = e.first.column(); c <= e.second.column(); c++) {
-            if (all || !view->horizontalHeader()->isSectionHidden(c)) {
+            if (all || !hHeader->isSectionHidden(c)) {
                 stream.writeStartElement("th");
-                writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->filterProxyModel()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::TextAlignmentRole).toInt()));
+                writeAlignment(stream, static_cast<Qt::AlignmentFlag>(proxyModel->headerData(hHeader->visualIndex(c), Qt::Horizontal, Qt::TextAlignmentRole).toInt()));
                 stream.writeStartElement("font");
-                writeFontAttributes(stream, qvariant_cast<QFont>(view->filterProxyModel()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::FontRole)));
-                stream.writeCharacters(view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::DisplayRole).toString());
+                writeFontAttributes(stream, qvariant_cast<QFont>(proxyModel->headerData(hHeader->visualIndex(c), Qt::Horizontal, Qt::FontRole)));
+                stream.writeCharacters(proxyModel->headerData(hHeader->visualIndex(c), Qt::Horizontal, Qt::DisplayRole).toString());
                 stream.writeEndElement();
                 // end tag <th>
                 stream.writeEndElement();
@@ -89,15 +91,15 @@ bool QTableModelHtmlWriter::write(QAdvancedTableView *view, bool all)
     for (int r = e.first.row(); r <= e.second.row(); r++) {
         stream.writeStartElement("tr");
         for (int c = e.first.column(); c <= e.second.column(); c++) {
-            if (!view->horizontalHeader()->isSectionHidden(c)) {
+            if (!hHeader->isSectionHidden(c)) {
                 stream.writeStartElement("td");
-                writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::TextAlignmentRole).toInt()));
+                writeAlignment(stream, static_cast<Qt::AlignmentFlag>(proxyModel->index(r, hHeader->visualIndex(c)).data(Qt::TextAlignmentRole).toInt()));
                 writeBorderStyle(stream, view->gridStyle());
-                writeBackgroundColor(stream, qvariant_cast<QBrush>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));
-                writeDecoration(stream, view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DecorationRole));
+                writeBackgroundColor(stream, qvariant_cast<QBrush>(proxyModel->index(r, hHeader->visualIndex(c)).data(Qt::BackgroundRole)));
+                writeDecoration(stream, proxyModel->index(r, hHeader->visualIndex(c)).data(Qt::DecorationRole));
                 stream.writeStartElement("font");
-                writeFontAttributes(stream, qvariant_cast<QFont>(view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::FontRole)));
-                writeCharacters(stream, view->filterProxyModel()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
+                writeFontAttributes(stream, qvariant_cast<QFont>(view->filterProxyModel()->index(r, hHeader->visualIndex(c)).data(Qt::FontRole)));
+                writeCharacters(stream, proxyModel->index(r, hHeader->visualIndex(c)).data(Qt::DisplayRole).toString());
                 stream.writeEndElement();
                 // end tag <td>
                 stream.writeEndElement();
@@ -140,13 +142,15 @@ bool QTableModelHtmlWriter::write(QTableView *view, bool all)
         // start tag <tr>
         stream.writeStartElement("tr");
         writeBorderStyle(stream, view->gridStyle());
-        for (int c = 0; c < view->horizontalHeader()->count(); c++) {
-            if (all || !view->horizontalHeader()->isSectionHidden(c)) {
+        auto *hHeader = view->horizontalHeader();
+        for (int c = 0; c < hHeader->count(); c++) {
+            if (all || !hHeader->isSectionHidden(c)) {
+                auto *model = view->model();
                 stream.writeStartElement("th");
-                writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::TextAlignmentRole).toInt()));
+                writeAlignment(stream, static_cast<Qt::AlignmentFlag>(model->headerData(hHeader->visualIndex(c), Qt::Horizontal, Qt::TextAlignmentRole).toInt()));
                 stream.writeStartElement("font");
-                writeFontAttributes(stream, qvariant_cast<QFont>(view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::FontRole)));
-                stream.writeCharacters(view->model()->headerData(view->horizontalHeader()->visualIndex(c), Qt::Horizontal, Qt::DisplayRole).toString());
+                writeFontAttributes(stream, qvariant_cast<QFont>(model->headerData(hHeader->visualIndex(c), Qt::Horizontal, Qt::FontRole)));
+                stream.writeCharacters(model->headerData(hHeader->visualIndex(c), Qt::Horizontal, Qt::DisplayRole).toString());
                 stream.writeEndElement();
                 // end tag <th>
                 stream.writeEndElement();
@@ -166,15 +170,16 @@ bool QTableModelHtmlWriter::write(QTableView *view, bool all)
     for (int r = e.first.row(); r <= e.second.row(); r++) {
         stream.writeStartElement("tr");
         for (int c = e.first.column(); c <= e.second.column(); c++) {
-            if (!view->horizontalHeader()->isSectionHidden(c)) {
+            auto *hHeader = view->horizontalHeader();
+            if (!hHeader->isSectionHidden(c)) {
                 stream.writeStartElement("td");
-                writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::TextAlignmentRole).toInt()));
+                writeAlignment(stream, static_cast<Qt::AlignmentFlag>(view->model()->index(r, hHeader->visualIndex(c)).data(Qt::TextAlignmentRole).toInt()));
                 writeBorderStyle(stream, view->gridStyle());
-                writeBackgroundColor(stream, qvariant_cast<QBrush>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::BackgroundRole)));
-                writeDecoration(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DecorationRole));
+                writeBackgroundColor(stream, qvariant_cast<QBrush>(view->model()->index(r, hHeader->visualIndex(c)).data(Qt::BackgroundRole)));
+                writeDecoration(stream, view->model()->index(r, hHeader->visualIndex(c)).data(Qt::DecorationRole));
                 stream.writeStartElement("font");
-                writeFontAttributes(stream, qvariant_cast<QFont>(view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::FontRole)));
-                writeCharacters(stream, view->model()->index(r, view->horizontalHeader()->visualIndex(c)).data(Qt::DisplayRole).toString());
+                writeFontAttributes(stream, qvariant_cast<QFont>(view->model()->index(r, hHeader->visualIndex(c)).data(Qt::FontRole)));
+                writeCharacters(stream, view->model()->index(r, hHeader->visualIndex(c)).data(Qt::DisplayRole).toString());
                 stream.writeEndElement();
 
                 // end tag <td>
