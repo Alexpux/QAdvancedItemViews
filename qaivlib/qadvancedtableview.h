@@ -434,7 +434,7 @@ public:
     /**
      * Sets the current item to be the item at @p index.
      */
-    void setEditTriggers(const QAbstractItemView::EditTriggers &triggers);
+    void setEditTriggers(QAbstractItemView::EditTriggers triggers);
     /**
      * Sets the list of available filter @p types for the given @p column.
      * @see columnsFilterTypes()
@@ -557,7 +557,7 @@ public:
     bool wordWrap() const;
 
     void setSummaryType(int column, advSummaryFunc type);
-    void setSummaryTypes(QMap<int, advSummaryFunc> columnMap);
+    void setSummaryTypes(const QMap<int, advSummaryFunc> &columnMap);
 
 signals:
     /**
@@ -676,7 +676,7 @@ public slots:
      * @param colSpareWidthParts Map of columns and its parts count of width from spare width
      * @param forceFitSize Fit all columns width to viewport size
      */
-    void setColumnsAutoFitParams(QMap<int, int> colSpareWidthParts, bool forceFitSize);
+    void setColumnsAutoFitParams(const QMap<int, int> &colSpareWidthParts, bool forceFitSize);
     /**
      * Sets the current item to be the item at @p index.
      */
@@ -772,10 +772,14 @@ private slots:
     void adjustSummaryOffset();
 
 private:
-    QAdvancedTableViewPrivate *d;
-    Ui::QAdvancedTableView *ui;
+    QAdvancedTableViewPrivate *d { nullptr };
+    Ui::QAdvancedTableView *ui { nullptr };
 
     QModelIndex mapToSource(const QModelIndex &index) const;
+
+    int getHeaderSectionWidth(QHeaderView *header, int column);
+
+    // void syncModels();
 };
 
 #endif // QADVANCEDTABLEVIEW_H

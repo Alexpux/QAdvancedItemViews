@@ -54,7 +54,7 @@ private slots:
     void sharedSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
-    QSharedItemSelectionModelPrivate *d;
+    QSharedItemSelectionModelPrivate *d { nullptr };
 };
 
 #endif // QSHAREDITEMSELECTIONMODEL_H

@@ -86,7 +86,7 @@ private slots:
     void updateResult();
 
 private:
-    QAbstractFilterProxyModelPrivate *d;
+    QAbstractFilterProxyModelPrivate *d { nullptr };
 
     QModelIndex getIndexForModel(const QAbstractItemModel *model, const QModelIndex &sourceIndex) const;
 };

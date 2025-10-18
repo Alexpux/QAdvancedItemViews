@@ -74,7 +74,7 @@ public:
     void setProperties(const QVariantMap &properties);
 
 private:
-    QAbstractItemModelDecorationPrivate *d;
+    QAbstractItemModelDecorationPrivate *d { nullptr };
 };
 
 #endif // QABSTRACTITEMMODELDECORATION_H

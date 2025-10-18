@@ -189,7 +189,7 @@ public:
     void setIconSpacing(int spacing);
 
 private:
-    QConditionalDecorationProxyModelPrivate *d;
+    QConditionalDecorationProxyModelPrivate *d { nullptr };
 };
 
 #endif // QCONDITIONALDECORATIONPROXYMODEL_H

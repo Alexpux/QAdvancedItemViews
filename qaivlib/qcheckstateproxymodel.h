@@ -103,7 +103,7 @@ private slots:
     void sourceModelAboutToBeReset();
 
 private:
-    QCheckStateProxyModelPrivate *d;
+    QCheckStateProxyModelPrivate *d { nullptr };
 };
 
 #endif // QCHECKSTATEPROXYMODEL_H

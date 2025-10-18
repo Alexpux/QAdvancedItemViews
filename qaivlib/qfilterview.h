@@ -110,7 +110,7 @@ private slots:
     void showFilter();
 
 private:
-    QFilterViewPrivate *d;
+    QFilterViewPrivate *d { nullptr };
 
     void updateGeometry();
 };

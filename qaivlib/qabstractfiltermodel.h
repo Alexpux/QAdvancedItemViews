@@ -163,7 +163,7 @@ private slots:
     void sourceModelLayoutChanged();
 
 private:
-    QAbstractFilterModelPrivate *d;
+    QAbstractFilterModelPrivate *d { nullptr };
 };
 
 #endif // QABSTRACTFILTERMODEL_H

@@ -162,7 +162,7 @@ protected:
 
 private:
     friend class QAbstractFilterModel;
-    QAbstractFilterPrivate *d;
+    QAbstractFilterPrivate *d { nullptr };
 
     void setRow(int row);
 };

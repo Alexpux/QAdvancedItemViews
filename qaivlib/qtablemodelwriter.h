@@ -87,7 +87,7 @@ private:
     bool write(QAdvancedTableView *view, bool all);
     bool write(QTableView *view, bool all);
 
-    QTableModelWriterPrivate *d;
+    QTableModelWriterPrivate *d { nullptr };
 };
 
 #endif // QTABLEMODELWRITER_H

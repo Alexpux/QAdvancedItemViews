@@ -43,6 +43,7 @@ HEADERS += qabstractfilter.h \
            qadvancedtablemodel.h \
            qadvancedtableview.h \
            qadvancedtableview_p.h \
+           qadvancedtableviewproxy.h \
            qaiv.h \
            qaivlib_global.h \
            qautofilter.h \

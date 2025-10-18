@@ -42,7 +42,7 @@ public:
     /**
      * Destroys the value filter.
      */
-    ~QValueFilter() = default;
+    ~QValueFilter() override = default;
     /**
      * Returns the widget used to edit the filter specified by @p index for editing. The @p parent widget and style @p option are used to control how the editor widget appears.
      */

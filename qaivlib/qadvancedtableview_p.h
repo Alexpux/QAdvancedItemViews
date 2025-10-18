@@ -18,47 +18,89 @@
 ** License along with qadvanceditemviews.
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#ifndef QFILTERTABLEVIEW_P_H
-#define QFILTERTABLEVIEW_P_H
+#ifndef QADVANCEDTABLEVIEW_P_H
+#define QADVANCEDTABLEVIEW_P_H
 
 #include "qadvancedtableview.h"
-#include "qclickablelabel.h"
+#include "qfiltermodelproxy.h"
+#include "qtextfilter.h"
 
-#include <QCheckBox>
-#include <QDialog>
-#include <QGroupBox>
-#include <QHBoxLayout>
+#include <QAbstractItemModel>
 #include <QHeaderView>
-#include <QLabel>
-#include <QListWidget>
-#include <QMetaType>
-#include <QSignalMapper>
-#include <QSortFilterProxyModel>
-#include <QStringList>
-#include <QStyledItemDelegate>
-#include <QTableView>
-#include <QTableWidget>
-#include <QVBoxLayout>
-#include <QWidget>
+#include <QMap>
 
-class QAbstractItemDelegate;
-class QComboBox;
-class QLineEdit;
-class QStandardItemModel;
+class QSharedItemSelectionModel;
+class QAbstractFilterProxyModel;
+class QFilterModelProxy;
+class QAdvancedHeaderView;
 
-class QAdvancedTableViewProxy : public QTableView {
-    Q_OBJECT
+class QAdvancedTableViewPrivate {
 public:
-    explicit QAdvancedTableViewProxy(QWidget *parent = nullptr);
-    ~QAdvancedTableViewProxy() = default;
+    explicit QAdvancedTableViewPrivate(QAdvancedTableView *tv) :
+        v { tv }
+    {
+        dataViewProxy = new QFilterModelProxy(tv);
+    }
 
-signals:
-    void focusReceived();
+    QAdvancedTableViewPrivate(const QAdvancedTableViewPrivate &other)
+    {
+        autoResizeRowsToContents = other.autoResizeRowsToContents;
+        autoResizeColumnsToFitView = other.autoResizeColumnsToFitView;
+        defaultFilterType = other.defaultFilterType;
+        dataViewProxy = new QFilterModelProxy(other.v);
+        filterModel = other.filterModel;
+        model = other.model;
+        summaryView = other.summaryView;
+        horizontalHeader = other.horizontalHeader;
+        horizontalScrollBarPolicy = other.horizontalScrollBarPolicy;
+        verticalHeader = other.verticalHeader;
+        splittedViewSelectionModel = other.splittedViewSelectionModel;
+        columnSpareWidthParts.clear();
+        columnSpareWidthParts = other.columnSpareWidthParts;
+        columnSpareWidthParts.detach();
+        v = other.v;
+    }
 
-protected:
-    void closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint) override;
-    void focusInEvent(QFocusEvent *event) override;
-    // void mousePressEvent(QMouseEvent *event) override;
+    QAdvancedTableViewPrivate &operator=(const QAdvancedTableViewPrivate &other)
+    {
+        if (&other != this) {
+            autoResizeRowsToContents = other.autoResizeRowsToContents;
+            autoResizeColumnsToFitView = other.autoResizeColumnsToFitView;
+            defaultFilterType = other.defaultFilterType;
+            dataViewProxy = new QFilterModelProxy(other.v);
+            filterModel = other.filterModel;
+            model = other.model;
+            horizontalHeader = other.horizontalHeader;
+            horizontalScrollBarPolicy = other.horizontalScrollBarPolicy;
+            verticalHeader = other.verticalHeader;
+            summaryView = nullptr;
+            splittedViewSelectionModel = other.splittedViewSelectionModel;
+            columnSpareWidthParts.clear();
+            columnSpareWidthParts = other.columnSpareWidthParts;
+            columnSpareWidthParts.detach();
+            v = other.v;
+        }
+        return *this;
+    }
+
+    ~QAdvancedTableViewPrivate() = default;
+
+    bool autoResizeRowsToContents { false };
+    bool autoResizeColumnsToFitView { true };
+    int defaultFilterType { QTextFilter::Type };
+
+    QAdvancedTableView *v { nullptr };
+    QAbstractFilterProxyModel *dataViewProxy { nullptr };
+    QAbstractFilterModel *filterModel { nullptr };
+    QAbstractItemModel *model { nullptr };
+    QAdvancedHeaderView *horizontalHeader { nullptr };
+    Qt::ScrollBarPolicy horizontalScrollBarPolicy { Qt::ScrollBarAsNeeded };
+    QAdvancedHeaderView *verticalHeader { nullptr };
+    QHeaderView *summaryView { nullptr };
+    QSharedItemSelectionModel *splittedViewSelectionModel { nullptr };
+
+    QMap<int, advSummaryFunc> columnsSummaryTypes;
+    QMap<int, int> columnSpareWidthParts;
 };
 
-#endif // QFILTERTABLEVIEW_P_H
+#endif // QADVANCEDTABLEVIEW_P_H

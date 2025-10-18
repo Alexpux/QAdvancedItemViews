@@ -46,7 +46,7 @@ public:
     /**
      * Destroys the range filter.
      */
-    ~QRangeFilter() = default;
+    ~QRangeFilter() override = default;
 
     QWidget *createEditor(QFilterViewItemDelegate *delegate, QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     /**

@@ -90,7 +90,7 @@ private slots:
     void sourceModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 private:
-    QUniqueValuesProxyModelPrivate *d;
+    QUniqueValuesProxyModelPrivate *d { nullptr };
 
     bool isDuplicate(int row) const;
 };

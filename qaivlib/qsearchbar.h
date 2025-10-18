@@ -52,8 +52,8 @@ private slots:
     void expressionChangedHandler(const QString &text);
 
 private:
-    QSearchBarPrivate *d;
-    Ui::QSearchBar *ui;
+    QSearchBarPrivate *d { nullptr };
+    Ui::QSearchBar *ui { nullptr };
 };
 
 #endif // QSEARCHBAR_H

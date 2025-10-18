@@ -161,7 +161,7 @@ public slots:
     void setRowFixed(const QModelIndex &index, bool fixed);
 
 private:
-    QFixedRowsFilterProxyModelPrivate *d;
+    QFixedRowsFilterProxyModelPrivate *d { nullptr };
 };
 
 //! The QFixedRowsDecorationProxyModel class implements a decoration proxy model.
@@ -202,7 +202,7 @@ public slots:
     void toggleRow(const QModelIndex &index);
 
 private:
-    QFixedRowsDecorationProxyModelPrivate *d;
+    QFixedRowsDecorationProxyModelPrivate *d { nullptr };
 };
 
 #endif // QFIXEDROWSTABLEVIEW_H

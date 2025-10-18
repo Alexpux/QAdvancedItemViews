@@ -92,7 +92,7 @@ private:
     QVariantMap cIconSets;
     QVariantMap cProperties;
 
-    Ui::QConditionalDecorationDialog *ui;
+    Ui::QConditionalDecorationDialog *ui { nullptr };
 };
 
 #endif // QCONDITIONALDECORATIONDIALOG_H
