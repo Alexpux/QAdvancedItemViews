@@ -54,9 +54,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 QAdvancedHeaderItem *QAdvancedMultiLevelHeaderView::current_active_item = nullptr;
 
 /* *****************************************************************************************************
- * struct DATA
+ * struct private_data
  * *****************************************************************************************************/
-struct QAdvancedMultiLevelHeaderView::DATA {
+struct QAdvancedMultiLevelHeaderView::private_data {
     /* ----------------------------VARIABLES----------------------- */
     // contains the model
     QStandardItemModel *headerModel { nullptr };
@@ -68,21 +68,21 @@ struct QAdvancedMultiLevelHeaderView::DATA {
     bool SECTIONS_CLICKABLE { true };
 
     /* -----------------------------METHODS------------------------ */
-    DATA() = default;
+    private_data() = default;
 
-    ~DATA()
+    ~private_data()
     {
         ClearModel();
     }
 
-    DATA *ClearModel()
+    private_data *ClearModel()
     {
         delete headerModel;
         headerModel = nullptr;
         return this;
     }
 
-    DATA *initFromNewModel(Qt::Orientation orientation, QStandardItemModel *model)
+    private_data *initFromNewModel(Qt::Orientation orientation, QStandardItemModel *model)
     {
         ClearModel();
         CustomRoles hf;
@@ -444,7 +444,7 @@ struct QAdvancedMultiLevelHeaderView::DATA {
  * *****************************************************************************************************/
 
 QAdvancedMultiLevelHeaderView::QAdvancedMultiLevelHeaderView(Qt::Orientation orientation, QWidget *parent) :
-    QAdvancedHeaderView(orientation, parent), _data(new DATA())
+    QAdvancedHeaderView(orientation, parent), _data(new private_data())
 {
     setStyle(new QAdvancedHeaderStyle());
     setHighlightSections(_data->HIGHLIGHT_SECTIONS);

@@ -43,7 +43,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class QAIVLIBSHARED_EXPORT QAdvancedMultiLevelHeaderView : public QAdvancedHeaderView {
     Q_OBJECT
-    struct DATA;
+    struct private_data;
 
 public:
     explicit QAdvancedMultiLevelHeaderView(Qt::Orientation orientation = Qt::Horizontal, QWidget *parent = nullptr);
@@ -60,7 +60,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *e) override;
 
 private:
-    DATA *_data { nullptr };
+    private_data *_data { nullptr };
 
     // Useful while registering clicks
     static QAdvancedHeaderItem *current_active_item;
