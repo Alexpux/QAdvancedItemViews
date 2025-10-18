@@ -225,16 +225,18 @@ bool QConditionalDecorationProxyModel::setData(const QModelIndex &index, const Q
 
 void QConditionalDecorationProxyModel::setIconSize(const QSize &size)
 {
+    beginFilterChange();
     if (size != d->iconSize) {
         d->iconSize = size;
-        invalidateFilter();
     }
+    endFilterChange();
 }
 
 void QConditionalDecorationProxyModel::setIconSpacing(int spacing)
 {
+    beginFilterChange();
     if (spacing != d->iconSpacing) {
         d->iconSpacing = spacing;
-        invalidateFilter();
     }
+    endFilterChange();
 }

@@ -132,7 +132,8 @@ void QAbstractFilterProxyModel::updateResult()
     d->lastResultCount = -1;
     emit resultAboutToChange();
     // invalidate filter
-    invalidateFilter();
+    beginFilterChange();
+    endFilterChange();
     //
     emit resultChanged();
     // emit result count changed

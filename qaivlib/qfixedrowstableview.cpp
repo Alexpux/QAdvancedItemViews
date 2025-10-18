@@ -76,8 +76,9 @@ QFixedRowsFilterProxyModel::~QFixedRowsFilterProxyModel()
 
 void QFixedRowsFilterProxyModel::clear()
 {
+    beginFilterChange();
     d->rows.clear();
-    invalidateFilter();
+    endFilterChange();
 }
 
 bool QFixedRowsFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
@@ -114,10 +115,11 @@ bool QFixedRowsFilterProxyModel::isRowPinned(int row) const
 
 void QFixedRowsFilterProxyModel::setEnabled(bool on)
 {
+    beginFilterChange();
     if (d->enabled != on) {
         d->enabled = on;
-        invalidateFilter();
     }
+    endFilterChange();
 }
 
 void QFixedRowsFilterProxyModel::sourceModelReset()
@@ -125,19 +127,21 @@ void QFixedRowsFilterProxyModel::sourceModelReset()
     /**
      * @todo slot sourceModelReset() should not be public
      */
+    beginFilterChange();
     d->rows.clear();
-    invalidateFilter();
+    endFilterChange();
 }
 
 void QFixedRowsFilterProxyModel::toggleRow(const QModelIndex &index)
 {
     QPersistentModelIndex i(index);
+    beginFilterChange();
     if (!d->rows.contains(i)) {
         d->rows.append(i);
     } else {
         d->rows.removeAt(d->rows.indexOf(i));
     }
-    invalidateFilter();
+    endFilterChange();
 }
 
 void QFixedRowsFilterProxyModel::setRowFixed(const QModelIndex &index, bool fixed)
