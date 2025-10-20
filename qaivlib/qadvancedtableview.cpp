@@ -56,31 +56,35 @@ void QAdvancedTableView::syncColumnProperties(int column, int size, bool hidden)
     if (column < 0) {
         return;
     }
-    
+
     // Lambda to apply properties to a single header view
-    auto applyToView = [=](QHeaderView* header) {
-        if (!header || column >= header->count()) {
+    auto applyToView = [=](QHeaderView *header, int columnIndex) {
+        if (!header || columnIndex >= header->count()) {
             return;
         }
-        header->resizeSection(column, size);
-        header->setSectionHidden(column, hidden);
+        header->resizeSection(columnIndex, size);
+        header->setSectionHidden(columnIndex, hidden);
     };
-    
-    // Apply to all views atomically
-    applyToView(ui->dataTableView->horizontalHeader());
-    applyToView(ui->fixedRowsTableView->horizontalHeader());
-    applyToView(ui->splittedDataTableView->horizontalHeader());
-    applyToView(d->summaryView);
+
+    // Apply to all data views (same column index)
+    applyToView(ui->dataTableView->horizontalHeader(), column);
+    applyToView(ui->fixedRowsTableView->horizontalHeader(), column);
+    applyToView(ui->splittedDataTableView->horizontalHeader(), column);
+
+    // CRITICAL FIX: Summary view uses column + 1 because section 0 is for vertical header
+    if (d->summaryView) {
+        applyToView(d->summaryView, column + 1); // +1 offset for extra section
+    }
 }
 
 // Synchronize ALL columns from headerTableView to other views
 void QAdvancedTableView::syncAllColumns()
 {
-    const auto* header = ui->headerTableView->horizontalHeader();
+    const auto *header = ui->headerTableView->horizontalHeader();
     if (!header) {
         return;
     }
-    
+
     const int columnCount = header->count();
     for (int i = 0; i < columnCount; ++i) {
         syncColumnProperties(i, header->sectionSize(i), header->isSectionHidden(i));
@@ -91,15 +95,15 @@ void QAdvancedTableView::syncAllColumns()
 std::vector<ColumnState> QAdvancedTableView::captureColumnStates() const
 {
     std::vector<ColumnState> states;
-    const auto* header = ui->headerTableView->horizontalHeader();
-    
+    const auto *header = ui->headerTableView->horizontalHeader();
+
     if (!header) {
         return states;
     }
-    
+
     const int count = header->count();
     states.reserve(count);
-    
+
     for (int i = 0; i < count; ++i) {
         ColumnState state;
         state.index = i;
@@ -108,34 +112,34 @@ std::vector<ColumnState> QAdvancedTableView::captureColumnStates() const
         state.visualIndex = header->visualIndex(i);
         states.push_back(state);
     }
-    
+
     return states;
 }
 
 // Apply captured column states
-void QAdvancedTableView::applyColumnStates(const std::vector<ColumnState>& states)
+void QAdvancedTableView::applyColumnStates(const std::vector<ColumnState> &states)
 {
     if (states.empty()) {
         return;
     }
-    
+
     // Use RAII guard for batch operation
     BatchSyncGuard guard(this);
-    
-    auto* header = ui->headerTableView->horizontalHeader();
+
+    auto *header = ui->headerTableView->horizontalHeader();
     if (!header) {
         return;
     }
-    
+
     // Apply all states to header view first
-    for (const auto& state : states) {
+    for (const auto &state : states) {
         if (!state.isValid() || state.index >= header->count()) {
             continue;
         }
         header->resizeSection(state.index, state.size);
         header->setSectionHidden(state.index, state.hidden);
     }
-    
+
     // After guard destruction, sync to all views
 }
 
@@ -507,11 +511,11 @@ void QAdvancedTableView::headerViewSectionResized(int logicalIndex, int oldSize,
     if (d->isSyncSuppressed()) {
         return;
     }
-    
+
     // Use unified synchronization for individual column changes
     const bool hidden = (newSize == 0);
     const int size = (newSize == 0 && oldSize > 0) ? 0 : newSize;
-    
+
     syncColumnProperties(logicalIndex, size, hidden);
 }
 
@@ -547,6 +551,9 @@ void QAdvancedTableView::horizontalHeaderViewSectionMoved(int logicalIndex, int 
     ui->dataTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
     ui->fixedRowsTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
     ui->splittedDataTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
+    if (d->summaryView->isVisible()) {
+        d->summaryView->moveSection(oldVisualIndex + 1, newVisualIndex + 1);
+    }
 }
 
 void QAdvancedTableView::horizontalHeaderSortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
@@ -753,7 +760,7 @@ bool QAdvancedTableView::restoreState(const QByteArray &data)
         setShowFixedRows(fixed);
         setShowFilter(filter);
         setShowGrid(grid);
-        syncAllColumns();  // UNIFIED SYNC: Use unified synchronization
+        syncAllColumns(); // UNIFIED SYNC: Use unified synchronization
         ui->headerTableView->viewport()->update();
         ui->dataTableView->horizontalHeader()->restoreState(stateArr);
         ui->fixedRowsTableView->horizontalHeader()->restoreState(stateArr);
@@ -1018,8 +1025,8 @@ void QAdvancedTableView::setModel(QAbstractItemModel *model)
     ui->fixedRowsTableView->setModel(d->model);
     d->filterModel->setSourceModel(d->model);
 
-    d->summaryView->setModel(new QStandardItemModel(1, d->model->columnCount()));
-    for (int i = 0; i < d->model->columnCount(); i++) {
+    d->summaryView->setModel(new QStandardItemModel(1, d->model->columnCount() + 1));
+    for (int i = 0; i < d->model->columnCount() + 1; i++) {
         d->summaryView->model()->setHeaderData(i, Qt::Horizontal, "");
     }
 
@@ -1030,7 +1037,7 @@ void QAdvancedTableView::setModel(QAbstractItemModel *model)
         ui->dataTableView->horizontalHeader()->moveSection(ui->dataTableView->horizontalHeader()->visualIndex(iCol), d->horizontalHeader->visualIndex(iCol));
 
         // d->summaryView->resizeSection(iCol, d->horizontalHeader->sectionSize(iCol));
-        d->summaryView->moveSection(ui->dataTableView->horizontalHeader()->visualIndex(iCol), d->horizontalHeader->visualIndex(iCol));
+        d->summaryView->moveSection(ui->dataTableView->horizontalHeader()->visualIndex(iCol + 1), d->horizontalHeader->visualIndex(iCol + 1));
     }
     if (horizontalHeader()->stretchLastSection()) {
         if (horizontalHeader()->count() > 0) {
@@ -1097,8 +1104,7 @@ void QAdvancedTableView::autoResizeColumnsToContent()
     // Calculate available width, accounting for scrollbar
     int availableWidth = viewport()->width();
 
-    if (ui->dataTableView->verticalScrollBar()->isVisible() && 
-        ui->dataTableView->verticalScrollBarPolicy() != Qt::ScrollBarAlwaysOff) {
+    if (ui->dataTableView->verticalScrollBar()->isVisible() && ui->dataTableView->verticalScrollBarPolicy() != Qt::ScrollBarAlwaysOff) {
         const int scrollBarWidth = style()->pixelMetric(QStyle::PM_ScrollBarExtent);
         availableWidth -= scrollBarWidth;
     }
@@ -1124,7 +1130,7 @@ void QAdvancedTableView::autoResizeColumnsToContent()
             item.index = i;
 
             item.top_header = getHeaderSectionWidth(horizontalHeader(), i);
-            item.extra_header = d->summaryView ? getHeaderSectionWidth(d->summaryView, i) : 0;
+            item.extra_header = d->summaryView ? getHeaderSectionWidth(d->summaryView, i + 1) : 0;
             item.content = ui->dataTableView->columnWidth(i);
             item.max_width = std::max({ item.top_header, item.content, item.extra_header });
             item.min_width = std::max({ item.top_header, item.extra_header });
@@ -1218,18 +1224,27 @@ void QAdvancedTableView::autoResizeColumnsToContent()
         }
     }
 
+    if (d->summaryView->isVisible()) {
+        // Synchronize section 0 (vertical header placeholder) with actual vertical header
+        const bool vHeaderVisible = verticalHeader()->isVisible() && !verticalHeader()->sectionsHidden();
+        const int vHeaderWidth = vHeaderVisible ? verticalHeader()->width() : 0;
+
+        d->summaryView->resizeSection(0, vHeaderWidth);
+        d->summaryView->setSectionHidden(0, !vHeaderVisible);
+    }
     // Resize all visible columns in the header view
     for (const auto &pair : col_info) {
         if (!isColumnHidden(pair.first)) {
             ui->headerTableView->horizontalHeader()->resizeSection(pair.first, pair.second.max_width);
         }
     }
-    
+
     // Guard destructor will trigger syncAllColumns() automatically
     // when batch operations complete
-    
+
     // Adjust row heights after column resize
     ui->dataTableView->resizeRowsToContents();
+
     emit sectionSizeChanged();
 }
 
@@ -1391,7 +1406,7 @@ void QAdvancedTableView::dataModelLayoutChanged()
         ui->dataTableView->horizontalHeader()->setSectionHidden(i, isHidden);
         ui->fixedRowsTableView->horizontalHeader()->setSectionHidden(i, isHidden);
         ui->splittedDataTableView->horizontalHeader()->setSectionHidden(i, isHidden);
-        d->summaryView->setSectionHidden(i, isHidden);
+        d->summaryView->setSectionHidden(i + 1, isHidden);
     }
     updateSummary();
 }
@@ -1450,6 +1465,15 @@ void QAdvancedTableView::updateHeaderViewGeometries()
         ui->splittedDataTableView->verticalHeader()->setFixedWidth(vertHWidth);
     } else {
         ui->headerTableView->verticalHeader()->setFixedWidth(dataVHWidth);
+    }
+
+    if (d->summaryView->isVisible()) {
+        // Synchronize section 0 (vertical header placeholder) with actual vertical header
+        const bool vHeaderVisible = verticalHeader()->isVisible() && !verticalHeader()->sectionsHidden();
+        const int vHeaderWidth = vHeaderVisible ? verticalHeader()->width() : 0;
+
+        d->summaryView->resizeSection(0, vHeaderWidth);
+        d->summaryView->setSectionHidden(0, !vHeaderVisible);
     }
 }
 
@@ -1582,7 +1606,7 @@ void QAdvancedTableView::updateSummary()
             advSummaryFunc fn = iter.value();
             if (fn) {
                 QVariant result = fn(ui->dataTableView->model(), iter.key());
-                d->summaryView->model()->setHeaderData(iter.key(), Qt::Horizontal, result);
+                d->summaryView->model()->setHeaderData(iter.key() + 1, Qt::Horizontal, result);
             }
         }
     } else {
@@ -1593,8 +1617,8 @@ void QAdvancedTableView::updateSummary()
 void QAdvancedTableView::adjustSummaryOffset()
 {
     updateSummary();
-    int offset = ui->headerTableView->horizontalHeader()->offset() + (ui->dataTableView->verticalHeader()->isVisible() ? ui->dataTableView->verticalHeader()->width() : 0);
-    d->summaryView->setStyleSheet(QString("margin-left: %1px;").arg(offset));
+    // int offset = ui->headerTableView->horizontalHeader()->offset() + (ui->dataTableView->verticalHeader()->isVisible() ? ui->dataTableView->verticalHeader()->width() : 0);
+    // d->summaryView->setStyleSheet(QString("margin-left: %1px;").arg(offset));
 }
 
 void QAdvancedTableView::sectionsResize()
@@ -1602,7 +1626,7 @@ void QAdvancedTableView::sectionsResize()
     adjustSummaryOffset();
     if (ui->dataTableView->model()) {
         for (int i = 0; i < ui->dataTableView->model()->columnCount(); i++) {
-            d->summaryView->resizeSection(i, ui->dataTableView->columnWidth(i));
+            d->summaryView->resizeSection(i + 1, ui->dataTableView->columnWidth(i));
         }
     }
 }
