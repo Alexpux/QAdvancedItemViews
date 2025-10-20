@@ -521,6 +521,7 @@ void MainWindow::initTabAdvancedTableView()
     p->setSourceModel(m_model);
     ui->filterTableView->setModel(p);
     ui->filterTableView->setFilterProxyModel(new FilterProxyModel(this));
+    ui->filterTableView->setSummaryType(0, advColumnSum);
 
 #if QT_VERSION >= 0x050000
     ui->filterTableView->horizontalHeader()->setSectionsClickable(true);
