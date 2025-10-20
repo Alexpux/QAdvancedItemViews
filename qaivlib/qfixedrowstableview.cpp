@@ -116,9 +116,7 @@ bool QFixedRowsFilterProxyModel::isRowPinned(int row) const
 void QFixedRowsFilterProxyModel::setEnabled(bool on)
 {
     beginFilterChange();
-    if (d->enabled != on) {
-        d->enabled = on;
-    }
+    d->enabled = on;
     endFilterChange();
 }
 
@@ -148,7 +146,6 @@ void QFixedRowsFilterProxyModel::setRowFixed(const QModelIndex &index, bool fixe
 {
     Q_UNUSED(index)
     if (fixed) {
-
     } else {
     }
 }

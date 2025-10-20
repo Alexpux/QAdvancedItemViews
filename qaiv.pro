@@ -27,3 +27,6 @@ SUBDIRS += qaivlib/qaivlib.pro \
            test/qaiv/test_qaiv.pro \
            test/qaivproxymodels/test_qaivproxymodels.pro \
            example/example.pro
+
+qaivdesigner.depends = qaivlib
+example.depends = qaivlib

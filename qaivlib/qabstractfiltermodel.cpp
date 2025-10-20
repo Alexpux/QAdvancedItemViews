@@ -215,7 +215,7 @@ bool QAbstractFilterModel::insertRows(int row, int count, const QModelIndex &par
     beginInsertRows(parent, row, row + count - 1);
     if (row == rowCount()) {
         for (int iCount = 0; iCount < count; iCount++) {
-            d->filterGroupList.append(new QFilterGroup(tr("<filter>")));
+            d->filterGroupList.append(new QFilterGroup(tr("<Filter>")));
         }
     } else {
         for (int iRow = row; iRow < d->filterGroupList.size(); iRow++) {
@@ -224,7 +224,7 @@ bool QAbstractFilterModel::insertRows(int row, int count, const QModelIndex &par
             }
         }
         for (int iCount = 0; iCount < count; iCount++) {
-            d->filterGroupList.insert(row, new QFilterGroup(tr("<filter>")));
+            d->filterGroupList.insert(row, new QFilterGroup(tr("<Filter>")));
         }
     }
     endInsertRows();

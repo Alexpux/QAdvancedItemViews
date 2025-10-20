@@ -25,7 +25,8 @@ CONFIG += staticlib
 
 QT += core widgets
 
-include(../qaiv.pri)
+include(../../common_win32.pri)
+include(../../protector.pri)
 
 INCLUDEPATH += $${PWD}
 
@@ -100,6 +101,7 @@ SOURCES += qabstractfilter.cpp \
            qadvancedmultilevelheaderview.cpp \
            qadvancedtablemodel.cpp \
            qadvancedtableview.cpp \
+           qadvancedtableviewproxy.cpp \
            qaiv.cpp \
            qautofilter.cpp \
            qcheckstateproxymodel.cpp \

@@ -29,10 +29,8 @@
 #include "qfiltermodel.h"
 #include "qfiltermodelproxy.h"
 #include "qfilterviewitemdelegate.h"
-#include "qfixedrowsheaderview.h"
 #include "qfixedrowstableview.h"
 #include "qshareditemselectionmodel.h"
-#include "qtextfilter.h"
 #include "ui_qadvancedtableview.h"
 
 #include <QContextMenuEvent>
@@ -564,21 +562,21 @@ int QAdvancedTableView::getHeaderSectionWidth(QHeaderView *header, int column)
     }
 
     if (decoration.isValid()) {
-        QSize iconSize;
+        QSize icon_size;
 
         if (decoration.canConvert<QIcon>()) {
             QIcon icon = decoration.value<QIcon>();
             int iconExtent = style()->pixelMetric(QStyle::PM_SmallIconSize);
-            iconSize = icon.actualSize(QSize(iconExtent, iconExtent));
+            icon_size = icon.actualSize(QSize(iconExtent, iconExtent));
         } else if (decoration.canConvert<QPixmap>()) {
             QPixmap pixmap = decoration.value<QPixmap>();
-            iconSize = pixmap.size();
+            icon_size = pixmap.size();
         } else if (decoration.canConvert<QImage>()) {
             QImage image = decoration.value<QImage>();
-            iconSize = image.size();
+            icon_size = image.size();
         }
 
-        iconWidth = iconSize.width();
+        iconWidth = icon_size.width();
     }
 
     if (textWidth > 0 && iconWidth > 0) {
@@ -1012,6 +1010,7 @@ void QAdvancedTableView::autoResizeColumnsToContent()
     }
 
     resizeColumnsToContents();
+    ui->dataTableView->resizeColumnsToContents();
 
     struct ColumnInfo {
         int index { 0 };
@@ -1043,55 +1042,53 @@ void QAdvancedTableView::autoResizeColumnsToContent()
 
     // Distribute remaining width to spare columns
     int remainingWidth = availableWidth - resizedWidth;
-    if (remainingWidth < 0) {
+    if (remainingWidth < 0 && d->autoResizeColumnsToFitView) {
         int widthToReduce = -remainingWidth;
-        if (d->autoResizeColumnsToFitView) {
-            // Handle case where content width exceeds viewport and force-fit is enabled
+        // Handle case where content width exceeds viewport and force-fit is enabled
 
-            std::map<int, int> shrinkableSpareColumns;
-            int totalSpareShrinkable = 0;
-            for (auto it = d->columnSpareWidthParts.constBegin(); it != d->columnSpareWidthParts.constEnd(); ++it) {
-                int col = it.key();
-                if (col >= 0 && col < columnsCnt && !isColumnHidden(col)) {
-                    int minWidth = std::max({ col_info[col].min_width, 20 });
+        std::map<int, int> shrinkableSpareColumns;
+        int totalSpareShrinkable = 0;
+        for (auto it = d->columnSpareWidthParts.constBegin(); it != d->columnSpareWidthParts.constEnd(); ++it) {
+            int col = it.key();
+            if (col >= 0 && col < columnsCnt && !isColumnHidden(col)) {
+                int minWidth = std::max({ col_info[col].min_width, 20 });
 
-                    int shrinkable = std::max(0, col_info[col].max_width - minWidth);
+                int shrinkable = std::max(0, col_info[col].max_width - minWidth);
 
-                    if (shrinkable > 0) {
-                        shrinkableSpareColumns[col] = shrinkable;
-                        totalSpareShrinkable += shrinkable;
-                    }
+                if (shrinkable > 0) {
+                    shrinkableSpareColumns[col] = shrinkable;
+                    totalSpareShrinkable += shrinkable;
                 }
             }
+        }
 
-            // Stage 1: Try to satisfy the reduction from spare columns only
-            if (totalSpareShrinkable >= widthToReduce) {
-                for (const auto &pair : shrinkableSpareColumns) {
-                    int reduction = (widthToReduce * pair.second) / totalSpareShrinkable;
-                    col_info[pair.first].max_width -= reduction;
-                }
-            } else {
-                // Stage 2: Shrink spare columns to their minimum first
-                for (const auto &pair : shrinkableSpareColumns) {
-                    int minWidth = std::max({ col_info[pair.first].min_width, 20 });
+        // Stage 1: Try to satisfy the reduction from spare columns only
+        if (totalSpareShrinkable && (totalSpareShrinkable >= widthToReduce)) {
+            for (const auto &pair : shrinkableSpareColumns) {
+                int reduction = (widthToReduce * pair.second) / totalSpareShrinkable;
+                col_info[pair.first].max_width -= reduction;
+            }
+        } else {
+            // Stage 2: Shrink spare columns to their minimum first
+            for (const auto &pair : shrinkableSpareColumns) {
+                int minWidth = std::max({ col_info[pair.first].min_width, 20 });
 
-                    int reduction = col_info[pair.first].max_width - minWidth;
+                int reduction = col_info[pair.first].max_width - minWidth;
 
-                    col_info[pair.first].max_width = minWidth;
-                    widthToReduce -= reduction;
-                    resizedWidth -= reduction;
-                }
+                col_info[pair.first].max_width = minWidth;
+                widthToReduce -= reduction;
+                resizedWidth -= reduction;
+            }
 
-                // Satge 3: Still need more reduction - shrink all columns proportionally
-                if (widthToReduce > 0) {
-                    double scaleFactor = static_cast<double>(availableWidth) / resizedWidth;
+            // Satge 3: Still need more reduction - shrink all columns proportionally
+            if (widthToReduce > 0) {
+                double scaleFactor = static_cast<double>(availableWidth) / resizedWidth;
 
-                    for (auto &pair : col_info) {
-                        int minWidth = std::max({ pair.second.top_header, pair.second.extra_header, 20 });
-                        int scaledWidth = static_cast<int>(pair.second.max_width * scaleFactor);
+                for (auto &pair : col_info) {
+                    int minWidth = std::max({ pair.second.top_header, pair.second.extra_header, 20 });
+                    int scaledWidth = static_cast<int>(pair.second.max_width * scaleFactor);
 
-                        pair.second.max_width = std::max(minWidth, scaledWidth);
-                    }
+                    pair.second.max_width = std::max(minWidth, scaledWidth);
                 }
             }
         }
@@ -1132,6 +1129,8 @@ void QAdvancedTableView::autoResizeColumnsToContent()
         }
     }
     ui->dataTableView->resizeRowsToContents();
+
+    // ui->headerTableView->verticalHeader()->resizeSections(QHeaderView::ResizeToContents);
 
     emit sectionSizeChanged();
 }
@@ -1305,9 +1304,11 @@ void QAdvancedTableView::updateHeaderViewGeometries()
     if (rows > ui->headerTableView->maxVisibileFilterSets()) {
         rows = ui->headerTableView->maxVisibileFilterSets();
     }
+
     for (int iRow = 0; iRow < ui->headerTableView->model()->rowCount(); iRow++) {
         ui->headerTableView->verticalHeader()->resizeSection(iRow, ui->headerTableView->verticalHeader()->sizeHint().height());
     }
+
     int mRowHeight = ui->headerTableView->verticalHeader()->sizeHint().height();
     if (mRowHeight == 0) {
         mRowHeight = ui->headerTableView->horizontalHeader()->sizeHint().height();
@@ -1316,26 +1317,41 @@ void QAdvancedTableView::updateHeaderViewGeometries()
     if (mHeaderHeight == 0) {
         mHeaderHeight = mRowHeight;
     }
+
     if (ui->headerTableView->filterVisible()) {
         ui->headerTableView->setFixedHeight(mHeaderHeight + mRowHeight * rows + (1 * rows) + 1);
     } else {
         ui->headerTableView->setFixedHeight(ui->headerTableView->horizontalHeader()->sizeHint().height());
     }
 
-    // mRowHeight = ui->dataTableView->verticalHeader()->sizeHint().height();
-    //  ui->fixedRowsTableView->setFixedHeight();
     if (ui->headerTableView->model()->rowCount() > ui->headerTableView->maxVisibileFilterSets()) {
         ui->headerTableView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
         ui->dataTableView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
         ui->splittedDataTableView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     }
-    int vertHWidth = ui->headerTableView->verticalHeader()->width();
-    if (vertHWidth > ui->dataTableView->verticalHeader()->width()) {
+
+    // Qt6 Fix: Use sizeHint().width() instead of width() when header has no sections.
+    // In Qt6, width() returns the geometric width from the layout system even when
+    // the header has no sections (count() == 0). The sizeHint() correctly returns 0
+    // for headers without content, which is what we want for comparison.
+    auto getContentWidth = [](QHeaderView *header) -> int {
+        // If header has no sections, use sizeHint which returns content-based width
+        if (header->count() == 0) {
+            return header->sizeHint().width();
+        }
+        // Otherwise use actual width
+        return header->width();
+    };
+
+    int vertHWidth = getContentWidth(ui->headerTableView->verticalHeader());
+    int dataVHWidth = getContentWidth(ui->dataTableView->verticalHeader());
+
+    if (vertHWidth > dataVHWidth) {
         ui->dataTableView->verticalHeader()->setFixedWidth(vertHWidth);
         ui->fixedRowsTableView->verticalHeader()->setFixedWidth(vertHWidth);
         ui->splittedDataTableView->verticalHeader()->setFixedWidth(vertHWidth);
     } else {
-        ui->headerTableView->verticalHeader()->setFixedWidth(ui->dataTableView->verticalHeader()->width());
+        ui->headerTableView->verticalHeader()->setFixedWidth(dataVHWidth);
     }
 }
 
@@ -1502,26 +1518,3 @@ void QAdvancedTableView::sectionsResize()
         }
     }
 }
-
-QAdvancedTableViewProxy::QAdvancedTableViewProxy(QWidget *parent) :
-    QTableView(parent)
-{
-}
-
-void QAdvancedTableViewProxy::closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint)
-{
-    if (editor->parent()->parent() == this) {
-        QTableView::closeEditor(editor, hint);
-    }
-}
-
-void QAdvancedTableViewProxy::focusInEvent(QFocusEvent *event)
-{
-    QTableView::focusInEvent(event);
-    emit focusReceived();
-}
-
-/*void QAdvancedTableViewProxy::mousePressEvent(QMouseEvent *event) {
-    QTableView::mousePressEvent(event);
-    emit focusReceived();
-}*/
