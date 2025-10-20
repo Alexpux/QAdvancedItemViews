@@ -37,11 +37,107 @@
 #include <QScrollBar>
 #include <QTableView>
 #include <QTimer>
+#include <algorithm>
 
 #define V_CALL(_m_)              \
     ui->dataTableView->_m_;      \
     ui->fixedRowsTableView->_m_; \
     ui->splittedDataTableView->_m_;
+
+//-----------------------------------------------
+// MODERN C++20: Unified Column Synchronization System
+//-----------------------------------------------
+
+// SINGLE POINT OF SYNCHRONIZATION: This is the ONLY place where column
+// properties are applied to all views. This eliminates code duplication
+// and ensures perfect consistency.
+void QAdvancedTableView::syncColumnProperties(int column, int size, bool hidden)
+{
+    if (column < 0) {
+        return;
+    }
+    
+    // Lambda to apply properties to a single header view
+    auto applyToView = [=](QHeaderView* header) {
+        if (!header || column >= header->count()) {
+            return;
+        }
+        header->resizeSection(column, size);
+        header->setSectionHidden(column, hidden);
+    };
+    
+    // Apply to all views atomically
+    applyToView(ui->dataTableView->horizontalHeader());
+    applyToView(ui->fixedRowsTableView->horizontalHeader());
+    applyToView(ui->splittedDataTableView->horizontalHeader());
+    applyToView(d->summaryView);
+}
+
+// Synchronize ALL columns from headerTableView to other views
+void QAdvancedTableView::syncAllColumns()
+{
+    const auto* header = ui->headerTableView->horizontalHeader();
+    if (!header) {
+        return;
+    }
+    
+    const int columnCount = header->count();
+    for (int i = 0; i < columnCount; ++i) {
+        syncColumnProperties(i, header->sectionSize(i), header->isSectionHidden(i));
+    }
+}
+
+// Capture current state of all columns
+std::vector<ColumnState> QAdvancedTableView::captureColumnStates() const
+{
+    std::vector<ColumnState> states;
+    const auto* header = ui->headerTableView->horizontalHeader();
+    
+    if (!header) {
+        return states;
+    }
+    
+    const int count = header->count();
+    states.reserve(count);
+    
+    for (int i = 0; i < count; ++i) {
+        ColumnState state;
+        state.index = i;
+        state.size = header->sectionSize(i);
+        state.hidden = header->isSectionHidden(i);
+        state.visualIndex = header->visualIndex(i);
+        states.push_back(state);
+    }
+    
+    return states;
+}
+
+// Apply captured column states
+void QAdvancedTableView::applyColumnStates(const std::vector<ColumnState>& states)
+{
+    if (states.empty()) {
+        return;
+    }
+    
+    // Use RAII guard for batch operation
+    BatchSyncGuard guard(this);
+    
+    auto* header = ui->headerTableView->horizontalHeader();
+    if (!header) {
+        return;
+    }
+    
+    // Apply all states to header view first
+    for (const auto& state : states) {
+        if (!state.isValid() || state.index >= header->count()) {
+            continue;
+        }
+        header->resizeSection(state.index, state.size);
+        header->setSectionHidden(state.index, state.hidden);
+    }
+    
+    // After guard destruction, sync to all views
+}
 
 //-----------------------------------------------
 // class QAdvancedTableView
@@ -407,22 +503,16 @@ void QAdvancedTableView::headerViewHorizontalScrollBarValueChanged(int value)
 
 void QAdvancedTableView::headerViewSectionResized(int logicalIndex, int oldSize, int newSize)
 {
-    if (newSize == 0) {
-        ui->dataTableView->horizontalHeader()->hideSection(logicalIndex);
-        ui->fixedRowsTableView->horizontalHeader()->hideSection(logicalIndex);
-        ui->splittedDataTableView->horizontalHeader()->hideSection(logicalIndex);
-        d->summaryView->hideSection(logicalIndex);
-    } else if (oldSize == 0) {
-        ui->dataTableView->horizontalHeader()->showSection(logicalIndex);
-        ui->fixedRowsTableView->horizontalHeader()->showSection(logicalIndex);
-        ui->splittedDataTableView->horizontalHeader()->showSection(logicalIndex);
-        d->summaryView->showSection(logicalIndex);
-    } else {
-        ui->dataTableView->horizontalHeader()->resizeSection(logicalIndex, newSize);
-        ui->fixedRowsTableView->horizontalHeader()->resizeSection(logicalIndex, newSize);
-        ui->splittedDataTableView->horizontalHeader()->resizeSection(logicalIndex, newSize);
-        d->summaryView->resizeSection(logicalIndex, newSize);
+    // UNIFIED SYNC: Skip synchronization during batch operations
+    if (d->isSyncSuppressed()) {
+        return;
     }
+    
+    // Use unified synchronization for individual column changes
+    const bool hidden = (newSize == 0);
+    const int size = (newSize == 0 && oldSize > 0) ? 0 : newSize;
+    
+    syncColumnProperties(logicalIndex, size, hidden);
 }
 
 void QAdvancedTableView::hideColumn(int column)
@@ -663,7 +753,7 @@ bool QAdvancedTableView::restoreState(const QByteArray &data)
         setShowFixedRows(fixed);
         setShowFilter(filter);
         setShowGrid(grid);
-        updateHorizontalHeaderSectionSize();
+        syncAllColumns();  // UNIFIED SYNC: Use unified synchronization
         ui->headerTableView->viewport()->update();
         ui->dataTableView->horizontalHeader()->restoreState(stateArr);
         ui->fixedRowsTableView->horizontalHeader()->restoreState(stateArr);
@@ -996,20 +1086,25 @@ void QAdvancedTableView::autoResizeColumnsToContent()
         return;
     }
 
-    int columnsCnt = model()->columnCount();
+    const int columnsCnt = model()->columnCount();
     if (columnsCnt == 0) {
         return;
     }
 
-    // Calculate available width, according to scrollbar
+    // UNIFIED SYNC: Use RAII guard for batch operations
+    BatchSyncGuard guard(this);
+
+    // Calculate available width, accounting for scrollbar
     int availableWidth = viewport()->width();
 
-    if (ui->dataTableView->verticalScrollBar()->isVisible() && ui->dataTableView->verticalScrollBarPolicy() != Qt::ScrollBarAlwaysOff) {
-        int scrollBarWidth = style()->pixelMetric(QStyle::PM_ScrollBarExtent);
+    if (ui->dataTableView->verticalScrollBar()->isVisible() && 
+        ui->dataTableView->verticalScrollBarPolicy() != Qt::ScrollBarAlwaysOff) {
+        const int scrollBarWidth = style()->pixelMetric(QStyle::PM_ScrollBarExtent);
         availableWidth -= scrollBarWidth;
     }
 
     resizeColumnsToContents();
+
     ui->dataTableView->resizeColumnsToContents();
 
     struct ColumnInfo {
@@ -1123,15 +1218,18 @@ void QAdvancedTableView::autoResizeColumnsToContent()
         }
     }
 
+    // Resize all visible columns in the header view
     for (const auto &pair : col_info) {
         if (!isColumnHidden(pair.first)) {
             ui->headerTableView->horizontalHeader()->resizeSection(pair.first, pair.second.max_width);
         }
     }
+    
+    // Guard destructor will trigger syncAllColumns() automatically
+    // when batch operations complete
+    
+    // Adjust row heights after column resize
     ui->dataTableView->resizeRowsToContents();
-
-    // ui->headerTableView->verticalHeader()->resizeSections(QHeaderView::ResizeToContents);
-
     emit sectionSizeChanged();
 }
 
@@ -1365,16 +1463,6 @@ void QAdvancedTableView::updateHeaderViewVerticalScrollBar(int min, int max)
     } else {
         ui->headerTableView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
         ui->fixedRowsTableView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    }
-}
-
-void QAdvancedTableView::updateHorizontalHeaderSectionSize()
-{
-    for (int i = 0; i < ui->headerTableView->horizontalHeader()->count(); i++) {
-        int sectionSize = ui->headerTableView->horizontalHeader()->sectionSize(i);
-        ui->dataTableView->horizontalHeader()->resizeSection(i, sectionSize);
-        ui->fixedRowsTableView->horizontalHeader()->resizeSection(i, sectionSize);
-        // d->summaryView->resizeSection(i, sectionSize);
     }
 }
 

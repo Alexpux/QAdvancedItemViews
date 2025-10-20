@@ -26,6 +26,9 @@
 
 #include <QAbstractItemView>
 #include <QHeaderView>
+#include <vector>
+
+struct ColumnState;  // Forward declaration
 
 class QFilterView;
 class QAdvancedHeaderView;
@@ -87,6 +90,10 @@ class QAdvancedTableView;
  */
 class QAIVLIBSHARED_EXPORT QAdvancedTableView : public QWidget {
     Q_OBJECT
+    
+    // Allow batch guard to access private sync methods
+    friend class BatchSyncGuard;
+    
     //! @property(alternatingRowColors)
     /**
      * This property holds whether to draw the background using alternating colors.
@@ -752,7 +759,6 @@ private slots:
     void subviewReceivedFocus();
     void updateHeaderViewGeometries();
     void updateHeaderViewVerticalScrollBar(int min, int max);
-    void updateHorizontalHeaderSectionSize();
     void verticalHeaderSectionClicked(int section);
     void verticalHeaderWidthChangeRequested(int width);
 
@@ -776,10 +782,16 @@ private:
     Ui::QAdvancedTableView *ui { nullptr };
 
     QModelIndex mapToSource(const QModelIndex &index) const;
-
     int getHeaderSectionWidth(QHeaderView *header, int column);
-
-    // void syncModels();
+    
+    // MODERN C++20: Unified synchronization system
+    // This is the SINGLE point where column properties are synchronized across all views
+    void syncColumnProperties(int column, int size, bool hidden);
+    void syncAllColumns();
+    
+    // Helper to get all column states from header view
+    std::vector<ColumnState> captureColumnStates() const;
+    void applyColumnStates(const std::vector<ColumnState>& states);
 };
 
 #endif // QADVANCEDTABLEVIEW_H
