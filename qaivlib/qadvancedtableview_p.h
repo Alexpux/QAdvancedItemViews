@@ -41,7 +41,7 @@ struct ColumnState {
     int size { 0 };
     bool hidden { false };
     int visualIndex { -1 };
-    
+
     bool isValid() const { return index >= 0; }
 };
 
@@ -96,12 +96,13 @@ public:
 
     ~QAdvancedTableViewPrivate() = default;
 
-    bool autoResizeRowsToContents { false };
+    bool autoResizeRowsToContents { true };
     bool autoResizeColumnsToFitView { true };
     int defaultFilterType { QTextFilter::Type };
-    
+
     // MODERN C++20: Unified synchronization control
-    int batchUpdateDepth { 0 };  // Support nested batch operations
+    int batchUpdateDepth { 0 }; // Support nested batch operations
+
     bool isSyncSuppressed() const { return batchUpdateDepth > 0; }
 
     QAdvancedTableView *v { nullptr };
@@ -121,27 +122,29 @@ public:
 // MODERN C++20: RAII guard for batch synchronization operations
 class BatchSyncGuard {
 public:
-    explicit BatchSyncGuard(QAdvancedTableView* view) : v(view), d(view->d) {
+    explicit BatchSyncGuard(QAdvancedTableView *view) : v(view), d(view->d)
+    {
         ++d->batchUpdateDepth;
     }
-    
-    ~BatchSyncGuard() {
+
+    ~BatchSyncGuard()
+    {
         --d->batchUpdateDepth;
         // When depth returns to 0, synchronize all columns
         if (d->batchUpdateDepth == 0 && v) {
             v->syncAllColumns();
         }
     }
-    
+
     // Disable copy and move
-    BatchSyncGuard(const BatchSyncGuard&) = delete;
-    BatchSyncGuard& operator=(const BatchSyncGuard&) = delete;
-    BatchSyncGuard(BatchSyncGuard&&) = delete;
-    BatchSyncGuard& operator=(BatchSyncGuard&&) = delete;
-    
+    BatchSyncGuard(const BatchSyncGuard &) = delete;
+    BatchSyncGuard &operator=(const BatchSyncGuard &) = delete;
+    BatchSyncGuard(BatchSyncGuard &&) = delete;
+    BatchSyncGuard &operator=(BatchSyncGuard &&) = delete;
+
 private:
-    QAdvancedTableView* v;
-    QAdvancedTableViewPrivate* d;
+    QAdvancedTableView *v;
+    QAdvancedTableViewPrivate *d;
 };
 
 #endif // QADVANCEDTABLEVIEW_P_H

@@ -21,7 +21,10 @@
 
 #include "qfixedrowstableview.h"
 
+#include <QApplication>
 #include <QDebug>
+#include <QFontMetrics>
+#include <QStyle>
 
 class QFixedRowsTableViewPrivate {
 public:
@@ -164,6 +167,17 @@ QFixedRowsDecorationProxyModel::~QFixedRowsDecorationProxyModel()
 
 QVariant QFixedRowsDecorationProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    if (orientation == Qt::Vertical && role == Qt::SizeHintRole) {
+        QSize size = QIdentityProxyModel::headerData(section, orientation, role).toSize();
+
+        // Only adjust if decoration enabled and icon needs more space
+        if (d->enabled) {
+            size.setHeight(std::max(size.height(), iconSize().height()));
+        }
+
+        return size;
+    }
+
     if (d->enabled && orientation == Qt::Vertical && role == Qt::DecorationRole) {
         if (d->filterProxy) {
             QIcon icon = qvariant_cast<QIcon>(QIdentityProxyModel::headerData(section, orientation, role));
@@ -178,6 +192,7 @@ QVariant QFixedRowsDecorationProxyModel::headerData(int section, Qt::Orientation
             }
         }
     }
+
     return QIdentityProxyModel::headerData(section, orientation, role);
 }
 
