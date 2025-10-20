@@ -246,38 +246,43 @@ void MainWindow::pinRowsToolButtonClicked()
 void MainWindow::populatePushButtonClicked()
 {
     QList<QByteArray> w;
-    QFile f(QApplication::applicationDirPath() + "/lorem_ipsum.txt");
-    if (f.open(QIODevice::ReadOnly)) {
-        w = f.readAll().split(' ');
-        f.close();
-    }
-    QProgressDialog *d = new QProgressDialog(tr("Reading file..."), tr("Cancel"), 0, 30000, this);
-    d->setMinimumDuration(0);
-    d->setWindowModality(Qt::WindowModal);
-
-    QStandardItemModel *m = new QStandardItemModel(this);
-    m->setColumnCount(10);
-    QStringList l;
-    l << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum"
-      << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum"
-      << "Lorem ipsum" << "Lorem ipsum";
-    m->setHorizontalHeaderLabels(l);
-    int wi = 0;
-    for (int i = 0; i < 30000 && !d->wasCanceled(); i++) {
-        d->setValue(wi);
-        QList<QStandardItem *> items;
-        for (int c = 0; c < 10; c++) {
-            items << new QStandardItem(QString(w.at(wi)));
-            wi++;
+    QString example_file = QApplication::applicationDirPath() + "/lorem_ipsum.txt";
+    QFile f(example_file);
+    if (f.exists()) {
+        if (f.open(QIODevice::ReadOnly)) {
+            w = f.readAll().split(' ');
+            f.close();
         }
-        m->appendRow(items);
-    }
-    delete d;
+        QProgressDialog *d = new QProgressDialog(tr("Reading file..."), tr("Cancel"), 0, 30000, this);
+        d->setMinimumDuration(0);
+        d->setWindowModality(Qt::WindowModal);
 
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    ui->populatePushButton->setEnabled(false);
-    ui->largeTableView->setModel(m);
-    QApplication::restoreOverrideCursor();
+        QStandardItemModel *m = new QStandardItemModel(this);
+        m->setColumnCount(10);
+        QStringList l;
+        l << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum"
+          << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum" << "Lorem ipsum"
+          << "Lorem ipsum" << "Lorem ipsum";
+        m->setHorizontalHeaderLabels(l);
+        int wi = 0;
+        for (int i = 0; i < 30000 && !d->wasCanceled(); i++) {
+            d->setValue(wi);
+            QList<QStandardItem *> items;
+            for (int c = 0; c < 10; c++) {
+                items << new QStandardItem(QString(w.at(wi)));
+                wi++;
+            }
+            m->appendRow(items);
+        }
+        delete d;
+
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+        ui->populatePushButton->setEnabled(false);
+        ui->largeTableView->setModel(m);
+        QApplication::restoreOverrideCursor();
+    } else {
+        QMessageBox::critical(this, "File load", "File " + example_file + " not exists");
+    }
 }
 
 void MainWindow::selectionChanged(const QItemSelection &selected,
