@@ -785,7 +785,7 @@ private:
     QModelIndex mapToSource(const QModelIndex &index) const;
     int getHeaderSectionWidth(QHeaderView *header, int column);
 
-    // MODERN C++20: Unified synchronization system
+    // Unified synchronization system
     // This is the SINGLE point where column properties are synchronized across all views
     void syncColumnProperties(int column, int size, bool hidden);
     void syncAllColumns();

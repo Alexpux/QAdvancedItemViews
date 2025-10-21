@@ -103,7 +103,7 @@ private slots:
     void verticalHeaderSectionClicked(int section);
 
 private:
-    QFixedRowsTableViewPrivate *d;
+    QFixedRowsTableViewPrivate *d { nullptr };
 };
 
 //! The QFixedRowsFilterProxyModel class implements a proxy model supporting fixed (pinned) rows.

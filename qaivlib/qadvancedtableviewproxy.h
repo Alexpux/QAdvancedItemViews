@@ -21,9 +21,6 @@
 #ifndef QFILTERTABLEVIEWPROXY_H
 #define QFILTERTABLEVIEWPROXY_H
 
-#include "qadvancedtableview.h"
-#include "qclickablelabel.h"
-
 #include <QCheckBox>
 #include <QDialog>
 #include <QGroupBox>

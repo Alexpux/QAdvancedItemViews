@@ -3,10 +3,10 @@
 #include "qadvancedconstants.h"
 
 #include <QPainter>
-#include <QPixmapCache>
-#include <QStyleOptionHeader>
 #include <QPainterPath>
+#include <QPixmapCache>
 #include <QStyleOptionButton>
+#include <QStyleOptionHeader>
 
 static QWindow *qt_getWindow(const QWidget *widget)
 {
@@ -18,7 +18,7 @@ static QPixmap cachedPixmap(const QString &img, const QSize &pixSize)
     QPixmap pm;
     // Create unique cache key including size for HiDPI support
     QString cacheKey = QString("%1_%2x%3").arg(img).arg(pixSize.width()).arg(pixSize.height());
-    
+
     if (!QPixmapCache::find(cacheKey, &pm)) {
         pm = QIcon(img).pixmap(pixSize);
         QPixmapCache::insert(cacheKey, pm);
@@ -86,12 +86,12 @@ void QAdvancedHeaderStyle::drawControl(ControlElement element, const QStyleOptio
         p->setPen(Qt::NoPen);
         p->setBrush(opt->palette.button());
         p->drawRect(opt->rect);
-        
+
         // Draw border with proper shading for Qt6
         QPen borderPen(opt->palette.mid().color());
         borderPen.setWidth(1);
         p->setPen(borderPen);
-        
+
         if (opt->state & State_Sunken) {
             // Sunken appearance - dark on top/left, light on bottom/right
             p->setPen(opt->palette.dark().color());
@@ -149,7 +149,7 @@ void QAdvancedHeaderStyle::drawControl(ControlElement element, const QStyleOptio
         // Modern Qt6 style for empty area
         p->save();
         p->fillRect(opt->rect, opt->palette.button());
-        
+
         // Draw simple border
         p->setPen(opt->palette.mid().color());
         p->drawRect(opt->rect.adjusted(0, 0, -1, -1));
