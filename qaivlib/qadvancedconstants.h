@@ -28,18 +28,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef CUSTOM_CONSTANTS_H
 #define CUSTOM_CONSTANTS_H
 
-#include <Qt>
 #include <QSize>
 #include <QString>
+#include <Qt>
 
 enum CustomRoles {
-    MultiLevelHeaderView_Rows = Qt::UserRole,      // - User role to identify
-    MultiLevelHeaderView_Columns,                  //     header rows and columns
-    Item_Rotated,                           // - Appended data for rotated items
-    Item_Order_Identify,                    // - Bind item to column/row index
-    Item_Filtering                          // - Show filter button for section
+    MultiLevelHeaderView_Rows = Qt::UserRole, // - User role to identify
+    MultiLevelHeaderView_Columns, //     header rows and columns
+    Item_Rotated, // - Appended data for rotated items
+    Item_Order_Identify, // - Bind item to column/row index
+    Item_Filtering // - Show filter button for section
 };
-
 
 enum class RotationType {
     DEFAULT,
@@ -55,6 +54,5 @@ inline const QString HeaderFilterIcon = QStringLiteral(":/svg/filter.svg");
 inline const QSize HeaderSortMarkSize = QSize(16, 16);
 inline const QString HeaderSortUpIcon = QStringLiteral(":/svg/up-arrow-blue.svg");
 inline const QString HeaderSortDownIcon = QStringLiteral(":/svg/down-arrow-blue.svg");
-
 
 #endif // CUSTOM_CONSTANTS_H

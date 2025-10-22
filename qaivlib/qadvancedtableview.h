@@ -230,7 +230,7 @@ public:
     /**
      * Destroys the filter table view.
      */
-    ~QAdvancedTableView();
+    ~QAdvancedTableView() override;
     /**
      * Returns true if alternating row colors are displayed. Otherwise false.
      * @see setAlternatingRowColors()

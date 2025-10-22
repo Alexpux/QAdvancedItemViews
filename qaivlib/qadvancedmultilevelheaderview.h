@@ -47,7 +47,7 @@ class QAIVLIBSHARED_EXPORT QAdvancedMultiLevelHeaderView : public QAdvancedHeade
 
 public:
     explicit QAdvancedMultiLevelHeaderView(Qt::Orientation orientation = Qt::Horizontal, QWidget *parent = nullptr);
-    ~QAdvancedMultiLevelHeaderView();
+    ~QAdvancedMultiLevelHeaderView() override;
 
     void setModel(QAbstractItemModel *model) override;
     void setGroupItemsByClick(bool value);
@@ -66,10 +66,6 @@ private:
     static QAdvancedHeaderItem *current_active_item;
 
     QStyleOptionHeader styleOptionForCell(int logicalIdx) const;
-
-signals:
-
-public slots:
 
 private slots:
     void on_sectionResized(int logicalIndex, int oldSize, int newSize);

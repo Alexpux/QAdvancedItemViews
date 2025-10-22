@@ -35,10 +35,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ***************************************************************************************/
 
 QAdvancedTableModel::QAdvancedTableModel(QObject *parent) :
-    QAbstractTableModel(parent)
+    QAbstractTableModel(parent),
+    _rows_model(new QStandardItemModel),
+    _columns_model(new QStandardItemModel)
 {
-    _columns_model = new QStandardItemModel;
-    _rows_model = new QStandardItemModel;
 }
 
 QAdvancedTableModel::~QAdvancedTableModel()
@@ -114,32 +114,20 @@ QVariant QAdvancedTableModel::data(const QModelIndex &index, int role) const
 
 QVariant QAdvancedTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (role == CustomRoles::MultiLevelHeaderView_Rows) {
-        QVariant v;
-        v.setValue(_rows_model);
-        return v;
-    }
-    if (role == CustomRoles::MultiLevelHeaderView_Columns) {
-        QVariant v;
-        v.setValue(_columns_model);
-        return v;
-    }
     if (role == Qt::ToolTipRole) {
-        /*QAdvancedHeaderItem *item = GetItemAtSection(section, orientation);
+        QAdvancedHeaderItem *item = GetItemAtSection(section, orientation);
         if (item) {
-            switch(orientation) {
-            case Qt::Orientation::Horizontal:
-            {
+            switch (orientation) {
+            case Qt::Orientation::Horizontal: {
                 return QString("HTooltip ") + GetItemAtSection(section, orientation)->_name;
             }
-            case Qt::Orientation::Vertical:
-            {
+            case Qt::Orientation::Vertical: {
                 return QString("VTooltip ") + GetItemAtSection(section, orientation)->_name;
             }
             default:
                 break;
             }
-        }*/
+        }
     }
     if (role == Qt::DisplayRole) {
         QAdvancedHeaderItem *rootItem = GetRootItem(orientation);

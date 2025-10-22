@@ -42,7 +42,9 @@ struct QAdvancedHeaderItem::TreeInfo {
     int _maxDepth { 0 };
 
     TreeInfo(QAdvancedHeaderItem *htvitem, RotationType rotation, int maxDepth) :
-        root_node(htvitem), _rotation(rotation), _maxDepth(maxDepth)
+        root_node(htvitem),
+        _rotation(rotation),
+        _maxDepth(maxDepth)
     {
         _rotation = (rotation == RotationType::DEFAULT ? RotationType::HORIZONTAL : rotation);
     }
@@ -118,7 +120,9 @@ QAdvancedHeaderItem &QAdvancedHeaderItem::AppendNewItem(const QString &newName, 
         return *this;
     }
     if (rotation == RotationType::DEFAULT) {
-        rotation = (_treeinfo->_rotation == RotationType::HORIZONTAL) ? RotationType::HORIZONTAL : RotationType::VERTICAL;
+        rotation = (_treeinfo->_rotation == RotationType::HORIZONTAL)
+            ? RotationType::HORIZONTAL
+            : RotationType::VERTICAL;
     }
     SetRotation(_treeinfo->_rotation);
 
@@ -175,13 +179,13 @@ QAdvancedHeaderItem *QAdvancedHeaderItem::PlaceholderItemPut()
     // Usually returns a pointer to this
     _parent->takeRow(trow);
     RotationType newRotation = (_treeinfo->_rotation == RotationType::HORIZONTAL) ? RotationType::VERTICAL : RotationType::HORIZONTAL;
-    /*auto* newItem = new QAdvancedHeaderItem(QString("*") + _name, newRotation, _parent,
-                                _depth, ItemTypeEnum::PLACEHOLDER);         //           Create Item -> ____*/
+    auto *newItem = new QAdvancedHeaderItem(QString("*") + _name, newRotation, _parent,
+                                            _depth, ItemTypeEnum::PLACEHOLDER); //           Create Item -> ____*/
 
     // Create Item -> ____*/
-    QAdvancedHeaderItem *newItem = this->clone();
-    newItem->SetName(QStringLiteral("*") + _name);
-    newItem->SetType(ItemTypeEnum::PLACEHOLDER);
+    // QAdvancedHeaderItem *newItem = this->clone();
+    // newItem->SetName(QStringLiteral("*") + _name);
+    // newItem->SetType(ItemTypeEnum::PLACEHOLDER);
 
     // ____ -> Set Rotation -> ____
     newItem->SetRotation(newRotation);
@@ -204,7 +208,7 @@ QAdvancedHeaderItem *QAdvancedHeaderItem::PlaceholderItemRemove()
     }
     int trow = p->_doppelganger->row();
     _parent->takeRow(trow);
-    delete p->_doppelganger;
+    // delete p->_doppelganger;
     p->_doppelganger = nullptr;
     _parent->insertRow(trow, p);
     return p;
@@ -212,7 +216,7 @@ QAdvancedHeaderItem *QAdvancedHeaderItem::PlaceholderItemRemove()
 
 QAdvancedHeaderItem *QAdvancedHeaderItem::PlaceholderToggle()
 {
-    QAdvancedHeaderItem *res;
+    QAdvancedHeaderItem *res { nullptr };
     if (IsPlaceholder()) {
         res = PlaceholderItemRemove();
     } else {

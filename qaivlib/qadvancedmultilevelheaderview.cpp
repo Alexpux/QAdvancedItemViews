@@ -59,7 +59,7 @@ QAdvancedHeaderItem *QAdvancedMultiLevelHeaderView::current_active_item = nullpt
 struct QAdvancedMultiLevelHeaderView::private_data {
     /* ----------------------------VARIABLES----------------------- */
     // contains the model
-    QStandardItemModel *headerModel { nullptr };
+    QAbstractItemModel *headerModel { nullptr };
     // Do we want to hide/show items when we click on their parents?
     bool GROUP_ITEMS_ON_CLICK { true };
     // standard headerview setting
@@ -82,7 +82,7 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         return this;
     }
 
-    private_data *initFromNewModel(Qt::Orientation orientation, QStandardItemModel *model)
+    private_data *initFromNewModel(Qt::Orientation orientation, QAbstractItemModel *model)
     {
         ClearModel();
         CustomRoles hf;
@@ -98,9 +98,9 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         }
         headerModel = new QStandardItemModel();
         if (model) {
-            QVariant v(model->headerData(0, Qt::Horizontal, hf));
+            QVariant v(model->data(QModelIndex(), hf));
             if (v.isValid()) {
-                headerModel = qobject_cast<QStandardItemModel *>(v.value<QObject *>());
+                headerModel = qobject_cast<QAbstractItemModel *>(v.value<QObject *>());
             }
         }
         return this;
@@ -192,7 +192,10 @@ struct QAdvancedMultiLevelHeaderView::private_data {
     }
 
     /* Look and feel */
-    void fillStyleOptionsFromModel(QPainter *painter, const QAdvancedMultiLevelHeaderView *hv, QStyleOptionHeader &opt, const QModelIndex &index) const
+    void fillStyleOptionsFromModel(QPainter *painter,
+                                   const QHeaderView *hv,
+                                   QStyleOptionHeader &opt,
+                                   const QModelIndex &index) const
     {
         QVariant fgBrush = index.data(Qt::ForegroundRole);
         if (fgBrush.canConvert(QMetaType(QMetaType::QBrush))) {
@@ -238,7 +241,9 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         // opt.text = index.data(Qt::DisplayRole).toString();
     }
 
-    QSize cellSize(const QModelIndex &leafIdx, const QAdvancedMultiLevelHeaderView *hv, QStyleOptionHeader &styleOptions) const
+    QSize cellSize(const QModelIndex &leafIdx,
+                   const QHeaderView *hv,
+                   QStyleOptionHeader &styleOptions) const
     {
         QSize res;
         QVariant variant(leafIdx.data(Qt::SizeHintRole));
@@ -281,7 +286,10 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         return res;
     }
 
-    int currentCellWidth(const QModelIndex &searchedIndex, const QModelIndex &leafIndex, int sectionIndex, const QAdvancedMultiLevelHeaderView *hv) const
+    int currentCellWidth(const QModelIndex &searchedIndex,
+                         const QModelIndex &leafIndex,
+                         int sectionIndex,
+                         const QHeaderView *hv) const
     {
         QModelIndexList leafsList(leafs(searchedIndex));
         if (leafsList.empty()) {
@@ -295,7 +303,11 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         return width;
     }
 
-    int currentCellLeft(const QModelIndex &searchedIndex, const QModelIndex &leafIndex, int sectionIndex, int left, const QAdvancedMultiLevelHeaderView *hv) const
+    int currentCellLeft(const QModelIndex &searchedIndex,
+                        const QModelIndex &leafIndex,
+                        int sectionIndex,
+                        int left,
+                        const QHeaderView *hv) const
     {
         QModelIndexList leafsList(leafs(searchedIndex));
         if (!leafsList.empty()) {
@@ -310,8 +322,8 @@ struct QAdvancedMultiLevelHeaderView::private_data {
     }
 
     /* Returns how deep the parent clicked is */
-    int getDepthOfCurrentlyClickedItem(const QAdvancedMultiLevelHeaderView *hv,
-                                       const QPoint &point,
+    int getDepthOfCurrentlyClickedItem(const QHeaderView *hv,
+                                       const QPoint point,
                                        const QStyleOptionHeader &styleOptions,
                                        const QModelIndex &leafIndex,
                                        Qt::Orientation orientation) const
@@ -331,8 +343,13 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         return indexes.size() - 1;
     }
 
-    int paintHorizontalCell(QPainter *painter, const QAdvancedMultiLevelHeaderView *hv, const QModelIndex &cellIndex, const QModelIndex &leafIndex,
-                            int logicalLeafIndex, const QStyleOptionHeader &styleOptions, const QRect &sectionRect, int top) const
+    int paintHorizontalCell(QPainter *painter,
+                            const QHeaderView *hv,
+                            const QModelIndex &cellIndex,
+                            const QModelIndex &leafIndex,
+                            int logicalLeafIndex,
+                            const QStyleOptionHeader &styleOptions,
+                            const QRect sectionRect, int top) const
     {
         QStyleOptionHeader uniopt(styleOptions);
         fillStyleOptionsFromModel(painter, hv, uniopt, cellIndex);
@@ -368,8 +385,12 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         return top + height;
     }
 
-    void paintHorizontalSection(QPainter *painter, const QRect &sectionRect, int logicalLeafIndex, const QAdvancedMultiLevelHeaderView *hv,
-                                const QStyleOptionHeader &styleOptions, const QModelIndex &leafIndex) const
+    void paintHorizontalSection(QPainter *painter,
+                                const QRect sectionRect,
+                                int logicalLeafIndex,
+                                const QHeaderView *hv,
+                                const QStyleOptionHeader &styleOptions,
+                                const QModelIndex &leafIndex) const
     {
         QPointF oldBO(painter->brushOrigin());
         int top = sectionRect.y();
@@ -388,8 +409,14 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         painter->setBrushOrigin(oldBO);
     }
 
-    int paintVerticalCell(QPainter *painter, const QAdvancedMultiLevelHeaderView *hv, const QModelIndex &cellIndex, const QModelIndex &leafIndex,
-                          int logicalLeafIndex, const QStyleOptionHeader &styleOptions, const QRect &sectionRect, int left) const
+    int paintVerticalCell(QPainter *painter,
+                          const QHeaderView *hv,
+                          const QModelIndex &cellIndex,
+                          const QModelIndex &leafIndex,
+                          int logicalLeafIndex,
+                          const QStyleOptionHeader &styleOptions,
+                          const QRect sectionRect,
+                          int left) const
     {
         QStyleOptionHeader uniopt(styleOptions);
         fillStyleOptionsFromModel(painter, hv, uniopt, cellIndex);
@@ -421,8 +448,12 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         return left + width;
     }
 
-    void paintVerticalSection(QPainter *painter, const QRect &sectionRect, int logicalLeafIndex, const QAdvancedMultiLevelHeaderView *hv,
-                              const QStyleOptionHeader &styleOptions, const QModelIndex &leafIndex) const
+    void paintVerticalSection(QPainter *painter,
+                              const QRect sectionRect,
+                              int logicalLeafIndex,
+                              const QAdvancedMultiLevelHeaderView *hv,
+                              const QStyleOptionHeader &styleOptions,
+                              const QModelIndex &leafIndex) const
     {
         QPointF oldBO(painter->brushOrigin());
         int left = sectionRect.x();
@@ -444,7 +475,8 @@ struct QAdvancedMultiLevelHeaderView::private_data {
  * *****************************************************************************************************/
 
 QAdvancedMultiLevelHeaderView::QAdvancedMultiLevelHeaderView(Qt::Orientation orientation, QWidget *parent) :
-    QAdvancedHeaderView(orientation, parent), _data(new private_data())
+    QAdvancedHeaderView(orientation, parent),
+    _data(new private_data())
 {
     setStyle(new QAdvancedHeaderStyle());
     setHighlightSections(_data->HIGHLIGHT_SECTIONS);
@@ -462,7 +494,7 @@ QAdvancedMultiLevelHeaderView::~QAdvancedMultiLevelHeaderView()
 void QAdvancedMultiLevelHeaderView::setModel(QAbstractItemModel *model)
 {
     QHeaderView::setModel(model);
-    _data->initFromNewModel(orientation(), qobject_cast<QStandardItemModel *>(model));
+    _data->initFromNewModel(orientation(), model);
     int cnt = -1;
     if (model) {
         cnt = (orientation() == Qt::Horizontal ? model->columnCount() : model->rowCount());

@@ -28,7 +28,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef QADVANCEDTABLEMODEL_H
 #define QADVANCEDTABLEMODEL_H
 
-#include "qadvancedconstants.h"
 #include "qadvancedheaderitem.h"
 
 #include <QAbstractTableModel>
@@ -38,7 +37,7 @@ class QAdvancedTableModel : public QAbstractTableModel {
     Q_OBJECT
 public:
     explicit QAdvancedTableModel(QObject *parent = nullptr);
-    ~QAdvancedTableModel();
+    ~QAdvancedTableModel() override;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -52,9 +51,6 @@ public:
     // data and headerData control what is shown
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-
-protected:
-signals:
 
 public slots:
     void emit_layoutChanged();

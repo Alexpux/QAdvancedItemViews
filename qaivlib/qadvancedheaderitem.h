@@ -46,6 +46,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * Placeholder/doppelganger is an item that serves to collapse the subtree on element
  * clicked.
  * *************************************************************************************/
+
 class QAdvancedHeaderItem : public QStandardItem {
     struct TreeInfo;
     /* -----------------------VARIABLES-------------------------- */
