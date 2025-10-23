@@ -160,7 +160,9 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     setFilterModel(new QFilterModel(this));
     // d->filterModel = new QFilterModel(this);
     //  Create horizontal header view
-    d->horizontalHeader = new QAdvancedMultiLevelHeaderView(Qt::Horizontal, this);
+    auto *hHeader = new QAdvancedMultiLevelHeaderView(Qt::Horizontal, this);
+    hHeader->setRootLevelVisible(false);
+    d->horizontalHeader = hHeader;
     ui->headerTableView->setHorizontalHeader(d->horizontalHeader);
     ui->headerTableView->setItemDelegate(new QFilterViewItemDelegate(this));
     ui->headerTableView->horizontalHeader()->setSectionsMovable(true);

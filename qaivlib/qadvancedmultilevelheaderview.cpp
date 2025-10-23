@@ -67,6 +67,9 @@ struct QAdvancedMultiLevelHeaderView::private_data {
     // standard headerview setting
     bool SECTIONS_CLICKABLE { true };
 
+    bool rootLevelVisible { false };
+    int minimumPaintepth { 1 };
+
     /* -----------------------------METHODS------------------------ */
     private_data() = default;
 
@@ -122,6 +125,17 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         }
         indexes.removeFirst();
         return indexes;
+    }
+
+    [[nodiscard]] int getDepth(const QModelIndex &index) const
+    {
+        int depth = 0;
+        QModelIndex current = index;
+        while (current.parent().isValid()) {
+            depth++;
+            current = current.parent();
+        }
+        return depth;
     }
 
     /* Return leaf on position target */
@@ -191,6 +205,42 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         return leafs;
     }
 
+    struct SectionRange {
+        int first;
+        int last;
+
+        int count() const { return last - first + 1; }
+    };
+
+    [[nodiscard]] SectionRange getChildSectionRange(QAdvancedHeaderItem *item) const
+    {
+        if (!item || item->Size() == 0) {
+            return { -1, -1 };
+        }
+
+        // Get first child leaf
+        QAdvancedHeaderItem *firstLeaf = (*item)[0];
+        while (firstLeaf->Size() > 0) {
+            firstLeaf = (*firstLeaf)[0];
+        }
+
+        // Get last child leaf
+        QAdvancedHeaderItem *lastChild = (*item)[item->Size() - 1];
+        QAdvancedHeaderItem *lastLeaf = lastChild;
+        while (lastLeaf->Size() > 0) {
+            lastLeaf = (*lastLeaf)[lastLeaf->Size() - 1];
+        }
+
+        // Get their column indices from Item_Order_Identify
+        QVariant firstData = firstLeaf->data(CustomRoles::Item_Order_Identify);
+        QVariant lastData = lastLeaf->data(CustomRoles::Item_Order_Identify);
+
+        if (firstData.isValid() && lastData.isValid()) {
+            return { firstData.toInt(), lastData.toInt() };
+        }
+        return { -1, -1 };
+    }
+
     /* Look and feel */
     void fillStyleOptionsFromModel(QPainter *painter,
                                    const QHeaderView *hv,
@@ -198,22 +248,22 @@ struct QAdvancedMultiLevelHeaderView::private_data {
                                    const QModelIndex &index) const
     {
         QVariant fgBrush = index.data(Qt::ForegroundRole);
-        if (fgBrush.canConvert(QMetaType(QMetaType::QBrush))) {
+        if (fgBrush.canConvert(QMetaType::QBrush)) {
             opt.palette.setBrush(QPalette::ButtonText, qvariant_cast<QBrush>(fgBrush));
             opt.palette.setBrush(QPalette::WindowText, qvariant_cast<QBrush>(fgBrush));
         }
 
         QVariant bgBrush = index.data(Qt::BackgroundRole);
-        if (bgBrush.canConvert(QMetaType(QMetaType::QBrush))) {
+        if (bgBrush.canConvert(QMetaType::QBrush)) {
             opt.palette.setBrush(QPalette::Button, qvariant_cast<QBrush>(bgBrush));
             opt.palette.setBrush(QPalette::Window, qvariant_cast<QBrush>(bgBrush));
             painter->setBrushOrigin(opt.rect.topLeft());
         }
 
         QVariant bgIcon = index.data(Qt::DecorationRole);
-        if (bgIcon.canConvert(QMetaType(QMetaType::QIcon))) {
+        if (bgIcon.canConvert(QMetaType::QIcon)) {
             opt.icon = qvariant_cast<QIcon>(bgIcon);
-        } else if (bgIcon.canConvert(QMetaType(QMetaType::QPixmap))) {
+        } else if (bgIcon.canConvert(QMetaType::QPixmap)) {
             opt.icon = qvariant_cast<QPixmap>(bgIcon);
         }
         opt.iconAlignment = Qt::AlignCenter;
@@ -231,7 +281,7 @@ struct QAdvancedMultiLevelHeaderView::private_data {
 
         QFont fnt(hv->font());
         QVariant varFont(index.data(Qt::FontRole));
-        if (varFont.isValid() && varFont.canConvert(QMetaType(QMetaType::QFont))) {
+        if (varFont.isValid() && varFont.canConvert(QMetaType::QFont)) {
             fnt = qvariant_cast<QFont>(varFont);
         }
         fnt.setBold(true);
@@ -331,7 +381,8 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         int xy = (orientation == Qt::Horizontal) ? point.y() : point.x(); // XY - position; WH - width, height
         QModelIndexList indexes(parentIndexes(leafIndex));
         int result = 0;
-        for (int i = 0; i < indexes.size(); ++i) {
+        int startIndex = std::max(0, minimumPaintepth);
+        for (int i = startIndex; i < indexes.size(); ++i) {
             QStyleOptionHeader uniopt(styleOptions);
             QSize box = cellSize(indexes[i], hv, uniopt);
             int wh = (orientation == Qt::Horizontal) ? box.height() : box.width();
@@ -395,7 +446,10 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         QPointF oldBO(painter->brushOrigin());
         int top = sectionRect.y();
         QModelIndexList indexes(parentIndexes(leafIndex));
-        for (int i = 0; i < indexes.size(); ++i) {
+
+        int startIndex = std::max(0, minimumPaintepth);
+
+        for (int i = startIndex; i < indexes.size(); ++i) {
             // main logic here is actually taking all the parents of the element and disabling the styles for them
             QStyleOptionHeader realStyleOptions(styleOptions);
             if (i < indexes.size() - 1) {
@@ -458,7 +512,10 @@ struct QAdvancedMultiLevelHeaderView::private_data {
         QPointF oldBO(painter->brushOrigin());
         int left = sectionRect.x();
         QModelIndexList indexes(parentIndexes(leafIndex));
-        for (int i = 0; i < indexes.size(); ++i) {
+
+        int startIndex = std::max(0, minimumPaintepth);
+
+        for (int i = startIndex; i < indexes.size(); ++i) {
             QStyleOptionHeader realStyleOptions(styleOptions);
             if (i < indexes.size() - 1 && (realStyleOptions.state.testFlag(QStyle::State_Sunken) || realStyleOptions.state.testFlag(QStyle::State_On))) {
                 QStyle::State t(QStyle::State_Sunken | QStyle::State_On);
@@ -612,13 +669,19 @@ QSize QAdvancedMultiLevelHeaderView::sectionSizeFromContents(int logicalIndex) c
             QStyleOptionHeader styleOption(styleOptionForCell(logicalIndex));
             QSize s = _data->cellSize(curLeafIndex, this, styleOption);
             curLeafIndex = curLeafIndex.parent();
+
+            int depth = _data->getDepth(curLeafIndex);
+
             while (curLeafIndex.isValid()) {
-                if (orientation() == Qt::Horizontal) {
-                    s.rheight() += _data->cellSize(curLeafIndex, this, styleOption).height();
-                } else {
-                    s.rwidth() += _data->cellSize(curLeafIndex, this, styleOption).width();
+                if (depth >= _data->minimumPaintepth) {
+                    if (orientation() == Qt::Horizontal) {
+                        s.rheight() += _data->cellSize(curLeafIndex, this, styleOption).height();
+                    } else {
+                        s.rwidth() += _data->cellSize(curLeafIndex, this, styleOption).width();
+                    }
                 }
                 curLeafIndex = curLeafIndex.parent();
+                --depth;
             }
             return s;
         }
@@ -689,4 +752,36 @@ void QAdvancedMultiLevelHeaderView::on_sectionResized(int logicalIndex, int oldS
 void QAdvancedMultiLevelHeaderView::setGroupItemsByClick(bool value)
 {
     _data->GROUP_ITEMS_ON_CLICK = value;
+}
+
+void QAdvancedMultiLevelHeaderView::setRootLevelVisible(bool visible)
+{
+    if (_data->rootLevelVisible != visible) {
+        _data->rootLevelVisible = visible;
+        _data->minimumPaintepth = visible ? 0 : 1;
+
+        updateGeometry();
+        viewport()->update();
+    }
+}
+
+bool QAdvancedMultiLevelHeaderView::isRootLevelVisible() const noexcept
+{
+    return _data->rootLevelVisible;
+}
+
+void QAdvancedMultiLevelHeaderView::setMinimumPaintDepth(int depth)
+{
+    if (_data->minimumPaintepth != depth) {
+        _data->minimumPaintepth = std::max(0, depth);
+        _data->rootLevelVisible = (depth == 0);
+
+        updateGeometry();
+        viewport()->update();
+    }
+}
+
+int QAdvancedMultiLevelHeaderView::minimumPaintDepth() const noexcept
+{
+    return _data->minimumPaintepth;
 }

@@ -52,6 +52,21 @@ public:
     void setModel(QAbstractItemModel *model) override;
     void setGroupItemsByClick(bool value);
 
+    void setRootLevelVisible(bool visible);
+    [[nodiscard]] bool isRootLevelVisible() const noexcept;
+
+    /**
+     * @brief Set minimum depth to paint (0 = root, 1 = first children, etc.)
+     * @param depth Minimum depth level to start painting from
+     *
+     * This is more flexible than setRootLevelVisible()
+     *  - depth = 0: Paint everything
+     *  - depth = 1: Skip root level (default)
+     *  - depth = 2: Skip root and first level
+     */
+    void setMinimumPaintDepth(int depth);
+    [[nodiscard]] int minimumPaintDepth() const noexcept;
+
 protected:
     void paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const override;
     QSize sectionSizeFromContents(int logicalIndex) const override;
