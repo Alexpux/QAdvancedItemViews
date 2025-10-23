@@ -28,14 +28,13 @@
 #include <QAbstractItemModel>
 #include <QHeaderView>
 #include <QMap>
-#include <vector>
 
 class QSharedItemSelectionModel;
 class QAbstractFilterProxyModel;
 class QFilterModelProxy;
 class QAdvancedHeaderView;
 
-// MODERN C++20: Column state structure for batch operations
+// Column state structure for batch operations
 struct ColumnState {
     int index { -1 };
     int size { 0 };
@@ -119,7 +118,7 @@ public:
     QMap<int, int> columnSpareWidthParts;
 };
 
-// MODERN C++20: RAII guard for batch synchronization operations
+// RAII guard for batch synchronization operations
 class BatchSyncGuard {
 public:
     explicit BatchSyncGuard(QAdvancedTableView *view) : v(view), d(view->d)

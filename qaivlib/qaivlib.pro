@@ -40,6 +40,7 @@ HEADERS += qabstractfilter.h \
            qadvancedheaderview.h \
            qadvancedheaderview_p.h \
            qadvancedmultilevelheaderview.h \
+           qadvancedmultilevelheaderview_p.h \
            qadvancedtablemodel.h \
            qadvancedtableview.h \
            qadvancedtableview_p.h \

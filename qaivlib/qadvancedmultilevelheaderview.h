@@ -35,15 +35,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * All rights reserved.
  * **********************************************************************************/
 
-#ifndef HT_HEADERVIEW_H
-#define HT_HEADERVIEW_H
+#ifndef QADVANCEDMULTILEVELHEADERVIEW_H
+#define QADVANCEDMULTILEVELHEADERVIEW_H
 
 #include "qadvancedheaderitem.h"
 #include "qadvancedheaderview.h"
 
+class QAdvancedMultiLevelHeaderViewPrivate;
+
 class QAIVLIBSHARED_EXPORT QAdvancedMultiLevelHeaderView : public QAdvancedHeaderView {
     Q_OBJECT
-    struct private_data;
 
 public:
     explicit QAdvancedMultiLevelHeaderView(Qt::Orientation orientation = Qt::Horizontal, QWidget *parent = nullptr);
@@ -75,7 +76,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *e) override;
 
 private:
-    private_data *_data { nullptr };
+    QAdvancedMultiLevelHeaderViewPrivate *d { nullptr };
 
     // Useful while registering clicks
     static QAdvancedHeaderItem *current_active_item;
@@ -86,4 +87,4 @@ private slots:
     void on_sectionResized(int logicalIndex, int oldSize, int newSize);
 };
 
-#endif // HT_HEADERVIEW_H
+#endif // QADVANCEDMULTILEVELHEADERVIEW_H
