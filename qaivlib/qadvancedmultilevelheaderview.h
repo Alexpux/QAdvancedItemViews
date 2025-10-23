@@ -76,6 +76,8 @@ protected:
     void mousePressEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
 
+    void changeEvent(QEvent *event) override;
+
 private:
     QAdvancedMultiLevelHeaderViewPrivate *d { nullptr };
 

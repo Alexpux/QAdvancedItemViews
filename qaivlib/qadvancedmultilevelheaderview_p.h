@@ -132,7 +132,7 @@ public:
 
     [[nodiscard]] QSize enhancedCellSize(const QModelIndex &cellIndex,
                                          const QAdvancedMultiLevelHeaderView *hv,
-                                         QStyleOptionHeader &styleOptions)
+                                         QStyleOptionHeader &styleOptions) const
     {
         QSize sz = cellSize(cellIndex, hv, styleOptions);
 
@@ -142,6 +142,17 @@ public:
         if (hasChildren) {
             int minWidth = minimumSpanWidth(cellIndex, hv);
             sz.setWidth(std::max(sz.width(), minWidth));
+
+            // Also ensure minimum height for parent cells with multiline text
+            QString txt = cellIndex.data(Qt::DisplayRole).toString();
+            if (txt.contains('\n') || txt.contains("<br>")) {
+                QRect textRect = styleOptions.fontMetrics.boundingRect(
+                    QRect(0, 0, minWidth, 1000), // Use available width for word wrap
+                    Qt::TextWordWrap | Qt::AlignCenter,
+                    txt);
+                int requiredHeight = textRect.height() + 2 * hv->style()->pixelMetric(QStyle::PM_HeaderMargin, &styleOptions, hv);
+                sz.setHeight(std::max(sz.height(), requiredHeight));
+            }
         }
 
         return sz;
@@ -272,56 +283,6 @@ public:
         return { -1, -1 };
     }
 
-    /* Look and feel */
-    void fillStyleOptionsFromModel(QPainter *painter,
-                                   const QAdvancedMultiLevelHeaderView *hv,
-                                   QStyleOptionHeader &opt,
-                                   const QModelIndex &index) const
-    {
-        QVariant fgBrush = index.data(Qt::ForegroundRole);
-        if (fgBrush.canConvert(QMetaType::QBrush)) {
-            opt.palette.setBrush(QPalette::ButtonText, qvariant_cast<QBrush>(fgBrush));
-            opt.palette.setBrush(QPalette::WindowText, qvariant_cast<QBrush>(fgBrush));
-        }
-
-        QVariant bgBrush = index.data(Qt::BackgroundRole);
-        if (bgBrush.canConvert(QMetaType::QBrush)) {
-            opt.palette.setBrush(QPalette::Button, qvariant_cast<QBrush>(bgBrush));
-            opt.palette.setBrush(QPalette::Window, qvariant_cast<QBrush>(bgBrush));
-            painter->setBrushOrigin(opt.rect.topLeft());
-        }
-
-        QVariant bgIcon = index.data(Qt::DecorationRole);
-        if (bgIcon.canConvert(QMetaType::QIcon)) {
-            opt.icon = qvariant_cast<QIcon>(bgIcon);
-        } else if (bgIcon.canConvert(QMetaType::QPixmap)) {
-            opt.icon = qvariant_cast<QPixmap>(bgIcon);
-        }
-        opt.iconAlignment = Qt::AlignCenter;
-
-        /*QModelIndexList leafsList(leafs(index));
-        if (leafsList.size() > 0) {
-            opt.sortIndicator = QStyleOptionHeader::None;
-        }
-
-         QVariant varFilter = index.data(Item_Filtering);
-         if (varFilter.isValid()) {
-             //opt.filterIcon = QIcon(HeaderFilterIcon);
-             opt.filteringItem = true;
-         }*/
-
-        QFont fnt(hv->font());
-        QVariant varFont(index.data(Qt::FontRole));
-        if (varFont.isValid() && varFont.canConvert(QMetaType::QFont)) {
-            fnt = qvariant_cast<QFont>(varFont);
-        }
-        fnt.setBold(true);
-        QFontMetrics fm(fnt);
-        opt.fontMetrics = std::move(fm);
-
-        // opt.text = index.data(Qt::DisplayRole).toString();
-    }
-
     QSize cellSize(const QModelIndex &leafIdx,
                    const QAdvancedMultiLevelHeaderView *hv,
                    QStyleOptionHeader &styleOptions) const
@@ -332,38 +293,50 @@ public:
             res = qvariant_cast<QSize>(variant);
         }
 
-        int margin = hv->style()->pixelMetric(QStyle::PM_HeaderMargin, nullptr, hv);
+        int margin = hv->style()->pixelMetric(QStyle::PM_HeaderMargin, &styleOptions, hv);
 
         QSize indicatorSize(0, 0);
         int section = hv->sortIndicatorSection();
         QModelIndex idx = leafIndex(section);
         if (hv->isSortIndicatorShown() && idx == leafIdx) {
-            styleOptions.sortIndicator = (hv->sortIndicatorOrder() == Qt::AscendingOrder) ? QStyleOptionHeader::SortDown : QStyleOptionHeader::SortUp;
-            indicatorSize = HeaderSortMarkSize + QSize(margin, 0);
+            styleOptions.sortIndicator = (hv->sortIndicatorOrder() == Qt::AscendingOrder)
+                ? QStyleOptionHeader::SortDown
+                : QStyleOptionHeader::SortUp;
+            indicatorSize = hv->style()->sizeFromContents(QStyle::CT_HeaderSection, &styleOptions, QSize(), hv);
         }
-
-        /*QModelIndexList leafsList = leafs(leafIdx);
-        if (leafsList.size() > 0) {
-            //styleOptions.sortIndicator = QStyleOptionHeader::None;
-        } else {
-        }*/
-
-        // fillStyleOptionsFromModel(hv, styleOptions, leafIndex);
 
         QSize decorationsSize = hv->style()->sizeFromContents(QStyle::CT_HeaderSection, &styleOptions, QSize(), hv);
 
-        QSize emptyTextSize = styleOptions.fontMetrics.size(0, "");
         QString txt = leafIdx.data(Qt::DisplayRole).toString();
-        QSize textSize = styleOptions.fontMetrics.size(0, txt);
-        if (!txt.isNull()) {
-            textSize.rwidth() += margin;
-        }
-        if (leafIdx.data(CustomRoles::Item_Rotated).isValid()) {
-            textSize.transpose();
-            emptyTextSize.transpose();
+
+        // Calculate text size properly for multiline text
+        QSize textSize;
+        if (txt.contains('\n') || txt.contains("<br>")) {
+            // Multiline text - use boundingRect for proper calculation
+            QRect textRect = styleOptions.fontMetrics.boundingRect(
+                QRect(0, 0, 1000, 1000), // Large available space
+                Qt::TextWordWrap | Qt::AlignCenter,
+                txt);
+            textSize = textRect.size();
+        } else {
+            // Single line text
+            textSize = styleOptions.fontMetrics.size(0, txt);
         }
 
-        res = res.expandedTo(textSize + decorationsSize + indicatorSize /*+ iconElemSize + QSize(0, iconFilterSize.height())*/ - emptyTextSize);
+        // Add appropriate margins
+        if (!txt.isEmpty()) {
+            textSize.rwidth() += 2 * margin;
+            textSize.rheight() += 2 * margin;
+        }
+
+        if (leafIdx.data(CustomRoles::Item_Rotated).isValid()) {
+            textSize.transpose();
+        }
+
+        // Use maximum of specified size, text size, and decoration size
+        res = res.expandedTo(textSize);
+        res = res.expandedTo(decorationsSize);
+
         return res;
     }
 
@@ -415,7 +388,7 @@ public:
         int startIndex = std::max(0, minimumPaintepth);
         for (int i = startIndex; i < indexes.size(); ++i) {
             QStyleOptionHeader uniopt(styleOptions);
-            QSize box = cellSize(indexes[i], hv, uniopt);
+            QSize box = enhancedCellSize(indexes[i], hv, uniopt);
             int wh = (orientation == Qt::Horizontal) ? box.height() : box.width();
             result += wh;
             if (xy <= result) {
@@ -423,6 +396,60 @@ public:
             }
         }
         return indexes.size() - 1;
+    }
+
+    /* Look and feel */
+    void fillStyleOptionsFromModel(QPainter *painter,
+                                   const QAdvancedMultiLevelHeaderView *hv,
+                                   QStyleOptionHeader &opt,
+                                   const QModelIndex &index) const
+    {
+        // Use the widget's palette as base
+        opt.palette = hv->palette();
+
+        // Foreground color - use model data if provided, otherwise default
+        QVariant fgBrush = index.data(Qt::ForegroundRole);
+        if (fgBrush.canConvert(QMetaType::QBrush)) {
+            opt.palette.setBrush(QPalette::ButtonText, qvariant_cast<QBrush>(fgBrush));
+            // opt.palette.setBrush(QPalette::WindowText, qvariant_cast<QBrush>(fgBrush));
+        }
+
+        // Background color - use model data if provided, otherwise default
+        QVariant bgBrush = index.data(Qt::BackgroundRole);
+        if (bgBrush.canConvert(QMetaType::QBrush)) {
+            opt.palette.setBrush(QPalette::Button, qvariant_cast<QBrush>(bgBrush));
+            opt.palette.setBrush(QPalette::Window, qvariant_cast<QBrush>(bgBrush));
+            painter->setBrushOrigin(opt.rect.topLeft());
+        }
+
+        painter->setBrushOrigin(opt.rect.topLeft());
+
+        QVariant bgIcon = index.data(Qt::DecorationRole);
+        if (bgIcon.canConvert(QMetaType::QIcon)) {
+            opt.icon = qvariant_cast<QIcon>(bgIcon);
+        } else if (bgIcon.canConvert(QMetaType::QPixmap)) {
+            opt.icon = qvariant_cast<QPixmap>(bgIcon);
+        }
+        opt.iconAlignment = Qt::AlignCenter;
+
+        // Text alignment - use model data if provided, otherwise default to center
+        QVariant alignmentVar = index.data(Qt::TextAlignmentRole);
+        if (alignmentVar.isValid()) {
+            opt.textAlignment = Qt::Alignment(alignmentVar.toInt());
+        } else {
+            opt.textAlignment = Qt::AlignCenter; // Default for headers
+        }
+
+        QFont fnt(hv->font());
+        QVariant varFont(index.data(Qt::FontRole));
+        if (varFont.isValid() && varFont.canConvert(QMetaType::QFont)) {
+            fnt = qvariant_cast<QFont>(varFont);
+        }
+        // fnt.setBold(true);
+        QFontMetrics fm(fnt);
+        opt.fontMetrics = std::move(fm);
+
+        opt.text = index.data(Qt::DisplayRole).toString();
     }
 
     int paintHorizontalCell(QPainter *painter,
@@ -436,7 +463,7 @@ public:
         QStyleOptionHeader uniopt(styleOptions);
         fillStyleOptionsFromModel(painter, hv, uniopt, cellIndex);
 
-        QSize cellSz = cellSize(cellIndex, hv, uniopt);
+        QSize cellSz = enhancedCellSize(cellIndex, hv, uniopt);
 
         int height = cellSz.height();
         if (cellIndex == leafIndex) {
@@ -444,23 +471,54 @@ public:
         }
         int left = currentCellLeft(cellIndex, leafIndex, logicalLeafIndex, sectionRect.left(), hv);
         int width = currentCellWidth(cellIndex, leafIndex, logicalLeafIndex, hv);
+
         QRect r(left, top, width, height);
-        uniopt.text = cellIndex.data(Qt::DisplayRole).toString();
+        uniopt.rect = r;
 
         painter->save();
-        uniopt.rect = r;
 
         if (cellIndex.data(CustomRoles::Item_Rotated).isValid()) {
             hv->style()->drawControl(QStyle::CE_HeaderSection, &uniopt, painter, hv);
             QTransform m;
             m.rotate(-90);
             painter->setWorldTransform(m, true);
+
             QRect new_r(0, 0, r.height(), r.width());
             new_r.moveCenter(QPoint(-r.center().y(), r.center().x()));
             uniopt.rect = new_r;
+
             hv->style()->drawControl(QStyle::CE_HeaderLabel, &uniopt, painter, hv);
         } else {
-            hv->style()->drawControl(/*(QStyle::ControlElement)(QAdvancedHeaderStyle::CE_HeaderLook)*/ QStyle::CE_Header, &uniopt, painter, hv);
+            // Check if we need custom multiline painting
+            QString text = uniopt.text;
+            if (text.contains('\n') || text.contains("<br>")) {
+                // Custom multiline text painting
+                hv->style()->drawControl(QStyle::CE_HeaderSection, &uniopt, painter, hv);
+
+                // Draw multiline text manually
+                painter->setPen(uniopt.palette.color(QPalette::ButtonText));
+
+                QFont fnt(hv->font());
+                QVariant varFont(cellIndex.data(Qt::FontRole));
+                if (varFont.isValid() && varFont.canConvert(QMetaType::QFont)) {
+                    fnt = qvariant_cast<QFont>(varFont);
+                }
+                // fnt.setBold(true);
+                painter->setFont(fnt);
+
+                QRect textRect = uniopt.rect.adjusted(
+                    hv->style()->pixelMetric(QStyle::PM_HeaderMargin, &uniopt, hv),
+                    hv->style()->pixelMetric(QStyle::PM_HeaderMargin, &uniopt, hv),
+                    -hv->style()->pixelMetric(QStyle::PM_HeaderMargin, &uniopt, hv),
+                    -hv->style()->pixelMetric(QStyle::PM_HeaderMargin, &uniopt, hv));
+
+                // Replace <br> with actual newlines and draw
+                text = text.replace("<br>", "\n");
+                painter->drawText(textRect, uniopt.textAlignment, text);
+            } else {
+                // Single line - use standard style drawing
+                hv->style()->drawControl(QStyle::CE_Header, &uniopt, painter, hv);
+            }
         }
 
         painter->restore();
@@ -506,17 +564,17 @@ public:
         QStyleOptionHeader uniopt(styleOptions);
         fillStyleOptionsFromModel(painter, hv, uniopt, cellIndex);
 
-        int width = cellSize(cellIndex, hv, uniopt).width();
+        int width = enhancedCellSize(cellIndex, hv, uniopt).width();
         if (cellIndex == leafIndex) {
             width = sectionRect.width() - left;
         }
         int top = currentCellLeft(cellIndex, leafIndex, logicalLeafIndex, sectionRect.top(), hv);
         int height = currentCellWidth(cellIndex, leafIndex, logicalLeafIndex, hv);
+
         QRect r(left, top, width, height);
-        uniopt.text = cellIndex.data(Qt::DisplayRole).toString();
+        uniopt.rect = r;
 
         painter->save();
-        uniopt.rect = r;
         if (cellIndex.data(CustomRoles::Item_Rotated).isValid()) {
             hv->style()->drawControl(QStyle::CE_HeaderSection, &uniopt, painter, hv);
             QTransform m;
@@ -527,7 +585,36 @@ public:
             uniopt.rect = new_r;
             hv->style()->drawControl(QStyle::CE_HeaderLabel, &uniopt, painter, hv);
         } else {
-            hv->style()->drawControl(QStyle::CE_Header, &uniopt, painter, hv);
+            // Check if we need custom multiline painting
+            QString text = uniopt.text;
+            if (text.contains('\n') || text.contains("<br>")) {
+                // Custom multiline text painting
+                hv->style()->drawControl(QStyle::CE_HeaderSection, &uniopt, painter, hv);
+
+                // Draw multiline text manually
+                painter->setPen(uniopt.palette.color(QPalette::ButtonText));
+
+                QFont fnt(hv->font());
+                QVariant varFont(cellIndex.data(Qt::FontRole));
+                if (varFont.isValid() && varFont.canConvert(QMetaType::QFont)) {
+                    fnt = qvariant_cast<QFont>(varFont);
+                }
+                // fnt.setBold(true);
+                painter->setFont(fnt);
+
+                QRect textRect = uniopt.rect.adjusted(
+                    hv->style()->pixelMetric(QStyle::PM_HeaderMargin, &uniopt, hv),
+                    hv->style()->pixelMetric(QStyle::PM_HeaderMargin, &uniopt, hv),
+                    -hv->style()->pixelMetric(QStyle::PM_HeaderMargin, &uniopt, hv),
+                    -hv->style()->pixelMetric(QStyle::PM_HeaderMargin, &uniopt, hv));
+
+                // Replace <br> with actual newlines and draw
+                text = text.replace("<br>", "\n");
+                painter->drawText(textRect, uniopt.textAlignment, text);
+            } else {
+                // Single line - use standard style drawing
+                hv->style()->drawControl(QStyle::CE_Header, &uniopt, painter, hv);
+            }
         }
         painter->restore();
         return left + width;

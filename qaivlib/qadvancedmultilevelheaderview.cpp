@@ -38,7 +38,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "qadvancedmultilevelheaderview.h"
 
 #include "qadvancedconstants.h"
-#include "qadvancedheaderstyle.h"
 #include "qadvancedmultilevelheaderview_p.h"
 #include "qadvancedtablemodel.h"
 
@@ -62,7 +61,6 @@ QAdvancedMultiLevelHeaderView::QAdvancedMultiLevelHeaderView(Qt::Orientation ori
     QAdvancedHeaderView(orientation, parent),
     d(new QAdvancedMultiLevelHeaderViewPrivate())
 {
-    setStyle(new QAdvancedHeaderStyle());
     setHighlightSections(d->HIGHLIGHT_SECTIONS);
     setSectionsClickable(d->SECTIONS_CLICKABLE);
     setIconSize(HeaderIconSize);
@@ -243,6 +241,18 @@ void QAdvancedMultiLevelHeaderView::mouseReleaseEvent(QMouseEvent *e)
             }
         }
     }
+}
+
+void QAdvancedMultiLevelHeaderView::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::StyleChange
+        || event->type() == QEvent::PaletteChange
+        || event->type() == QEvent::ThemeChange) {
+        // Update the view when style or theme changes
+        updateGeometry();
+        viewport()->update();
+    }
+    QAdvancedHeaderView::changeEvent(event);
 }
 
 void QAdvancedMultiLevelHeaderView::on_sectionResized(int logicalIndex, int oldSize, int newSize)
