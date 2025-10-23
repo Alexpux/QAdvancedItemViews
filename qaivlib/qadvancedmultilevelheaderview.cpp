@@ -194,7 +194,7 @@ QSize QAdvancedMultiLevelHeaderView::sectionSizeFromContents(int logicalIndex) c
         QModelIndex curLeafIndex(d->leafIndex(logicalIndex));
         if (curLeafIndex.isValid()) {
             QStyleOptionHeader styleOption(styleOptionForCell(logicalIndex));
-            QSize s = d->cellSize(curLeafIndex, this, styleOption);
+            QSize s = d->enhancedCellSize(curLeafIndex, this, styleOption);
             curLeafIndex = curLeafIndex.parent();
 
             int depth = d->getDepth(curLeafIndex);
@@ -202,9 +202,9 @@ QSize QAdvancedMultiLevelHeaderView::sectionSizeFromContents(int logicalIndex) c
             while (curLeafIndex.isValid()) {
                 if (depth >= d->minimumPaintepth) {
                     if (orientation() == Qt::Horizontal) {
-                        s.rheight() += d->cellSize(curLeafIndex, this, styleOption).height();
+                        s.rheight() += d->enhancedCellSize(curLeafIndex, this, styleOption).height();
                     } else {
-                        s.rwidth() += d->cellSize(curLeafIndex, this, styleOption).width();
+                        s.rwidth() += d->enhancedCellSize(curLeafIndex, this, styleOption).width();
                     }
                 }
                 curLeafIndex = curLeafIndex.parent();

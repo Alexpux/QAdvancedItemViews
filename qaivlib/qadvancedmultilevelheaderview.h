@@ -47,6 +47,7 @@ class QAIVLIBSHARED_EXPORT QAdvancedMultiLevelHeaderView : public QAdvancedHeade
     Q_OBJECT
 
 public:
+    friend QAdvancedMultiLevelHeaderViewPrivate;
     explicit QAdvancedMultiLevelHeaderView(Qt::Orientation orientation = Qt::Horizontal, QWidget *parent = nullptr);
     ~QAdvancedMultiLevelHeaderView() override;
 

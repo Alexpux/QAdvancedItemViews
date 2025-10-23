@@ -2,9 +2,9 @@
 #define QADVANCEDMULTILEVELHEADERVIEWPRIVATE_H
 
 #include "qadvancedheaderitem.h"
+#include "qadvancedmultilevelheaderview.h"
 
 #include <QAbstractItemModel>
-#include <QHeaderView>
 #include <QPainter>
 #include <QStandardItemModel>
 
@@ -66,6 +66,85 @@ public:
             }
         }
         return this;
+    }
+
+    /**
+     * @brief logicalIndexFor
+     * @param index
+     * @return Logical index from model index
+     */
+    [[nodiscard]] int logicalIndexFor(const QModelIndex &index) const
+    {
+        if (!index.isValid()) {
+            return -1;
+        }
+
+        // If leaf, has Item_Order_Identity
+        QVariant orderData = index.data(CustomRoles::Item_Order_Identify);
+        if (orderData.isValid()) {
+            return orderData.toInt();
+        }
+
+        // If parent, get firt child's index
+        QModelIndexList leaves = searchLeafs(index);
+        if (!leaves.isEmpty()) {
+            QVariant firstData = leaves.first().data(CustomRoles::Item_Order_Identify);
+            if (firstData.isValid()) {
+                return firstData.toInt();
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * @brief minimumSpanWidth Calculate minimum width needed to span all children
+     * @param cellIndex
+     * @param hv
+     * @return
+     */
+    [[nodiscard]] int minimumSpanWidth(const QModelIndex &cellIndex,
+                                       const QAdvancedMultiLevelHeaderView *hv) const
+    {
+        if (!cellIndex.isValid() || !hv) {
+            return 0;
+        }
+
+        QModelIndexList childLeaves = searchLeafs(cellIndex);
+
+        if (childLeaves.isEmpty()) {
+            return 0;
+        }
+
+        int totalWidth = 0;
+
+        // Sum up the current widths of all child columns
+        for (const QModelIndex &leafIdx : childLeaves) {
+            QVariant orderData = leafIdx.data(CustomRoles::Item_Order_Identify);
+            if (orderData.isValid()) {
+                int logicalIdx = orderData.toInt();
+                totalWidth += hv->sectionSize(logicalIdx);
+            }
+        }
+
+        return totalWidth;
+    }
+
+    [[nodiscard]] QSize enhancedCellSize(const QModelIndex &cellIndex,
+                                         const QAdvancedMultiLevelHeaderView *hv,
+                                         QStyleOptionHeader &styleOptions)
+    {
+        QSize sz = cellSize(cellIndex, hv, styleOptions);
+
+        // Check if this cell has children (is a parant)
+        bool hasChildren = cellIndex.model() && cellIndex.model()->rowCount(cellIndex) > 0;
+
+        if (hasChildren) {
+            int minWidth = minimumSpanWidth(cellIndex, hv);
+            sz.setWidth(std::max(sz.width(), minWidth));
+        }
+
+        return sz;
     }
 
     /* Find the root-iest model */
@@ -195,7 +274,7 @@ public:
 
     /* Look and feel */
     void fillStyleOptionsFromModel(QPainter *painter,
-                                   const QHeaderView *hv,
+                                   const QAdvancedMultiLevelHeaderView *hv,
                                    QStyleOptionHeader &opt,
                                    const QModelIndex &index) const
     {
@@ -244,7 +323,7 @@ public:
     }
 
     QSize cellSize(const QModelIndex &leafIdx,
-                   const QHeaderView *hv,
+                   const QAdvancedMultiLevelHeaderView *hv,
                    QStyleOptionHeader &styleOptions) const
     {
         QSize res;
@@ -291,7 +370,7 @@ public:
     int currentCellWidth(const QModelIndex &searchedIndex,
                          const QModelIndex &leafIndex,
                          int sectionIndex,
-                         const QHeaderView *hv) const
+                         const QAdvancedMultiLevelHeaderView *hv) const
     {
         QModelIndexList leafsList(leafs(searchedIndex));
         if (leafsList.empty()) {
@@ -309,7 +388,7 @@ public:
                         const QModelIndex &leafIndex,
                         int sectionIndex,
                         int left,
-                        const QHeaderView *hv) const
+                        const QAdvancedMultiLevelHeaderView *hv) const
     {
         QModelIndexList leafsList(leafs(searchedIndex));
         if (!leafsList.empty()) {
@@ -324,7 +403,7 @@ public:
     }
 
     /* Returns how deep the parent clicked is */
-    int getDepthOfCurrentlyClickedItem(const QHeaderView *hv,
+    int getDepthOfCurrentlyClickedItem(const QAdvancedMultiLevelHeaderView *hv,
                                        const QPoint point,
                                        const QStyleOptionHeader &styleOptions,
                                        const QModelIndex &leafIndex,
@@ -347,7 +426,7 @@ public:
     }
 
     int paintHorizontalCell(QPainter *painter,
-                            const QHeaderView *hv,
+                            const QAdvancedMultiLevelHeaderView *hv,
                             const QModelIndex &cellIndex,
                             const QModelIndex &leafIndex,
                             int logicalLeafIndex,
@@ -391,7 +470,7 @@ public:
     void paintHorizontalSection(QPainter *painter,
                                 const QRect sectionRect,
                                 int logicalLeafIndex,
-                                const QHeaderView *hv,
+                                const QAdvancedMultiLevelHeaderView *hv,
                                 const QStyleOptionHeader &styleOptions,
                                 const QModelIndex &leafIndex) const
     {
@@ -416,7 +495,7 @@ public:
     }
 
     int paintVerticalCell(QPainter *painter,
-                          const QHeaderView *hv,
+                          const QAdvancedMultiLevelHeaderView *hv,
                           const QModelIndex &cellIndex,
                           const QModelIndex &leafIndex,
                           int logicalLeafIndex,
@@ -457,7 +536,7 @@ public:
     void paintVerticalSection(QPainter *painter,
                               const QRect sectionRect,
                               int logicalLeafIndex,
-                              const QHeaderView *hv,
+                              const QAdvancedMultiLevelHeaderView *hv,
                               const QStyleOptionHeader &styleOptions,
                               const QModelIndex &leafIndex) const
     {

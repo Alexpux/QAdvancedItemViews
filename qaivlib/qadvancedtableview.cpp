@@ -169,7 +169,7 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     // Create vertical header views
     d->verticalHeader = new QAdvancedHeaderView(Qt::Vertical, this);
     ui->headerTableView->setVerticalHeader(d->verticalHeader);
-    ui->headerTableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    // ui->headerTableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     // ui->dataTableView->setVerticalHeader(new QFixedRowsHeaderView(Qt::Vertical, this));
 
     d->summaryView = new QHeaderView(Qt::Horizontal, this);
@@ -318,7 +318,7 @@ void QAdvancedTableView::contextMenuEvent(QContextMenuEvent *event)
 QMenu *QAdvancedTableView::createStandardContextMenu(const QModelIndex &index)
 {
     Q_UNUSED(index)
-    QAction *a;
+    QAction *a { nullptr };
     QMenu *m = new QMenu();
     m = m->addMenu(tr("View"));
     a = m->addAction(tr("Splitted View"));
@@ -509,7 +509,7 @@ void QAdvancedTableView::headerViewHorizontalScrollBarValueChanged(int value)
 
 void QAdvancedTableView::headerViewSectionResized(int logicalIndex, int oldSize, int newSize)
 {
-    // UNIFIED SYNC: Skip synchronization during batch operations
+    // Skip synchronization during batch operations
     if (d->isSyncSuppressed()) {
         return;
     }
@@ -722,10 +722,10 @@ bool QAdvancedTableView::restoreFilter(const QByteArray &data)
     if (mStream.atEnd()) {
         return false;
     }
-    qint32 mCol;
-    qint32 mRow;
-    qint32 mRows;
-    QString mName;
+    qint32 mCol { 0 };
+    qint32 mRow { 0 };
+    qint32 mRows { 0 };
+    QString mName {};
     QVariantMap mProperties;
     // Clear current filter model
     d->filterModel->removeRows(0, d->filterModel->rowCount());
@@ -749,10 +749,10 @@ bool QAdvancedTableView::restoreState(const QByteArray &data)
 {
     QByteArray stateArr;
     QByteArray ds(data);
-    bool splitted;
-    bool fixed;
-    bool filter;
-    bool grid;
+    bool splitted { false };
+    bool fixed { false };
+    bool filter { false };
+    bool grid { false };
     QDataStream stream(&ds, QIODevice::ReadOnly);
     if (stream.atEnd()) {
         return false;
@@ -994,7 +994,7 @@ void QAdvancedTableView::setGridStyle(Qt::PenStyle style)
     V_CALL(setGridStyle(style))
 }
 
-void QAdvancedTableView::setIconSize(const QSize &size) {
+void QAdvancedTableView::setIconSize(const QSize size) {
     V_CALL(setIconSize(size))
 }
 
@@ -1100,7 +1100,7 @@ void QAdvancedTableView::autoResizeColumnsToContent()
         return;
     }
 
-    // UNIFIED SYNC: Use RAII guard for batch operations
+    // Use RAII guard for batch operations
     BatchSyncGuard guard(this);
 
     // Calculate available width, accounting for scrollbar
@@ -1114,6 +1114,11 @@ void QAdvancedTableView::autoResizeColumnsToContent()
     resizeColumnsToContents();
 
     ui->dataTableView->resizeColumnsToContents();
+
+    /*horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
+    if (d->summaryView) {
+        d->summaryView->resizeSections(QHeaderView::ResizeToContents);
+    }*/
 
     struct ColumnInfo {
         int index { 0 };
@@ -1133,6 +1138,8 @@ void QAdvancedTableView::autoResizeColumnsToContent()
 
             item.top_header = getHeaderSectionWidth(horizontalHeader(), i);
             item.extra_header = d->summaryView ? getHeaderSectionWidth(d->summaryView, i + 1) : 0;
+            // item.top_header = horizontalHeader()->sectionSize(i);
+            // item.extra_header = d->summaryView ? d->summaryView->sectionSize(i + 1) : 0;
             item.content = ui->dataTableView->columnWidth(i);
             item.max_width = std::max({ item.top_header, item.content, item.extra_header });
             item.min_width = std::max({ item.top_header, item.extra_header });

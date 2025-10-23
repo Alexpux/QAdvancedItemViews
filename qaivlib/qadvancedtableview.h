@@ -462,7 +462,7 @@ public:
      */
     void setGridStyle(Qt::PenStyle style);
 
-    void setIconSize(const QSize &size);
+    void setIconSize(const QSize size);
 
     QWidget *indexWidget(const QModelIndex &index) const;
     void setIndexWidget(const QModelIndex &index, QWidget *widget);
