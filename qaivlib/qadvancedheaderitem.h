@@ -65,9 +65,8 @@ private:
     enum class ItemTypeEnum { NORMAL,
                               PLACEHOLDER } _type;
 
-    /* ------------------------METHODS--------------------------- */
 public:
-    ~QAdvancedHeaderItem();
+    ~QAdvancedHeaderItem() override;
     static QAdvancedHeaderItem *CreateRootItem(const QString &name = QString(), RotationType rotation = RotationType::DEFAULT, int maxDepth = -1);
     static QAdvancedHeaderItem *CastFromQStandardItem(QStandardItem *);
 

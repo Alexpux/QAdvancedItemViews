@@ -79,12 +79,84 @@ protected:
     void changeEvent(QEvent *event) override;
 
 private:
+    struct SectionRange {
+        int first;
+        int last;
+
+        int count() const { return last - first + 1; }
+    };
+
     QAdvancedMultiLevelHeaderViewPrivate *d { nullptr };
 
     // Useful while registering clicks
     static QAdvancedHeaderItem *current_active_item;
 
     QStyleOptionHeader styleOptionForCell(int logicalIdx) const;
+    QStyleOptionHeader styleOptionFromModel(const QStyleOptionHeader &opt, const QModelIndex &index) const;
+
+    /**
+     * @brief minimumSpanWidth Calculate minimum width needed to span all children
+     * @param cellIndex
+     * @param hv
+     * @return
+     */
+    [[nodiscard]] int minimumSpanWidth(const QModelIndex &cellIndex) const;
+
+    [[nodiscard]] QSize cellSize(const QModelIndex &leafIdx,
+                                 QStyleOptionHeader &styleOptions) const;
+
+    [[nodiscard]] int currentCellWidth(const QModelIndex &searchedIndex,
+                                       const QModelIndex &leafIndex,
+                                       int sectionIndex) const;
+
+    [[nodiscard]] int currentCellLeft(const QModelIndex &searchedIndex,
+                                      const QModelIndex &leafIndex,
+                                      int sectionIndex,
+                                      int left) const;
+
+    [[nodiscard]] QModelIndex findRootIndex(const QModelIndex &index) const;
+
+    /**
+     * @brief findLeaf
+     * @param currIndex
+     * @param target
+     * @param currentLeafIndex
+     * @return Leaf on position target
+     */
+    [[nodiscard]] QModelIndex findLeaf(const QModelIndex &currIndex, const int target, int &currentLeafIndex) const;
+
+    /* find leaf on index sectionindex */
+    [[nodiscard]] QModelIndex leafIndex(const int sectionIndex) const;
+
+    /* Get all leaves of this index */
+    [[nodiscard]] QModelIndexList searchLeafs(const QModelIndex &currentIndex) const;
+
+    /* Same as above but groups finished items differently */
+    [[nodiscard]] QModelIndexList leafs(const QModelIndex &searchedIndex) const;
+
+    /**
+     * @brief logicalIndexFor
+     * @param index
+     * @return Logical index from model index
+     */
+    [[nodiscard]] int logicalIndexFor(const QModelIndex &index) const;
+
+    /**
+     * @brief parentIndexes
+     * @param index
+     * @return All parents of elem (ordered root to elem)
+     */
+    [[nodiscard]] QModelIndexList parentIndexes(const QModelIndex &index) const;
+
+    [[nodiscard]] int getDepth(const QModelIndex &index) const;
+
+    [[nodiscard]] SectionRange getChildSectionRange(QAdvancedHeaderItem *item) const;
+
+    /* Returns how deep the parent clicked is */
+    [[nodiscard]] int getDepthOfCurrentlyClickedItem(const QPoint point,
+                                                     const QStyleOptionHeader &styleOptions,
+                                                     const QModelIndex &leafIndex,
+                                                     Qt::Orientation orientation) const;
 
 private slots:
     void on_sectionResized(int logicalIndex, int oldSize, int newSize);
