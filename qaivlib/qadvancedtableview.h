@@ -774,6 +774,7 @@ private slots:
 
     void updateSummary();
     void sectionsResize();
+    void summaryButtonClicked();
 
     void adjustSummaryOffset();
 

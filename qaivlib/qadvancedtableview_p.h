@@ -28,6 +28,7 @@
 #include <QAbstractItemModel>
 #include <QHeaderView>
 #include <QMap>
+#include <QPushButton>
 
 class QSharedItemSelectionModel;
 class QAbstractFilterProxyModel;
@@ -47,51 +48,13 @@ struct ColumnState {
 class QAdvancedTableViewPrivate {
 public:
     explicit QAdvancedTableViewPrivate(QAdvancedTableView *tv) :
-        v { tv }
+        v { tv },
+        dataViewProxy(new QFilterModelProxy(tv))
     {
-        dataViewProxy = new QFilterModelProxy(tv);
     }
 
-    QAdvancedTableViewPrivate(const QAdvancedTableViewPrivate &other)
-    {
-        autoResizeRowsToContents = other.autoResizeRowsToContents;
-        autoResizeColumnsToFitView = other.autoResizeColumnsToFitView;
-        defaultFilterType = other.defaultFilterType;
-        dataViewProxy = new QFilterModelProxy(other.v);
-        filterModel = other.filterModel;
-        model = other.model;
-        summaryView = other.summaryView;
-        horizontalHeader = other.horizontalHeader;
-        horizontalScrollBarPolicy = other.horizontalScrollBarPolicy;
-        verticalHeader = other.verticalHeader;
-        splittedViewSelectionModel = other.splittedViewSelectionModel;
-        columnSpareWidthParts.clear();
-        columnSpareWidthParts = other.columnSpareWidthParts;
-        columnSpareWidthParts.detach();
-        v = other.v;
-    }
-
-    QAdvancedTableViewPrivate &operator=(const QAdvancedTableViewPrivate &other)
-    {
-        if (&other != this) {
-            autoResizeRowsToContents = other.autoResizeRowsToContents;
-            autoResizeColumnsToFitView = other.autoResizeColumnsToFitView;
-            defaultFilterType = other.defaultFilterType;
-            dataViewProxy = new QFilterModelProxy(other.v);
-            filterModel = other.filterModel;
-            model = other.model;
-            horizontalHeader = other.horizontalHeader;
-            horizontalScrollBarPolicy = other.horizontalScrollBarPolicy;
-            verticalHeader = other.verticalHeader;
-            summaryView = nullptr;
-            splittedViewSelectionModel = other.splittedViewSelectionModel;
-            columnSpareWidthParts.clear();
-            columnSpareWidthParts = other.columnSpareWidthParts;
-            columnSpareWidthParts.detach();
-            v = other.v;
-        }
-        return *this;
-    }
+    QAdvancedTableViewPrivate(const QAdvancedTableViewPrivate &other) = delete;
+    QAdvancedTableViewPrivate &operator=(const QAdvancedTableViewPrivate &other) = delete;
 
     ~QAdvancedTableViewPrivate() = default;
 
@@ -99,7 +62,7 @@ public:
     bool autoResizeColumnsToFitView { true };
     int defaultFilterType { QTextFilter::Type };
 
-    // MODERN C++20: Unified synchronization control
+    // Unified synchronization control
     int batchUpdateDepth { 0 }; // Support nested batch operations
 
     bool isSyncSuppressed() const { return batchUpdateDepth > 0; }
@@ -111,8 +74,11 @@ public:
     QAdvancedHeaderView *horizontalHeader { nullptr };
     Qt::ScrollBarPolicy horizontalScrollBarPolicy { Qt::ScrollBarAsNeeded };
     QAdvancedHeaderView *verticalHeader { nullptr };
-    QHeaderView *summaryView { nullptr };
     QSharedItemSelectionModel *splittedViewSelectionModel { nullptr };
+
+    QWidget *summaryWidget { nullptr };
+    QPushButton *summaryButton { nullptr };
+    QHeaderView *summaryHeader { nullptr };
 
     QMap<int, advSummaryFunc> columnsSummaryTypes;
     QMap<int, int> columnSpareWidthParts;

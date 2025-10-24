@@ -44,10 +44,6 @@
     ui->fixedRowsTableView->_m_; \
     ui->splittedDataTableView->_m_;
 
-//-----------------------------------------------
-// MODERN C++20: Unified Column Synchronization System
-//-----------------------------------------------
-
 // SINGLE POINT OF SYNCHRONIZATION: This is the ONLY place where column
 // properties are applied to all views. This eliminates code duplication
 // and ensures perfect consistency.
@@ -71,9 +67,8 @@ void QAdvancedTableView::syncColumnProperties(int column, int size, bool hidden)
     applyToView(ui->fixedRowsTableView->horizontalHeader(), column);
     applyToView(ui->splittedDataTableView->horizontalHeader(), column);
 
-    // CRITICAL FIX: Summary view uses column + 1 because section 0 is for vertical header
-    if (d->summaryView) {
-        applyToView(d->summaryView, column + 1); // +1 offset for extra section
+    if (d->summaryHeader) {
+        applyToView(d->summaryHeader, column); // +1 offset for extra section
     }
 }
 
@@ -172,19 +167,38 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     // ui->headerTableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     // ui->dataTableView->setVerticalHeader(new QFixedRowsHeaderView(Qt::Vertical, this));
 
-    d->summaryView = new QHeaderView(Qt::Horizontal, this);
-    d->summaryView->setMinimumHeight(20);
-    d->summaryView->setMaximumHeight(20);
-    d->summaryView->setSectionResizeMode(QHeaderView::Fixed);
-    QFont fnt = d->summaryView->font();
+    // Replace the current summaryView setup:
+    d->summaryWidget = new QWidget(this);
+    d->summaryWidget->setMinimumHeight(25);
+    d->summaryWidget->setMaximumHeight(25);
+
+    QHBoxLayout *summaryLayout = new QHBoxLayout(d->summaryWidget);
+    summaryLayout->setContentsMargins(0, 0, 0, 0);
+    summaryLayout->setSpacing(0);
+
+    // Create the button
+    d->summaryButton = new QPushButton(d->summaryWidget);
+    d->summaryButton->setFixedWidth(verticalHeader()->width()); // Match vertical header width
+    d->summaryButton->setText("Σ"); // Or use an icon
+    d->summaryButton->setToolTip(tr("Summary actions"));
+    // Control how the button behaves when parent resizes
+    d->summaryButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    d->summaryButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    d->summaryButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    connect(d->summaryButton, &QPushButton::clicked, this, &QAdvancedTableView::summaryButtonClicked);
+
+    // Create the header for summary data
+    d->summaryHeader = new QHeaderView(Qt::Horizontal, d->summaryWidget);
+    d->summaryHeader->setSectionResizeMode(QHeaderView::Fixed);
+    QFont fnt = d->summaryHeader->font();
     fnt.setBold(true);
-    d->summaryView->setFont(fnt);
-    QSizePolicy spFooter(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    spFooter.setHorizontalStretch(0);
-    spFooter.setVerticalStretch(0);
-    d->summaryView->setSizePolicy(spFooter);
-    ui->verticalLayout->addWidget(d->summaryView);
-    d->summaryView->setVisible(false);
+    d->summaryHeader->setFont(fnt);
+
+    summaryLayout->addWidget(d->summaryButton);
+    summaryLayout->addWidget(d->summaryHeader);
+
+    ui->verticalLayout->addWidget(d->summaryWidget);
+    d->summaryWidget->setVisible(false);
 
     // set models
     d->dataViewProxy->setSourceModel(ui->fixedRowsTableView->decorationProxy());
@@ -553,8 +567,8 @@ void QAdvancedTableView::horizontalHeaderViewSectionMoved(int logicalIndex, int 
     ui->dataTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
     ui->fixedRowsTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
     ui->splittedDataTableView->horizontalHeader()->moveSection(oldVisualIndex, newVisualIndex);
-    if (d->summaryView->isVisible()) {
-        d->summaryView->moveSection(oldVisualIndex + 1, newVisualIndex + 1);
+    if (d->summaryHeader->isVisible()) {
+        d->summaryHeader->moveSection(oldVisualIndex, newVisualIndex);
     }
 }
 
@@ -678,12 +692,20 @@ int QAdvancedTableView::getHeaderSectionWidth(QHeaderView *header, int column)
         iconWidth = icon_size.width();
     }
 
+    // Spacing between text and icon
     if (textWidth > 0 && iconWidth > 0) {
         spacing = style()->pixelMetric(QStyle::PM_HeaderMargin);
     }
 
-    int padding = 2 * style()->pixelMetric(QStyle::PM_HeaderMargin);
+    int padding = 0;
 
+    // Base header margin (applied to both sides)
+    padding += 2 * style()->pixelMetric(QStyle::PM_HeaderMargin);
+
+    // Frame width
+    padding += 2 * style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
+
+    // Sort indicator space
     if (header->isSortIndicatorShown()) {
         padding += style()->pixelMetric(QStyle::PM_HeaderMarkSize);
     }
@@ -1027,9 +1049,9 @@ void QAdvancedTableView::setModel(QAbstractItemModel *model)
     ui->fixedRowsTableView->setModel(d->model);
     d->filterModel->setSourceModel(d->model);
 
-    d->summaryView->setModel(new QStandardItemModel(1, d->model->columnCount() + 1));
+    d->summaryHeader->setModel(new QStandardItemModel(1, d->model->columnCount()));
     for (int i = 0; i < d->model->columnCount() + 1; i++) {
-        d->summaryView->model()->setHeaderData(i, Qt::Horizontal, "");
+        d->summaryHeader->model()->setHeaderData(i, Qt::Horizontal, "");
     }
 
     horizontalHeader()->setModel(d->model);
@@ -1039,12 +1061,12 @@ void QAdvancedTableView::setModel(QAbstractItemModel *model)
         ui->dataTableView->horizontalHeader()->moveSection(ui->dataTableView->horizontalHeader()->visualIndex(iCol), d->horizontalHeader->visualIndex(iCol));
 
         // d->summaryView->resizeSection(iCol, d->horizontalHeader->sectionSize(iCol));
-        d->summaryView->moveSection(ui->dataTableView->horizontalHeader()->visualIndex(iCol + 1), d->horizontalHeader->visualIndex(iCol + 1));
+        // d->summaryHeader->moveSection(ui->dataTableView->horizontalHeader()->visualIndex(iCol), d->horizontalHeader->visualIndex(iCol));
     }
     if (horizontalHeader()->stretchLastSection()) {
         if (horizontalHeader()->count() > 0) {
             horizontalHeader()->setSectionResizeMode(horizontalHeader()->count() - 1, QHeaderView::Stretch);
-            d->summaryView->setSectionResizeMode(d->summaryView->count() - 1, QHeaderView::Stretch);
+            d->summaryHeader->setSectionResizeMode(d->summaryHeader->count() - 1, QHeaderView::Stretch);
         }
     }
 
@@ -1137,7 +1159,7 @@ void QAdvancedTableView::autoResizeColumnsToContent()
             item.index = i;
 
             item.top_header = getHeaderSectionWidth(horizontalHeader(), i);
-            item.extra_header = d->summaryView ? getHeaderSectionWidth(d->summaryView, i + 1) : 0;
+            item.extra_header = d->summaryHeader ? getHeaderSectionWidth(d->summaryHeader, i) : 0;
             // item.top_header = horizontalHeader()->sectionSize(i);
             // item.extra_header = d->summaryView ? d->summaryView->sectionSize(i + 1) : 0;
             item.content = ui->dataTableView->columnWidth(i);
@@ -1233,13 +1255,13 @@ void QAdvancedTableView::autoResizeColumnsToContent()
         }
     }
 
-    if (d->summaryView->isVisible()) {
+    if (d->summaryHeader->isVisible()) {
         // Synchronize section 0 (vertical header placeholder) with actual vertical header
         const bool vHeaderVisible = verticalHeader()->isVisible() && !verticalHeader()->sectionsHidden();
         const int vHeaderWidth = vHeaderVisible ? verticalHeader()->width() : 0;
 
-        d->summaryView->resizeSection(0, vHeaderWidth);
-        d->summaryView->setSectionHidden(0, !vHeaderVisible);
+        d->summaryButton->setFixedWidth(vHeaderWidth);
+        d->summaryButton->setVisible(vHeaderVisible);
     }
     // Resize all visible columns in the header view
     for (const auto &pair : col_info) {
@@ -1415,7 +1437,7 @@ void QAdvancedTableView::dataModelLayoutChanged()
         ui->dataTableView->horizontalHeader()->setSectionHidden(i, isHidden);
         ui->fixedRowsTableView->horizontalHeader()->setSectionHidden(i, isHidden);
         ui->splittedDataTableView->horizontalHeader()->setSectionHidden(i, isHidden);
-        d->summaryView->setSectionHidden(i + 1, isHidden);
+        d->summaryHeader->setSectionHidden(i, isHidden);
     }
     updateSummary();
 }
@@ -1476,13 +1498,13 @@ void QAdvancedTableView::updateHeaderViewGeometries()
         ui->headerTableView->verticalHeader()->setFixedWidth(dataVHWidth);
     }
 
-    if (d->summaryView->isVisible()) {
+    if (d->summaryHeader->isVisible()) {
         // Synchronize section 0 (vertical header placeholder) with actual vertical header
         const bool vHeaderVisible = verticalHeader()->isVisible() && !verticalHeader()->sectionsHidden();
         const int vHeaderWidth = vHeaderVisible ? verticalHeader()->width() : 0;
 
-        d->summaryView->resizeSection(0, vHeaderWidth);
-        d->summaryView->setSectionHidden(0, !vHeaderVisible);
+        d->summaryButton->setFixedWidth(vHeaderWidth);
+        d->summaryButton->setVisible(vHeaderVisible);
     }
 }
 
@@ -1609,17 +1631,17 @@ void QAdvancedTableView::setSummaryTypes(const QMap<int, advSummaryFunc> &column
 void QAdvancedTableView::updateSummary()
 {
     if (d->model && d->columnsSummaryTypes.count() > 0) {
-        d->summaryView->setVisible(true);
+        d->summaryWidget->setVisible(true);
         QMap<int, advSummaryFunc>::iterator iter;
         for (iter = d->columnsSummaryTypes.begin(); iter != d->columnsSummaryTypes.end(); ++iter) {
             advSummaryFunc fn = iter.value();
             if (fn) {
                 QVariant result = fn(ui->dataTableView->model(), iter.key());
-                d->summaryView->model()->setHeaderData(iter.key() + 1, Qt::Horizontal, result);
+                d->summaryHeader->model()->setHeaderData(iter.key(), Qt::Horizontal, result);
             }
         }
     } else {
-        d->summaryView->setVisible(false);
+        d->summaryWidget->setVisible(false);
     }
 }
 
@@ -1635,7 +1657,11 @@ void QAdvancedTableView::sectionsResize()
     adjustSummaryOffset();
     if (ui->dataTableView->model()) {
         for (int i = 0; i < ui->dataTableView->model()->columnCount(); i++) {
-            d->summaryView->resizeSection(i + 1, ui->dataTableView->columnWidth(i));
+            d->summaryHeader->resizeSection(i, ui->dataTableView->columnWidth(i));
         }
     }
+}
+
+void QAdvancedTableView::summaryButtonClicked()
+{
 }
