@@ -23,6 +23,7 @@
 
 #include "qabstractfilter.h"
 #include "qautofilter.h"
+#include "qcolorfilter.h"
 #include "qfiltergroup.h"
 #include "qrangefilter.h"
 #include "qregularexpressionfilter.h"
@@ -39,6 +40,7 @@ QFilterModel::QFilterModel(QObject *parent) :
     registerFilter(QRegularExpressionFilter::Type, QIcon(":/qaiv/filter/regexp"), tr("RegExp Filter"));
     registerFilter(QAutoFilter::Type, QIcon(":/qaiv/filter/auto"), tr("Auto Filter"));
     registerFilter(QSelectionListFilter::Type, QIcon(":/qaiv/filter/selection"), tr("Selection List Filter"));
+    registerFilter(QColorFilter::Type, QIcon(":/qaiv/filter/color"), tr("Color Filter"), tr("Filter on background color"));
 }
 
 QAbstractFilter *QFilterModel::createFilter(const QModelIndex &index, const QVariantMap &properties) const
@@ -73,6 +75,10 @@ QAbstractFilter *QFilterModel::createFilter(const QModelIndex &index, const QVar
         }
         case QSelectionListFilter::Type: {
             filter = new QSelectionListFilter(index.row(), index.column());
+            break;
+        }
+        case QColorFilter::Type: {
+            filter = new QColorFilter(index.row(), index.column());
             break;
         }
         default:

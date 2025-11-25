@@ -51,6 +51,8 @@ HEADERS += qabstractfilter.h \
            qautofilter_p.h \
            qcheckstateproxymodel.h \
            qclickablelabel.h \
+           qcolorfilter.h \
+           qcolorfilter_p.h \
            qconditionaldecoration.h \
            qconditionaldecorationdialog.h \
            qconditionaldecorationdialog_p.h \
@@ -106,6 +108,7 @@ SOURCES += qabstractfilter.cpp \
            qautofilter.cpp \
            qcheckstateproxymodel.cpp \
            qclickablelabel.cpp \
+           qcolorfilter.cpp \
            qconditionaldecoration.cpp \
            qconditionaldecorationdialog.cpp \
            qconditionaldecorationproxymodel.cpp \

@@ -23,6 +23,7 @@
 
 #include "qabstractfilter.h"
 #include "qabstractfiltermodel.h"
+#include "qcolorfilter.h"
 
 QFilterModelProxy::QFilterModelProxy(QObject *parent) :
     QAbstractFilterProxyModel(parent)
@@ -40,12 +41,23 @@ QVariant QFilterModelProxy::data(const QModelIndex &index, int role) const
             for (const QAbstractFilter *f : std::as_const(filters)) {
                 int t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
                 if (f->isEnabled()) {
+                    // Get the appropriate data role based on filter type
+                    QModelIndex sourceIdx = sourceModel()->index(mSourceIndex.row(), f->column());
+                    QVariant cellData;
+                    if (f->type() == QColorFilter::Type) {
+                        // QColorFilter needs BackgroundRole data
+                        cellData = sourceModel()->data(sourceIdx, Qt::BackgroundRole);
+                    } else {
+                        // Other filters use DisplayRole (default)
+                        cellData = sourceModel()->data(sourceIdx);
+                    }
+
                     if (filterModel()->matchMode() == QAdvancedItemViews::MatchNormal) {
-                        if (f->matches(sourceModel()->index(mSourceIndex.row(), f->column()).data(), t)) {
+                        if (f->matches(cellData, t)) {
                             cl << f->highlightColor();
                         }
                     } else if (filterModel()->matchMode() == QAdvancedItemViews::MatchInverted) {
-                        if (!f->matches(sourceModel()->index(mSourceIndex.row(), f->column()).data(), t)) {
+                        if (!f->matches(cellData, t)) {
                             cl << f->highlightColor();
                         }
                     }
@@ -86,12 +98,24 @@ bool QFilterModelProxy::filterAcceptsRow(int source_row, const QModelIndex &sour
             int t = filterModel()->index(0, f->column()).data(QAbstractFilterModel::ValueFilterTypeRole).toInt();
             if (f->isEnabled()) {
                 fc++;
+
+                // Get the appropriate data role based on filter type
+                QModelIndex sourceIdx = sourceModel()->index(source_row, f->column());
+                QVariant cellData;
+                if (f->type() == QColorFilter::Type) {
+                    // QColorFilter needs BackgroundRole data
+                    cellData = sourceModel()->data(sourceIdx, Qt::BackgroundRole);
+                } else {
+                    // Other filters use DisplayRole (default)
+                    cellData = sourceModel()->data(sourceIdx);
+                }
+
                 if (filterModel()->matchMode() == QAdvancedItemViews::MatchNormal) {
-                    if (f->matches(sourceModel()->data(sourceModel()->index(source_row, f->column())), t)) {
+                    if (f->matches(cellData, t)) {
                         rr++;
                     }
                 } else if (filterModel()->matchMode() == QAdvancedItemViews::MatchInverted) {
-                    if (!f->matches(sourceModel()->data(sourceModel()->index(source_row, f->column())), t)) {
+                    if (!f->matches(cellData, t)) {
                         rr++;
                     }
                 }

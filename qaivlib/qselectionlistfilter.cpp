@@ -287,7 +287,6 @@ void QSelectionListFilter::setEditorData(QWidget *editor, const QModelIndex &ind
 
 void QSelectionListFilter::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index)
 {
-    Q_UNUSED(index);
     const QSelectionListFilterEditor *w = qobject_cast<QSelectionListFilterEditor *>(editor);
     if (w) {
         const QSelectionListFilterEditorPopup *p = qobject_cast<QSelectionListFilterEditorPopup *>(w->popup());
