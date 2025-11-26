@@ -75,7 +75,11 @@ private slots:
     void emptyToolButtonClicked();
     void notEmptyToolButtonClicked();
     void checkStateProxyDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 7, 0))
     void selectCheckBoxStateChanged(Qt::CheckState state);
+#else
+    void selectCheckBoxStateChanged(int state);
+#endif
 
 private:
     bool cancelAndClose(QObject *obj, int key) const override;

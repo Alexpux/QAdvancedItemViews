@@ -87,8 +87,12 @@ QColorFilterEditorPopup::QColorFilterEditorPopup(QWidget *parent) : QFilterEdito
     m_selectCheckBox->setText(tr("Select/Deselect all"));
     m_selectCheckBox->setTristate(true);
     m_selectCheckBox->installEventFilter(parent);
-    connect(m_selectCheckBox, &QCheckBox::checkStateChanged,
-            this, &QColorFilterEditorPopup::selectCheckBoxStateChanged);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 7, 0))
+    connect(m_selectCheckBox, &QCheckBox::checkStateChanged, this, &QColorFilterEditorPopup::selectCheckBoxStateChanged);
+#else
+    connect(m_selectCheckBox, &QCheckBox::stateChanged, this, &QColorFilterEditorPopup::selectCheckBoxStateChanged);
+#endif
     layout->addWidget(m_selectCheckBox);
 
     // Setup models
@@ -202,7 +206,11 @@ void QColorFilterEditorPopup::checkStateProxyDataChanged(const QModelIndex &topL
     m_selectCheckBox->blockSignals(false);
 }
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 7, 0))
 void QColorFilterEditorPopup::selectCheckBoxStateChanged(Qt::CheckState state)
+#else
+void QColorFilterEditorPopup::selectCheckBoxStateChanged(int state)
+#endif
 {
     if (state == Qt::Checked) {
         m_checkStateProxy->setAllChecked(true);

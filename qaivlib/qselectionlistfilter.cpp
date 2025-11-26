@@ -76,7 +76,11 @@ QSelectionListFilterEditorPopup::QSelectionListFilterEditorPopup(QWidget *parent
     m_selectCheckBox->setText(tr("Select/Deselect all"));
     m_selectCheckBox->setTristate(true);
     m_selectCheckBox->installEventFilter(parent);
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 7, 0))
     connect(m_selectCheckBox, &QCheckBox::checkStateChanged, this, &QSelectionListFilterEditorPopup::selectCheckBoxStateChanged);
+#else
+    connect(m_selectCheckBox, &QCheckBox::stateChanged, this, &QSelectionListFilterEditorPopup::selectCheckBoxStateChanged);
+#endif
 
     l->addWidget(m_selectCheckBox);
 
@@ -155,7 +159,11 @@ void QSelectionListFilterEditorPopup::searchForTextEdited(const QString &text)
     }
 }
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 7, 0))
 void QSelectionListFilterEditorPopup::selectCheckBoxStateChanged(Qt::CheckState state)
+#else
+void QSelectionListFilterEditorPopup::selectCheckBoxStateChanged(int state)
+#endif
 {
     if (state == Qt::Checked) {
         m_checkStateProxy->setAllChecked(true);

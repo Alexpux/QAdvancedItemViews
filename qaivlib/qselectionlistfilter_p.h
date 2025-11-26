@@ -64,7 +64,11 @@ private slots:
     void emptyToolButtonClicked();
     void notEmptyToolButtonClicked();
     void searchForTextEdited(const QString &text);
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 7, 0))
     void selectCheckBoxStateChanged(Qt::CheckState state);
+#else
+    void selectCheckBoxStateChanged(int state);
+#endif
 
 private:
     // 0 = Selected values
